@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LeaseQA
+
+LeaseQA is an AI-powered lease review and legal Q&A platform for Boston renters. The goal is to deliver a full-stack Next.js 14 application that combines AI-assisted contract analysis, a rubric-compliant Q&A experience, and lightweight admin tooling.
+
+## Core Features
+
+- **AI Lease Review** – Upload a PDF or paste text and receive a Claude-generated risk report with export options and shortcuts to the Q&A flow.
+- **Housing Q&A Community** – Browse or filter questions by topic, post with rich text, and view multi-role answers (lawyers vs tenants) plus threaded discussions.
+- **Operations Dashboard** – Manage folders/categories, monitor platform stats, and moderate problematic content.
+- **Rubric Coverage** – Matches the Pazza rubric areas: Q&A Screen, Posts Sidebar, Posting Flow, Viewing & Replying, Manage Class/Folders, General Requirements, and Deployment.
+
+## Tech Stack
+
+- **Frontend / Full-stack**: Next.js 14 (App Router + Server Actions), React 18, Tailwind CSS, React Query / SWR.
+- **Authentication**: NextAuth.js with tenant, verified lawyer, and admin roles.
+- **Backend & Database**: Next.js API Routes backed by MongoDB Atlas via Mongoose.
+- **AI Integration**: Anthropic Claude API for contract parsing and summarization.
+- **Rich Text**: React-Quill loaded dynamically to avoid SSR issues.
+- **Deployment Targets**: Vercel (web + API) and MongoDB Atlas, with optional Render workers for long-running tasks.
+
+## Repository Layout
+
+```
+.
+├── README.md
+├── docs
+│   ├── requirements.md
+│   ├── architecture.md
+│   ├── api-design.md
+│   ├── rubric-checklist.md
+│   └── project-plan.md
+├── apps
+│   └── web              # Next.js application
+├── packages
+│   ├── config           # Shared Tailwind/ESLint configs
+│   └── ui               # Reusable UI library
+└── .env.example         # Environment variable template
+```
+
+> **Note:** Install dependencies before running any scripts. Ensure Node.js 18.17+ (or preferably v25 via `.nvmrc`) is available together with npm.
 
 ## Getting Started
 
-First, run the development server:
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Create your `.env.local` based on `.env.example`.
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Collaboration Notes
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Product & frontend ownership: you.
+- Backend & DevOps: teammate(s).
+- Weekly cadence: plan on Monday, review & merge on Friday.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See the `docs/` directory for deeper specs, architecture notes, and rubric checklists.

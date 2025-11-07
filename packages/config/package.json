@@ -1,0 +1,7 @@
+{
+  "name": "@leaseqa/config",
+  "version": "0.1.0",
+  "private": true,
+  "main": "tailwind-config.js",
+  "types": "tailwind-config.d.ts"
+}
