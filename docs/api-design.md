@@ -1,12 +1,12 @@
-# API 设计草案
+# API Design Draft
 
-> 采用 REST 风格，路径基于 `/api`。后续可补充 GraphQL 或 Server Actions 版本。
+> REST-style design, all paths based on `/api`. GraphQL or Server Actions versions may be added later.
 
-## 1. 认证相关
+## 1. Authentication
 
 ### POST `/api/auth/register`
-- **描述**：注册新用户（租客或申请律师）。
-- **请求体**：
+- **Description**: Register a new user (tenant or lawyer applicant).
+- **Request Body**:
   ```json
   {
     "username": "Alice",
@@ -19,28 +19,28 @@
     }
   }
   ```
-- **响应**：`201 Created`，返回用户基本信息（不含密码）。
+- **Response**: `201 Created`, returns basic user info (excluding password).
 
 ### POST `/api/auth/login`
-- 交由 NextAuth Credentials Provider 处理，返回 session。
+- Handled by NextAuth Credentials Provider, returns session.
 
 ### GET `/api/auth/session`
-- 返回当前登录用户信息。
+- Returns current logged-in user info.
 
-## 2. AI 合同审核
+## 2. AI Contract Review
 
 ### POST `/api/ai-review`
-- **认证**：租客/律师均可调用。
-- **请求体**（multipart/form-data）：
-  - `file`: PDF 文件（二选一）
-  - `contractText`: 文本内容
-  - `contractType`: 字符串（可选）
-- **流程**：
-  1. 校验至少提供文件或文本。
-  2. 若上传文件，提取文本（后端 TBD）。
-  3. 调用 Claude API 获取分析结果。
-  4. 写入 `AIReviews` 集合。
-- **响应**：
+- **Auth**: Both tenants and lawyers can call this.
+- **Request Body** (multipart/form-data):
+  - `file`: PDF file (one of two options)
+  - `contractText`: Text content
+  - `contractType`: String (optional)
+- **Flow**:
+  1. Validate that at least file or text is provided.
+  2. If file uploaded, extract text (backend TBD).
+  3. Call Claude API to get analysis results.
+  4. Write to `AIReviews` collection.
+- **Response**:
   ```json
   {
     "reviewId": "6550...",
@@ -55,46 +55,46 @@
   ```
 
 ### GET `/api/ai-review/:id`
-- 返回指定审核结果，包含原始报告。
+- Returns specified review result, including original report.
 
-## 3. 帖子 Posts
+## 3. Posts
 
 ### GET `/api/posts`
-- **查询参数**：
-  - `folder`: 分类
-  - `role`: 视角（可选）
-  - `search`: 搜索关键词
-- **响应**：按时间倒序的帖子列表。
+- **Query Parameters**:
+  - `folder`: Category filter
+  - `role`: Perspective (optional)
+  - `search`: Search keyword
+- **Response**: List of posts sorted by newest first.
 
 ### POST `/api/posts`
-- **请求体**：
+- **Request Body**:
   ```json
   {
-    "summary": "需要确认租约转让条款是否合法",
+    "summary": "Need to confirm if lease transfer clause is legal",
     "details": "<p>...</p>",
     "postType": "question",
     "visibility": "class",         // class | private
     "folders": ["lease_review", "rent_increase"],
-    "fromAIReview": "6550...",     // 可选，关联审核
-    "urgency": "high"              // 可选
+    "fromAIReview": "6550...",     // optional, linked review
+    "urgency": "high"              // optional
   }
   ```
-- **响应**：`201 Created`，返回新帖详情。
-- **验证**：摘要 ≤ 100 字符，至少选择一个分类。
+- **Response**: `201 Created`, returns new post details.
+- **Validation**: Summary ≤ 100 characters, at least one folder required.
 
 ### GET `/api/posts/:id`
-- 返回帖子详情，包含回答与讨论（可选整合或拆分查询）。
+- Returns post details, including answers and discussions (can be split into separate queries).
 
 ### PUT `/api/posts/:id`
-- 更新摘要、详情、分类、可见性等。
+- Update summary, details, folders, visibility, etc.
 
 ### DELETE `/api/posts/:id`
-- 作者/律师/管理员权限；管理员可删除违规内容。
+- Author/lawyer/admin permission; admins can delete rule-violating content.
 
-## 4. 回答 Answers
+## 4. Answers
 
 ### POST `/api/answers`
-- **请求体**：
+- **Request Body**:
   ```json
   {
     "postId": "654f...",
@@ -102,54 +102,54 @@
     "answerType": "lawyer_opinion"  // or community_answer
   }
   ```
-- **权限**：`lawyer_opinion` 仅律师，`community_answer` 租客/律师均可。
+- **Permissions**: `lawyer_opinion` for lawyers only, `community_answer` for both tenants and lawyers.
 
 ### PUT `/api/answers/:id`
-- 编辑回答，仅作者或管理员。
+- Edit answer, author or admin only.
 
 ### DELETE `/api/answers/:id`
-- 作者或管理员可删除。
+- Author or admin can delete.
 
-## 5. 讨论 Discussions
+## 5. Discussions
 
 ### POST `/api/discussions`
-- **请求体**：
+- **Request Body**:
   ```json
   {
     "postId": "654f...",
-    "parentId": "6550...",   // 顶层为空
-    "content": "我有类似经历...",
+    "parentId": "6550...",   // null for top-level
+    "content": "I had a similar experience...",
     "isResolved": false
   }
   ```
-- 顶层讨论用于“跟进讨论”，子层用于回复。
+- Top-level discussions for "follow-up discussions", nested levels for replies.
 
 ### PATCH `/api/discussions/:id/resolve`
-- **请求体**：`{ "isResolved": true }`
-- **权限**：帖子作者、律师或管理员。
+- **Request Body**: `{ "isResolved": true }`
+- **Permissions**: Post author, lawyer, or admin.
 
 ### DELETE `/api/discussions/:id`
-- 作者或管理员。
+- Author or admin.
 
-## 6. 分类 Folders
+## 6. Folders (Categories)
 
 ### GET `/api/folders`
-- 返回所有分类，供前端渲染过滤器。
+- Returns all folders for frontend filter rendering.
 
 ### POST `/api/folders`
-- **权限**：管理员。
-- **请求体**：`{ "name": "utilities", "displayName": "水电费" }`
+- **Permissions**: Admin only.
+- **Request Body**: `{ "name": "utilities", "displayName": "Utilities" }`
 
 ### PUT `/api/folders/:id`
-- 更新名称/描述。
+- Update name/description.
 
 ### DELETE `/api/folders/:id`
-- 删除分类（需处理关联帖子策略）。
+- Delete folder (need to handle associated posts strategy).
 
-## 7. 统计 Statistics
+## 7. Statistics
 
 ### GET `/api/stats/overview`
-- 返回 Rubric 要求的指标：
+- Returns metrics required by Rubric:
   ```json
   {
     "unreadPosts": 3,
@@ -160,32 +160,32 @@
     "enrolledUsers": 137
   }
   ```
-- 管理员权限，其他角色按需过滤。
+- Admin permission, other roles see filtered data as needed.
 
-## 8. 管理工具
+## 8. Moderation Tools
 
 ### POST `/api/moderation/posts/:id/hide`
-- 管理员隐藏或恢复帖子。
+- Admin hides or restores posts.
 
 ### POST `/api/moderation/users/:id/ban`
-- 管理员停用用户（可选扩展）。
+- Admin disables user (optional extension).
 
-## 9. 错误响应标准
+## 9. Error Response Standard
 
-- 统一返回结构：
+- Unified response structure:
   ```json
   {
     "error": {
       "code": "VALIDATION_ERROR",
-      "message": "摘要不能为空",
+      "message": "Summary cannot be empty",
       "details": { ... }
     }
   }
   ```
-- 常见错误码：`UNAUTHORIZED`、`FORBIDDEN`、`NOT_FOUND`、`VALIDATION_ERROR`、`INTERNAL_ERROR`。
+- Common error codes: `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `VALIDATION_ERROR`, `INTERNAL_ERROR`.
 
-## 10. 未来扩展
+## 10. Future Extensions
 
-- WebSocket/Server-Sent Events 提示实时更新（新回答、讨论）。
-- 导出/导入测试数据的管理接口。
-- AI 审核结果的版本化与反馈接口。
+- WebSocket/Server-Sent Events for real-time updates (new answers, discussions).
+- Admin endpoints for exporting/importing test data.
+- AI review result versioning and feedback endpoints.

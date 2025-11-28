@@ -1,90 +1,122 @@
-# 项目里程碑与任务分配
+# Project Milestones & Task Assignment
 
-## 1. 时间轴总览（10 月 19 日 - 11 月 30 日）
+## 1. Timeline Overview (October 19 - November 30)
 
-| 周次 | 日期范围 | 目标 | 负责人 |
-| ---- | -------- | ---- | ------ |
-| Week 1 | 10/19 - 10/25 | 初始化项目、完成 Landing Page 线框、搭建认证与数据库连接 | 前端/后端 |
-| Week 2 | 10/26 - 11/01 | 实现 AI 审核流程 MVP、准备 5 个测试案例 | 全栈 |
-| Week 3 | 11/02 - 11/08 | 完成 Q&A 列表页（侧栏、过滤、统计） | 前端 |
-| Week 4 | 11/09 - 11/15 | 发帖页 + 详情页（回答区、讨论）与对应 API | 前端/后端 |
-| Week 5 | 11/16 - 11/22 | 管理员分类管理、内容审核、数据持久化校验 | 全栈 |
-| Week 6 | 11/23 - 11/30 | UI 优化、测试、部署、文档、演示录制 | 全队 |
+| Week | Date Range | Goals | Responsible |
+| ---- | ---------- | ----- | ----------- |
+| Week 1 | 10/19 - 10/25 | Initialize project, complete Landing Page wireframe, set up auth & database connection | Frontend/Backend |
+| Week 2 | 10/26 - 11/01 | Implement AI Review MVP, prepare 5 test cases | Full Stack |
+| Week 3 | 11/02 - 11/08 | Complete Q&A list page (sidebar, filters, statistics) | Frontend |
+| Week 4 | 11/09 - 11/15 | Create Post page + Details page (answers, discussions) with corresponding APIs | Frontend/Backend |
+| Week 5 | 11/16 - 11/22 | Admin category management, content moderation, data persistence validation | Full Stack |
+| Week 6 | 11/23 - 11/30 | UI polish, testing, deployment, documentation, demo recording | Entire Team |
 
-## 2. 每周详细任务
+## 2. Weekly Task Breakdown
 
-### Week 1：基础设施
-- 初始化 Next.js 14 项目，设置 ESLint/Prettier/Turbo Repo（如需要）。
-- 配置 Tailwind CSS、全局布局、导航骨架、法律免责声明组件。
-- 建立 NextAuth + MongoDB 连接，完成用户模型。
-- 设计 Landing Page：展示项目亮点、团队信息、仓库链接。
-- 产出 5 个波士顿租赁案例描述。
+### Week 1: Infrastructure Setup
 
-### Week 2：AI 审核 MVP
-- 实现合同上传 UI，加入加载进度与错误提示。
-- 编写 `/api/ai-review` Route Handler：参数校验、Mock Claude 响应（若缺 Key）。
-- 输出风险级别卡片组件，支持导出（占位）与跳转发帖。
-- 编写 AIReviews 模型，完成数据持久化并可查询。
+| Task | Description |
+| ---- | ----------- |
+| Project Init | Initialize Next.js 14 project, configure ESLint/Prettier/Turbo Repo (if needed) |
+| Styling Setup | Configure Tailwind CSS, global layout, navigation skeleton, legal disclaimer component |
+| Auth & Database | Set up NextAuth + MongoDB connection, complete User model |
+| Landing Page | Design and build: project highlights, team info, repository link |
+| Test Cases | Create 5 Boston rental case descriptions |
 
-### Week 3：Q&A 列表页
-- 构建固定导航、分类过滤条（默认九大分类）。
-- 实现侧栏折叠、Today/Yesterday/Last Week 分组。
-- 搭建 posts 列表组件，加载真实数据或 Mock。
-- 构建 “Class at a Glance” 统计卡片组件。
-- 接口：`GET /api/posts`、`GET /api/stats/overview` 初版。
+### Week 2: AI Review MVP
 
-### Week 4：发帖 & 详情
-- 发帖表单（React Hook Form + Zod），完成校验提示。
-- 接口：`POST /api/posts`、`PUT/DELETE /api/posts/:id`。
-- 详情页：顶部元信息、浏览量、操作按钮。
-- 回答区：按照律师/社区拆分，提供新增/编辑/删除，支持富文本。
-- 讨论区：嵌套列表、回复表单、解决状态按钮。
-- 接口：`POST /api/answers`、`POST /api/discussions` 等。
+| Task | Description |
+| ---- | ----------- |
+| Upload UI | Implement contract upload interface with loading progress and error messages |
+| API Route | Build `/api/ai-review` Route Handler: parameter validation, Mock Claude response (if no API key) |
+| Results Display | Create risk level card components, support export (placeholder) and link to create post |
+| Data Model | Build AIReviews model, complete data persistence and query functionality |
 
-### Week 5：管理员与优化
-- 管理员路由保护、中间件实现。
-- 分类管理界面：列表、搜索、新增、编辑、删除。
-- 内容审核面板：帖子隐藏/删除、用户统计。
-- 数据持久化检查：默认分类初始化脚本、索引优化。
-- UI 优化：高亮状态、空态、Loading Skeleton。
+### Week 3: Q&A List Page
 
-### Week 6：验证与交付
-- Writing 测试计划：单元、集成、端到端。
-- 自动化测试（Jest + Playwright/Cypress）。
-- 部署到 Vercel，配置环境变量与域名。
-- 整理文档：用户指南、技术文档、Rubric Checklist。
-- 录制演示视频、准备答辩材料。
+| Task | Description |
+| ---- | ----------- |
+| Navigation | Build fixed navigation bar with category filter (9 default categories) |
+| Sidebar | Implement collapsible sidebar with Today/Yesterday/Last Week grouping |
+| Post List | Build posts list component, load real data or mock data |
+| Statistics | Create "Class at a Glance" statistics card component |
+| APIs | Initial version of `GET /api/posts` and `GET /api/stats/overview` |
 
-## 3. 分工建议
+### Week 4: Create Post & Post Details
 
-- **前端负责人（你）**
-  - UI/UX 设计与实现（Landing、AI 审核、Q&A、Admin）。
-  - React 组件库、状态管理、表单验证、交互细节。
-  - 协调测试用例、文档书写。
-- **后端/DevOps 队友**
-  - NextAuth 逻辑、角色权限中间件。
-  - MongoDB 模型、API Route Handler、Claude 集成。
-  - 部署、环境变量、安全性、性能优化。
+| Task | Description |
+| ---- | ----------- |
+| Post Form | Build form with React Hook Form + Zod, complete validation messages |
+| Post APIs | Implement `POST /api/posts`, `PUT/DELETE /api/posts/:id` |
+| Details Header | Build top section with metadata, view count, action buttons |
+| Answers Section | Split by lawyer/community, support add/edit/delete with rich text |
+| Discussions | Nested list, reply form, resolve status button |
+| Discussion APIs | Implement `POST /api/answers`, `POST /api/discussions`, etc. |
 
-## 4. 沟通机制
+### Week 5: Admin & Optimization
 
-- 周一 30 分钟：任务规划与风险识别。
-- 周五 1 小时：进度演示、代码审查、合并。
-- 使用 Google Docs/Trello 跟踪待办与问题。
-- 重要里程碑前增加临时同步会（如 AI 接口上线）。
+| Task | Description |
+| ---- | ----------- |
+| Route Protection | Implement admin route protection and middleware |
+| Category Management | Build UI for list, search, add, edit, delete categories |
+| Content Moderation | Build panel for hide/delete posts, user statistics |
+| Data Persistence | Default category initialization script, index optimization |
+| UI Polish | Highlight states, empty states, loading skeletons |
 
-## 5. 交付物清单
+### Week 6: Validation & Delivery
 
-- 产品演示站点（Vercel）。
-- GitHub 仓库（前端/全栈）+ README + 部署说明。
-- Rubric 勾选清单（完成状态）。
-- 测试报告与案例。
-- 用户指南 + 技术文档。
-- 演示视频与 PPT（可选）。
+| Task | Description |
+| ---- | ----------- |
+| Test Planning | Write test plan: unit, integration, end-to-end |
+| Automated Testing | Set up Jest + Playwright/Cypress |
+| Deployment | Deploy to Vercel, configure environment variables and domain |
+| Documentation | User guide, technical docs, Rubric checklist |
+| Demo | Record demo video, prepare presentation materials |
 
-## 6. 风险应对
+## 3. Role Assignments
 
-- **Claude API 访问**：若审批延迟，使用 Mock + 本地分析脚本验证流程。
-- **时间延误**：关键路径为 AI 审核 + Q&A 详情，优先保障；管理员功能可裁剪成基础版。
-- **部署问题**：提前在 Week 5 完成预部署测试，留出缓冲。
-- **角色权限复杂度**：编写统一的 `requireRole` 辅助，避免分散校验。
+### Frontend Lead (You)
+
+| Responsibility | Details |
+| -------------- | ------- |
+| UI/UX | Design and implement Landing, AI Review, Q&A, Admin pages |
+| Components | React component library, state management, form validation, interaction details |
+| Coordination | Test cases, documentation writing |
+
+### Backend/DevOps Teammate
+
+| Responsibility | Details |
+| -------------- | ------- |
+| Authentication | NextAuth logic, role permission middleware |
+| Data Layer | MongoDB models, API Route Handlers, Claude integration |
+| Infrastructure | Deployment, environment variables, security, performance optimization |
+
+## 4. Communication Plan
+
+| Meeting | Frequency | Purpose |
+| ------- | --------- | ------- |
+| Monday Sync | 30 min | Task planning and risk identification |
+| Friday Review | 1 hour | Progress demo, code review, merge |
+| Ad-hoc Meetings | As needed | Before major milestones (e.g., AI API launch) |
+
+**Tracking Tools**: Google Docs / Trello for todos and issue tracking
+
+## 5. Deliverables Checklist
+
+| Deliverable | Status |
+| ----------- | ------ |
+| Product demo site (Vercel) | ⬜ |
+| GitHub repository + README + deployment instructions | ⬜ |
+| Rubric checklist (completion status) | ⬜ |
+| Test report and test cases | ⬜ |
+| User guide + technical documentation | ⬜ |
+| Demo video and PPT (optional) | ⬜ |
+
+## 6. Risk Management
+
+| Risk | Mitigation Strategy |
+| ---- | ------------------- |
+| **Claude API Access** | If approval is delayed, use Mock responses + local analysis script to validate the flow |
+| **Timeline Delays** | Critical path is AI Review + Q&A Details - prioritize these; Admin features can be trimmed to basic version |
+| **Deployment Issues** | Complete pre-deployment testing in Week 5, leave buffer time |
+| **Role Permission Complexity** | Write a unified `requireRole` helper function to avoid scattered permission checks |

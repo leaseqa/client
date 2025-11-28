@@ -1,83 +1,117 @@
-# Rubric 对照清单
+# Rubric Checklist
 
-> 勾选框用于开发过程中逐项自查。
+> Use checkboxes for self-review during development.
 
-## Q&A Screen（33 分）
+## Q&A Screen (33 points)
 
-- [ ] 点击导航 Pazza / LeaseQA 进入 Q&A 页面
-- [ ] Q&A 作为默认选项卡
-- [ ] 固定导航栏显示项目/课程名称
-- [ ] 每个课程/空间拥有独立实例（以租赁分类映射）
-- [ ] Q&A 标签指向问题列表
-- [ ] Manage Class 标签指向管理页面
-- [ ] 固定分类过滤条（lease_review、deposit、maintenance 等）
-- [ ] 分类过滤功能生效
-- [ ] 列表区域维持双列布局（侧栏 + 内容）
+| Status | Requirement |
+| ------ | ----------- |
+| ⬜ | Clicking Piazza / LeaseQA navigation enters Q&A page |
+| ⬜ | Q&A is the default selected tab |
+| ⬜ | Fixed navbar displays project/course name |
+| ⬜ | Each course/space has its own instance (mapped to rental categories) |
+| ⬜ | Q&A tab links to question list |
+| ⬜ | Manage Class tab links to admin page |
+| ⬜ | Fixed category filter bar (lease_review, deposit, maintenance, etc.) |
+| ⬜ | Category filtering works correctly |
+| ⬜ | List area maintains two-column layout (sidebar + content) |
 
-## Posts Sidebar（15 分）
+## Posts Sidebar (15 points)
 
-- [ ] 提供折叠按钮（默认展开）
-- [ ] 可展开/收起保持状态
-- [ ] 帖子按时间倒序
-- [ ] 列表项显示摘要、角色、时间戳
-- [ ] Accordion 按 Today / Yesterday / Last Week 分组
+| Status | Requirement |
+| ------ | ----------- |
+| ⬜ | Collapse button provided (expanded by default) |
+| ⬜ | Expand/collapse state persists |
+| ⬜ | Posts sorted in reverse chronological order |
+| ⬜ | List items display summary, role, timestamp |
+| ⬜ | Accordion groups by Today / Yesterday / Last Week |
 
-## Posting New Questions（27 分）
+## Posting New Questions (27 points)
 
-- [ ] 点击“新建帖子”进入发帖界面
-- [ ] 帖子类型 Tab：Question（默认）、Note（预留）、Poll（占位）
-- [ ] 发送对象：Entire Class（默认）、指定用户（可选）
-- [ ] 分类多选（至少 1 项）
-- [ ] 摘要字段必填，≤ 100 字符
-- [ ] 详情使用富文本编辑器，必填
-- [ ] 忽略邮件通知设置
-- [ ] “发布”创建帖子，“取消”返回列表
-- [ ] 缺少必填字段时显示提示
+| Status | Requirement |
+| ------ | ----------- |
+| ⬜ | Clicking "New Post" enters posting interface |
+| ⬜ | Post type tabs: Question (default), Note (reserved), Poll (placeholder) |
+| ⬜ | Send to: Entire Class (default), Specific users (optional) |
+| ⬜ | Multi-select categories (at least 1 required) |
+| ⬜ | Summary field required, ≤ 100 characters |
+| ⬜ | Details use rich text editor, required |
+| ⬜ | Email notification settings ignored |
+| ⬜ | "Post" creates the post, "Cancel" returns to list |
+| ⬜ | Missing required fields show validation prompts |
 
-## Viewing & Replying（33 分）
+## Viewing & Replying (33 points)
 
-- [ ] 当前帖子在侧栏高亮
-- [ ] 帖子详情显示浏览量、分类、作者、编辑按钮、操作下拉
-- [ ] 律师区（学生回答）展示作者、时间、编辑、操作
-- [ ] 租客区（教师回答）展示作者、时间、编辑、操作
-- [ ] 嵌套讨论支持多层回复
-- [ ] 发起新的跟进讨论输入框
-- [ ] 讨论项包含解决/未解决按钮、作者、时间、正文、操作、回复框
-- [ ] 回复包含作者、时间、正文、操作、回复框
+| Status | Requirement |
+| ------ | ----------- |
+| ⬜ | Current post highlighted in sidebar |
+| ⬜ | Post details show view count, categories, author, edit button, action dropdown |
+| ⬜ | Lawyer section (student answers) displays author, time, edit, actions |
+| ⬜ | Tenant section (instructor answers) displays author, time, edit, actions |
+| ⬜ | Nested discussions support multi-level replies |
+| ⬜ | Input box for starting new follow-up discussion |
+| ⬜ | Discussion items include resolved/unresolved button, author, time, content, actions, reply box |
+| ⬜ | Replies include author, time, content, actions, reply box |
 
-## Class at a Glance（3 分）
+## Class at a Glance (3 points)
 
-- [ ] 展示未读、未答、总帖、律师回答、租客回答、用户数
+| Status | Requirement |
+| ------ | ----------- |
+| ⬜ | Display: unread, unanswered, total posts, lawyer responses, tenant responses, user count |
 
-## Manage Class（6 分）
+## Manage Class (6 points)
 
-- [ ] 仅管理员可访问管理标签
-- [ ] 管理界面展示分类管理 Tab
+| Status | Requirement |
+| ------ | ----------- |
+| ⬜ | Only admins can access Manage tab |
+| ⬜ | Management interface shows category management tab |
 
-## Manage Folders（18 分）
+## Manage Folders (18 points)
 
-- [ ] 点击分类管理进入对应界面
-- [ ] 显示标题 “Manage Folders”
-- [ ] 默认分类初始化（9 个租赁主题）
-- [ ] 可新增单个分类并实时更新
-- [ ] 可删除选中分类
-- [ ] 可编辑分类名称并保存/取消
+| Status | Requirement |
+| ------ | ----------- |
+| ⬜ | Clicking category management enters corresponding interface |
+| ⬜ | Display title "Manage Folders" |
+| ⬜ | Default categories initialized (9 rental topics) |
+| ⬜ | Can add single category with real-time update |
+| ⬜ | Can delete selected category |
+| ⬜ | Can edit category name with save/cancel options |
 
-## General Requirements（12 分）+ 部署（15 分）
+## General Requirements (12 points) + Deployment (15 points)
 
-- [ ] 字段标签明确、占位符友好
-- [ ] 输入类型符合字段要求
-- [ ] UI 风格与目标一致（无需 1:1 还原）
-- [ ] 选中/激活状态高亮
-- [ ] 设置与数据持久化并重渲染
-- [ ] Netlify/Vercel + Render + Mongo Atlas 部署上线
-- [ ] （部署加分）提供在线演示链接
+| Status | Requirement |
+| ------ | ----------- |
+| ⬜ | Field labels clear, placeholders user-friendly |
+| ⬜ | Input types match field requirements |
+| ⬜ | UI style consistent with target (no need for 1:1 recreation) |
+| ⬜ | Selected/active states highlighted |
+| ⬜ | Settings and data persist and re-render correctly |
+| ⬜ | Deployed on Netlify/Vercel + Render + MongoDB Atlas |
+| ⬜ | (Bonus) Provide live demo link |
 
-## 额外扩展
+## Additional Extensions
 
-- [ ] AI 合同审核流程完成
-- [ ] 风险报告支持导出/打印
-- [ ] 发帖可引用 AI 审核结果
-- [ ] 管理员内容审核工具
+| Status | Requirement |
+| ------ | ----------- |
+| ⬜ | AI contract review flow completed |
+| ⬜ | Risk report supports export/print |
+| ⬜ | Posts can reference AI review results |
+| ⬜ | Admin content moderation tools |
 
-> 建议每完成一项立即勾选并在 MR/Commit 中引用，方便结项验收。
+---
+
+## Progress Summary
+
+| Section | Points | Completed | Remaining |
+| ------- | ------ | --------- | --------- |
+| Q&A Screen | 33 | 0 | 9 items |
+| Posts Sidebar | 15 | 0 | 5 items |
+| Posting New Questions | 27 | 0 | 9 items |
+| Viewing & Replying | 33 | 0 | 8 items |
+| Class at a Glance | 3 | 0 | 1 item |
+| Manage Class | 6 | 0 | 2 items |
+| Manage Folders | 18 | 0 | 6 items |
+| General + Deployment | 27 | 0 | 7 items |
+| **Total** | **162** | **0** | **47 items** |
+
+> **Tip**: Check off each item immediately after completion and reference it in your MR/Commit message for easier final review.

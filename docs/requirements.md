@@ -1,74 +1,101 @@
-# LeaseQA 需求说明
+# LeaseQA Requirements Specification
 
-## 1. 产品目标
+## 1. Product Goals
 
-- 帮助波士顿租客快速识别租赁合同风险，提供社区交流与律师问答渠道。
-- 满足课程 Pazza Rubric 全部功能项，确保项目最终考核通过。
-- 将 AI 合同审核与传统 Q&A 模块结合，形成差异化卖点。
+| Goal | Description |
+| ---- | ----------- |
+| **User Value** | Help Boston tenants quickly identify lease contract risks, provide community discussion and lawyer Q&A channels |
+| **Academic** | Meet all Piazza Rubric requirements to ensure project passes final evaluation |
+| **Differentiation** | Combine AI contract review with traditional Q&A module to create a unique value proposition |
 
-## 2. 目标用户与角色
+## 2. Target Users & Roles
 
-| 角色 | 描述 | 核心需求 |
-| ---- | ---- | -------- |
-| 租客 | 平台主要用户 | 上传合同、查看风险、发帖和讨论、获得律师答复 |
-| 认证律师 | 持牌法律顾问 | 回复法律问题、发布官方意见、维护专业形象 |
-| 管理员 | 平台运营人员 | 管理分类、监控内容、查看统计、保证合规 |
+| Role | Description | Core Needs |
+| ---- | ----------- | ---------- |
+| **Tenant** | Primary platform users | Upload contracts, view risks, create posts and discussions, receive lawyer responses |
+| **Certified Lawyer** | Licensed legal advisors | Answer legal questions, post official opinions, maintain professional image |
+| **Admin** | Platform operators | Manage categories, moderate content, view statistics, ensure compliance |
 
-> 律师与管理员权限互斥：律师可回答但不能管理分类，管理员可运营但不能发表法律意见。
+> **Note**: Lawyer and Admin permissions are mutually exclusive. Lawyers can answer questions but cannot manage categories. Admins can operate the platform but cannot post legal opinions.
 
-## 3. 核心功能
+## 3. Core Features
 
-1. **AI 合同审核**
-   - 支持 PDF 上传或文本粘贴。
-   - 调用 Claude API 输出风险报告（高/中/低）。
-   - 可下载审核结果或一键跳转发帖。
-2. **问答社区**
-   - 列表页：固定导航、分类过滤、帖子侧栏、统计面板。
-   - 发帖页：分类多选、摘要限制、富文本详情、表单校验。
-   - 详情页：律师区 ⚖️、社区区 🏠、嵌套讨论、解决状态、操作菜单。
-   - 数据持久化：帖子、回答、讨论、浏览量、分类。
-3. **管理员后台**
-   - 管理分类（增删改，默认九大租赁主题）。
-   - 查看平台 KPI（未读、未答、总帖、律师/租客回复数、用户数）。
-   - 内容审核（删除不当帖子/讨论）。
-4. **通用要求**
-   - 全站法律免责声明。
-   - 输入字段标签明确、合适类型、选中态高亮、空/错误提示。
-   - 支持响应式布局与可访问性基础。
-   - 部署上线可访问。
+### 3.1 AI Contract Review
 
-## 4. 非功能需求
+| Feature | Description |
+| ------- | ----------- |
+| Input Methods | PDF upload or text paste |
+| AI Analysis | Call Claude API to generate risk report (High/Medium/Low) |
+| Output Options | Download review results or one-click redirect to create post |
 
-- **性能**：Claude API 调用可能 30–60s，需提供 Loading、可取消与失败重试。
-- **安全**：认证鉴权、角色权限、API 输入校验、防止越权操作。
-- **可维护性**：代码模块化、清晰的文件结构、配套文档与测试。
-- **可观测性**：错误日志、API 调用监控（可选 Sentry/Logflare）。
+### 3.2 Q&A Community
 
-## 5. Rubric 对齐概览
+| Page | Features |
+| ---- | -------- |
+| **List Page** | Fixed navigation, category filters, post sidebar, statistics panel |
+| **Create Post** | Multi-category selection, summary character limit, rich text details, form validation |
+| **Post Details** | Lawyer section ⚖️, Community section 🏠, nested discussions, resolved status, action menu |
+| **Data Persistence** | Posts, answers, discussions, view counts, categories |
 
-- **Q&A Screen**：课程导航、默认 Q&A、固定导航条、分类过滤、双栏布局。
-- **Posts Sidebar**：折叠按钮、时间分组、倒序列表、摘要与元信息展示。
-- **Posting**：多标签、多分类、富文本、验证、提示、创建成功/取消。
-- **Viewing & Replying**：高亮当前帖子、浏览数、操作菜单、回答区分、嵌套讨论、解决状态。
-- **Class at a Glance**：统计卡片。
-- **Manage Class/Folders**：管理员独有视图、分类管理。
-- **General Requirements**：UI 规范、持久化、部署。
+### 3.3 Admin Dashboard
 
-## 6. 外部依赖
+| Feature | Description |
+| ------- | ----------- |
+| Category Management | Add, edit, delete categories (9 default rental topics) |
+| Platform KPIs | Unread posts, unanswered posts, total posts, lawyer/tenant response counts, user count |
+| Content Moderation | Delete inappropriate posts/discussions |
 
-- MongoDB Atlas 数据库。
-- Anthropic Claude API。
-- 邮件服务（如果 NextAuth 使用 Email Provider，可按需配置）。
+### 3.4 General Requirements
 
-## 7. 风险与假设
+| Requirement | Description |
+| ----------- | ----------- |
+| Legal Disclaimer | Site-wide legal disclaimer visible on all pages |
+| Form UX | Clear field labels, appropriate input types, selected state highlighting, empty/error prompts |
+| Responsive Design | Support for various screen sizes with basic accessibility |
+| Deployment | Live deployment accessible online |
 
-- Claude API Key 获取与配额限制。
-- PDF 上传的存储与解析策略需提前确认。
-- 课程部署要求（Netlify/Render）与 Vercel 兼容性待核实。
+## 4. Non-Functional Requirements
 
-## 8. 验收标准
+| Category | Requirements |
+| -------- | ------------ |
+| **Performance** | Claude API calls may take 30-60s; must provide loading indicator, cancel option, and retry on failure |
+| **Security** | Authentication, role-based permissions, API input validation, prevent unauthorized access |
+| **Maintainability** | Modular code, clear file structure, documentation and tests |
+| **Observability** | Error logging, API call monitoring (optional: Sentry/Logflare) |
 
-- Rubric 所有勾选项在演示时均能操作验证。
-- AI 审核流程产出完整报告并可复用到发帖。
-- 三种角色权限与 UI 呈现差异明确。
-- 项目部署可在线访问并附完整文档与演示材料。
+## 5. Rubric Alignment Overview
+
+| Rubric Section | Requirements |
+| -------------- | ------------ |
+| **Q&A Screen** | Course navigation, default Q&A view, fixed navbar, category filters, two-column layout |
+| **Posts Sidebar** | Collapse button, time-based grouping, reverse chronological list, summary and metadata display |
+| **Posting** | Multi-tag, multi-category, rich text, validation, prompts, create success/cancel |
+| **Viewing & Replying** | Highlight current post, view count, action menu, answer sections, nested discussions, resolved status |
+| **Class at a Glance** | Statistics cards |
+| **Manage Class/Folders** | Admin-only view, category management |
+| **General Requirements** | UI standards, data persistence, deployment |
+
+## 6. External Dependencies
+
+| Dependency | Purpose |
+| ---------- | ------- |
+| MongoDB Atlas | Database for storing all application data |
+| Anthropic Claude API | AI-powered contract analysis |
+| Email Service | Optional: If NextAuth uses Email Provider for authentication |
+
+## 7. Risks & Assumptions
+
+| Risk | Mitigation |
+| ---- | ---------- |
+| Claude API Key access and quota limits | Prepare mock responses for development/testing |
+| PDF upload storage and parsing strategy | Confirm approach early in development |
+| Course deployment requirements (Netlify/Render) | Verify compatibility with Vercel |
+
+## 8. Acceptance Criteria
+
+| Criteria | Description |
+| -------- | ----------- |
+| **Rubric Compliance** | All Rubric checklist items can be demonstrated and verified |
+| **AI Review Flow** | Produces complete risk report that can be reused when creating posts |
+| **Role Differentiation** | Three roles have clear permission differences reflected in UI |
+| **Deployment** | Project is deployed online with complete documentation and demo materials |
