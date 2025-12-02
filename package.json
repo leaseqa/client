@@ -18,5 +18,8 @@
   },
   "devDependencies": {
     "prettier": "^3.3.3"
+  },
+  "dependencies": {
+    "react-redux": "^9.2.0"
   }
 }
