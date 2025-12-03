@@ -1,19 +1,38 @@
 "use client";
 
-import {Button, Card, Col, Row, Stack} from "react-bootstrap";
-
-const stats = [
-    {label: "Unread items", value: "151"},
-    {label: "Open questions", value: "18"},
-    {label: "Attorney replies", value: "32"},
-    {label: "AI reviews this week", value: "12"},
-];
+import { useEffect, useState } from "react";
+import { Button, Card, CardBody, CardImg, Col, Row, Stack } from "react-bootstrap";
+import { Stat } from "./qa/types";
+import * as client from "./qa/client";
 
 export default function LandingPage() {
+    const [stats, setStats] = useState<Stat[]>([]);
+
+    useEffect(() => {
+        loadStats();
+    }, []);
+
+    const loadStats = async () => {
+        try {
+            const response = await client.fetchStats();
+            if (response.data) {
+                setStats([
+                    { label: "Unread items", value: response.data.unreadPosts || 0 },
+                    { label: "Open questions", value: response.data.unansweredPosts || 0 },
+                    { label: "Attorney replies", value: response.data.lawyerResponses || 0 },
+                    // TODO: ai reviews not totalPosts
+                    { label: "AI reviews this week", value: response.data.totalPosts || 0 },
+                ]);
+            }
+        } catch (error) {
+            console.error("Failed to load stats:", error);
+        }
+    };
+
     return (
         <div className="mb-4">
             <Card className="hero-card mb-4">
-                <Card.Body>
+                <CardBody>
                     <div className="d-flex flex-column flex-lg-row align-items-lg-center">
                         <div className="flex-grow-1">
                             <div className="pill mb-3">Mission</div>
@@ -43,13 +62,13 @@ export default function LandingPage() {
                             </div>
                         </div>
                     </div>
-                </Card.Body>
+                </CardBody>
             </Card>
 
             <Row className="g-4">
                 <Col lg={6}>
                     <Card className="h-100">
-                        <Card.Body className="d-flex flex-column">
+                        <CardBody className="d-flex flex-column">
                             <div className="d-flex align-items-center mb-3">
                                 <div className="pill">AI Review</div>
                                 <div className="ms-auto text-secondary small">
@@ -69,18 +88,18 @@ export default function LandingPage() {
                                     Post to Q&A
                                 </Button>
                             </div>
-                        </Card.Body>
-                        <Card.Img
-                            src="https://images.unsplash.com/photo-1454165205744-3b78555e5572?auto=format&fit=crop&w=900&q=80"
+                        </CardBody>
+                        <CardImg
+                            src="images/ai-reviews.png"
                             alt="AI Review"
-                            style={{borderBottomLeftRadius: "1rem", borderBottomRightRadius: "1rem"}}
+                            style={{ borderBottomLeftRadius: "1rem", borderBottomRightRadius: "1rem" }}
                         />
                     </Card>
                 </Col>
 
                 <Col lg={6}>
                     <Card className="h-100">
-                        <Card.Body className="d-flex flex-column">
+                        <CardBody className="d-flex flex-column">
                             <div className="d-flex align-items-center mb-3">
                                 <div className="pill">QA Community</div>
                                 <div className="ms-auto text-secondary small">
@@ -100,18 +119,18 @@ export default function LandingPage() {
                                     View resources
                                 </Button>
                             </div>
-                        </Card.Body>
-                        <Card.Img
-                            src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80"
+                        </CardBody>
+                        <CardImg
+                            src="images/qa-community.png"
                             alt="QA Community"
-                            style={{borderBottomLeftRadius: "1rem", borderBottomRightRadius: "1rem"}}
+                            style={{ borderBottomLeftRadius: "1rem", borderBottomRightRadius: "1rem" }}
                         />
                     </Card>
                 </Col>
             </Row>
 
             <Card className="mt-4">
-                <Card.Body>
+                <CardBody>
                     <Row className="g-3">
                         {stats.map((stat) => (
                             <Col key={stat.label} md={3} sm={6} xs={12}>
@@ -124,7 +143,7 @@ export default function LandingPage() {
                             </Col>
                         ))}
                     </Row>
-                </Card.Body>
+                </CardBody>
             </Card>
         </div>
     );

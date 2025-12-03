@@ -26,15 +26,13 @@ export default function SideNav() {
                 target="_blank"
                 className="text-center mb-3 text-decoration-none text-white"
             >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                     src="/images/NEU.png"
-                    width="72"
-                    height="72"
+                    width={60}
+                    height={60}
                     alt="NEU"
                     className="rounded-2"
                 />
-                <div className="small mt-2 text-secondary">NEU</div>
             </Link>
 
             <ListGroup variant="flush" className="w-100">
