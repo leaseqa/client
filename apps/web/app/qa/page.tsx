@@ -122,7 +122,9 @@ export default function QAPage() {
                                     >
                                         <div className="fw-semibold">{post.summary}</div>
                                         <div className="text-secondary small">
-                                            {new Date(post.createdAt).toLocaleDateString()} · {post.folders.map(f => getFolderDisplayName(folders, f)).join(" · ")}
+                                            {new Date(post.createdAt).toLocaleDateString()} · {post.folders
+                                            .map(f => getFolderDisplayName(folders, f))
+                                            .join(" · ")}
                                         </div>
                                     </ListGroupItem>
                                 ))

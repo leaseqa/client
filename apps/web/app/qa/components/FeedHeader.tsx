@@ -49,7 +49,7 @@ export default function FeedHeader({folders, posts, activeFolder, onSelectFolder
                                 <ListGroupItem key={post._id}>
                                     <div className="fw-semibold">{post.summary}</div>
                                     <div className="text-secondary small">
-                                        {getFolderDisplayName(folders, post.folders[0])}
+                                        {getFolderDisplayName(folders, post.folders.map(f => getFolderDisplayName(folders, f)).join(" · "))}
                                     </div>
                                 </ListGroupItem>
                             ))}

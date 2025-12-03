@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, CardBody, Stack } from "react-bootstrap";
+import {Button, Card, CardBody, Stack} from "react-bootstrap";
 
 export default function NavTabs() {
     return (
