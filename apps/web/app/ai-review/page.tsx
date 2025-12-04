@@ -201,7 +201,7 @@ export default function AIReviewPage() {
 
                             <Stack direction="horizontal" gap={2} className="mt-4 flex-wrap">
                                 <Button variant="outline-secondary">Download report</Button>
-                                <Button as={Link} href="/qa/new" variant="primary">
+                                <Button href="/qa/new" variant="primary">
                                     Bring result to QA · New Post
                                 </Button>
                             </Stack>

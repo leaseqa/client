@@ -52,7 +52,7 @@ export default function LandingPage() {
                                 🏠 Boston Renter Protection
                             </div>
                             <h1 className="display-4 fw-bold mb-3">
-                                Where laws can&apos;t reach,<br/>
+                                Where laws can&apos;t reach<br/>
                                 <span style={{color: "#e94560"}}>we help you understand</span>
                             </h1>
                             <p className="lead mb-4 opacity-75">
