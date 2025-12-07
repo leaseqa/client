@@ -6,7 +6,7 @@ import {useRouter} from "next/navigation";
 import {useDispatch} from "react-redux";
 import {setSession} from "@/app/store";
 import {Alert, Button, Card, CardBody, Form, Modal} from "react-bootstrap";
-import * as client from "../client";
+import {registerUser} from "@/app/lib/api";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -39,7 +39,7 @@ export default function RegisterPage() {
         setLoading(true);
 
         try {
-            const user = await client.registerUser({
+            const user = await registerUser({
                 username: formData.username,
                 email: formData.email,
                 password: formData.password,

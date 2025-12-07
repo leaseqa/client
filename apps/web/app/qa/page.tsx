@@ -17,8 +17,7 @@ import dynamic from "next/dynamic";
 import {format} from "date-fns";
 import {FaChevronDown, FaChevronRight} from "react-icons/fa";
 import {Folder, Post} from "./types";
-import * as client from "./client";
-import {createPost} from "../lib/api";
+import {createPost, fetchFoldersApi, fetchPosts, uploadPostAttachments} from "../lib/api";
 import FeedHeader from "./components/FeedHeader";
 import PostDetail from "./components/PostDetail";
 const ReactQuill = dynamic(() => import("react-quill-new"), {ssr: false});
@@ -104,16 +103,16 @@ export default function QAPage() {
         try {
             setLoading(true);
 
-            const foldersResponse = await client.fetchFolders();
-            const foldersData = foldersResponse.data || [];
+            const foldersResponse = await fetchFoldersApi();
+            const foldersData = (foldersResponse as any)?.data || foldersResponse || [];
             setFolders(foldersData);
 
             if (foldersData.length > 0) {
                 setActiveFolder(foldersData[0].name);
             }
 
-            const postsResponse = await client.fetchPosts({});
-            const postsData = postsResponse.data || [];
+            const postsResponse = await fetchPosts({});
+            const postsData = (postsResponse as any)?.data || postsResponse || [];
             setPosts(postsData);
         } catch (error) {
             console.error("Failed to load data:", error);
@@ -468,7 +467,7 @@ export default function QAPage() {
                                                     const newPost = (resp as any)?.data || resp;
                                                     if (newPost?._id && composeState.files.length) {
                                                         try {
-                                                            await (await import("../lib/api")).uploadPostAttachments(newPost._id, composeState.files);
+                                                            await uploadPostAttachments(newPost._id, composeState.files);
                                                         } catch (err) {
                                                             console.error("Upload attachments failed", err);
                                                         }

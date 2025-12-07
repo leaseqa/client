@@ -6,7 +6,7 @@ import {useRouter} from "next/navigation";
 import {useDispatch} from "react-redux";
 import {setSession} from "@/app/store";
 import {Alert, Button, Card, CardBody, Form} from "react-bootstrap";
-import * as client from "../client";
+import {loginUser} from "@/app/lib/api";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -27,7 +27,7 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            const user = await client.loginUser(formData);
+            const user = await loginUser(formData);
             dispatch(setSession(user.data || user));
             router.push("/account");
         } catch (err: any) {

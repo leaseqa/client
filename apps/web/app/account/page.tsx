@@ -17,7 +17,7 @@ import {
     FaSignInAlt,
     FaUserPlus,
 } from "react-icons/fa";
-import * as client from "../auth/client";
+import {logoutUser, updateCurrentUser} from "../lib/api";
 
 //TODO: not in the database yet
 const recentActions = [
@@ -51,7 +51,7 @@ export default function AccountPage() {
 
     const handleLogout = async () => {
         try {
-            await client.logoutUser();
+            await logoutUser();
         } finally {
             dispatch(signOut());
             router.push("/");
@@ -62,7 +62,7 @@ export default function AccountPage() {
         setError("");
         setSaving(true);
         try {
-            const response = await client.updateUser({
+            const response = await updateCurrentUser({
                 username: profileForm.name,
                 email: profileForm.email,
             });
