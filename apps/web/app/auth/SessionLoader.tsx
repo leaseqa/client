@@ -3,7 +3,7 @@
 import React, {useEffect} from "react";
 import {useDispatch} from "react-redux";
 import {setSession, signOut} from "@/app/store";
-import {fetchSession} from "./client";
+import {fetchSession} from "../lib/api";
 
 export default function SessionLoader({children}: { children: React.ReactNode }) {
     const dispatch = useDispatch();

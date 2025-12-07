@@ -36,7 +36,7 @@ export async function fetchJson<T>(
 }
 
 export async function submitAiReview(form: FormData) {
-    const response = await fetch(`${API_BASE}/ai-review`, {
+    const response = await fetch(`${API_BASE}/ai-reviews`, {
         method: "POST",
         credentials: "include",
         body: form,
@@ -60,6 +60,22 @@ export async function fetchPosts(params: {
     if (params.role) query.set("role", params.role);
     if (params.audience) query.set("audience", params.audience);
     return fetchJson(`/posts?${query.toString()}`);
+}
+
+export async function fetchPostById(postId: string) {
+    return fetchJson(`/posts/${postId}`);
+}
+
+export async function fetchStats() {
+    return fetchJson("/stats/overview");
+}
+
+export async function fetchReviews() {
+    return fetchJson("/ai-reviews");
+}
+
+export async function fetchReviewById(reviewId: string) {
+    return fetchJson(`/ai-reviews/${reviewId}`);
 }
 
 export async function createPost(payload: {

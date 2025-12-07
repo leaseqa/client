@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState, signOut} from "@/app/store";
 import {Container, Dropdown, Navbar, NavbarBrand, Stack} from "react-bootstrap";
 import {FaBell, FaSearch} from "react-icons/fa";
-import * as client from "@/app/auth/client";
+import {logoutUser} from "@/app/lib/api";
 import AvatarToggle from "./HeaderBar/AvatarToggle";
 import MobileNav from "./HeaderBar/MobileNav";
 import ProfileHeader from "./HeaderBar/ProfileHeader";
