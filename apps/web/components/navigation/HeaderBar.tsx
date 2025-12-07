@@ -23,7 +23,6 @@ export default function HeaderBar() {
 
     const [showMenu, setShowMenu] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
-    const showHeaderSearch = !pathname?.startsWith("/qa");
 
     const notifications: {id: string; title: string; href?: string}[] = [];
 
@@ -75,13 +74,6 @@ export default function HeaderBar() {
                 <MobileNav pathname={pathname}/>
 
                 <Stack direction="horizontal" gap={2}>
-                    {showHeaderSearch && (
-                        <div className="search-box d-none d-md-flex">
-                            <FaSearch className="text-muted-light" size={14}/>
-                            <span className="text-muted-light search-text">Search...</span>
-                        </div>
-                    )}
-
                     <Dropdown align="end" show={showNotifications} onToggle={setShowNotifications}>
                         <Dropdown.Toggle
                             as="button"

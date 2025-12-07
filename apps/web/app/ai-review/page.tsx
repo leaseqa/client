@@ -160,18 +160,18 @@ export default function AIReviewPage() {
                     )}
                 </Col>
 
-                {isAuthenticated && (
-                    <Col lg={4}>
-                        <AccentCard>
-                            <div className="d-flex align-items-center gap-3 mb-4">
-                                <IconCircle size="md" variant="muted"><FaHistory size={16}/></IconCircle>
-                                <div>
-                                    <div className="fw-bold">History</div>
-                                    <div className="text-muted-light small">Your past reviews</div>
-                                </div>
+                <Col lg={4}>
+                    <AccentCard>
+                        <div className="d-flex align-items-center gap-3 mb-4">
+                            <IconCircle size="md" variant="muted"><FaHistory size={16}/></IconCircle>
+                            <div>
+                                <div className="fw-bold">History</div>
+                                <div className="text-muted-light small">Your past reviews</div>
                             </div>
+                        </div>
 
-                            {loading ? (
+                        {isAuthenticated ? (
+                            loading ? (
                                 <div className="text-center py-4">
                                     <Spinner size="sm" className="me-2"/>
                                     <span className="text-muted-light small">Loading...</span>
@@ -199,10 +199,18 @@ export default function AIReviewPage() {
                                     <FaCloudUploadAlt size={30} className="text-muted-light mb-2"/>
                                     <div className="text-muted-light small">No reviews yet. Submit one above!</div>
                                 </div>
-                            )}
-                        </AccentCard>
-                    </Col>
-                )}
+                            )
+                        ) : (
+                            <div className="text-center py-4 rounded-3 bg-muted">
+                                <FaCloudUploadAlt size={30} className="text-muted-light mb-2"/>
+                                <div className="text-muted-light small">Sign in to view your review history.</div>
+                                <div className="mt-2">
+                                    <Button href="/auth/login" variant="primary" size="sm" className="btn-pill">Sign in</Button>
+                                </div>
+                            </div>
+                        )}
+                    </AccentCard>
+                </Col>
             </Row>
         </div>
     );
