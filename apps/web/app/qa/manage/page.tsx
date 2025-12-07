@@ -5,15 +5,8 @@ import {useSelector} from "react-redux";
 import {useRouter} from "next/navigation";
 import * as client from "../client";
 import {RootState} from "@/app/store";
-import {Folder} from "../types";
-import {ManageHeader, ManageAlerts, CreateSectionForm, SectionsTable} from "./components";
-
-type FolderDraft = {
-    name: string;
-    displayName: string;
-    description?: string;
-    color?: string;
-};
+import {Folder, FolderDraft, User} from "../types";
+import {CreateSectionForm, ManageAlerts, ManageHeader, SectionsTable, UsersTable} from "./components";
 
 const EMPTY_DRAFT: FolderDraft = {name: "", displayName: "", description: "", color: ""};
 
@@ -21,8 +14,10 @@ export default function ManageSectionsPage() {
     const router = useRouter();
     const session = useSelector((state: RootState) => state.session);
     const isAdmin = session.user?.role === "admin";
+    const currentUserId = session.user?.id || (session.user as any)?._id || "";
 
     const [folders, setFolders] = useState<Folder[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
@@ -38,34 +33,37 @@ export default function ManageSectionsPage() {
         [folders]
     );
 
-    const loadFolders = async () => {
+    const sortedUsers = useMemo(
+        () => [...users].sort((a, b) => a.username.localeCompare(b.username)),
+        [users]
+    );
+
+    const loadData = async () => {
         try {
             setLoading(true);
             setError("");
-            const res = await client.fetchFolders();
-            setFolders((res as any)?.data || res || []);
+            const [foldersRes, usersRes] = await Promise.all([
+                client.fetchFolders(),
+                client.fetchAllUsers(),
+            ]);
+            setFolders((foldersRes as any)?.data || foldersRes || []);
+            setUsers((usersRes as any)?.data || usersRes || []);
         } catch (err: any) {
-            setError(err.message || "Failed to load sections");
+            setError(err.message || "Failed to load data");
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        if (isAdmin) loadFolders();
+        if (!isAdmin) {
+            router.push("/qa");
+            return;
+        }
+        loadData();
     }, [isAdmin]);
 
-    if (!isAdmin) {
-        return (
-            <div className="manage-empty">
-                <h2>Admin Only</h2>
-                <p>You need admin permissions to manage sections.</p>
-                <button className="manage-btn primary" onClick={() => router.push("/qa")}>
-                    Back to Q&A
-                </button>
-            </div>
-        );
-    }
+    if (!isAdmin) return null;
 
     const handleSaveNew = async () => {
         setError("");
@@ -84,7 +82,7 @@ export default function ManageSectionsPage() {
             setNewFolder(EMPTY_DRAFT);
             setShowCreateForm(false);
             setSuccess("Section created successfully.");
-            loadFolders();
+            await loadData();
         } catch (err: any) {
             setError(err.message || "Failed to create section");
         }
@@ -140,7 +138,7 @@ export default function ManageSectionsPage() {
                 return next;
             });
             setSuccess("Section updated successfully.");
-            loadFolders();
+            await loadData();
         } catch (err: any) {
             setError(err.message || "Failed to update section");
         }
@@ -155,7 +153,7 @@ export default function ManageSectionsPage() {
         });
     };
 
-    const handleDelete = async (id: string) => {
+    const handleDeleteFolder = async (id: string) => {
         setError("");
         setSuccess("");
         const target = folders.find((f) => f._id === id);
@@ -163,9 +161,62 @@ export default function ManageSectionsPage() {
         try {
             await client.deleteFolder(id);
             setSuccess("Section deleted.");
-            loadFolders();
+            await loadData();
         } catch (err: any) {
             setError(err.message || "Failed to delete section");
+        }
+    };
+
+    const handleChangeRole = async (userId: string, role: string) => {
+        setError("");
+        setSuccess("");
+        try {
+            await client.updateUserRole(userId, role);
+            setSuccess("User role updated.");
+            await loadData();
+        } catch (err: any) {
+            setError(err.message || "Failed to update user role");
+        }
+    };
+
+    const handleVerifyLawyer = async (userId: string) => {
+        setError("");
+        setSuccess("");
+        try {
+            await client.verifyLawyer(userId);
+            setSuccess("Lawyer verified.");
+            await loadData();
+        } catch (err: any) {
+            setError(err.message || "Failed to verify lawyer");
+        }
+    };
+
+    const handleToggleBan = async (userId: string, banned: boolean) => {
+        setError("");
+        setSuccess("");
+        const action = banned ? "ban" : "unban";
+        const target = users.find((u) => u._id === userId);
+        if (!window.confirm(`Are you sure you want to ${action} "${target?.username || ""}"?`)) return;
+        try {
+            await client.banUser(userId, banned);
+            setSuccess(`User ${banned ? "banned" : "unbanned"}.`);
+            await loadData();
+        } catch (err: any) {
+            setError(err.message || `Failed to ${action} user`);
+        }
+    };
+
+    const handleDeleteUser = async (userId: string) => {
+        setError("");
+        setSuccess("");
+        const target = users.find((u) => u._id === userId);
+        if (!window.confirm(`Delete user "${target?.username || ""}"? This cannot be undone.`)) return;
+        try {
+            await client.deleteUser(userId);
+            setSuccess("User deleted.");
+            await loadData();
+        } catch (err: any) {
+            setError(err.message || "Failed to delete user");
         }
     };
 
@@ -174,7 +225,7 @@ export default function ManageSectionsPage() {
             <ManageHeader
                 loading={loading}
                 showCreateForm={showCreateForm}
-                onRefresh={loadFolders}
+                onRefresh={loadData}
                 onShowCreate={() => setShowCreateForm(true)}
             />
 
@@ -203,7 +254,16 @@ export default function ManageSectionsPage() {
                 onDraftChange={handleDraftChange}
                 onSave={handleSaveEdit}
                 onCancelEdit={handleCancelEdit}
-                onDelete={handleDelete}
+                onDelete={handleDeleteFolder}
+            />
+
+            <UsersTable
+                users={sortedUsers}
+                currentUserId={currentUserId}
+                onChangeRole={handleChangeRole}
+                onVerifyLawyer={handleVerifyLawyer}
+                onToggleBan={handleToggleBan}
+                onDelete={handleDeleteUser}
             />
         </div>
     );

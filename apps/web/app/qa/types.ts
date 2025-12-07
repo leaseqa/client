@@ -6,6 +6,13 @@ export type Folder = {
     color: string;
 };
 
+export type FolderDraft = {
+    name: string;
+    displayName: string;
+    description?: string;
+    color?: string;
+};
+
 export type Post = {
     _id: string;
     summary: string;
@@ -67,6 +74,17 @@ export type UserSummary = {
     username?: string;
     email?: string;
     role?: string;
+};
+
+export type User = {
+    _id: string;
+    username: string;
+    email: string;
+    role: "tenant" | "lawyer" | "admin";
+    lawyerVerified?: boolean;
+    banned?: boolean;
+    createdAt?: string;
+    updatedAt?: string;
 };
 
 export type Stat = {

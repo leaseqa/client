@@ -109,3 +109,28 @@ export async function fetchStats() {
     const response = await axiosWithCredentials.get(`${API_BASE}/stats/overview`);
     return response.data;
 }
+
+export async function fetchAllUsers() {
+    const response = await axiosWithCredentials.get(`${API_BASE}/users`);
+    return response.data;
+}
+
+export async function updateUserRole(userId: string, role: string) {
+    const response = await axiosWithCredentials.patch(`${API_BASE}/users/${userId}/role`, {role});
+    return response.data;
+}
+
+export async function verifyLawyer(userId: string) {
+    const response = await axiosWithCredentials.patch(`${API_BASE}/users/${userId}/verify-lawyer`);
+    return response.data;
+}
+
+export async function banUser(userId: string, banned: boolean) {
+    const response = await axiosWithCredentials.patch(`${API_BASE}/users/${userId}/ban`, {banned});
+    return response.data;
+}
+
+export async function deleteUser(userId: string) {
+    const response = await axiosWithCredentials.delete(`${API_BASE}/users/${userId}`);
+    return response.data;
+}

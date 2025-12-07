@@ -2033,6 +2033,11 @@ body {
     padding: 0;
 }
 
+.manage-card-body.scrollable {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
 .manage-form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -2260,6 +2265,102 @@ body {
 @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+}
+
+/* Users Table */
+.manage-table-cell.user-name {
+    flex: 2;
+}
+
+.manage-table-cell.user-email {
+    flex: 2;
+}
+
+.manage-table-cell.user-role {
+    flex: 1;
+}
+
+.manage-table-cell.user-status {
+    flex: 1.5;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-role-select {
+    padding: 0.35rem 0.5rem;
+    border: 1px solid var(--qa-border);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    background: white;
+    cursor: pointer;
+}
+
+.user-role-select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.user-status-badges {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+}
+
+.user-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    text-transform: uppercase;
+}
+
+.user-badge.verified {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.user-badge.unverified {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.user-badge.banned {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.manage-table-row.banned {
+    background: #fef2f2;
+}
+
+.manage-icon-btn.verify {
+    background: #d1fae5;
+    border-color: #a7f3d0;
+    color: #065f46;
+}
+
+.manage-icon-btn.verify:hover {
+    background: #a7f3d0;
+}
+
+.manage-icon-btn.ban:hover {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #dc2626;
+}
+
+.manage-icon-btn.unban {
+    background: #d1fae5;
+    border-color: #a7f3d0;
+    color: #065f46;
+}
+
+.manage-icon-btn.unban:hover {
+    background: #a7f3d0;
 }
 
 @media (max-width: 768px) {

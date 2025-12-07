@@ -1,12 +1,5 @@
 import {FaCheck, FaEdit, FaTimes, FaTrash} from "react-icons/fa";
-import {Folder} from "../../types";
-
-type FolderDraft = {
-    name: string;
-    displayName: string;
-    description?: string;
-    color?: string;
-};
+import {Folder, FolderDraft} from "../../types";
 
 type SectionsTableProps = {
     folders: Folder[];
@@ -35,7 +28,7 @@ export default function SectionsTable({
                 <h2>Existing Sections</h2>
                 <span className="manage-count">{folders.length} sections</span>
             </div>
-            <div className="manage-card-body no-padding">
+            <div className="manage-card-body no-padding scrollable">
                 {!folders.length ? (
                     <div className="manage-empty-state">
                         No sections found. Create one to get started.
