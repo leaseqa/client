@@ -14,8 +14,8 @@ import RecencySidebar from "./components/RecencySidebar";
 import FeedHeader from "./components/FeedHeader";
 import AnnouncementSection from "./components/AnnouncementSection";
 import ComposeForm from "./components/ComposeForm";
-import PostDetail from "./components/PostDetail";
 import PinPostsSection from "./components/PinPostsSection";
+import PostDetailSection from "./components/PostDetailSection";
 
 export default function QAPage() {
     const router = useRouter();
@@ -23,14 +23,12 @@ export default function QAPage() {
     const scenario = searchParams.get("scenario") || "all";
     const searchParam = searchParams.get("search") || "";
     const composeParam = searchParams.get("compose") === "1";
+    const postIdParam = searchParams.get("post");
 
     const [folders, setFolders] = useState<Folder[]>([]);
     const [posts, setPosts] = useState<Post[]>([]);
-    const [selectedId, setSelectedId] = useState<string | null>(null);
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
-    const [sidebarOpen] = useState(true);
-    const [showCompose, setShowCompose] = useState(false);
     const [posting, setPosting] = useState(false);
     const [postError, setPostError] = useState("");
     const [composeState, setComposeState] = useState<ComposeState>(INITIAL_COMPOSE_STATE);
@@ -47,9 +45,8 @@ export default function QAPage() {
     }, []);
 
     useEffect(() => {
-        setShowCompose(composeParam);
         setSearch(searchParam);
-    }, [composeParam, searchParam, scenario]);
+    }, [searchParam, scenario]);
 
     const loadData = async () => {
         try {
@@ -86,14 +83,17 @@ export default function QAPage() {
     }, [posts, search, scenario, showResolved]);
 
     const handleSelectPost = (id: string) => {
-        setSelectedId(id);
-        router.push(`/qa/${id}`);
+        router.push(`/qa?post=${id}`);
+    };
+
+    const handleClosePost = () => {
+        router.push("/qa");
     };
 
     const resetCompose = () => {
         setComposeState(INITIAL_COMPOSE_STATE);
-        setShowCompose(false);
         setPostError("");
+        router.push("/qa");
     };
 
     const handleSubmitPost = async () => {
@@ -122,8 +122,10 @@ export default function QAPage() {
                 await client.uploadPostAttachments(newPost._id, composeState.files).catch(console.error);
             }
             await loadData();
-            if (newPost?._id) setSelectedId(newPost._id);
             resetCompose();
+            if (newPost?._id) {
+                router.push(`/qa?post=${newPost._id}`);
+            }
         } catch (err: any) {
             setPostError(err.message || "Failed to create post");
         } finally {
@@ -131,7 +133,6 @@ export default function QAPage() {
         }
     };
 
-    const selectedPost = posts.find(p => p._id === selectedId) || null;
     const folderDisplayMap = useMemo(() => {
         return folders.reduce<Record<string, string>>((acc, f) => {
             acc[f.name] = f.displayName || f.name;
@@ -150,6 +151,8 @@ export default function QAPage() {
         );
     }
 
+    const showFeed = !composeParam && !postIdParam;
+
     return (
         <>
             <ScenarioFilter/>
@@ -161,21 +164,19 @@ export default function QAPage() {
             />
 
             <Row className="g-3 mx-0">
-                {sidebarOpen && (
-                    <Col lg={3} className="px-1">
-                        <RecencySidebar
-                            posts={filteredPosts}
-                            currentPostId={selectedId}
-                            onSelectPost={handleSelectPost}
-                            folderDisplayMap={folderDisplayMap}
-                            bucketOpen={bucketOpen}
-                            onToggleBucket={(key) => setBucketOpen(prev => ({...prev, [key]: !prev[key]}))}
-                        />
-                    </Col>
-                )}
+                <Col lg={3} className="px-1">
+                    <RecencySidebar
+                        posts={filteredPosts}
+                        currentPostId={postIdParam}
+                        onSelectPost={handleSelectPost}
+                        folderDisplayMap={folderDisplayMap}
+                        bucketOpen={bucketOpen}
+                        onToggleBucket={(key) => setBucketOpen(prev => ({...prev, [key]: !prev[key]}))}
+                    />
+                </Col>
 
-                <Col lg={sidebarOpen ? 9 : 12} className="px-1">
-                    {!showCompose && (
+                <Col lg={9} className="px-1">
+                    {showFeed && (
                         <>
                             <PinPostsSection posts={filteredPosts} folders={folders}/>
                             <AnnouncementSection posts={filteredPosts} folders={folders}/>
@@ -183,7 +184,7 @@ export default function QAPage() {
                         </>
                     )}
 
-                    {showCompose ? (
+                    {composeParam && (
                         <ComposeForm
                             composeState={composeState}
                             folders={folders}
@@ -193,8 +194,14 @@ export default function QAPage() {
                             onSubmit={handleSubmitPost}
                             onCancel={resetCompose}
                         />
-                    ) : (
-                        <PostDetail post={selectedPost} folders={folders}/>
+                    )}
+
+                    {postIdParam && (
+                        <PostDetailSection
+                            postId={postIdParam}
+                            folders={folders}
+                            onClose={handleClosePost}
+                        />
                     )}
                 </Col>
             </Row>

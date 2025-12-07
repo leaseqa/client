@@ -116,24 +116,29 @@ export type RecencySidebarProps = {
 
 export type PostContentProps = {
     post: Post;
+    folders: Folder[];
     canEdit: boolean;
     isEditing: boolean;
     editSummary: string;
     editDetails: string;
+    editUrgency: "low" | "medium" | "high";
+    editFolders: string[];
+    resolvedStatus: "open" | "resolved";
+    onStatusChange: (status: "open" | "resolved") => void;
     onEdit: () => void;
     onDelete: () => void;
     onSave: () => void;
     onCancel: () => void;
     onSummaryChange: (val: string) => void;
     onDetailsChange: (val: string) => void;
+    onUrgencyChange: (val: "low" | "medium" | "high") => void;
+    onFoldersChange: (val: string[]) => void;
 };
 
 export type AnswersSectionProps = {
     answers: Answer[];
-    canEditPost: boolean;
     currentUserId: string | null;
     currentRole: string | null;
-    resolvedStatus: "open" | "resolved";
     showAnswerBox: boolean;
     answerContent: string;
     answerFocused: boolean;
@@ -141,7 +146,6 @@ export type AnswersSectionProps = {
     answerEditing: string | null;
     answerEditContent: string;
     error: string;
-    onStatusChange: (status: "open" | "resolved") => void;
     onShowAnswerBox: () => void;
     onAnswerContentChange: (val: string) => void;
     onAnswerFocus: () => void;

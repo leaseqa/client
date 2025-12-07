@@ -18,7 +18,7 @@ export default function PinPostsSection({posts, folders}: PinPostsProps) {
     if (!pinPosts.length) return null;
 
     const handlePostClick = (postId: string) => {
-        router.push(`/qa/${postId}`);
+        router.push(`/qa?post=${postId}`);
     };
 
     return (
@@ -31,11 +31,14 @@ export default function PinPostsSection({posts, folders}: PinPostsProps) {
                 {pinPosts.map((post) => (
                     <div
                         key={post._id}
-                        className="feed-section-post"
+                        className={`feed-section-post ${post.isResolved ? "resolved" : ""}`}
                         onClick={() => handlePostClick(post._id)}
                     >
                         <div className="feed-section-post-top">
-                            <span className="feed-section-post-title">{post.summary}</span>
+                            <span className="feed-section-post-title">
+                                {post.isResolved && <span className="resolved-badge">✓</span>}
+                                {post.summary}
+                            </span>
                             <div className="feed-section-post-tags">
                                 {post.folders.map(f => (
                                     <span key={f} className="feed-section-folder-badge">

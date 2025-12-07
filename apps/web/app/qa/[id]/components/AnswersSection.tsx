@@ -8,10 +8,8 @@ const ReactQuill = dynamic(() => import("react-quill-new"), {ssr: false});
 
 export default function AnswersSection({
     answers,
-    canEditPost,
     currentUserId,
     currentRole,
-    resolvedStatus,
     showAnswerBox,
     answerContent,
     answerFocused,
@@ -19,7 +17,6 @@ export default function AnswersSection({
     answerEditing,
     answerEditContent,
     error,
-    onStatusChange,
     onShowAnswerBox,
     onAnswerContentChange,
     onAnswerFocus,
@@ -40,33 +37,6 @@ export default function AnswersSection({
         <div className="post-detail-card">
             <div className="post-section-header">
                 <h2 className="post-section-title">Answers</h2>
-                <div className="post-status-toggle">
-                    <span>Status:</span>
-                    {canEditPost ? (
-                        <div className="post-status-options">
-                            <label className={resolvedStatus === "open" ? "active" : ""}>
-                                <input
-                                    type="radio"
-                                    checked={resolvedStatus === "open"}
-                                    onChange={() => onStatusChange("open")}
-                                />
-                                <span>Open</span>
-                            </label>
-                            <label className={resolvedStatus === "resolved" ? "active" : ""}>
-                                <input
-                                    type="radio"
-                                    checked={resolvedStatus === "resolved"}
-                                    onChange={() => onStatusChange("resolved")}
-                                />
-                                <span>Resolved</span>
-                            </label>
-                        </div>
-                    ) : (
-                        <span className={`post-status-badge ${resolvedStatus}`}>
-                            {resolvedStatus === "resolved" ? "Resolved" : "Open"}
-                        </span>
-                    )}
-                </div>
             </div>
 
             {!showAnswerBox ? (

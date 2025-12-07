@@ -18,7 +18,7 @@ export default function AnnouncementSection({posts, folders}: AnnouncementProps)
     if (!announcementPosts.length) return null;
 
     const handlePostClick = (postId: string) => {
-        router.push(`/qa/${postId}`);
+        router.push(`/qa?post=${postId}`);
     };
 
     return (

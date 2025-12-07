@@ -18,7 +18,7 @@ export default function FeedHeader({folders, posts}: FeedHeaderProps) {
     if (!hotPosts.length) return null;
 
     const handlePostClick = (postId: string) => {
-        router.push(`/qa/${postId}`);
+        router.push(`/qa?post=${postId}`);
     };
 
     return (

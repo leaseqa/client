@@ -1,22 +1,27 @@
 import {FaEdit, FaTrash, FaEye} from "react-icons/fa";
 import {format} from "date-fns";
-import dynamic from "next/dynamic";
 import {PostContentProps} from "../../types";
-
-const ReactQuill = dynamic(() => import("react-quill-new"), {ssr: false});
+import EditPostForm from "./EditPostForm";
 
 export default function PostContent({
     post,
+    folders,
     canEdit,
     isEditing,
     editSummary,
     editDetails,
+    editUrgency,
+    editFolders,
+    resolvedStatus,
+    onStatusChange,
     onEdit,
     onDelete,
     onSave,
     onCancel,
     onSummaryChange,
     onDetailsChange,
+    onUrgencyChange,
+    onFoldersChange,
 }: PostContentProps) {
     const authorName = post.author?.username || post.author?.email || "Anonymous";
     const authorInitial = authorName.charAt(0).toUpperCase();
@@ -48,7 +53,7 @@ export default function PostContent({
                 </div>
                 <div className="post-detail-header-right">
                     <span className={`post-urgency-badge ${post.urgency || "low"}`}>
-                        {post.urgency || "low"}
+                        {(post.urgency || "low").toUpperCase()}
                     </span>
                     {canEdit && !isEditing && (
                         <div className="post-detail-actions">
@@ -64,22 +69,19 @@ export default function PostContent({
             </div>
 
             {isEditing ? (
-                <div className="post-edit-form">
-                    <input
-                        type="text"
-                        className="post-edit-title"
-                        value={editSummary}
-                        onChange={(e) => onSummaryChange(e.target.value.slice(0, 100))}
-                        placeholder="Post title"
-                    />
-                    <div className="post-editor-box">
-                        <ReactQuill theme="snow" value={editDetails} onChange={onDetailsChange}/>
-                    </div>
-                    <div className="post-editor-actions">
-                        <button className="post-btn primary" onClick={onSave}>Save</button>
-                        <button className="post-btn secondary" onClick={onCancel}>Cancel</button>
-                    </div>
-                </div>
+                <EditPostForm
+                    folders={folders}
+                    editSummary={editSummary}
+                    editDetails={editDetails}
+                    editUrgency={editUrgency}
+                    editFolders={editFolders}
+                    onSummaryChange={onSummaryChange}
+                    onDetailsChange={onDetailsChange}
+                    onUrgencyChange={onUrgencyChange}
+                    onFoldersChange={onFoldersChange}
+                    onSave={onSave}
+                    onCancel={onCancel}
+                />
             ) : (
                 <>
                     <h1 className="post-detail-title">{post.summary}</h1>
@@ -104,6 +106,40 @@ export default function PostContent({
                             </a>
                         ))}
                     </div>
+                </div>
+            )}
+
+            {canEdit && (
+                <div className="post-detail-footer">
+                    <div className="post-status-toggle">
+                        <span>Status:</span>
+                        <div className="post-status-options">
+                            <label className={resolvedStatus === "open" ? "active" : ""}>
+                                <input
+                                    type="radio"
+                                    checked={resolvedStatus === "open"}
+                                    onChange={() => onStatusChange("open")}
+                                />
+                                Open
+                            </label>
+                            <label className={resolvedStatus === "resolved" ? "active" : ""}>
+                                <input
+                                    type="radio"
+                                    checked={resolvedStatus === "resolved"}
+                                    onChange={() => onStatusChange("resolved")}
+                                />
+                                Resolved
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {!canEdit && (
+                <div className="post-detail-footer">
+                    <span className={`post-status-badge ${resolvedStatus}`}>
+                        {resolvedStatus === "resolved" ? "✓ Resolved" : "Open"}
+                    </span>
                 </div>
             )}
         </div>
