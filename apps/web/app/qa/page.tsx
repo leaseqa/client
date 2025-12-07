@@ -15,6 +15,7 @@ import FeedHeader from "./components/FeedHeader";
 import AnnouncementSection from "./components/AnnouncementSection";
 import ComposeForm from "./components/ComposeForm";
 import PostDetail from "./components/PostDetail";
+import PinPostsSection from "@/app/qa/components/PinPostsSection";
 
 export default function QAPage() {
     const router = useRouter();
@@ -167,6 +168,7 @@ export default function QAPage() {
                 <Col lg={sidebarOpen ? 9 : 12} className="px-1">
                     {!showCompose && (
                         <>
+                            <PinPostsSection posts={posts} folders={folders}/>
                             <AnnouncementSection posts={posts} folders={folders}/>
                             <FeedHeader folders={folders} posts={posts}/>
                         </>
