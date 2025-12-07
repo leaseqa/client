@@ -2,7 +2,7 @@
 
 import {useEffect, useRef, useState} from "react";
 import {Badge, Button, Col, Form, ListGroup, ListGroupItem, Row, Spinner, Stack} from "react-bootstrap";
-import {FaCloudUploadAlt, FaHistory, FaRobot} from "react-icons/fa";
+import {FaCloudUploadAlt, FaHistory, FaRegClock, FaRobot} from "react-icons/fa";
 import {AIReview, ReviewState} from "./types";
 import RiskCard from "../../components/ui/RiskCard";
 import ToastNotification, {ToastData} from "@/components/ui/ToastNotification";
@@ -163,7 +163,7 @@ export default function AIReviewPage() {
                 <Col lg={4}>
                     <AccentCard>
                         <div className="d-flex align-items-center gap-3 mb-4">
-                            <IconCircle size="md" variant="muted"><FaHistory size={16}/></IconCircle>
+                            <IconCircle size="md" variant="muted"><FaRegClock size={16}/></IconCircle>
                             <div>
                                 <div className="fw-bold">History</div>
                                 <div className="text-muted-light small">Your past reviews</div>

@@ -32,7 +32,7 @@ export default function InfoPage() {
                     </div>
                     <h1 className="display-6 fw-bold mb-3">LeaseQA Team & Credits</h1>
                     <p className="lead mb-0 opacity-75">
-                        Built for NEU CS5610 — AI lease review + Piazza-inspired Q&A.<br/>
+                        Built for NEU CS5610.18616.202610 — AI lease review + Piazza-inspired Q&A.<br/>
                         Helping Boston renters understand their rights.
                     </p>
                 </CardBody>
