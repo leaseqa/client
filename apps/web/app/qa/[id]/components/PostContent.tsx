@@ -50,7 +50,10 @@ export default function PostContent({
                     </span>
                     <span className="post-detail-folders">{post.folders?.join(" · ")}</span>
                     <span className="post-detail-date">
-                        {post.createdAt ? format(new Date(post.createdAt), "MMM d, yyyy") : ""}
+                        {post.createdAt ? format(new Date(post.createdAt), "MMM d, yyyy HH:mm") : ""}
+                    </span>
+                    <span className="post-detail-author">
+                        {post.author?.username || post.author?.email || post.authorId || "Anonymous"}
                     </span>
                     <span className="post-detail-views">
                         <FaEye size={12}/>

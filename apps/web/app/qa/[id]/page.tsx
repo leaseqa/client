@@ -159,6 +159,10 @@ export default function PostDetailPage() {
                     posts={allPosts}
                     currentPostId={postId}
                     onSelectPost={(id) => router.push(`/qa/${id}`)}
+                    folderDisplayMap={folders.reduce<Record<string, string>>((acc, f) => {
+                        acc[f.name] = f.displayName || f.name;
+                        return acc;
+                    }, {})}
                 />
             </Col>
 

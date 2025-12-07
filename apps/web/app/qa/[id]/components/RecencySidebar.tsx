@@ -6,6 +6,9 @@ type Post = {
     _id: string;
     summary: string;
     folders?: string[];
+    details?: string;
+    author?: {username?: string; email?: string};
+    authorId?: string;
     createdAt?: string;
 };
 
@@ -13,9 +16,10 @@ type RecencySidebarProps = {
     posts: Post[];
     currentPostId: string;
     onSelectPost: (id: string) => void;
+    folderDisplayMap?: Record<string, string>;
 };
 
-export default function RecencySidebar({posts, currentPostId, onSelectPost}: RecencySidebarProps) {
+export default function RecencySidebar({posts, currentPostId, onSelectPost, folderDisplayMap = {}}: RecencySidebarProps) {
     const [open, setOpen] = useState<Record<string, boolean>>({
         thisWeek: true,
         lastWeek: true,
@@ -53,6 +57,18 @@ export default function RecencySidebar({posts, currentPostId, onSelectPost}: Rec
     const hasAny = Object.values(grouped).some((b) => b.items.length);
     if (!hasAny) return null;
 
+    const makeSnippet = (text: string) => {
+        if (!text) return "";
+        const clean = text.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+        return clean;
+    };
+
+    const getAuthor = (p: Post) => p.author?.username || p.author?.email || p.authorId || "Anonymous";
+    const getFolder = (p: Post) => {
+        const key = p.folders?.[0];
+        return key ? folderDisplayMap[key] || key : "";
+    };
+
     return (
         <div className="post-sidebar">
             {Object.entries(grouped).map(([key, bucket]) => {
@@ -80,9 +96,21 @@ export default function RecencySidebar({posts, currentPostId, onSelectPost}: Rec
                                             onClick={() => onSelectPost(p._id)}
                                         >
                                             <div className="post-sidebar-item-title">{p.summary}</div>
+                                            <div
+                                                className="post-sidebar-item-snippet"
+                                                style={{
+                                                    display: "-webkit-box",
+                                                    WebkitLineClamp: 3,
+                                                    WebkitBoxOrient: "vertical",
+                                                    overflow: "hidden",
+                                                }}
+                                            >
+                                                {makeSnippet(p.details || "")}
+                                            </div>
                                             <div className="post-sidebar-item-meta">
-                                                <span>{p.createdAt ? format(new Date(p.createdAt), "MMM d") : ""}</span>
-                                                <span>{p.folders?.slice(0, 2).join(" · ")}</span>
+                                                <span className="text-truncate">{getAuthor(p)}</span>
+                                                <span>· {p.createdAt ? format(new Date(p.createdAt), "MMM d") : ""}</span>
+                                                {getFolder(p) && <span>· {getFolder(p)}</span>}
                                             </div>
                                         </div>
                                     );

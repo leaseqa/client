@@ -151,6 +151,12 @@ export default function QAPage() {
     };
 
     const selectedPost = posts.find(p => p._id === selectedId) || null;
+    const folderDisplayMap = useMemo(() => {
+        return folders.reduce<Record<string, string>>((acc, f) => {
+            acc[f.name] = f.displayName || f.name;
+            return acc;
+        }, {});
+    }, [folders]);
 
     if (loading) {
         return (
@@ -196,6 +202,7 @@ export default function QAPage() {
                             currentRouteId={currentRouteId}
                             onToggleBucket={(key) => setBucketOpen(prev => ({...prev, [key]: !prev[key]}))}
                             onSelectPost={handleSelectPost}
+                            folderDisplayMap={folderDisplayMap}
                         />
                     </Col>
                 )}

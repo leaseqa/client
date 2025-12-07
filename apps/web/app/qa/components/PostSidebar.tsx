@@ -9,6 +9,7 @@ type PostSidebarProps = {
     currentRouteId: string | null;
     onToggleBucket: (key: string) => void;
     onSelectPost: (post: Post) => void;
+    folderDisplayMap: Record<string, string>;
 };
 
 export default function PostSidebar({
@@ -18,6 +19,7 @@ export default function PostSidebar({
     currentRouteId,
     onToggleBucket,
     onSelectPost,
+    folderDisplayMap,
 }: PostSidebarProps) {
     const formatTimestamp = (date: any) => {
         if (!date) return "—";
@@ -31,7 +33,14 @@ export default function PostSidebar({
     const makeSnippet = (text: string) => {
         if (!text) return "";
         const clean = text.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
-        return clean.length <= 80 ? clean : `${clean.slice(0, 80)}…`;
+        return clean;
+    };
+
+    const getAuthor = (post: Post) =>
+        post.author?.username || post.author?.email || post.authorId || "Anonymous";
+    const getFolder = (post: Post) => {
+        const key = post.folders?.[0];
+        return key ? (folderDisplayMap[key] || key) : "";
     };
 
     const hasAnyPosts = Object.values(groupedPosts).some(bucket => bucket.items.length > 0);
@@ -69,11 +78,21 @@ export default function PostSidebar({
                                             onClick={() => onSelectPost(post)}
                                         >
                                             <div className="post-sidebar-item-title">{post.summary}</div>
-                                            <div className="post-sidebar-item-snippet">
+                                            <div
+                                                className="post-sidebar-item-snippet"
+                                                style={{
+                                                    display: "-webkit-box",
+                                                    WebkitLineClamp: 3,
+                                                    WebkitBoxOrient: "vertical",
+                                                    overflow: "hidden",
+                                                }}
+                                            >
                                                 {makeSnippet(post.details)}
                                             </div>
-                                            <div className="post-sidebar-item-date">
-                                                {formatTimestamp(post.createdAt)}
+                                            <div className="post-sidebar-item-meta">
+                                                <span className="text-truncate">{getAuthor(post)}</span>
+                                                <span>· {formatTimestamp(post.createdAt)}</span>
+                                                {getFolder(post) && <span>· {getFolder(post)}</span>}
                                             </div>
                                         </div>
                                     );
