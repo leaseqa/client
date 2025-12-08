@@ -9,6 +9,7 @@ export default function DiscussionsSection({
     discussions,
     currentUserId,
     currentRole,
+    isGuest = false,
     showFollowBox,
     followFocused,
     discussionDrafts,
@@ -26,7 +27,7 @@ export default function DiscussionsSection({
     onCancelEdit,
     onClearFollow,
 }: DiscussionsSectionProps) {
-    const canEdit = (node: Discussion) => currentRole === "admin" || node.authorId === currentUserId;
+    const canEdit = (node: Discussion) => !isGuest && (currentRole === "admin" || node.authorId === currentUserId);
 
     const renderDiscussion = (node: Discussion, depth = 0) => {
         const isReplying = discussionReplying === node._id;
@@ -74,7 +75,7 @@ export default function DiscussionsSection({
                     <div className="post-discussion-content" dangerouslySetInnerHTML={{__html: node.content}}/>
                 )}
 
-                {!isEditing && (
+                {!isGuest && !isEditing && (
                     <button className="post-discussion-reply-btn" onClick={() => onReply(node._id)}>
                         <FaReply size={10}/>
                         <span>Reply</span>
@@ -115,11 +116,13 @@ export default function DiscussionsSection({
                 <h2 className="post-section-title">Follow-up Discussion</h2>
             </div>
 
-            {!showFollowBox ? (
+            {!isGuest && !showFollowBox && (
                 <button className="post-btn primary" onClick={onShowFollowBox}>
                     Write follow-up
                 </button>
-            ) : (
+            )}
+
+            {!isGuest && showFollowBox && (
                 <div className="post-editor-box">
                     <ReactQuill
                         theme="snow"

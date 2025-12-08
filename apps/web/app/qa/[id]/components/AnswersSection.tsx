@@ -10,6 +10,7 @@ export default function AnswersSection({
     answers,
     currentUserId,
     currentRole,
+    isGuest = false,
     showAnswerBox,
     answerContent,
     answerFocused,
@@ -31,7 +32,7 @@ export default function AnswersSection({
 }: AnswersSectionProps) {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    const canEditAnswer = (ans: Answer) => currentRole === "admin" || ans.authorId === currentUserId;
+    const canEditAnswer = (ans: Answer) => !isGuest && (currentRole === "admin" || ans.authorId === currentUserId);
 
     return (
         <div className="post-detail-card">
@@ -39,11 +40,13 @@ export default function AnswersSection({
                 <h2 className="post-section-title">Answers</h2>
             </div>
 
-            {!showAnswerBox ? (
+            {!isGuest && !showAnswerBox && (
                 <button className="post-btn primary" onClick={onShowAnswerBox}>
                     Write an answer
                 </button>
-            ) : (
+            )}
+
+            {!isGuest && showAnswerBox && (
                 <div className="post-editor-box">
                     <ReactQuill
                         theme="snow"

@@ -20,6 +20,8 @@ export default function HeaderBar() {
     const session = useSelector((state: RootState) => state.session);
     const user = session.user;
     const isAuthenticated = session.status === "authenticated" && !!user;
+    const isGuest = session.status === "guest";
+    const hasUser = isAuthenticated || isGuest;
 
     const [showMenu, setShowMenu] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
@@ -106,12 +108,13 @@ export default function HeaderBar() {
                     </Dropdown>
 
                     <Dropdown align="end" show={showMenu} onToggle={setShowMenu}>
-                        <Dropdown.Toggle as={AvatarToggle} initials={initials} isAuthenticated={isAuthenticated}/>
+                        <Dropdown.Toggle as={AvatarToggle} initials={initials} isAuthenticated={isAuthenticated} isGuest={isGuest}/>
                         <Dropdown.Menu className="shadow-sm profile-menu">
-                            <ProfileHeader user={user} initials={initials} isAuthenticated={isAuthenticated}/>
+                            <ProfileHeader user={user} initials={initials} isAuthenticated={isAuthenticated} isGuest={isGuest}/>
                             <Dropdown.Divider/>
                             <ProfileMenuItems
                                 isAuthenticated={isAuthenticated}
+                                isGuest={isGuest}
                                 navigate={navigate}
                                 onSignOut={handleSignOut}
                             />

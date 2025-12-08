@@ -11,7 +11,7 @@ type User = {
 };
 
 type SessionState = {
-    status: "authenticated" | "unauthenticated";
+    status: "authenticated" | "unauthenticated" | "guest";
     user: User | null;
 };
 
@@ -76,6 +76,16 @@ const sessionSlice = createSlice({
                 avatar: "/images/NEU.png",
             };
         },
+        setGuestSession(state) {
+            state.status = "guest";
+            state.user = {
+                id: "guest",
+                name: "Guest",
+                email: "guest@leaseqa.com",
+                role: "tenant",
+                avatar: "/images/NEU.png",
+            };
+        },
     },
 });
 
@@ -104,7 +114,7 @@ export type AppStore = typeof store;
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-export const {setSession, signOut, signInAsDemo} = sessionSlice.actions;
+export const {setSession, signOut, signInAsDemo, setGuestSession} = sessionSlice.actions;
 export const {addReview} = aiHistorySlice.actions;
 
 export default store;

@@ -5,12 +5,14 @@ type AvatarToggleProps = {
     onClick?: (e: React.MouseEvent) => void;
     initials: string;
     isAuthenticated: boolean;
+    isGuest?: boolean;
 };
 
 const AvatarToggle = forwardRef<HTMLButtonElement, AvatarToggleProps>(
-    ({onClick, initials, isAuthenticated}, ref) => {
-        const avatarVariantClass = isAuthenticated ? "icon-bg-purple" : "icon-bg-muted";
-        const avatarContent = isAuthenticated ? (
+    ({onClick, initials, isAuthenticated, isGuest = false}, ref) => {
+        const hasUser = isAuthenticated || isGuest;
+        const avatarVariantClass = isGuest ? "icon-bg-muted" : (isAuthenticated ? "icon-bg-purple" : "icon-bg-muted");
+        const avatarContent = hasUser ? (
             <span className="fw-semibold avatar-text-sm">{initials}</span>
         ) : (
             <FaUser className="text-secondary" size={18} aria-hidden />

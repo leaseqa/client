@@ -33,6 +33,7 @@ export default function AccountPage() {
     const session = useSelector((state: RootState) => state.session);
     const user = session.user;
     const isAuthenticated = session.status === "authenticated" && !!user;
+    const isGuest = session.status === "guest";
 
     const [editMode, setEditMode] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -100,9 +101,16 @@ export default function AccountPage() {
                                     <h2 className="fw-bold mb-1">{user?.name || "Guest User"}</h2>
                                     <div className="opacity-75 mb-2">{user?.email || "Not signed in"}</div>
                                     {user && (
-                                        <Badge className="px-3 py-2 role-badge">
-                                            {user.role === "lawyer" ? "⚖️" : user.role === "admin" ? "🛡️" : "🏠"} {user.role}
-                                        </Badge>
+                                        <div className="d-flex align-items-center gap-2">
+                                            <Badge className="px-3 py-2 role-badge">
+                                                {user.role === "lawyer" ? "⚖️" : user.role === "admin" ? "🛡️" : "🏠"} {user.role}
+                                            </Badge>
+                                            {isGuest && (
+                                                <Badge bg="secondary" className="px-3 py-2">
+                                                    👁️ Read-only
+                                                </Badge>
+                                            )}
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -127,7 +135,7 @@ export default function AccountPage() {
                 <Col lg={6}>
                     <Card className="card-base card-accent-purple">
                         <CardBody className="p-4">
-                            {isAuthenticated ? (
+                            {(isAuthenticated || isGuest) ? (
                                 <div>
                                     <div className="d-flex align-items-center gap-3 mb-4">
                                         <div
@@ -136,7 +144,9 @@ export default function AccountPage() {
                                         </div>
                                         <div>
                                             <div className="fw-bold">Profile overview</div>
-                                            <div className="text-secondary small">Your LeaseQA identity</div>
+                                            <div className="text-secondary small">
+                                                {isGuest ? "Browsing as guest" : "Your LeaseQA identity"}
+                                            </div>
                                         </div>
                                     </div>
 
@@ -192,48 +202,64 @@ export default function AccountPage() {
 
                                         {error && <div className="text-danger small">{error}</div>}
 
-                                        <div className="d-flex gap-2">
-                                            {!editMode ? (
-                                                <>
-                                                    <Button
-                                                        variant="outline-secondary"
-                                                        className="flex-fill"
-                                                        onClick={() => {
-                                                            setError("");
-                                                            setEditMode(true);
-                                                        }}
-                                                    >
-                                                        Edit
-                                                    </Button>
-                                                    <Button
-                                                        variant="outline-secondary"
-                                                        className="flex-fill text-danger border-danger"
-                                                        onClick={handleLogout}
-                                                    >
-                                                        Sign out
-                                                    </Button>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Button
-                                                        variant="primary"
-                                                        className="flex-fill"
-                                                        disabled={saving}
-                                                        onClick={handleSaveProfile}
-                                                    >
-                                                        {saving ? "Saving..." : "Save"}
-                                                    </Button>
-                                                    <Button
-                                                        variant="outline-secondary"
-                                                        className="flex-fill"
-                                                        disabled={saving}
-                                                        onClick={handleCancelEdit}
-                                                    >
-                                                        Cancel
-                                                    </Button>
-                                                </>
-                                            )}
-                                        </div>
+                                        {isGuest ? (
+                                            <Stack gap={2}>
+                                                <p className="text-secondary small mb-0">
+                                                    Sign in to edit your profile, post questions, and access AI review.
+                                                </p>
+                                                <Button
+                                                    href="/auth/login"
+                                                    variant="dark"
+                                                    className="d-flex align-items-center justify-content-center gap-2 btn-pill"
+                                                >
+                                                    <FaSignInAlt/>
+                                                    Sign In for Full Access
+                                                </Button>
+                                            </Stack>
+                                        ) : (
+                                            <div className="d-flex gap-2">
+                                                {!editMode ? (
+                                                    <>
+                                                        <Button
+                                                            variant="outline-secondary"
+                                                            className="flex-fill"
+                                                            onClick={() => {
+                                                                setError("");
+                                                                setEditMode(true);
+                                                            }}
+                                                        >
+                                                            Edit
+                                                        </Button>
+                                                        <Button
+                                                            variant="outline-secondary"
+                                                            className="flex-fill text-danger border-danger"
+                                                            onClick={handleLogout}
+                                                        >
+                                                            Sign out
+                                                        </Button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Button
+                                                            variant="primary"
+                                                            className="flex-fill"
+                                                            disabled={saving}
+                                                            onClick={handleSaveProfile}
+                                                        >
+                                                            {saving ? "Saving..." : "Save"}
+                                                        </Button>
+                                                        <Button
+                                                            variant="outline-secondary"
+                                                            className="flex-fill"
+                                                            disabled={saving}
+                                                            onClick={handleCancelEdit}
+                                                        >
+                                                            Cancel
+                                                        </Button>
+                                                    </>
+                                                )}
+                                            </div>
+                                        )}
                                     </Stack>
                                 </div>
                             ) : (
@@ -277,7 +303,7 @@ export default function AccountPage() {
                     </Card>
                 </Col>
 
-                {isAuthenticated && (
+                {(isAuthenticated || isGuest) && (
                     <Col lg={6}>
                         <Card className="h-100 activity-card">
                             <CardBody className="p-4">
@@ -288,27 +314,45 @@ export default function AccountPage() {
                                     </div>
                                     <div>
                                         <div className="fw-bold">Recent Activity</div>
-                                        <div className="text-secondary small">Your latest actions</div>
+                                        <div className="text-secondary small">
+                                            {isGuest ? "Sign in to track activity" : "Your latest actions"}
+                                        </div>
                                     </div>
                                 </div>
 
-                                <Stack gap={3}>
-                                    {recentActions.map((action, index) => (
-                                        <div
-                                            key={index}
-                                            className="d-flex align-items-center gap-3 p-3 rounded-3 bg-light-gray"
+                                {isGuest ? (
+                                    <div className="text-center py-4">
+                                        <p className="text-secondary mb-3">
+                                            Activity tracking is available for signed-in users.
+                                        </p>
+                                        <Button
+                                            href="/auth/login"
+                                            variant="outline-secondary"
+                                            size="sm"
+                                            className="btn-pill"
                                         >
+                                            Sign in to track
+                                        </Button>
+                                    </div>
+                                ) : (
+                                    <Stack gap={3}>
+                                        {recentActions.map((action, index) => (
                                             <div
-                                                className="d-flex align-items-center justify-content-center rounded-circle icon-circle-sm icon-bg-muted">
-                                                <action.icon className="text-secondary" size={14}/>
+                                                key={index}
+                                                className="d-flex align-items-center gap-3 p-3 rounded-3 bg-light-gray"
+                                            >
+                                                <div
+                                                    className="d-flex align-items-center justify-content-center rounded-circle icon-circle-sm icon-bg-muted">
+                                                    <action.icon className="text-secondary" size={14}/>
+                                                </div>
+                                                <div className="flex-grow-1">
+                                                    <div className="small">{action.text}</div>
+                                                    <div className="text-secondary small">{action.time}</div>
+                                                </div>
                                             </div>
-                                            <div className="flex-grow-1">
-                                                <div className="small">{action.text}</div>
-                                                <div className="text-secondary small">{action.time}</div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </Stack>
+                                        ))}
+                                    </Stack>
+                                )}
                             </CardBody>
                         </Card>
                     </Col>

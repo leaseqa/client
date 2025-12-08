@@ -4,7 +4,7 @@ import React, {useState} from "react";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {useDispatch} from "react-redux";
-import {setSession} from "@/app/store";
+import {setSession, setGuestSession} from "@/app/store";
 import {Alert, Button, Card, CardBody, Form} from "react-bootstrap";
 import * as client from "../client";
 
@@ -38,6 +38,11 @@ export default function LoginPage() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleGuestLogin = () => {
+        dispatch(setGuestSession());
+        router.push("/qa");
     };
 
     if (loading) {
@@ -95,6 +100,17 @@ export default function LoginPage() {
                                 disabled={loading}
                             >
                                 {loading ? "Signing In..." : "Sign In"}
+                            </Button>
+
+                            <div className="divider-text mb-3">or</div>
+
+                            <Button
+                                variant="outline-secondary"
+                                type="button"
+                                className="w-100 mb-3 btn-pill"
+                                onClick={handleGuestLogin}
+                            >
+                                Continue as Guest
                             </Button>
                         </Form>
 

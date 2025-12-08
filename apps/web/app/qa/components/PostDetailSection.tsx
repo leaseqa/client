@@ -5,7 +5,7 @@ import {Button} from "react-bootstrap";
 import {useSelector} from "react-redux";
 import {RootState} from "@/app/store";
 import * as client from "../client";
-import {PostContent, AnswersSection, DiscussionsSection} from "../[id]/components";
+import {PostContent, AnswersSection, DiscussionsSection} from "../[id]/components/index";
 import {Folder} from "../types";
 import {PostDetailData, Answer, Discussion} from "../[id]/types";
 
@@ -19,6 +19,7 @@ export default function PostDetailSection({postId, folders, onClose}: PostDetail
     const session = useSelector((state: RootState) => state.session);
     const currentUserId = session.user?.id || (session.user as any)?._id;
     const currentRole = session.user?.role;
+    const isGuest = session.status === "guest";
 
     const [post, setPost] = useState<PostDetailData | null>(null);
     const [answers, setAnswers] = useState<Answer[]>([]);
@@ -71,7 +72,7 @@ export default function PostDetailSection({postId, folders, onClose}: PostDetail
     }, [postId, fetchPost]);
 
     const isAuthor = post && currentUserId && post.authorId?.toString() === currentUserId;
-    const canEditPost = isAuthor || currentRole === "admin";
+    const canEditPost = !isGuest && (isAuthor || currentRole === "admin");
 
     const handleDeletePost = async () => {
         await client.deletePost(postId);
@@ -227,6 +228,7 @@ export default function PostDetailSection({postId, folders, onClose}: PostDetail
                 answers={answers}
                 currentUserId={currentUserId}
                 currentRole={currentRole || null}
+                isGuest={isGuest}
                 showAnswerBox={showAnswerBox}
                 answerContent={answerContent}
                 answerFocused={answerFocused}
@@ -262,6 +264,7 @@ export default function PostDetailSection({postId, folders, onClose}: PostDetail
                 discussions={discussions}
                 currentUserId={currentUserId}
                 currentRole={currentRole || null}
+                isGuest={isGuest}
                 showFollowBox={showFollowBox}
                 followFocused={followFocused}
                 discussionDrafts={discussionDrafts}

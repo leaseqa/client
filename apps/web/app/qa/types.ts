@@ -139,6 +139,7 @@ export type AnswersSectionProps = {
     answers: Answer[];
     currentUserId: string | null;
     currentRole: string | null;
+    isGuest?: boolean;
     showAnswerBox: boolean;
     answerContent: string;
     answerFocused: boolean;
@@ -163,6 +164,7 @@ export type DiscussionsSectionProps = {
     discussions: Discussion[];
     currentUserId: string | null;
     currentRole: string | null;
+    isGuest?: boolean;
     showFollowBox: boolean;
     followFocused: boolean;
     discussionDrafts: Record<string, string>;
