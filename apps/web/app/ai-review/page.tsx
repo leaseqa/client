@@ -1,6 +1,7 @@
 "use client";
 
 import {useEffect, useRef, useState} from "react";
+import {useRouter} from "next/navigation";
 import {Badge, Button, Col, Form, ListGroup, ListGroupItem, Row, Spinner, Stack} from "react-bootstrap";
 import {FaCloudUploadAlt, FaHistory, FaRegClock, FaRobot} from "react-icons/fa";
 import {AIReview, ReviewState} from "./types";
@@ -13,6 +14,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "@/app/store";
 
 export default function AIReviewPage() {
+    const router = useRouter();
     const [state, setState] = useState<ReviewState>({status: "idle"});
     const [fileName, setFileName] = useState("");
     const [reviews, setReviews] = useState<AIReview[]>([]);
@@ -21,6 +23,14 @@ export default function AIReviewPage() {
     const contractTextRef = useRef<HTMLTextAreaElement>(null);
     const session = useSelector((state: RootState) => state.session);
     const isAuthenticated = session.status === "authenticated";
+    const isGuest = session.status === "guest";
+    const hasAccess = isAuthenticated || isGuest;
+
+    useEffect(() => {
+        if (session.status === "unauthenticated") {
+            router.replace("/auth/login");
+        }
+    }, [session.status, router]);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -75,6 +85,17 @@ export default function AIReviewPage() {
             showToast(message, "error");
         }
     };
+
+    if (session.status === "unauthenticated") {
+        return (
+            <div className="d-flex justify-content-center align-items-center loading-min-height">
+                <div className="text-center">
+                    <div className="spinner-border text-primary mb-3" role="status"/>
+                    <div className="text-secondary">Redirecting to login...</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div>

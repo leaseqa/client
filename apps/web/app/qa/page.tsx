@@ -2,8 +2,10 @@
 
 import {Suspense, useEffect, useMemo, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
+import {useSelector} from "react-redux";
 import {Col, Row} from "react-bootstrap";
 
+import {RootState} from "@/app/store";
 import {Folder, Post} from "./types";
 import {ComposeState, INITIAL_COMPOSE_STATE} from "./constants";
 import * as client from "./client";
@@ -20,6 +22,8 @@ import PostDetailSection from "./components/PostDetailSection";
 function QAPageInner() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const session = useSelector((state: RootState) => state.session);
+
     const scenario = searchParams.get("scenario") || "all";
     const searchParam = searchParams.get("search") || "";
     const composeParam = searchParams.get("compose") === "1";
@@ -41,8 +45,16 @@ function QAPageInner() {
     });
 
     useEffect(() => {
-        loadData();
-    }, []);
+        if (session.status === "unauthenticated") {
+            router.replace("/auth/login");
+        }
+    }, [session.status, router]);
+
+    useEffect(() => {
+        if (session.status !== "unauthenticated") {
+            loadData();
+        }
+    }, [session.status]);
 
     useEffect(() => {
         setSearch(searchParam);
@@ -140,6 +152,17 @@ function QAPageInner() {
             return acc;
         }, {});
     }, [folders]);
+
+    if (session.status === "unauthenticated") {
+        return (
+            <div className="d-flex justify-content-center align-items-center loading-min-height">
+                <div className="text-center">
+                    <div className="spinner-border text-primary mb-3" role="status"/>
+                    <div className="text-secondary">Redirecting to login...</div>
+                </div>
+            </div>
+        );
+    }
 
     if (loading) {
         return (
