@@ -75,8 +75,9 @@ export default function AIReviewPage() {
 
             showToast("Review completed successfully!", "success");
             loadReviews();
-        } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : "Unable to process review";
+        } catch (error: any) {
+            const backendError = error.response?.data?.error;
+            const message = backendError?.details || backendError?.message || error.message || "Unable to process review";
             setState({status: "idle"});
             showToast(message, "error");
         }
