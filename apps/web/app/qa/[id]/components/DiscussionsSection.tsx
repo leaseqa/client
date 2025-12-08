@@ -38,7 +38,7 @@ export default function DiscussionsSection({
             <div key={node._id} className={`post-discussion-item ${depth > 0 ? "post-discussion-reply" : ""}`}>
                 <div className="post-discussion-header">
                     <span className="post-discussion-author">
-                        {node.author?.username || node.author?.email || "Anonymous"}
+                        {node.author?.username || node.author?.email || "Unknown"}
                     </span>
                     <span className="post-discussion-date">
                         {node.createdAt ? format(new Date(node.createdAt), "MMM d, yyyy") : ""}

@@ -86,7 +86,7 @@ export default function AnswersSection({
                         <div key={ans._id} className="post-answer-item">
                             <div className="post-answer-header">
                                 <span className="post-answer-author">
-                                    {ans.author?.username || ans.author?.email || "Anonymous"}
+                                    {ans.author?.username || ans.author?.email || "Unknown"}
                                 </span>
                                 <span className="post-answer-type">
                                     {ans.answerType === "lawyer_opinion" ? "⚖️ Lawyer" : "🏠 Community"}

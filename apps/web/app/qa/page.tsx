@@ -115,6 +115,7 @@ function QAPageInner() {
                 postType: composeState.postType,
                 audience: composeState.audience,
                 urgency: composeState.urgency,
+                isAnonymous: composeState.isAnonymous,
                 visibility: "class",
             });
             const newPost = (resp as any)?.data || resp;

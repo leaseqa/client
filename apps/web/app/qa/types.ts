@@ -29,6 +29,7 @@ export type Post = {
     viewCount: number;
     isPinned: boolean;
     isResolved: boolean;
+    isAnonymous: boolean;
     createdAt: string;
     updatedAt: string;
     lastActivityAt: string;

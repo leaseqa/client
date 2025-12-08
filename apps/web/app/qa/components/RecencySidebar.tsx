@@ -47,9 +47,8 @@ export default function RecencySidebar({
         return clean;
     };
 
-    const getAuthor = (p: Post) => p.author?.username || p.author?.email || "Anonymous";
-    const getAuthorInitial = (p: Post) => getAuthor(p).charAt(0).toUpperCase();
-    const getRole = (p: Post) => p.author?.role || "tenant";
+    const getAuthor = (p: Post) => p.isAnonymous ? "Anonymous" : (p.author?.username || p.author?.email || "Unknown");
+    const getAuthorInitial = (p: Post) => p.isAnonymous ? "?" : getAuthor(p).charAt(0).toUpperCase();
     const getFolder = (p: Post) => {
         const key = p.folders?.[0];
         return key ? folderDisplayMap[key] || key : "";
@@ -75,7 +74,6 @@ export default function RecencySidebar({
                             <div className="post-sidebar-items">
                                 {bucket.items.map((p) => {
                                     const isActive = p._id === currentPostId;
-                                    const role = getRole(p);
                                     return (
                                         <div
                                             key={p._id}
@@ -87,7 +85,6 @@ export default function RecencySidebar({
                                                 {p.summary}
                                             </div>
                                             <div className="post-sidebar-item-badges">
-                                                <span className={`role-tag-${role}`}>{role}</span>
                                                 <span className="post-sidebar-badge">
                                                     {p.createdAt ? format(new Date(p.createdAt), "MMM d") : ""}
                                                 </span>
@@ -99,7 +96,7 @@ export default function RecencySidebar({
                                                 {makeSnippet(p.details || "")}
                                             </div>
                                             <div className="post-sidebar-item-author">
-                                                <span className="icon-circle icon-circle-xs icon-bg-purple">
+                                                <span className={`icon-circle icon-circle-xs ${p.isAnonymous ? "icon-bg-muted" : "icon-bg-purple"}`}>
                                                     {getAuthorInitial(p)}
                                                 </span>
                                                 <span className="post-sidebar-item-author-name">

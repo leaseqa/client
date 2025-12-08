@@ -23,21 +23,20 @@ export default function PostContent({
     onUrgencyChange,
     onFoldersChange,
 }: PostContentProps) {
-    const authorName = post.author?.username || post.author?.email || "Anonymous";
-    const authorInitial = authorName.charAt(0).toUpperCase();
-    const authorRole = post.author?.role || "tenant";
+    const isAnonymous = (post as any).isAnonymous;
+    const authorName = isAnonymous ? "Anonymous" : (post.author?.username || post.author?.email || "Unknown");
+    const authorInitial = isAnonymous ? "?" : authorName.charAt(0).toUpperCase();
 
     return (
         <div className="post-detail-card">
             <div className="post-detail-header">
                 <div className="post-detail-author-section">
-                    <div className="icon-circle icon-circle-md icon-bg-purple">
+                    <div className={`icon-circle icon-circle-md ${isAnonymous ? "icon-bg-muted" : "icon-bg-purple"}`}>
                         {authorInitial}
                     </div>
                     <div className="post-detail-author-info">
                         <div className="post-detail-author-row">
                             <span className="post-detail-author-name">{authorName}</span>
-                            <span className={`role-tag-${authorRole}`}>{authorRole}</span>
                         </div>
                         <div className="post-detail-meta-row">
                             <span>{post.createdAt ? format(new Date(post.createdAt), "MMM d, yyyy 'at' h:mm a") : ""}</span>

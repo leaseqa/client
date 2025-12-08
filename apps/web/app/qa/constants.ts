@@ -5,6 +5,7 @@ export type ComposeState = {
     postType: "question" | "note" | "announcement";
     audience: "everyone" | "admin";
     urgency: "low" | "medium" | "high";
+    isAnonymous: boolean;
     files: File[];
 };
 
@@ -15,5 +16,6 @@ export const INITIAL_COMPOSE_STATE: ComposeState = {
     postType: "question",
     audience: "everyone",
     urgency: "low",
+    isAnonymous: false,
     files: [],
 };

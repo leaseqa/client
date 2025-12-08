@@ -118,6 +118,20 @@ export default function ComposeForm({
                     </div>
                 </div>
 
+                <div className="compose-form-row">
+                    <span className="compose-form-label">Identity</span>
+                    <div className="compose-form-options">
+                        <label className="compose-form-checkbox">
+                            <input
+                                type="checkbox"
+                                checked={composeState.isAnonymous}
+                                onChange={(e) => onUpdate({isAnonymous: e.target.checked})}
+                            />
+                            <span>Post anonymously</span>
+                        </label>
+                    </div>
+                </div>
+
                 <div className="compose-form-group">
                     <label className="compose-form-label">Sections</label>
                     <p className="compose-form-hint">Pick at least one section so attorneys and tenants can find the
