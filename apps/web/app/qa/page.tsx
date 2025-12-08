@@ -76,9 +76,10 @@ function QAPageInner() {
 
     const filteredPosts = useMemo(() => {
         return posts.filter(post => {
-            if (!showResolved && post.isResolved) {
-                return false;
-            }
+            // Resolved toggle now means "show resolved only" when on; otherwise show unresolved
+            if (showResolved && !post.isResolved) return false;
+            if (!showResolved && post.isResolved) return false;
+
             if (search) {
                 const q = search.toLowerCase();
                 if (!post.summary.toLowerCase().includes(q) && !post.details.toLowerCase().includes(q)) {
