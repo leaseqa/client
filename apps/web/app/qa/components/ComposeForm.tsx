@@ -9,14 +9,15 @@ import React from "react";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), {ssr: false});
 
+//TODO: move to types or constants
 type ComposeFormProps = {
     composeState: ComposeState;
     folders: Folder[];
     posting: boolean;
     postError: string;
-    onUpdate: (updates: Partial<ComposeState>) => void;
-    onSubmit: () => void;
-    onCancel: () => void;
+    onUpdateAction: (updates: Partial<ComposeState>) => void;
+    onSubmitAction: () => void;
+    onCancelAction: () => void;
 };
 
 export default function ComposeForm({
@@ -24,22 +25,23 @@ export default function ComposeForm({
                                         folders,
                                         posting,
                                         postError,
-                                        onUpdate,
-                                        onSubmit,
-                                        onCancel,
+                                        onUpdateAction,
+                                        onSubmitAction,
+                                        onCancelAction,
                                     }: ComposeFormProps) {
     const handleAddFolder = (value: string) => {
         if (!value || composeState.folders.includes(value)) return;
-        onUpdate({folders: [...composeState.folders, value]});
+        onUpdateAction({folders: [...composeState.folders, value]});
     };
 
     const handleRemoveFolder = (folder: string) => {
-        onUpdate({folders: composeState.folders.filter(f => f !== folder)});
+        onUpdateAction({folders: composeState.folders.filter(f => f !== folder)});
     };
 
+    //TODO: not implemented yet
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
-        onUpdate({files});
+        onUpdateAction({files});
     };
 
     const getFolderLabel = (name: string) => {
@@ -60,13 +62,14 @@ export default function ComposeForm({
                 <button
                     type="button"
                     className="compose-form-close"
-                    onClick={onCancel}
+                    onClick={onCancelAction}
                     disabled={posting}
                 >
                     <FaTimes size={16}/>
                 </button>
             </div>
 
+            {/*TODO: make the option connect with type to match the database*/}
             <div className="compose-form-body">
                 <div className="compose-form-row">
                     <span className="compose-form-label">Post type</span>
@@ -77,7 +80,7 @@ export default function ComposeForm({
                                     type="radio"
                                     name="postType"
                                     checked={composeState.postType === type}
-                                    onChange={() => onUpdate({postType: type})}
+                                    onChange={() => onUpdateAction({postType: type})}
                                 />
                                 <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
                             </label>
@@ -94,7 +97,7 @@ export default function ComposeForm({
                                     type="radio"
                                     name="urgency"
                                     checked={composeState.urgency === level}
-                                    onChange={() => onUpdate({urgency: level})}
+                                    onChange={() => onUpdateAction({urgency: level})}
                                 />
                                 <span>{level.charAt(0).toUpperCase() + level.slice(1)}</span>
                             </label>
@@ -111,7 +114,7 @@ export default function ComposeForm({
                                     type="radio"
                                     name="audience"
                                     checked={composeState.audience === aud}
-                                    onChange={() => onUpdate({audience: aud})}
+                                    onChange={() => onUpdateAction({audience: aud})}
                                 />
                                 <span>{aud === "everyone" ? "Everyone" : "Admins only"}</span>
                             </label>
@@ -126,7 +129,7 @@ export default function ComposeForm({
                             <input
                                 type="checkbox"
                                 checked={composeState.isAnonymous}
-                                onChange={(e) => onUpdate({isAnonymous: e.target.checked})}
+                                onChange={(e) => onUpdateAction({isAnonymous: e.target.checked})}
                             />
                             <span>Post anonymously</span>
                         </label>
@@ -171,7 +174,7 @@ export default function ComposeForm({
                         className="compose-form-input"
                         placeholder='One-line summary, e.g., "Is a three-month deposit legal in MA?"'
                         value={composeState.summary}
-                        onChange={(e) => onUpdate({summary: e.target.value.slice(0, 100)})}
+                        onChange={(e) => onUpdateAction({summary: e.target.value.slice(0, 100)})}
                         maxLength={100}
                     />
                 </div>
@@ -184,7 +187,7 @@ export default function ComposeForm({
                         <ReactQuill
                             theme="snow"
                             value={composeState.details}
-                            onChange={(val) => onUpdate({details: val})}
+                            onChange={(val) => onUpdateAction({details: val})}
                         />
                     </div>
                 </div>
@@ -216,7 +219,7 @@ export default function ComposeForm({
                 <button
                     type="button"
                     className="compose-form-btn secondary"
-                    onClick={onCancel}
+                    onClick={onCancelAction}
                     disabled={posting}
                 >
                     Cancel
@@ -224,7 +227,7 @@ export default function ComposeForm({
                 <button
                     type="button"
                     className="compose-form-btn primary"
-                    onClick={onSubmit}
+                    onClick={onSubmitAction}
                     disabled={posting}
                 >
                     {posting ? "Posting..." : "Post"}
