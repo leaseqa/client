@@ -2,8 +2,10 @@
 
 import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/navigation";
-import {Badge, Button, Col, Form, ListGroup, ListGroupItem, Row, Spinner, Stack} from "react-bootstrap";
-import {FaCloudUploadAlt, FaHistory, FaRegClock, FaRobot} from "react-icons/fa";
+import {Badge, Col, Form, ListGroup, ListGroupItem, Row, Spinner, Stack} from "react-bootstrap";
+import {FaCloudUploadAlt} from "react-icons/fa";
+import {Clock} from "lucide-react";
+import {HomePageIcons} from "@/components/ui/icons";
 import {AIReview, ReviewState} from "./types";
 import RiskCard from "../../components/ui/RiskCard";
 import ToastNotification, {ToastData} from "@/components/ui/ToastNotification";
@@ -101,11 +103,9 @@ export default function AIReviewPage() {
             <ToastNotification toast={toast} onClose={() => setToast({...toast, show: false})}/>
             <Row className="g-4">
                 <Col lg={8}>
-                    <AccentCard>
+                    <AccentCard accent="purple">
                         <div className="d-flex align-items-center gap-3 mb-4">
-                            <IconCircle size="lg" variant="purple">
-                                <FaRobot size={20}/>
-                            </IconCircle>
+                            <IconCircle size="lg" variant="purple" icon={HomePageIcons.ai} />
                             <div>
                                 <h1 className="h4 fw-bold mb-0">AI Lease Review</h1>
                                 <div className="text-muted-light small">Upload or paste your lease for analysis</div>
@@ -139,18 +139,27 @@ export default function AIReviewPage() {
                             <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
                                 <span
                                     className="text-muted-light small">For risk analysis only. Not stored long term.</span>
-                                <Button type="submit" variant="danger" disabled={state.status === "uploading"}
-                                        className="btn-pill">
-                                    {state.status === "uploading" ? <><Spinner size="sm"
-                                                                               className="me-2"/>Analyzing...</> : "Start Review"}
-                                </Button>
+                                <button type="submit" disabled={state.status === "uploading"}
+                                        className="btn-unified btn-unified-primary btn-unified-md">
+                                    {state.status === "uploading" ? (
+                                        <>
+                                            <Spinner size="sm" className="me-2"/>
+                                            Analyzing...
+                                        </>
+                                    ) : (
+                                        "Start Review"
+                                    )}
+                                </button>
                             </div>
                         </Form>
                     </AccentCard>
 
                     {state.status === "success" && (
                         <AccentCard accent="green" className="mt-4">
-                            <Badge bg="success" className="mb-4 btn-pill px-3 py-2">✓ Review Complete</Badge>
+                            <Badge bg="success" className="mb-4 btn-pill px-3 py-2 d-inline-flex align-items-center gap-1">
+                                <HomePageIcons.check size={14} />
+                                Review Complete
+                            </Badge>
 
                             <h5 className="fw-bold mb-2">Summary</h5>
                             <p className="text-muted-light p-3 rounded-3 bg-muted mb-4">{state.summary}</p>
@@ -166,24 +175,24 @@ export default function AIReviewPage() {
                             <div className="rounded-3 p-3 bg-muted mb-4">
                                 {state.chat.map((msg, idx) => (
                                     <div key={idx} className="d-flex gap-3">
-                                        <IconCircle size="sm" variant="purple"><FaRobot size={14}/></IconCircle>
+                                        <IconCircle size="sm" variant="purple" icon={HomePageIcons.ai} iconSize={14} />
                                         <div className="text-muted-light small">{msg.body}</div>
                                     </div>
                                 ))}
                             </div>
 
                             <Stack direction="horizontal" gap={2} className="flex-wrap">
-                                <Button variant="outline-secondary" className="btn-pill">Download Report</Button>
-                                <Button href="/qa/new" variant="primary" className="btn-pill">Post to Q&A</Button>
+                                <button className="btn-unified btn-unified-secondary btn-unified-md">Download Report</button>
+                                <a href="/qa/new" className="btn-unified btn-unified-primary btn-unified-md">Post to Q&A</a>
                             </Stack>
                         </AccentCard>
                     )}
                 </Col>
 
                 <Col lg={4}>
-                    <AccentCard>
+                    <AccentCard accent="blue">
                         <div className="d-flex align-items-center gap-3 mb-4">
-                            <IconCircle size="md" variant="muted"><FaRegClock size={16}/></IconCircle>
+                            <IconCircle size="md" variant="blue" icon={Clock} iconSize={16} />
                             <div>
                                 <div className="fw-bold">History</div>
                                 <div className="text-muted-light small">Your past reviews</div>
@@ -208,7 +217,9 @@ export default function AIReviewPage() {
                                                         <div
                                                             className="text-muted-light small">{new Date(review.createdAt).toLocaleDateString()}</div>
                                                     </div>
-                                                    <Badge bg="success" className="rounded-pill">✓</Badge>
+                                                    <Badge bg="success" className="rounded-pill d-inline-flex align-items-center">
+                                                        <HomePageIcons.check size={12} />
+                                                    </Badge>
                                                 </div>
                                             </ListGroupItem>
                                         ))}
@@ -224,7 +235,7 @@ export default function AIReviewPage() {
                             <div className="text-center py-4 rounded-3 bg-muted">
                                 <div className="text-muted-light small">Sign in to view your review history.</div>
                                 <div className="mt-2">
-                                    <Button href="/auth/login" variant="primary" size="sm" className="btn-pill">Sign in</Button>
+                                    <a href="/auth/login" className="btn-unified btn-unified-info btn-unified-sm">Sign in</a>
                                 </div>
                             </div>
                         )}

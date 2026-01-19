@@ -14,13 +14,13 @@ LeaseQA is an AI-powered lease review and legal Q&A platform for Boston renters.
 - **Frontend / Full-stack**: Next.js (App Router + Server Actions), React 18, Tailwind CSS, React Query / SWR.
 - **Authentication**: NextAuth.js with tenant, verified lawyer, and admin roles.
 - **Backend & Database**: Next.js API Routes backed by MongoDB Atlas via Mongoose.
-- **AI Integration**: Gemini API for contract parsing and summarization.
+- **AI Integration**: AI API for contract parsing and summarization.
 - **Rich Text**: React-Quill loaded dynamically to avoid SSR issues.
 - **Deployment Targets**: Vercel (web + API) and MongoDB Atlas, with optional Render workers for long-running tasks.
 
 ## Repository Layout
 
-```
+```text
 .
 ├── README.md
 ├── docs
@@ -42,11 +42,15 @@ LeaseQA is an AI-powered lease review and legal Q&A platform for Boston renters.
 ## Getting Started
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```
+
 2. Create your `.env.local` based on `.env.example`.
+
 3. Start the development server:
+
    ```bash
    npm run dev
    ```

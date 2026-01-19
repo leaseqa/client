@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import {FaPaperclip, FaTimes} from "react-icons/fa";
+import {Scale} from "lucide-react";
 import {ComposeState} from "../constants";
 import {Folder} from "../types";
 import React from "react";
@@ -52,7 +53,7 @@ export default function ComposeForm({
                 <div>
                     <h3 className="compose-form-title">Create a new post</h3>
                     <p className="compose-form-subtitle">
-                        Share a question or experience to help other renters. Replies marked ⚖️ are from verified
+                        Share a question or experience to help other renters. Replies marked <Scale size={14} className="d-inline" /> are from verified
                         attorneys.
                     </p>
                 </div>

@@ -22,8 +22,8 @@ export default function RootLayout({children}: { children: ReactNode }) {
                 <div className="flex-grow-1 d-flex flex-column content-shell">
                     <HeaderBar/>
 
-                    <main className="flex-grow-1">
-                        <div className="py-4 px-3 px-md-4">{children}</div>
+                    <main className="flex-grow-1 d-flex flex-column" style={{minHeight: 0}}>
+                        <div className="flex-grow-1 d-flex flex-column py-2 px-3 px-md-3">{children}</div>
                     </main>
 
                     <footer className="border-top bg-white py-3 px-4 text-secondary small">

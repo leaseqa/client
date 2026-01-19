@@ -1,5 +1,6 @@
 import {useRouter} from "next/navigation";
 import {FaBullhorn} from "react-icons/fa";
+import {Check} from "lucide-react";
 import {Folder, Post} from "../types";
 import {getFolderDisplayName} from "../utils";
 
@@ -36,7 +37,11 @@ export default function AnnouncementSection({posts, folders}: AnnouncementProps)
                     >
                         <div className="feed-section-post-top">
                             <span className="feed-section-post-title">
-                                {post.isResolved && <span className="resolved-badge">✓</span>}
+                                {post.isResolved && (
+                                    <span className="resolved-badge d-inline-flex align-items-center">
+                                        <Check size={12} />
+                                    </span>
+                                )}
                                 {post.summary}
                             </span>
                             <div className="feed-section-post-tags">

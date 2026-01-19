@@ -1,5 +1,6 @@
 import {useRef} from "react";
 import {FaEdit, FaTrash, FaPaperclip} from "react-icons/fa";
+import {Scale, Home} from "lucide-react";
 import {format} from "date-fns";
 import dynamic from "next/dynamic";
 import {Answer, AnswersSectionProps} from "../../types";
@@ -89,7 +90,19 @@ export default function AnswersSection({
                                     {ans.author?.username || ans.author?.email || "Unknown"}
                                 </span>
                                 <span className="post-answer-type">
-                                    {ans.answerType === "lawyer_opinion" ? "⚖️ Lawyer" : "🏠 Community"}
+                                    <span className="d-inline-flex align-items-center">
+                                        {ans.answerType === "lawyer_opinion" ? (
+                                            <>
+                                                <Scale size={14} className="me-1" />
+                                                Lawyer
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Home size={14} className="me-1" />
+                                                Community
+                                            </>
+                                        )}
+                                    </span>
                                 </span>
                                 <span className="post-answer-date">
                                     {ans.createdAt ? format(new Date(ans.createdAt), "MMM d, yyyy") : ""}

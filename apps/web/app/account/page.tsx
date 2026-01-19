@@ -17,6 +17,7 @@ import {
     FaSignInAlt,
     FaUserPlus,
 } from "react-icons/fa";
+import {Scale, Shield, Home} from "lucide-react";
 import * as client from "./client";
 
 //TODO: not in the database yet
@@ -103,7 +104,10 @@ export default function AccountPage() {
                                     {user && (
                                         <div className="d-flex align-items-center gap-2">
                                             <Badge className="px-3 py-2 role-badge">
-                                                {user.role === "lawyer" ? "⚖️" : user.role === "admin" ? "🛡️" : "🏠"} {user.role}
+                                                <span className="d-inline-flex align-items-center gap-1">
+                                                    {user.role === "lawyer" ? <Scale size={14} /> : user.role === "admin" ? <Shield size={14} /> : <Home size={14} />}
+                                                    {user.role}
+                                                </span>
                                             </Badge>
                                             {isGuest && (
                                                 <Badge bg="secondary" className="px-3 py-2">

@@ -1,4 +1,5 @@
 import {FaEdit, FaTrash, FaEye, FaMapPin} from "react-icons/fa";
+import {Check} from "lucide-react";
 import {format} from "date-fns";
 import {PostContentProps} from "../../types";
 import EditPostForm from "./EditPostForm";
@@ -154,7 +155,12 @@ export default function PostContent({
             {!canEdit && (
                 <div className="post-detail-footer">
                     <span className={`post-status-badge ${resolvedStatus}`}>
-                        {resolvedStatus === "resolved" ? "✓ Resolved" : "Open"}
+                        {resolvedStatus === "resolved" ? (
+                            <span className="d-inline-flex align-items-center gap-1">
+                                <Check size={14} />
+                                Resolved
+                            </span>
+                        ) : "Open"}
                     </span>
                 </div>
             )}

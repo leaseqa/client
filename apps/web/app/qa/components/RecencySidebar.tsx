@@ -1,4 +1,5 @@
 import {FaChevronDown, FaChevronRight} from "react-icons/fa";
+import {Check} from "lucide-react";
 import {format} from "date-fns";
 import {useMemo} from "react";
 import {Post, RecencySidebarProps} from "../types";
@@ -81,7 +82,11 @@ export default function RecencySidebar({
                                             onClick={() => onSelectPost(p._id)}
                                         >
                                             <div className="post-sidebar-item-title">
-                                                {p.isResolved && <span className="resolved-badge">✓</span>}
+                                                {p.isResolved && (
+                                                    <span className="resolved-badge d-inline-flex align-items-center">
+                                                        <Check size={12} />
+                                                    </span>
+                                                )}
                                                 {p.summary}
                                             </div>
                                             <div className="post-sidebar-item-badges">

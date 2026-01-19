@@ -25,47 +25,87 @@
     /* Layout */
     --nav-width: 100px;
 
-    /* Colors - Base */
-    --ink: #0f172a;
-    --ink-light: #334155;
-    --ink-muted: #6c757d;
-    --panel: #ffffff;
-    --panel-muted: #f4f4f4;
-    --panel-dark: #dddddd;
-    --border: #e9ecef;
-    --border-light: #dee2e6;
+    /* ============================================
+       COLOR SYSTEM - 60-30-10 RULE
+       Minimal & Fresh Design
+       ============================================ */
 
-    /* Colors - Accents */
-    --accent-red: #e94560;
-    --accent-purple: #764ba2;
-    --accent-blue: #4facfe;
-    --accent-green: #11998e;
-    --accent-success: #22c55e;
-    --accent-warning: #f59e0b;
-    --accent-danger: #ef4444;
+    /* 60% - Dominant Color (Background) */
+    --color-bg-primary: #f8fafc;      /* Main page background */
+    --color-bg-secondary: #f1f5f9;    /* Subtle sections */
+    --color-bg-tertiary: #e2e8f0;     /* Hover states */
 
-    /* Gradients */
-    --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --gradient-green: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-    --gradient-red: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%);
-    --gradient-blue: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    --gradient-pink: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    --gradient-teal: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-    --gradient-dark: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    --gradient-success: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-    --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    --gradient-sidenav: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    /* 30% - Secondary Color (Content Areas) */
+    --color-panel: #ffffff;           /* Cards, content containers */
+    --color-panel-muted: #f9fafb;     /* Subtle panels */
+    --color-panel-hover: #f1f5f9;     /* Panel hover state */
+
+    /* 10% - Accent Color (Highlights & CTAs) - Forum Style */
+    --color-accent-primary: #1890ff;  /* Main blue for CTAs (like forum buttons) */
+    --color-accent-secondary: #52c41a; /* Green for secondary actions */
+    --color-accent-success: #52c41a;  /* Success states (green) */
+    --color-accent-warning: #faad14; /* Warning states (orange) */
+    --color-accent-error: #ff4d4f;    /* Error states (red) */
+    --color-accent-info: #1890ff;     /* Info states (blue) */
+
+    /* Text Colors */
+    --color-text-primary: #1e293b;    /* Headings, main text */
+    --color-text-secondary: #64748b;  /* Body text */
+    --color-text-muted: #94a3b8;      /* Hints, labels */
+    --color-text-inverse: #ffffff;    /* White text on dark */
+
+    /* Border Colors */
+    --color-border-primary: #e2e8f0;  /* Main borders */
+    --color-border-secondary: #cbd5e1; /* Stronger borders */
+    --color-border-subtle: #f1f5f9;   /* Very subtle borders */
+
+    /* Legacy Colors (for backward compatibility) */
+    --ink: var(--color-text-primary);
+    --ink-light: var(--color-text-secondary);
+    --ink-muted: var(--color-text-muted);
+    --panel: var(--color-panel);
+    --panel-muted: var(--color-panel-muted);
+    --panel-dark: var(--color-bg-tertiary);
+    --border: var(--color-border-primary);
+    --border-light: var(--color-border-subtle);
+
+    /* Legacy Accents (mapped to new system) */
+    --accent-red: var(--color-accent-error);
+    --accent-purple: var(--color-accent-primary);  /* Purple maps to primary blue */
+    --accent-blue: var(--color-accent-info);
+    --accent-green: var(--color-accent-success);
+    --accent-success: var(--color-accent-success);
+    --accent-warning: var(--color-accent-warning);
+    --accent-danger: var(--color-accent-error);
+
+    /* Gradients - Forum Style */
+    --gradient-primary: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+    --gradient-success: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);
+    --gradient-info: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+    --gradient-warning: linear-gradient(135deg, #faad14 0%, #d48806 100%);
+    --gradient-error: linear-gradient(135deg, #ff4d4f 0%, #cf1322 100%);
+
+    /* Legacy Gradients (mapped to new system) */
+    --gradient-purple: var(--gradient-primary);
+    --gradient-green: var(--gradient-success);
+    --gradient-red: var(--gradient-error);
+    --gradient-blue: var(--gradient-info);
+    --gradient-pink: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+    --gradient-teal: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+    --gradient-dark: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    --gradient-danger: var(--gradient-error);
+    --gradient-sidenav: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
 
     /* Glass Effect */
     --glass-bg: rgba(255, 255, 255, 0.15);
     --glass-border: rgba(255, 255, 255, 0.2);
 
-    /* QA Page Colors */
-    --text-dark: #1f2937;
-    --text-muted: #6b7280;
-    --light-gray: #f3f4f6;
-    --primary: #667eea;
-    --qa-border: #e5e7eb;
+    /* QA Page Colors (mapped to new system) */
+    --text-dark: var(--color-text-primary);
+    --text-muted: var(--color-text-secondary);
+    --light-gray: var(--color-bg-secondary);
+    --primary: var(--color-accent-primary);
+    --qa-border: var(--color-border-primary);
 
     /* Shadows */
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -96,8 +136,8 @@
 
 body {
     margin: 0;
-    background: #eef1f5;
-    color: var(--ink);
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
     font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
@@ -203,10 +243,149 @@ body {
 }
 
 /* ============================================
-   5. BUTTONS
+   5. BUTTONS - Unified Button System
    ============================================ */
 
-/* Pill Buttons */
+/* Base Button Styles */
+.btn-unified {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border: 1px solid transparent;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-unified:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Button Sizes */
+.btn-unified-sm {
+    padding: 0.375rem 0.875rem;
+    font-size: 0.8125rem;
+}
+
+.btn-unified-md {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+}
+
+.btn-unified-lg {
+    padding: 0.75rem 1.75rem;
+    font-size: 0.9375rem;
+}
+
+/* Button Variants */
+
+/* Primary - Main CTA (10% accent color) */
+.btn-unified-primary {
+    background: var(--color-accent-primary);
+    color: var(--color-text-inverse);
+    border-color: var(--color-accent-primary);
+}
+
+.btn-unified-primary:hover:not(:disabled) {
+    background: #096dd9;
+    border-color: #096dd9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+.btn-unified-primary:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(24, 144, 255, 0.25);
+}
+
+/* Secondary - Secondary actions */
+.btn-unified-secondary {
+    background: var(--color-panel);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-primary);
+}
+
+.btn-unified-secondary:hover:not(:disabled) {
+    background: var(--color-panel-hover);
+    border-color: var(--color-border-secondary);
+}
+
+/* Outline - Outlined style */
+.btn-unified-outline {
+    background: transparent;
+    color: var(--color-accent-primary);
+    border-color: var(--color-accent-primary);
+}
+
+.btn-unified-outline:hover:not(:disabled) {
+    background: rgba(24, 144, 255, 0.08);
+    border-color: #096dd9;
+    color: #096dd9;
+}
+
+/* Ghost - Minimal style */
+.btn-unified-ghost {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border-color: transparent;
+}
+
+.btn-unified-ghost:hover:not(:disabled) {
+    background: var(--color-panel-hover);
+    color: var(--color-text-primary);
+}
+
+/* Danger - Destructive actions */
+.btn-unified-danger {
+    background: var(--color-accent-error);
+    color: var(--color-text-inverse);
+    border-color: var(--color-accent-error);
+}
+
+.btn-unified-danger:hover:not(:disabled) {
+    background: #dc2626;
+    border-color: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+/* Success - Success actions */
+.btn-unified-success {
+    background: var(--color-accent-success);
+    color: var(--color-text-inverse);
+    border-color: var(--color-accent-success);
+}
+
+.btn-unified-success:hover:not(:disabled) {
+    background: #389e0d;
+    border-color: #389e0d;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);
+}
+
+/* Info - Info actions (blue) */
+.btn-unified-info {
+    background: var(--color-accent-info);
+    color: var(--color-text-inverse);
+    border-color: var(--color-accent-info);
+}
+
+.btn-unified-info:hover:not(:disabled) {
+    background: #096dd9;
+    border-color: #096dd9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+/* Legacy Button Support (for backward compatibility) */
 .btn-pill {
     border-radius: var(--radius-full);
     padding: 0.5rem 1.5rem;
@@ -222,7 +401,7 @@ body {
     padding: 0.75rem 1.5rem;
 }
 
-/* Gradient Buttons - Shared Base */
+/* Gradient Buttons - Legacy (mapped to new system) */
 .btn-gradient-purple,
 .btn-gradient-green,
 .btn-gradient-red {
@@ -237,9 +416,9 @@ body {
     color: white;
 }
 
-.btn-gradient-purple { background: var(--gradient-purple); }
-.btn-gradient-green { background: var(--gradient-green); }
-.btn-gradient-red { background: var(--gradient-red); }
+.btn-gradient-purple { background: var(--gradient-primary); }
+.btn-gradient-green { background: var(--gradient-success); }
+.btn-gradient-red { background: var(--gradient-error); }
 
 /* ============================================
    6. FORMS & INPUTS
@@ -682,6 +861,7 @@ body {
 .bg-gradient-green { background: var(--gradient-green); }
 .bg-gradient-red { background: var(--gradient-red); }
 .bg-gradient-blue { background: var(--gradient-blue); }
+.bg-gradient-warning { background: var(--gradient-warning); }
 .bg-gradient-dark { background: var(--gradient-dark); }
 
 /* Borders */
