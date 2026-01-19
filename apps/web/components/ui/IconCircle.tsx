@@ -4,7 +4,7 @@ import {ReactNode} from "react";
 import {LucideIcon} from "lucide-react";
 
 type IconCircleProps = {
-    size?: "sm" | "md" | "lg" | "xl" | "2xl";
+    size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
     variant?: "purple" | "green" | "red" | "blue" | "muted" | "glass";
     children?: ReactNode;
     icon?: LucideIcon;
