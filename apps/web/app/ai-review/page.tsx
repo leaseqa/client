@@ -1,247 +1,450 @@
 "use client";
 
-import {useEffect, useRef, useState} from "react";
-import {useRouter} from "next/navigation";
-import {Badge, Col, Form, ListGroup, ListGroupItem, Row, Spinner, Stack} from "react-bootstrap";
-import {FaCloudUploadAlt} from "react-icons/fa";
-import {Clock} from "lucide-react";
-import {HomePageIcons} from "@/components/ui/icons";
-import {AIReview, ReviewState} from "./types";
-import RiskCard from "../../components/ui/RiskCard";
-import ToastNotification, {ToastData} from "@/components/ui/ToastNotification";
-import AccentCard from "@/components/ui/AccentCard";
-import IconCircle from "@/components/ui/IconCircle";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Badge, Form, Spinner } from "react-bootstrap";
+import { Clock3, FileText, MessageSquareQuote, Shield } from "lucide-react";
+
+import ToastNotification, {
+  ToastData,
+} from "@/components/ui/ToastNotification";
+import AceternityFileUpload from "@/components/ui/AceternityFileUpload";
+import AceternityStatefulButton from "@/components/ui/AceternityStatefulButton";
+import PageLoadingState from "@/components/ui/PageLoadingState";
 import * as client from "./client";
-import {useSelector} from "react-redux";
-import {RootState} from "@/app/store";
+import { ChatMessage, RagSession } from "./types";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
+
+const formatStatusLabel = (status: RagSession["status"]) => {
+  if (status === "ready") {
+    return "Ready";
+  }
+  if (status === "failed") {
+    return "Failed";
+  }
+  return "Indexing";
+};
+
+const formatStatusVariant = (status: RagSession["status"]) => {
+  if (status === "ready") {
+    return "success";
+  }
+  if (status === "failed") {
+    return "danger";
+  }
+  return "warning";
+};
 
 export default function AIReviewPage() {
-    const router = useRouter();
-    const [state, setState] = useState<ReviewState>({status: "idle"});
-    const [fileName, setFileName] = useState("");
-    const [reviews, setReviews] = useState<AIReview[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [toast, setToast] = useState<ToastData>({show: false, message: "", type: "error"});
-    const contractTextRef = useRef<HTMLTextAreaElement>(null);
-    const session = useSelector((state: RootState) => state.session);
-    const isAuthenticated = session.status === "authenticated";
-    const isGuest = session.status === "guest";
-    const hasAccess = isAuthenticated || isGuest;
+  const router = useRouter();
+  const session = useSelector(
+    (currentState: RootState) => currentState.session,
+  );
+  const isAuthenticated = session.status === "authenticated";
+  const isGuest = session.status === "guest";
+  const hasAccess = isAuthenticated || isGuest;
 
-    useEffect(() => {
-        if (session.status === "unauthenticated") {
-            router.replace("/auth/login");
-        } else if (isAuthenticated) {
-            loadReviews();
+  const [sessions, setSessions] = useState<RagSession[]>([]);
+  const [activeSession, setActiveSession] = useState<RagSession | null>(null);
+  const [sourceText, setSourceText] = useState("");
+  const [question, setQuestion] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadResetKey, setUploadResetKey] = useState(0);
+  const [loadingSessions, setLoadingSessions] = useState(false);
+  const [creatingSession, setCreatingSession] = useState(false);
+  const [sendingMessage, setSendingMessage] = useState(false);
+  const [toast, setToast] = useState<ToastData>({
+    show: false,
+    message: "",
+    type: "error",
+  });
+
+  const showToast = useCallback((message: string, type: "success" | "error") => {
+    setToast({ show: true, message, type });
+  }, []);
+
+  const loadSessions = useCallback(async () => {
+    try {
+      setLoadingSessions(true);
+      const data = await client.fetchSessions();
+      setSessions(data);
+      setActiveSession((current) => {
+        if (!current) {
+          return data[0] || null;
         }
-    }, [session.status, router, isAuthenticated]);
+        return data.find((item) => item._id === current._id) || data[0] || null;
+      });
+    } catch (error: any) {
+      showToast(
+        error.response?.data?.error?.message || "Failed to load chats.",
+        "error",
+      );
+    } finally {
+      setLoadingSessions(false);
+    }
+  }, [showToast]);
 
-    const loadReviews = async () => {
-        try {
-            setLoading(true);
-            const response = await client.fetchReviews();
-            setReviews((response as any).data || response || []);
-        } catch (error) {
-            console.error("Failed to load reviews:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+  const refreshActiveSession = useCallback(async (sessionId: string) => {
+    try {
+      const data = await client.fetchSessionById(sessionId);
+      setActiveSession(data);
+      setSessions((current) => {
+        const next = current.filter((item) => item._id !== data._id);
+        return [data, ...next];
+      });
+    } catch (error: any) {
+      showToast(
+        error.response?.data?.error?.message || "Failed to refresh this chat.",
+        "error",
+      );
+    }
+  }, [showToast]);
 
-    const showToast = (message: string, type: "success" | "error") => {
-        setToast({show: true, message, type});
-    };
+  useEffect(() => {
+    if (session.status === "unauthenticated") {
+      router.replace("/auth/login?next=%2Fai-review");
+      return;
+    }
+    if (hasAccess) {
+      void loadSessions();
+    }
+  }, [session.status, router, hasAccess, loadSessions]);
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setState({status: "uploading"});
-
-        const formData = new FormData(event.currentTarget);
-        const contractText = contractTextRef.current?.value || "";
-        if (contractText) formData.set("contractText", contractText);
-        formData.set("contractType", "residential");
-
-        try {
-            const response = await client.submitAiReview(formData);
-            const review = (response as any).data || response;
-            const aiResponse = review?.aiResponse;
-
-            setState({
-                status: "success",
-                summary: aiResponse?.summary || "Lease reviewed.",
-                highRisk: aiResponse?.highRisk || [],
-                mediumRisk: aiResponse?.mediumRisk || [],
-                lowRisk: aiResponse?.lowRisk || [],
-                chat: [{author: "assistant", body: aiResponse?.recommendations?.join(" ") || "Review complete."}],
-            });
-
-            showToast("Review completed successfully!", "success");
-            loadReviews();
-        } catch (error: any) {
-            const backendError = error.response?.data?.error;
-            const message = backendError?.details || backendError?.message || error.message || "Unable to process review";
-            setState({status: "idle"});
-            showToast(message, "error");
-        }
-    };
-
-    if (session.status === "loading" || session.status === "unauthenticated") {
-        return (
-            <div className="d-flex justify-content-center align-items-center loading-min-height">
-                <div className="text-center">
-                    <div className="spinner-border text-primary mb-3" role="status"/>
-                    <div className="text-secondary">
-                        {session.status === "loading" ? "Loading..." : "Redirecting to login..."}
-                    </div>
-                </div>
-            </div>
-        );
+  useEffect(() => {
+    if (!activeSession || activeSession.status !== "indexing") {
+      return;
     }
 
+    const timer = window.setTimeout(() => {
+      void refreshActiveSession(activeSession._id);
+    }, 2000);
+
+    return () => window.clearTimeout(timer);
+  }, [activeSession, refreshActiveSession]);
+
+  const handleCreateSession = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
+    event.preventDefault();
+    if (!selectedFile && !sourceText.trim()) {
+      showToast("Upload a PDF or paste text first.", "error");
+      return;
+    }
+
+    const formData = new FormData();
+    if (selectedFile) {
+      formData.set("file", selectedFile);
+    }
+    if (sourceText.trim()) {
+      formData.set("sourceText", sourceText.trim());
+    }
+
+    try {
+      setCreatingSession(true);
+      const created = await client.createSession(formData);
+      setActiveSession(created);
+      setSessions((current) => [
+        created,
+        ...current.filter((item) => item._id !== created._id),
+      ]);
+      setSourceText("");
+      setSelectedFile(null);
+      setUploadResetKey((current) => current + 1);
+      showToast(
+        created.status === "ready"
+          ? "Source loaded. You can start asking questions now."
+          : "Source uploaded. We are indexing it now.",
+        "success",
+      );
+    } catch (error: any) {
+      showToast(
+        error.response?.data?.error?.message || "Failed to load source.",
+        "error",
+      );
+    } finally {
+      setCreatingSession(false);
+    }
+  };
+
+  const handleSendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!activeSession) {
+      showToast("Create a chat source first.", "error");
+      return;
+    }
+    if (activeSession.status !== "ready") {
+      showToast("This source is still indexing. Try again in a moment.", "error");
+      return;
+    }
+    if (!question.trim()) {
+      return;
+    }
+
+    try {
+      setSendingMessage(true);
+      const result = await client.sendMessage(activeSession._id, question.trim());
+      setActiveSession(result.session);
+      setSessions((current) => [
+        result.session,
+        ...current.filter((item) => item._id !== result.session._id),
+      ]);
+      setQuestion("");
+    } catch (error: any) {
+      showToast(
+        error.response?.data?.error?.message || "Failed to send message.",
+        "error",
+      );
+    } finally {
+      setSendingMessage(false);
+    }
+  };
+
+  const activeMessages: ChatMessage[] = activeSession?.messages || [];
+
+  if (session.status === "loading" || session.status === "unauthenticated") {
     return (
-        <div>
-            <ToastNotification toast={toast} onClose={() => setToast({...toast, show: false})}/>
-            <Row className="g-4">
-                <Col lg={8}>
-                    <AccentCard accent="purple">
-                        <div className="d-flex align-items-center gap-3 mb-4">
-                            <IconCircle size="lg" variant="purple" icon={HomePageIcons.ai} />
-                            <div>
-                                <h1 className="h4 fw-bold mb-0">AI Lease Review</h1>
-                                <div className="text-muted-light small">Upload or paste your lease for analysis</div>
-                            </div>
-                        </div>
-
-                        <Form onSubmit={handleSubmit}>
-                            <div className="drop-zone mb-4"
-                                 onClick={() => document.getElementById("fileUpload")?.click()}>
-                                <FaCloudUploadAlt size={36} className="text-muted-light mb-2"/>
-                                <div className="fw-semibold">{fileName || "Drop your lease PDF here"}</div>
-                                <div className="text-muted-light small">or click to browse (max 8MB)</div>
-                                <Form.Control
-                                    type="file" name="file" id="fileUpload" accept="application/pdf"
-                                    onChange={(e) => setFileName((e.target as HTMLInputElement).files?.[0]?.name || "")}
-                                    className="d-none"
-                                />
-                            </div>
-
-                            <div className="divider-text mb-3">OR</div>
-
-                            <Form.Group className="mb-4">
-                                <Form.Label className="fw-semibold">Paste lease text</Form.Label>
-                                <Form.Control
-                                    as="textarea" name="contractText" ref={contractTextRef}
-                                    rows={5} placeholder="Paste clauses for review..."
-                                    className="input-rounded"
-                                />
-                            </Form.Group>
-
-                            <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                                <span
-                                    className="text-muted-light small">For risk analysis only. Not stored long term.</span>
-                                <button type="submit" disabled={state.status === "uploading"}
-                                        className="btn-unified btn-unified-primary btn-unified-md">
-                                    {state.status === "uploading" ? (
-                                        <>
-                                            <Spinner size="sm" className="me-2"/>
-                                            Analyzing...
-                                        </>
-                                    ) : (
-                                        "Start Review"
-                                    )}
-                                </button>
-                            </div>
-                        </Form>
-                    </AccentCard>
-
-                    {state.status === "success" && (
-                        <AccentCard accent="green" className="mt-4">
-                            <Badge bg="success" className="mb-4 btn-pill px-3 py-2 d-inline-flex align-items-center gap-1">
-                                <HomePageIcons.check size={14} />
-                                Review Complete
-                            </Badge>
-
-                            <h5 className="fw-bold mb-2">Summary</h5>
-                            <p className="text-muted-light p-3 rounded-3 bg-muted mb-4">{state.summary}</p>
-
-                            <Row className="g-3 mb-4">
-                                <Col md={4}><RiskCard tone="danger" title="High Risk" items={state.highRisk}/></Col>
-                                <Col md={4}><RiskCard tone="warning" title="Medium Risk"
-                                                      items={state.mediumRisk}/></Col>
-                                <Col md={4}><RiskCard tone="success" title="Low Risk" items={state.lowRisk}/></Col>
-                            </Row>
-
-                            <h6 className="fw-bold mb-2">Recommendations</h6>
-                            <div className="rounded-3 p-3 bg-muted mb-4">
-                                {state.chat.map((msg, idx) => (
-                                    <div key={idx} className="d-flex gap-3">
-                                        <IconCircle size="sm" variant="purple" icon={HomePageIcons.ai} iconSize={14} />
-                                        <div className="text-muted-light small">{msg.body}</div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <Stack direction="horizontal" gap={2} className="flex-wrap">
-                                <button className="btn-unified btn-unified-secondary btn-unified-md">Download Report</button>
-                                <a href="/qa/new" className="btn-unified btn-unified-primary btn-unified-md">Post to Q&A</a>
-                            </Stack>
-                        </AccentCard>
-                    )}
-                </Col>
-
-                <Col lg={4}>
-                    <AccentCard accent="blue">
-                        <div className="d-flex align-items-center gap-3 mb-4">
-                            <IconCircle size="md" variant="blue" icon={Clock} iconSize={16} />
-                            <div>
-                                <div className="fw-bold">History</div>
-                                <div className="text-muted-light small">Your past reviews</div>
-                            </div>
-                        </div>
-
-                        {isAuthenticated ? (
-                            loading ? (
-                                <div className="text-center py-4">
-                                    <Spinner size="sm" className="me-2"/>
-                                    <span className="text-muted-light small">Loading...</span>
-                                </div>
-                            ) : reviews.length > 0 ? (
-                                <div className="scrollable-md">
-                                    <ListGroup className="border-0">
-                                        {reviews.map((review) => (
-                                            <ListGroupItem key={review._id} className="list-item-muted">
-                                                <div className="d-flex justify-content-between align-items-center">
-                                                    <div>
-                                                        <div
-                                                            className="fw-semibold small">{review.contractType || "Lease review"}</div>
-                                                        <div
-                                                            className="text-muted-light small">{new Date(review.createdAt).toLocaleDateString()}</div>
-                                                    </div>
-                                                    <Badge bg="success" className="rounded-pill d-inline-flex align-items-center">
-                                                        <HomePageIcons.check size={12} />
-                                                    </Badge>
-                                                </div>
-                                            </ListGroupItem>
-                                        ))}
-                                    </ListGroup>
-                                </div>
-                            ) : (
-                                <div className="text-center py-4 rounded-3 bg-muted">
-                                    <FaCloudUploadAlt size={30} className="text-muted-light mb-2"/>
-                                    <div className="text-muted-light small">No reviews yet. Submit one above!</div>
-                                </div>
-                            )
-                        ) : (
-                            <div className="text-center py-4 rounded-3 bg-muted">
-                                <div className="text-muted-light small">Sign in to view your review history.</div>
-                                <div className="mt-2">
-                                    <a href="/auth/login" className="btn-unified btn-unified-info btn-unified-sm">Sign in</a>
-                                </div>
-                            </div>
-                        )}
-                    </AccentCard>
-                </Col>
-            </Row>
-        </div>
+      <PageLoadingState
+        message={
+          session.status === "loading"
+            ? "Loading review tools..."
+            : "Redirecting to login..."
+        }
+      />
     );
+  }
+
+  return (
+    <div className="review-flow">
+      <ToastNotification
+        toast={toast}
+        onClose={() => setToast({ ...toast, show: false })}
+      />
+
+      <section className="review-header-section">
+        <h1 className="qa-page-title">Upload a lease or paste one clause.</h1>
+        <p className="qa-page-sub">
+          Ask questions against your document and compare it with the
+          tenant-rights handbook.
+        </p>
+      </section>
+
+      <section className="review-input-section">
+        <Form onSubmit={handleCreateSession} className="review-upload-stack">
+          <AceternityFileUpload
+            key={uploadResetKey}
+            name="file"
+            accept="application/pdf,.docx,text/plain,.txt,text/markdown,.md"
+            maxSizeMb={8}
+            onFilesChangeAction={(files) => setSelectedFile(files[0] || null)}
+          />
+
+          <div className="review-divider">or paste text</div>
+
+          <Form.Group>
+            <Form.Control
+              as="textarea"
+              name="sourceText"
+              value={sourceText}
+              onChange={(event) => setSourceText(event.target.value)}
+              rows={6}
+              placeholder="Paste the lease clause, notice, or housing text you want to ask about."
+              className="review-textarea"
+            />
+          </Form.Group>
+
+          <div className="review-form-footer">
+            <div className="review-note">
+              <Shield size={14} />
+              <span>
+                {isGuest
+                  ? "Guest chats stay in this browser session."
+                  : "Not legal advice."}
+              </span>
+            </div>
+            <AceternityStatefulButton
+              type="submit"
+              status={creatingSession ? "loading" : "idle"}
+              className="btn-unified btn-unified-primary btn-unified-md"
+            >
+              {creatingSession ? "Loading source" : "Start chat"}
+            </AceternityStatefulButton>
+          </div>
+        </Form>
+      </section>
+
+      <section className="review-history-section">
+        <div className="review-history-header">
+          <div className="qa-sidebar-label">
+            <Clock3 size={12} />
+            <span>History</span>
+          </div>
+          {isGuest ? (
+            <span className="review-history-hint">Temporary for this guest session</span>
+          ) : null}
+        </div>
+
+        {loadingSessions ? (
+          <div className="review-history-inline">
+            <Spinner size="sm" />
+            <span>Loading...</span>
+          </div>
+        ) : sessions.length > 0 ? (
+          <div className="review-history-chips">
+            {sessions.map((item) => {
+              const isActive = activeSession?._id === item._id;
+              return (
+                <button
+                  key={item._id}
+                  type="button"
+                  onClick={() => setActiveSession(item)}
+                  className={`review-history-chip ${isActive ? "is-active" : ""}`}
+                >
+                  <span>{item.sourceName}</span>
+                  <span className="review-history-chip-date">
+                    {new Date(item.updatedAt).toLocaleDateString()}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="review-history-inline">
+            No chats yet. Start one above.
+          </div>
+        )}
+      </section>
+
+      <section className="review-results-section">
+        <div className="review-results-header">
+          <div>
+            <h2 className="qa-page-title" style={{ fontSize: "1.4rem" }}>
+              {activeSession ? "Ask follow-up questions" : "Chat"}
+            </h2>
+            <p className="qa-page-sub">
+              {activeSession
+                ? `Source: ${activeSession.sourceName}`
+                : "Create a source above, then ask questions here."}
+            </p>
+          </div>
+          {activeSession ? (
+            <Badge bg={formatStatusVariant(activeSession.status)}>
+              {formatStatusLabel(activeSession.status)}
+            </Badge>
+          ) : null}
+        </div>
+
+        {activeSession ? (
+          <>
+            <div className="review-recs-panel">
+              <div className="qa-sidebar-label">
+                <FileText size={12} />
+                <span>Current source</span>
+              </div>
+              <p className="review-summary-text">{activeSession.sourceTextPreview}</p>
+              {activeSession.error ? (
+                <p className="text-danger mb-0 small">{activeSession.error}</p>
+              ) : null}
+            </div>
+
+            <div className="review-next-step">
+              <div className="qa-sidebar-label">
+                <MessageSquareQuote size={12} />
+                <span>Conversation</span>
+              </div>
+              <div className="review-chat-log">
+                {activeMessages.length > 0 ? (
+                  activeMessages.map((message, index) => (
+                    <article
+                      key={`${message.createdAt}-${index}`}
+                      className={`review-chat-message review-chat-message-${message.role}`}
+                    >
+                      <div className="review-chat-role">{message.role}</div>
+                      <div className="review-chat-body">{message.content}</div>
+                      {message.citations.length > 0 ? (
+                        <div className="review-chat-citations">
+                          {message.citations.map((citation, citationIndex) => (
+                            <div
+                              key={`${citation.sourceName}-${citationIndex}`}
+                              className="review-chat-citation"
+                            >
+                              <div className="review-chat-citation-title">
+                                {citation.sourceUrl ? (
+                                  <a
+                                    href={citation.sourceUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    {citation.sourceName}
+                                    {citation.chapterRef
+                                      ? ` · Chapter ${citation.chapterRef}`
+                                      : ""}
+                                  </a>
+                                ) : (
+                                  <>
+                                    {citation.sourceName}
+                                    {citation.chapterRef
+                                      ? ` · Chapter ${citation.chapterRef}`
+                                      : ""}
+                                  </>
+                                )}
+                              </div>
+                              <div className="review-chat-citation-copy">
+                                {citation.snippet}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                    </article>
+                  ))
+                ) : (
+                  <div className="review-history-inline">
+                    Ask your first question about this source.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <Form onSubmit={handleSendMessage} className="review-upload-stack">
+              <Form.Group>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  value={question}
+                  onChange={(event) => setQuestion(event.target.value)}
+                  placeholder="Ask a question about this document or your housing issue."
+                  className="review-textarea"
+                />
+              </Form.Group>
+
+              <div className="review-form-footer">
+                <div className="review-note">
+                  <Shield size={14} />
+                  <span>
+                    {activeSession.status === "ready"
+                      ? "Answers cite your source and handbook materials."
+                      : "Wait for indexing to finish before asking a question."}
+                  </span>
+                </div>
+                <AceternityStatefulButton
+                  type="submit"
+                  status={sendingMessage ? "loading" : "idle"}
+                  className="btn-unified btn-unified-primary btn-unified-md"
+                  disabled={!question.trim() || activeSession.status !== "ready"}
+                >
+                  {sendingMessage ? "Sending" : "Send question"}
+                </AceternityStatefulButton>
+              </div>
+            </Form>
+          </>
+        ) : (
+          <div className="review-history-inline">
+            Start a chat above or <Link href="/qa">browse community Q&amp;A</Link>.
+          </div>
+        )}
+      </section>
+    </div>
+  );
 }

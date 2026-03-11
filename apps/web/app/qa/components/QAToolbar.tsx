@@ -41,7 +41,7 @@ export default function QAToolbar({
                 <FaSearch size={14} className="qa-toolbar-search-icon"/>
                 <input
                     type="text"
-                    placeholder="Search posts..."
+                    placeholder="Search questions..."
                     value={search}
                     onChange={(e) => handleChange(e.target.value)}
                     onKeyDown={handleKeyDown}
@@ -60,7 +60,7 @@ export default function QAToolbar({
                     onClick={() => router.push("/qa?compose=1")}
                 >
                     <FaPlus size={12}/>
-                    <span>New Post</span>
+                    <span>Ask</span>
                 </button>
             )}
         </div>

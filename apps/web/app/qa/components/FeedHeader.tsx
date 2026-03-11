@@ -26,7 +26,7 @@ export default function FeedHeader({folders, posts}: FeedHeaderProps) {
         <div className="feed-section">
             <div className="feed-section-title">
                 <FaFire size={16}/>
-                <span>Hot Posts</span>
+                <span>Popular questions</span>
             </div>
             <div className="feed-section-posts">
                 {hotPosts.map((post) => (

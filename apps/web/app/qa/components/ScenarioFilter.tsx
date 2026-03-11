@@ -21,6 +21,7 @@ export default function ScenarioFilter() {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         loadFolders();
     }, []);
 
@@ -38,7 +39,7 @@ export default function ScenarioFilter() {
                 className={`scenario-chip ${activeScenario === "all" ? "active" : ""}`}
                 onClick={() => handleSelect("all")}
             >
-                All
+                All topics
             </button>
             {folders.map((folder) => (
                 <button

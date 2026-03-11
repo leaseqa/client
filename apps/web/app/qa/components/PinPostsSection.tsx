@@ -26,7 +26,7 @@ export default function PinPostsSection({posts, folders}: PinPostsProps) {
         <div className="feed-section">
             <div className="feed-section-title">
                 <FaMapPin size={16}/>
-                <span>Pin</span>
+                <span>Pinned</span>
             </div>
             <div className="feed-section-posts">
                 {pinPosts.map((post) => (

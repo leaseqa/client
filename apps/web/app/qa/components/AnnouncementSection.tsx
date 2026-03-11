@@ -26,7 +26,7 @@ export default function AnnouncementSection({posts, folders}: AnnouncementProps)
         <div className="feed-section">
             <div className="feed-section-title">
                 <FaBullhorn size={16}/>
-                <span>Announcements</span>
+                <span>Updates</span>
             </div>
             <div className="feed-section-posts">
                 {announcementPosts.map((post) => (

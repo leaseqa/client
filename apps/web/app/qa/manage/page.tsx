@@ -61,7 +61,7 @@ export default function ManageSectionsPage() {
             return;
         }
         loadData();
-    }, [isAdmin]);
+    }, [isAdmin, router]);
 
     if (!isAdmin) return null;
 

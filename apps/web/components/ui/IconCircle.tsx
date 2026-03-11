@@ -14,7 +14,7 @@ type IconCircleProps = {
 
 export default function IconCircle({
                                        size = "md",
-                                       variant = "purple",
+                                       variant = "muted",
                                        children,
                                        icon: Icon,
                                        iconSize,

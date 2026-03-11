@@ -2,33 +2,36 @@
 import {RiskCardProps} from "@/app/ai-review/types";
 
 const config = {
-    danger: {icon: "🔴", textClass: "text-danger"},
-    warning: {icon: "🟡", textClass: "text-warning"},
-    success: {icon: "🟢", textClass: "text-success"}
+    danger: {label: "High", dotClass: "risk-dot-danger"},
+    warning: {label: "Medium", dotClass: "risk-dot-warning"},
+    success: {label: "Low", dotClass: "risk-dot-success"},
 };
 
 export default function RiskCard({tone, title, items}: RiskCardProps) {
-    const {icon, textClass} = config[tone];
+    const {label, dotClass} = config[tone];
 
     return (
         <div className={`risk-card risk-card-${tone}`}>
-            <div className={`fw-semibold d-flex align-items-center gap-2 mb-2 ${textClass}`}>
-                <span>{icon}</span>
-                <span>{title}</span>
-                <span className={`ms-auto badge rounded-pill bg-${tone}`}>
+            <div className="risk-card-header">
+                <span className={`risk-dot ${dotClass}`}/>
+                <div>
+                    <div className="risk-card-label">{label}</div>
+                    <div className="risk-card-title">{title}</div>
+                </div>
+                <span className="risk-card-count">
                     {items.length}
                 </span>
             </div>
             {items.length > 0 ? (
-                <ul className="ps-3 mb-0 small">
+                <ul className="risk-card-list">
                     {items.map((item, index) => (
-                        <li key={index} className="text-muted-light mb-1">
+                        <li key={index}>
                             {item}
                         </li>
                     ))}
                 </ul>
             ) : (
-                <div className="text-muted-light small">No issues found</div>
+                <div className="risk-card-empty">No issues found</div>
             )}
         </div>
     );

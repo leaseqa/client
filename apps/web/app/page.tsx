@@ -1,154 +1,221 @@
 "use client";
 
-import {useMemo} from "react";
+import Link from "next/link";
 import useSWR from "swr";
-import {Col, Row} from "react-bootstrap";
-import {Stat} from "./qa/types";
+import { Upload, MessageCircle, Scale } from "lucide-react";
 import * as client from "./client";
-import HeroCard from "@/components/ui/HeroCard";
-import AccentCard from "@/components/ui/AccentCard";
-import IconCircle from "@/components/ui/IconCircle";
-import {HomePageIcons} from "@/components/ui/icons";
+
+type PostItem = {
+  _id: string;
+  summary: string;
+  viewCount?: number;
+};
+
+type PreviewStatus = {
+  label: "New" | "Active" | "Answered";
+  tone: "new" | "active" | "answered";
+};
+
+const DAY_MS = 86_400_000;
 
 const statsFetcher = async () => {
-    const response = await client.fetchStats();
-    if (response && response.data) {
-        return [
-            {label: "Admin Posts", value: response.data.adminPosts || 0},
-            {label: "Open questions", value: response.data.unansweredPosts || 0},
-            {label: "Attorney replies", value: response.data.lawyerResponses || 0},
-            {label: "AI reviews this week", value: response.data.totalPosts || 0},
-        ];
-    }
+  const response = await client.fetchStats();
+  if (response && response.data) {
     return [
-        {label: "Admin Posts", value: 0},
-        {label: "Open questions", value: 0},
-        {label: "Attorney replies", value: 0},
-        {label: "AI reviews this week", value: 0},
+      { label: "Open questions", value: response.data.unansweredPosts || 0 },
+      { label: "Attorney replies", value: response.data.lawyerResponses || 0 },
+      { label: "Recent posts", value: response.data.totalPosts || 0 },
+      { label: "Notices", value: response.data.adminPosts || 0 },
     ];
+  }
+  return EMPTY_STATS;
+};
+
+const hotPostsFetcher = async () => {
+  const response = await client.fetchPosts();
+  const posts: PostItem[] = response.data || [];
+  return [...posts]
+    .sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0))
+    .slice(0, 5);
+};
+
+const EMPTY_STATS = [
+  { label: "Open questions", value: 0 },
+  { label: "Attorney replies", value: 0 },
+  { label: "Recent posts", value: 0 },
+  { label: "Notices", value: 0 },
+];
+
+const STEPS = [
+  {
+    num: "01",
+    icon: Upload,
+    title: "Upload or paste",
+    desc: "Drop a PDF or paste any clause. Our AI reads it in seconds.",
+  },
+  {
+    num: "02",
+    icon: Scale,
+    title: "See what matters",
+    desc: "Flagged terms are matched to Massachusetts tenant law.",
+  },
+  {
+    num: "03",
+    icon: MessageCircle,
+    title: "Ask the community",
+    desc: "Post follow-ups. Attorneys and tenants reply with context.",
+  },
+];
+
+const getPreviewStatus = (index: number, post: PostItem): PreviewStatus => {
+  if ((post.viewCount || 0) >= 25) {
+    return { label: "Answered", tone: "answered" };
+  }
+
+  if (index === 0 || (post.viewCount || 0) >= 10) {
+    return { label: "Active", tone: "active" };
+  }
+
+  return { label: "New", tone: "new" };
 };
 
 export default function LandingPage() {
-    const {data: stats = [
-        {label: "Admin Posts", value: 0},
-        {label: "Open questions", value: 0},
-        {label: "Attorney replies", value: 0},
-        {label: "AI reviews this week", value: 0},
-    ]} = useSWR("stats/overview", statsFetcher, {
-        revalidateOnFocus: false,
-        revalidateOnReconnect: true,
-        dedupingInterval: 30000, // Cache for 30 seconds
-        fallbackData: [
-            {label: "Admin Posts", value: 0},
-            {label: "Open questions", value: 0},
-            {label: "Attorney replies", value: 0},
-            {label: "AI reviews this week", value: 0},
-        ],
-    });
+  const { data: stats = EMPTY_STATS } = useSWR("stats/overview", statsFetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    dedupingInterval: DAY_MS,
+    fallbackData: EMPTY_STATS,
+  });
 
-    const statConfig = [
-        {icon: HomePageIcons.mail, gradient: "bg-gradient-green"},
-        {icon: HomePageIcons.question, gradient: "bg-gradient-red"},
-        {icon: HomePageIcons.legal, gradient: "bg-gradient-warning"},
-        {icon: HomePageIcons.ai, gradient: "bg-gradient-blue"},
-    ];
+  const { data: hotPosts = [] } = useSWR("posts/hot", hotPostsFetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    dedupingInterval: DAY_MS,
+    fallbackData: [],
+  });
 
-    return (
-        <div className="d-flex flex-column h-100">
-            <div className="mb-2 d-flex align-items-center" style={{flex: "0 0 auto", minHeight: "200px"}}>
-                <HeroCard className="w-100">
-                    <Row className="align-items-center w-100">
-                        <Col lg={12}>
-                            <div className="d-inline-flex align-items-center gap-2 pill pill-glass mb-3">
-                                <HomePageIcons.home size={12} />
-                                <span className="small">Boston Renter Protection</span>
-                            </div>
-                            <h1 className="h2 fw-bold mb-3">
-                                <span>We help you understand</span>
-                            </h1>
-                            <p className="mb-0" style={{fontSize: "0.95rem"}}>
-                                LeaseQA pairs AI lease review with a Q&A community so renters get clarity on edge cases and feasible solutions.
-                            </p>
-                        </Col>
-                    </Row>
-                </HeroCard>
-            </div>
-
-            <Row className="g-3 mb-2 flex-grow-1" style={{flex: "1 1 0"}}>
-                <Col lg={6} className="d-flex">
-                    <AccentCard accent="purple" className="h-100 shadow w-100 d-flex flex-column">
-                        <div className="d-flex align-items-center mb-3">
-                            <IconCircle size="lg" variant="purple" icon={HomePageIcons.ai} className="me-3" />
-                            <div>
-                                <div className="fw-bold">AI Review</div>
-                                <div className="text-muted-light small">AI powered</div>
-                            </div>
-                        </div>
-                        <h3 className="h5 fw-bold mb-3">Drag & drop to generate a review</h3>
-                        <p className="text-muted-light mb-4 flex-grow-1">
-                            Upload a PDF or paste lease text. We return rubric-aligned risks
-                            and a summary you can reuse in Q&A.
-                        </p>
-                        <div className="d-flex gap-2 mt-auto">
-                            <a href="/ai-review" className="btn-unified btn-unified-primary btn-unified-md">
-                                Go to AI Review →
-                            </a>
-                        </div>
-                    </AccentCard>
-                </Col>
-
-                <Col lg={6} className="d-flex">
-                    <AccentCard accent="green" className="h-100 shadow w-100 d-flex flex-column">
-                        <div className="d-flex align-items-center mb-3">
-                            <IconCircle size="lg" variant="green" icon={HomePageIcons.community} className="me-3" />
-                            <div>
-                                <div className="fw-bold">QA Community</div>
-                                <div className="text-muted-light small">Piazza-style forum</div>
-                            </div>
-                        </div>
-                        <h3 className="h5 fw-bold mb-3">Solve with tenants & attorneys</h3>
-                        <p className="text-muted-light mb-4 flex-grow-1">
-                            Post questions, search answers, and filter by case type.
-                            Linked to AI review results with history and resources.
-                        </p>
-                        <div className="d-flex gap-2 mt-auto">
-                            <a href="/qa" className="btn-unified btn-unified-success btn-unified-md">
-                                Open Q&A →
-                            </a>
-                        </div>
-                    </AccentCard>
-                </Col>
-            </Row>
-
-            <div className="flex-grow-1 d-flex flex-column" style={{flex: "1 1 0"}}>
-                <AccentCard accent="blue" className="shadow h-100 d-flex flex-column">
-                    <div className="text-center mb-4">
-                        <div className="d-inline-flex align-items-center gap-2 pill mb-2">
-                            <HomePageIcons.stats size={16} />
-                            <span>Live Stats</span>
-                        </div>
-                        <h2 className="h5 fw-bold mb-0">Community Activity</h2>
-                    </div>
-                    <Row className="g-3 flex-grow-1 align-items-stretch">
-                        {stats.map((stat, index) => {
-                            const StatIcon = statConfig[index].icon;
-                            return (
-                                <Col key={stat.label} md={3} sm={6} xs={12} className="d-flex">
-                                    <div className={`p-4 rounded-4 text-white w-100 d-flex flex-column justify-content-between ${statConfig[index].gradient}`}>
-                                        <div className="d-flex justify-content-between align-items-start mb-3">
-                                            <StatIcon size={32} strokeWidth={1.5} />
-                                        </div>
-                                        <div>
-                                            <div className="display-5 fw-bold mb-2">{stat.value}</div>
-                                            <div className="small opacity-75 text-uppercase">{stat.label}</div>
-                                        </div>
-                                    </div>
-                                </Col>
-                            );
-                        })}
-                    </Row>
-                </AccentCard>
-            </div>
+  return (
+    <div className="landing-page">
+      {/* Hero — two columns */}
+      <section className="landing-hero-grid">
+        <div className="landing-hero-copy">
+          <span className="landing-eyebrow">For Boston renters</span>
+          <h1 className="landing-hero-title">
+            Read the lease.
+            <br />
+            Ask the <em>next</em> question.
+          </h1>
+          <p className="landing-hero-sub">
+            LeaseQA flags the clauses that matter, points you to Massachusetts
+            law, and connects you with a community that gets it.
+          </p>
+          <div className="landing-hero-actions">
+            <Link href="/ai-review" className="landing-hero-cta">
+              Check a lease
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </Link>
+            <Link href="/qa" className="landing-hero-cta-outline">
+              Ask a question
+            </Link>
+          </div>
+          <div className="landing-trust">
+            <span className="landing-trust-tag">Plain language first</span>
+            <span className="landing-trust-tag">Built for class use</span>
+            <span className="landing-trust-tag">Not legal advice</span>
+          </div>
         </div>
-    );
+
+        {hotPosts.length > 0 && (
+          <div className="landing-hero-visual">
+            <div className="landing-preview-label">
+              <span>Popular questions</span>
+            </div>
+            <div className="landing-preview-list">
+              {hotPosts.map((post, i) => {
+                const status = getPreviewStatus(i, post);
+                return (
+                <Link
+                  key={post._id}
+                  href={`/qa?post=${post._id}`}
+                  className="landing-preview-item"
+                >
+                  <span
+                    className={`landing-preview-dot landing-preview-dot-${status.tone}`}
+                    aria-hidden
+                  />
+                  <span className="landing-preview-title">{post.summary}</span>
+                  <span
+                    className={`landing-preview-status landing-preview-status-${status.tone}`}
+                  >
+                    {status.label}
+                  </span>
+                </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* How it works */}
+      <section className="landing-how-section">
+        <div className="landing-section-label">
+          <h2>How it works</h2>
+        </div>
+
+        <div className="landing-how-grid">
+          {STEPS.map((step) => {
+            const Icon = step.icon;
+            return (
+              <div key={step.num} className="landing-how-step">
+                <div className="landing-how-num">{step.num}</div>
+                <div className="landing-how-icon">
+                  <Icon size={18} strokeWidth={1.8} />
+                </div>
+                <h3 className="landing-how-title">{step.title}</h3>
+                <p className="landing-how-desc">{step.desc}</p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Stats */}
+      <section className="landing-stats-section">
+        <div className="landing-section-label">
+          <h2>Right now</h2>
+        </div>
+
+        <div className="landing-stats">
+          <div className="landing-stats-header">
+            <span className="landing-stats-title">Community pulse</span>
+            <span className="landing-stats-live">
+              <span className="landing-live-dot" />
+              Live
+            </span>
+          </div>
+          <div className="landing-stats-grid">
+            {stats.map((s) => (
+              <div key={s.label} className="landing-stat">
+                <div className="landing-stat-val">{s.value}</div>
+                <div className="landing-stat-lbl">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
 }

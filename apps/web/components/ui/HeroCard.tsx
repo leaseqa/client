@@ -12,7 +12,7 @@ type HeroCardProps = {
 export default function HeroCard({
                                      children,
                                      className = "",
-                                     padding = "p-5"
+                                     padding = "p-4 p-lg-5"
                                  }: HeroCardProps) {
     return (
         <Card className={`card-hero border-0 ${className}`}>

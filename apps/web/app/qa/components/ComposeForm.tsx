@@ -1,18 +1,19 @@
 "use client";
 
+import React from "react";
 import dynamic from "next/dynamic";
 import {FaPaperclip, FaTimes} from "react-icons/fa";
 import {Scale} from "lucide-react";
+
 import {ComposeState} from "../constants";
 import {Folder} from "../types";
-import React from "react";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), {ssr: false});
 
-//TODO: move to types or constants
 type ComposeFormProps = {
     composeState: ComposeState;
     folders: Folder[];
+    prefillSource?: string;
     posting: boolean;
     postError: string;
     onUpdateAction: (updates: Partial<ComposeState>) => void;
@@ -21,42 +22,49 @@ type ComposeFormProps = {
 };
 
 export default function ComposeForm({
-                                        composeState,
-                                        folders,
-                                        posting,
-                                        postError,
-                                        onUpdateAction,
-                                        onSubmitAction,
-                                        onCancelAction,
-                                    }: ComposeFormProps) {
+    composeState,
+    folders,
+    prefillSource,
+    posting,
+    postError,
+    onUpdateAction,
+    onSubmitAction,
+    onCancelAction,
+}: ComposeFormProps) {
+    const isAiReviewDraft = prefillSource === "ai-review";
+
     const handleAddFolder = (value: string) => {
-        if (!value || composeState.folders.includes(value)) return;
+        if (!value || composeState.folders.includes(value)) {
+            return;
+        }
         onUpdateAction({folders: [...composeState.folders, value]});
     };
 
     const handleRemoveFolder = (folder: string) => {
-        onUpdateAction({folders: composeState.folders.filter(f => f !== folder)});
+        onUpdateAction({folders: composeState.folders.filter((currentFolder) => currentFolder !== folder)});
     };
 
-    //TODO: not implemented yet
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(e.target.files || []);
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(event.target.files || []);
         onUpdateAction({files});
     };
 
     const getFolderLabel = (name: string) => {
-        const folder = folders.find(f => f.name === name);
+        const folder = folders.find((currentFolder) => currentFolder.name === name);
         return folder?.displayName || name;
     };
 
     return (
-        <div className="compose-form">
+        <div className={`compose-form ${isAiReviewDraft ? "compose-form-draft" : ""}`}>
             <div className="compose-form-header">
                 <div>
-                    <h3 className="compose-form-title">Create a new post</h3>
+                    <h3 className="compose-form-title">
+                        {isAiReviewDraft ? "Edit your draft" : "Write your question"}
+                    </h3>
                     <p className="compose-form-subtitle">
-                        Share a question or experience to help other renters. Replies marked <Scale size={14} className="d-inline" /> are from verified
-                        attorneys.
+                        {isAiReviewDraft
+                            ? "Check the wording, then post it to the right section."
+                            : "Write a short question and choose the right section."}
                     </p>
                 </div>
                 <button
@@ -69,150 +77,135 @@ export default function ComposeForm({
                 </button>
             </div>
 
-            {/*TODO: make the option connect with type to match the database*/}
-            <div className="compose-form-body">
-                <div className="compose-form-row">
-                    <span className="compose-form-label">Post type</span>
-                    <div className="compose-form-options">
-                        {(["question", "note", "announcement"] as const).map((type) => (
-                            <label key={type} className="compose-form-radio">
-                                <input
-                                    type="radio"
-                                    name="postType"
-                                    checked={composeState.postType === type}
-                                    onChange={() => onUpdateAction({postType: type})}
-                                />
-                                <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
-                            </label>
-                        ))}
-                    </div>
+            {isAiReviewDraft && (
+                <div className="compose-form-banner">
+                    <Scale size={16}/>
+                    <span>Your review summary, sections, and urgency are already filled in.</span>
                 </div>
+            )}
 
-                <div className="compose-form-row">
-                    <span className="compose-form-label">Urgency</span>
-                    <div className="compose-form-options">
-                        {(["low", "medium", "high"] as const).map((level) => (
-                            <label key={level} className={`compose-form-radio urgency-${level}`}>
-                                <input
-                                    type="radio"
-                                    name="urgency"
-                                    checked={composeState.urgency === level}
-                                    onChange={() => onUpdateAction({urgency: level})}
-                                />
-                                <span>{level.charAt(0).toUpperCase() + level.slice(1)}</span>
-                            </label>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="compose-form-row">
-                    <span className="compose-form-label">Post to</span>
-                    <div className="compose-form-options">
-                        {(["everyone", "admin"] as const).map((aud) => (
-                            <label key={aud} className="compose-form-radio">
-                                <input
-                                    type="radio"
-                                    name="audience"
-                                    checked={composeState.audience === aud}
-                                    onChange={() => onUpdateAction({audience: aud})}
-                                />
-                                <span>{aud === "everyone" ? "Everyone" : "Admins only"}</span>
-                            </label>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="compose-form-row">
-                    <span className="compose-form-label">Identity</span>
-                    <div className="compose-form-options">
-                        <label className="compose-form-checkbox">
-                            <input
-                                type="checkbox"
-                                checked={composeState.isAnonymous}
-                                onChange={(e) => onUpdateAction({isAnonymous: e.target.checked})}
-                            />
-                            <span>Post anonymously</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div className="compose-form-group">
-                    <label className="compose-form-label">Sections</label>
-                    <p className="compose-form-hint">Pick at least one section so attorneys and tenants can find the
-                        right context.</p>
-                    <select
-                        className="compose-form-select"
-                        value=""
-                        onChange={(e) => handleAddFolder(e.target.value)}
-                    >
-                        <option value="">Select section...</option>
-                        {folders.map(folder => (
-                            <option key={folder.name} value={folder.name}>{folder.displayName}</option>
-                        ))}
-                    </select>
-                    {composeState.folders.length > 0 && (
-                        <div className="compose-form-tags">
-                            {composeState.folders.map((f) => (
-                                <span key={f} className="compose-form-tag">
-                                    {getFolderLabel(f)}
-                                    <button type="button" onClick={() => handleRemoveFolder(f)}>
-                                        <FaTimes size={10}/>
-                                    </button>
-                                </span>
+            <div className="compose-form-layout">
+                <div className="compose-form-main">
+                    <div className="compose-form-group">
+                        <label className="compose-form-label">Sections</label>
+                        <p className="compose-form-hint">Choose the closest topic.</p>
+                        <select
+                            className="compose-form-select"
+                            value=""
+                            onChange={(event) => handleAddFolder(event.target.value)}
+                        >
+                            <option value="">Select section...</option>
+                            {folders.map((folder) => (
+                                <option key={folder.name} value={folder.name}>
+                                    {folder.displayName}
+                                </option>
                             ))}
-                        </div>
-                    )}
-                </div>
+                        </select>
+                        {composeState.folders.length > 0 && (
+                            <div className="compose-form-tags">
+                                {composeState.folders.map((folder) => (
+                                    <span key={folder} className="compose-form-tag">
+                                        {getFolderLabel(folder)}
+                                        <button type="button" onClick={() => handleRemoveFolder(folder)}>
+                                            <FaTimes size={10}/>
+                                        </button>
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
 
-                <div className="compose-form-group">
-                    <label className="compose-form-label">
-                        Title
-                        <span className="compose-form-count">{composeState.summary.length}/100</span>
-                    </label>
-                    <input
-                        type="text"
-                        className="compose-form-input"
-                        placeholder='One-line summary, e.g., "Is a three-month deposit legal in MA?"'
-                        value={composeState.summary}
-                        onChange={(e) => onUpdateAction({summary: e.target.value.slice(0, 100)})}
-                        maxLength={100}
-                    />
-                </div>
-
-                <div className="compose-form-group">
-                    <label className="compose-form-label">Details</label>
-                    <p className="compose-form-hint">Describe the situation, timeline, and any communication you have
-                        had.</p>
-                    <div className="compose-form-editor">
-                        <ReactQuill
-                            theme="snow"
-                            value={composeState.details}
-                            onChange={(val) => onUpdateAction({details: val})}
+                    <div className="compose-form-group">
+                        <label className="compose-form-label">
+                            Title
+                            <span className="compose-form-count">{composeState.summary.length}/100</span>
+                        </label>
+                        <input
+                            type="text"
+                            className="compose-form-input"
+                            placeholder='Short question, for example: "Is this deposit clause normal?"'
+                            value={composeState.summary}
+                            onChange={(event) => onUpdateAction({summary: event.target.value.slice(0, 100)})}
+                            maxLength={100}
                         />
                     </div>
-                </div>
 
-                <div className="compose-form-group">
-                    <label className="compose-form-label">
-                        <FaPaperclip size={12}/>
-                        <span>Attachments</span>
-                    </label>
-                    <input
-                        type="file"
-                        className="compose-form-file"
-                        multiple
-                        onChange={handleFileChange}
-                    />
-                    {composeState.files.length > 0 && (
-                        <div className="compose-form-file-count">
-                            {composeState.files.length} file(s) selected
+                    <div className="compose-form-group">
+                        <label className="compose-form-label">Details</label>
+                        <p className="compose-form-hint">Add the clause, timeline, or detail you want explained.</p>
+                        <div className="compose-form-editor">
+                            <ReactQuill
+                                theme="snow"
+                                value={composeState.details}
+                                onChange={(value) => onUpdateAction({details: value})}
+                            />
                         </div>
+                    </div>
+
+                    <div className="compose-form-group">
+                        <label className="compose-form-label">
+                            <FaPaperclip size={12}/>
+                            <span>Attachments</span>
+                        </label>
+                        <input
+                            type="file"
+                            className="compose-form-file"
+                            multiple
+                            onChange={handleFileChange}
+                        />
+                        {composeState.files.length > 0 && (
+                            <div className="compose-form-file-count">
+                                {composeState.files.length} file(s) selected
+                            </div>
+                        )}
+                    </div>
+
+                    {postError && (
+                        <div className="compose-form-error">{postError}</div>
                     )}
                 </div>
 
-                {postError && (
-                    <div className="compose-form-error">{postError}</div>
-                )}
+                <aside className="compose-form-sidebar">
+                    <div className="compose-form-meta-card">
+                        <div className="compose-form-meta-title">Options</div>
+
+                        <div className="compose-form-row">
+                            <span className="compose-form-label">Urgency</span>
+                            <div className="compose-form-options">
+                                {(["low", "medium", "high"] as const).map((level) => (
+                                    <label key={level} className={`compose-form-radio urgency-${level}`}>
+                                        <input
+                                            type="radio"
+                                            name="urgency"
+                                            checked={composeState.urgency === level}
+                                            onChange={() => onUpdateAction({urgency: level})}
+                                        />
+                                        <span>{level.charAt(0).toUpperCase() + level.slice(1)}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="compose-form-row">
+                            <span className="compose-form-label">Identity</span>
+                            <label className="compose-form-checkbox">
+                                <input
+                                    type="checkbox"
+                                    checked={composeState.isAnonymous}
+                                    onChange={(event) => onUpdateAction({isAnonymous: event.target.checked})}
+                                />
+                                <span>Post anonymously</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div className="compose-form-meta-card">
+                        <div className="compose-form-meta-title">Who replies here</div>
+                        <p className="compose-form-hint mb-0">
+                            Community replies live here. Attorney answers are marked <Scale size={14} className="d-inline" />.
+                        </p>
+                    </div>
+                </aside>
             </div>
 
             <div className="compose-form-footer">

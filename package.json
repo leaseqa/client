@@ -2,15 +2,11 @@
   "name": "leaseqa-monorepo",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "npm@10.9.0",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "packageManager": "pnpm@10.31.0",
   "scripts": {
-    "dev": "npm --workspace=@leaseqa/web run dev",
-    "build": "npm --workspace=@leaseqa/web run build",
-    "lint": "npm --workspace=@leaseqa/web run lint",
+    "dev": "pnpm --filter @leaseqa/web dev",
+    "build": "pnpm --filter @leaseqa/web build",
+    "lint": "pnpm --filter @leaseqa/web lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
   },
   "engines": {

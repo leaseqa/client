@@ -17,13 +17,13 @@ export default function CardHeader({
                                        subtitle
                                    }: CardHeaderProps) {
     return (
-        <div className="d-flex align-items-center gap-3 mb-4">
+        <div className="card-header-refined d-flex align-items-center gap-3 mb-4">
             <IconCircle size="lg" variant={iconVariant}>
                 {icon}
             </IconCircle>
-            <div>
-                <div className="fw-bold">{title}</div>
-                {subtitle && <div className="text-secondary small">{subtitle}</div>}
+            <div className="card-header-copy">
+                <div className="card-header-title">{title}</div>
+                {subtitle && <div className="card-header-subtitle">{subtitle}</div>}
             </div>
         </div>
     );

@@ -37,14 +37,14 @@ LeaseQA is an AI-powered lease review and legal Q&A platform for Boston renters.
 └── .env.example         # Environment variable template
 ```
 
-> **Note:** Install dependencies before running any scripts. Ensure Node.js 18.17+ (or preferably v25 via `.nvmrc`) is available together with npm.
+> **Note:** Install dependencies before running any scripts. Ensure Node.js 18.17+ (or preferably v25 via `.nvmrc`) is available together with pnpm.
 
 ## Getting Started
 
 1. Install dependencies:
 
    ```bash
-   npm install
+   pnpm install
    ```
 
 2. Create your `.env.local` based on `.env.example`.
@@ -52,7 +52,7 @@ LeaseQA is an AI-powered lease review and legal Q&A platform for Boston renters.
 3. Start the development server:
 
    ```bash
-   npm run dev
+   pnpm dev
    ```
 
 ## Collaboration Notes

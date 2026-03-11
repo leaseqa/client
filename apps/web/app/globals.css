@@ -31,33 +31,33 @@
        ============================================ */
 
     /* 60% - Dominant Color (Background) */
-    --color-bg-primary: #f8fafc;      /* Main page background */
-    --color-bg-secondary: #f1f5f9;    /* Subtle sections */
-    --color-bg-tertiary: #e2e8f0;     /* Hover states */
+    --color-bg-primary: #f5f0eb;      /* Main page background */
+    --color-bg-secondary: #efe9e3;    /* Subtle sections */
+    --color-bg-tertiary: #e5ddd5;     /* Hover states */
 
     /* 30% - Secondary Color (Content Areas) */
-    --color-panel: #ffffff;           /* Cards, content containers */
-    --color-panel-muted: #f9fafb;     /* Subtle panels */
-    --color-panel-hover: #f1f5f9;     /* Panel hover state */
+    --color-panel: #fffcf8;           /* Cards, content containers */
+    --color-panel-muted: #f9f5f0;     /* Subtle panels */
+    --color-panel-hover: #f0ebe5;     /* Panel hover state */
 
-    /* 10% - Accent Color (Highlights & CTAs) - Forum Style */
-    --color-accent-primary: #1890ff;  /* Main blue for CTAs (like forum buttons) */
-    --color-accent-secondary: #52c41a; /* Green for secondary actions */
-    --color-accent-success: #52c41a;  /* Success states (green) */
-    --color-accent-warning: #faad14; /* Warning states (orange) */
-    --color-accent-error: #ff4d4f;    /* Error states (red) */
-    --color-accent-info: #1890ff;     /* Info states (blue) */
+    /* 10% - Accent Color (Highlights & CTAs) - Warm Palette */
+    --color-accent-primary: #5c6e4e;  /* Olive for CTAs */
+    --color-accent-secondary: #c4704b; /* Terracotta for secondary actions */
+    --color-accent-success: #5c6e4e;  /* Success states (olive) */
+    --color-accent-warning: #c4704b;  /* Warning states (terracotta) */
+    --color-accent-error: #b5473a;    /* Error states (warm red) */
+    --color-accent-info: #5c6e4e;     /* Info states (olive) */
 
     /* Text Colors */
-    --color-text-primary: #1e293b;    /* Headings, main text */
-    --color-text-secondary: #64748b;  /* Body text */
-    --color-text-muted: #94a3b8;      /* Hints, labels */
+    --color-text-primary: #2c2825;    /* Headings, main text */
+    --color-text-secondary: #6b6460;  /* Body text */
+    --color-text-muted: #9a928c;      /* Hints, labels */
     --color-text-inverse: #ffffff;    /* White text on dark */
 
     /* Border Colors */
-    --color-border-primary: #e2e8f0;  /* Main borders */
-    --color-border-secondary: #cbd5e1; /* Stronger borders */
-    --color-border-subtle: #f1f5f9;   /* Very subtle borders */
+    --color-border-primary: rgba(44, 40, 37, 0.1);  /* Main borders */
+    --color-border-secondary: rgba(44, 40, 37, 0.18); /* Stronger borders */
+    --color-border-subtle: rgba(44, 40, 37, 0.05);   /* Very subtle borders */
 
     /* Legacy Colors (for backward compatibility) */
     --ink: var(--color-text-primary);
@@ -71,30 +71,30 @@
 
     /* Legacy Accents (mapped to new system) */
     --accent-red: var(--color-accent-error);
-    --accent-purple: var(--color-accent-primary);  /* Purple maps to primary blue */
+    --accent-purple: var(--color-accent-primary);  /* Legacy purple maps to olive */
     --accent-blue: var(--color-accent-info);
     --accent-green: var(--color-accent-success);
     --accent-success: var(--color-accent-success);
     --accent-warning: var(--color-accent-warning);
     --accent-danger: var(--color-accent-error);
 
-    /* Gradients - Forum Style */
-    --gradient-primary: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
-    --gradient-success: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);
-    --gradient-info: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
-    --gradient-warning: linear-gradient(135deg, #faad14 0%, #d48806 100%);
-    --gradient-error: linear-gradient(135deg, #ff4d4f 0%, #cf1322 100%);
+    /* Gradients - Warm Palette */
+    --gradient-primary: linear-gradient(135deg, #5c6e4e 0%, #3d4a33 100%);
+    --gradient-success: linear-gradient(135deg, #5c6e4e 0%, #3d4a33 100%);
+    --gradient-info: linear-gradient(135deg, #5c6e4e 0%, #3d4a33 100%);
+    --gradient-warning: linear-gradient(135deg, #c4704b 0%, #a35a3a 100%);
+    --gradient-error: linear-gradient(135deg, #b5473a 0%, #8c362d 100%);
 
     /* Legacy Gradients (mapped to new system) */
     --gradient-purple: var(--gradient-primary);
     --gradient-green: var(--gradient-success);
     --gradient-red: var(--gradient-error);
     --gradient-blue: var(--gradient-info);
-    --gradient-pink: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
-    --gradient-teal: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
-    --gradient-dark: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    --gradient-pink: linear-gradient(135deg, #c4704b 0%, #a35a3a 100%);
+    --gradient-teal: linear-gradient(135deg, #5c6e4e 0%, #7a8e6a 100%);
+    --gradient-dark: linear-gradient(135deg, #2c2825 0%, #3d3835 100%);
     --gradient-danger: var(--gradient-error);
-    --gradient-sidenav: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    --gradient-sidenav: linear-gradient(180deg, #2c2825 0%, #3d3835 100%);
 
     /* Glass Effect */
     --glass-bg: rgba(255, 255, 255, 0.15);
@@ -256,7 +256,7 @@ body {
     font-size: 0.875rem;
     line-height: 1.5;
     border: 1px solid transparent;
-    border-radius: var(--radius-full);
+    border-radius: 8px;
     cursor: pointer;
     transition: all var(--transition-fast);
     text-decoration: none;
@@ -295,15 +295,15 @@ body {
 }
 
 .btn-unified-primary:hover:not(:disabled) {
-    background: #096dd9;
-    border-color: #096dd9;
+    background: #3d4a33;
+    border-color: #3d4a33;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(92, 110, 78, 0.3);
 }
 
 .btn-unified-primary:active:not(:disabled) {
     transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(24, 144, 255, 0.25);
+    box-shadow: 0 2px 6px rgba(92, 110, 78, 0.25);
 }
 
 /* Secondary - Secondary actions */
@@ -326,9 +326,9 @@ body {
 }
 
 .btn-unified-outline:hover:not(:disabled) {
-    background: rgba(24, 144, 255, 0.08);
-    border-color: #096dd9;
-    color: #096dd9;
+    background: rgba(92, 110, 78, 0.08);
+    border-color: #3d4a33;
+    color: #3d4a33;
 }
 
 /* Ghost - Minimal style */
@@ -351,10 +351,10 @@ body {
 }
 
 .btn-unified-danger:hover:not(:disabled) {
-    background: #dc2626;
-    border-color: #dc2626;
+    background: #8c362d;
+    border-color: #8c362d;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+    box-shadow: 0 4px 12px rgba(181, 71, 58, 0.25);
 }
 
 /* Success - Success actions */
@@ -365,10 +365,10 @@ body {
 }
 
 .btn-unified-success:hover:not(:disabled) {
-    background: #389e0d;
-    border-color: #389e0d;
+    background: #3d4a33;
+    border-color: #3d4a33;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);
+    box-shadow: 0 4px 12px rgba(92, 110, 78, 0.3);
 }
 
 /* Info - Info actions (blue) */
@@ -379,10 +379,10 @@ body {
 }
 
 .btn-unified-info:hover:not(:disabled) {
-    background: #096dd9;
-    border-color: #096dd9;
+    background: #3d4a33;
+    border-color: #3d4a33;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(92, 110, 78, 0.3);
 }
 
 /* Legacy Button Support (for backward compatibility) */
@@ -670,7 +670,7 @@ body {
 }
 
 .nav-tab-item.active {
-    background: var(--gradient-purple);
+    background: #5c6e4e;
     color: #fff;
     font-weight: 600;
 }
@@ -713,7 +713,7 @@ body {
 }
 
 .list-item-active {
-    background: #3d5a80;
+    background: #5c6e4e;
     color: white;
 }
 
@@ -742,7 +742,7 @@ body {
 
 /* Stat Box */
 .stat-box {
-    background: rgba(102, 126, 234, 0.08);
+    background: rgba(92, 110, 78, 0.08);
     border-radius: var(--radius-md);
     padding: 1rem;
     height: 100%;
@@ -765,7 +765,7 @@ body {
 
 .progress-bar-fill {
     height: 100%;
-    background: #667eea;
+    background: #5c6e4e;
     border-radius: var(--radius-full);
     transition: width 0.5s ease;
 }
@@ -952,10 +952,10 @@ body {
 }
 
 .scenario-chip.active {
-    background: var(--gradient-purple);
+    background: #5c6e4e;
     border-color: transparent;
     color: white;
-    box-shadow: 0 2px 8px rgba(108, 92, 231, 0.3);
+    box-shadow: 0 2px 8px rgba(92, 110, 78, 0.3);
 }
 
 /* QA Nav Tabs */
@@ -987,8 +987,8 @@ body {
 }
 
 .qa-nav-tab.active {
-    color: var(--primary);
-    background: rgba(108, 92, 231, 0.1);
+    color: #5c6e4e;
+    background: rgba(92, 110, 78, 0.1);
 }
 
 /* QA Toolbar */
@@ -1038,12 +1038,12 @@ body {
 }
 
 .qa-toolbar-btn.primary {
-    background: var(--gradient-purple);
+    background: #5c6e4e;
     color: white;
 }
 
 .qa-toolbar-btn.primary:hover {
-    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+    box-shadow: 0 4px 12px rgba(92, 110, 78, 0.3);
     transform: translateY(-1px);
 }
 
@@ -1134,8 +1134,8 @@ body {
 }
 
 .post-sidebar-item.active {
-    background: rgba(108, 92, 231, 0.1);
-    border-left: 3px solid var(--primary);
+    background: rgba(92, 110, 78, 0.1);
+    border-left: 3px solid #5c6e4e;
 }
 
 .post-sidebar-item.active:hover {
@@ -1675,7 +1675,7 @@ body {
 }
 
 .compose-form-btn.primary:hover {
-    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+    box-shadow: 0 4px 12px rgba(92, 110, 78, 0.3);
     transform: translateY(-1px);
 }
 
@@ -2003,7 +2003,7 @@ body {
 }
 
 .post-action-btn.pin:hover {
-    background: rgba(108, 92, 231, 0.1);
+    background: rgba(92, 110, 78, 0.1);
     border-color: var(--primary);
     color: var(--primary);
 }
@@ -2151,13 +2151,13 @@ body {
 }
 
 .post-btn.primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #5c6e4e 0%, #3d4a33 100%);
     border: none;
     color: white;
 }
 
 .post-btn.primary:hover {
-    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+    box-shadow: 0 4px 12px rgba(92, 110, 78, 0.3);
     transform: translateY(-1px);
 }
 
@@ -2430,13 +2430,13 @@ body {
 }
 
 .manage-btn.primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #5c6e4e 0%, #3d4a33 100%);
     border: none;
     color: white;
 }
 
 .manage-btn.primary:hover {
-    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+    box-shadow: 0 4px 12px rgba(92, 110, 78, 0.3);
     transform: translateY(-1px);
 }
 
@@ -2941,7 +2941,7 @@ body {
 }
 
 .post-status-badge.open {
-    background: rgba(108, 92, 231, 0.1);
+    background: rgba(92, 110, 78, 0.1);
     color: var(--primary);
 }
 
