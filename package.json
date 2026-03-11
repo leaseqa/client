@@ -10,7 +10,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
   },
   "engines": {
-    "node": ">=18.18.0"
+    "node": "20.x"
   },
   "devDependencies": {
     "prettier": "^3.3.3"
