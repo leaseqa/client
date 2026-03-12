@@ -36,15 +36,17 @@ export function getDisplayMetrics({
   });
 
   return {
-    totalUsers: users.hasLoaded ? metrics.totalUsers : null,
+    pendingLawyerCount: users.hasLoaded ? metrics.pendingLawyerCount : null,
     verifiedLawyers: users.hasLoaded ? metrics.verifiedLawyers : null,
+    bannedUserCount: users.hasLoaded ? metrics.bannedUserCount : null,
+    totalUsers: users.hasLoaded ? metrics.totalUsers : null,
     totalSections: sections.hasLoaded ? metrics.totalSections : null,
   } as const;
 }
 
 export function getDatasetState<T = unknown>(input: DatasetStateInput<T>) {
   const hasRows = input.data.length > 0;
-  const showStaleRows = input.hasLoaded && hasRows;
+  const showStaleRows = input.hasLoaded && hasRows && Boolean(input.error);
   const hasError = Boolean(input.error);
 
   return {
@@ -62,8 +64,7 @@ export function getSectionEditorState(input: {
   savePending: boolean;
 }) {
   const neverLoaded = !input.hasSectionsLoaded;
-  const hasError = Boolean(input.sectionsError);
-  const isDisabled = neverLoaded || hasError;
+  const isDisabled = neverLoaded;
   const isOpen = input.formMode !== "closed";
   const canOpen = !isOpen && !isDisabled && !input.savePending;
 
