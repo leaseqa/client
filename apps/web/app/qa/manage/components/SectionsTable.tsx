@@ -4,34 +4,32 @@ import { Folder, FolderDraft } from "../../types";
 
 type SectionsTableProps = {
   folders: Folder[];
-  // New simplified contract
-  mode?: "list-only" | "inline-edit";
+  // New contract (Task 2): list-only behavior with edit/delete intents
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-  // Back-compat props to keep old page.tsx working
-  editingId?: string | null;
-  drafts?: Record<string, FolderDraft>;
-  onDraftChange?: (id: string, field: keyof FolderDraft, value: string) => void;
-  onSave?: (id: string) => void;
-  onCancelEdit?: (id: string) => void;
-  // New contract: pending markers `${folderId}:delete|edit`
+  // Pending markers `${folderId}:delete|edit`
   pendingMarkers?: string[];
+  // Back-compat props to keep old page.tsx compiling (ignored at runtime in Task 2)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  mode?: "list-only" | "inline-edit";
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  editingId?: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  drafts?: Record<string, FolderDraft>;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onDraftChange?: (id: string, field: keyof FolderDraft, value: string) => void;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onSave?: (id: string) => void;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onCancelEdit?: (id: string) => void;
 };
 
 export default function SectionsTable({
   folders,
-  mode,
   onEdit,
   onDelete,
-  editingId = null,
-  drafts = {},
-  onDraftChange,
-  onSave,
-  onCancelEdit,
   pendingMarkers = [],
 }: SectionsTableProps) {
-    const inferredInline = Boolean(onDraftChange && onSave && onCancelEdit);
-    const effectiveMode: "list-only" | "inline-edit" = mode ?? (inferredInline ? "inline-edit" : "list-only");
     return (
         <div className="manage-card">
             <div className="manage-card-header">
@@ -54,95 +52,29 @@ export default function SectionsTable({
                         {folders.map((folder) => {
                             const locked = folder.name === "uncategorized";
                             const rowPending = pendingMarkers.some((m) => m.startsWith(`${folder._id}:`));
-                            if (effectiveMode === "list-only") {
-                                return (
-                                    <div key={folder._id} className={`manage-table-row ${rowPending ? "pending" : ""}`}>
-                                        <div className="manage-table-cell name">
-                                            <span className="manage-folder-name">{folder.displayName}</span>
-                                        </div>
-                                        <div className="manage-table-cell slug">
-                                            <span className="manage-slug">{folder.name}</span>
-                                        </div>
-                                        <div className="manage-table-cell desc">
-                                            <span className="manage-description">{folder.description || "—"}</span>
-                                        </div>
-                                        <div className="manage-table-cell actions">
-                                            <button className="manage-icon-btn edit" onClick={() => onEdit(folder._id)} title="Edit" disabled={rowPending}>
-                                                <FaEdit size={12} />
-                                            </button>
-                                            <button
-                                                className="manage-icon-btn delete"
-                                                onClick={() => onDelete(folder._id)}
-                                                disabled={locked || rowPending}
-                                                title={locked ? "Default section cannot be deleted" : "Delete"}
-                                            >
-                                                <FaTrash size={12} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                );
-                            }
-
-                            // inline-edit back-compat path
-                            const editing = editingId === folder._id;
-                            const draft = drafts[folder._id] || {
-                                name: folder.name,
-                                displayName: folder.displayName,
-                                description: folder.description,
-                                color: folder.color,
-                            };
                             return (
-                                <div key={folder._id} className={`manage-table-row ${editing ? "editing" : ""} ${rowPending ? "pending" : ""}`}>
+                                <div key={folder._id} className={`manage-table-row ${rowPending ? "pending" : ""}`}>
                                     <div className="manage-table-cell name">
-                                        {editing ? (
-                                            <input
-                                                type="text"
-                                                value={draft.displayName}
-                                                onChange={(e) => onDraftChange && onDraftChange(folder._id, "displayName", e.target.value)}
-                                            />
-                                        ) : (
-                                            <span className="manage-folder-name">{folder.displayName}</span>
-                                        )}
+                                        <span className="manage-folder-name">{folder.displayName}</span>
                                     </div>
                                     <div className="manage-table-cell slug">
                                         <span className="manage-slug">{folder.name}</span>
                                     </div>
                                     <div className="manage-table-cell desc">
-                                        {editing ? (
-                                            <textarea
-                                                rows={2}
-                                                value={draft.description}
-                                                onChange={(e) => onDraftChange && onDraftChange(folder._id, "description", e.target.value)}
-                                            />
-                                        ) : (
-                                            <span className="manage-description">{folder.description || "—"}</span>
-                                        )}
+                                        <span className="manage-description">{folder.description || "—"}</span>
                                     </div>
                                     <div className="manage-table-cell actions">
-                                        {editing ? (
-                                            <>
-                                                <button className="manage-icon-btn save" onClick={() => onSave && onSave(folder._id)} title="Save" disabled={rowPending}>
-                                                    <FaCheck size={12} />
-                                                </button>
-                                                <button className="manage-icon-btn cancel" onClick={() => onCancelEdit && onCancelEdit(folder._id)} title="Cancel" disabled={rowPending}>
-                                                    <FaTimes size={12} />
-                                                </button>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <button className="manage-icon-btn edit" onClick={() => onEdit(folder._id)} title="Edit" disabled={rowPending}>
-                                                    <FaEdit size={12} />
-                                                </button>
-                                                <button
-                                                    className="manage-icon-btn delete"
-                                                    onClick={() => onDelete(folder._id)}
-                                                    disabled={locked || rowPending}
-                                                    title={locked ? "Default section cannot be deleted" : "Delete"}
-                                                >
-                                                    <FaTrash size={12} />
-                                                </button>
-                                            </>
-                                        )}
+                                        <button className="manage-icon-btn edit" onClick={() => onEdit(folder._id)} title="Edit" disabled={rowPending}>
+                                            <FaEdit size={12} />
+                                        </button>
+                                        <button
+                                            className="manage-icon-btn delete"
+                                            onClick={() => onDelete(folder._id)}
+                                            disabled={locked || rowPending}
+                                            title={locked ? "Default section cannot be deleted" : "Delete"}
+                                        >
+                                            <FaTrash size={12} />
+                                        </button>
                                     </div>
                                 </div>
                             );

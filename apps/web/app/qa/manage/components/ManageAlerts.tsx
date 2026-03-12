@@ -22,7 +22,16 @@ export default function ManageAlerts({
   onClearError,
   onClearSuccess,
 }: ManageAlertsProps) {
-  const resolvedLatest: Latest = latest ?? (error ? { kind: "error", message: error } : success ? { kind: "success", message: success } : null);
+  // Determine latest: prefer explicit `latest`.
+  // For legacy props, only map when exactly one is set to avoid guessing.
+  let resolvedLatest: Latest = latest ?? null;
+  if (!resolvedLatest) {
+    const hasErr = Boolean(error);
+    const hasOk = Boolean(success);
+    if (hasErr !== hasOk) {
+      resolvedLatest = hasErr ? { kind: "error", message: error } : { kind: "success", message: success };
+    }
+  }
 
   if (!resolvedLatest) return null;
 

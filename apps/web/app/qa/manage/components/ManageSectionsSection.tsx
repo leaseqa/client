@@ -2,41 +2,35 @@ import React from "react";
 import SectionsTable from "./SectionsTable";
 import type { Folder } from "../../types";
 
+type SectionsAvailableProps = {
+  isDataAvailable: true;
+  sections: Folder[];
+  pendingMarkers: string[];
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
+};
+
+type SectionsUnavailableProps = {
+  isDataAvailable: false;
+  error?: string;
+  onRetry?: () => void;
+  children?: React.ReactNode; // back-compat content
+};
+
 type ManageSectionsSectionProps = {
   title: string;
   isLoading: boolean;
-  isDataAvailable: boolean;
-  hasLoaded?: boolean;
-  error?: string;
-  onRetry?: () => void;
-  // Owned data/actions
-  sections?: Folder[];
-  pendingMarkers?: string[];
-  onEdit?: (id: string) => void;
-  onDelete?: (id: string) => void;
-  // Back-compat escape hatch
-  children?: React.ReactNode;
-};
+} & (SectionsAvailableProps | SectionsUnavailableProps);
 
-export default function ManageSectionsSection({
-  title,
-  isLoading,
-  isDataAvailable,
-  error,
-  onRetry,
-  sections = [],
-  pendingMarkers = [],
-  onEdit,
-  onDelete,
-  children,
-}: ManageSectionsSectionProps) {
-  if (!isDataAvailable && error) {
+export default function ManageSectionsSection(props: ManageSectionsSectionProps) {
+  const { title, isLoading } = props;
+  if (!props.isDataAvailable && props.error) {
     return (
       <section id="sections" className="admin-v2-section">
         <div className="admin-v2-inline-error">
-          <p>{error}</p>
-          {onRetry && (
-            <button className="admin-v2-link-btn" onClick={onRetry}>
+          <p>{props.error}</p>
+          {props.onRetry && (
+            <button className="admin-v2-link-btn" onClick={props.onRetry}>
               Retry sections
             </button>
           )}
@@ -52,20 +46,20 @@ export default function ManageSectionsSection({
       </div>
       {isLoading ? (
         <p className="admin-v2-loading-copy">Loading sections…</p>
-      ) : isDataAvailable ? (
-        sections.length ? (
+      ) : props.isDataAvailable ? (
+        props.sections.length ? (
           <SectionsTable
-            folders={sections}
-            pendingMarkers={pendingMarkers}
-            onEdit={onEdit || (() => {})}
-            onDelete={onDelete || (() => {})}
+            folders={props.sections}
+            pendingMarkers={props.pendingMarkers}
+            onEdit={props.onEdit}
+            onDelete={props.onDelete}
           />
         ) : (
           <div className="manage-empty-state">No sections found. Create one to get started.</div>
         )
       ) : (
         // Back-compat path
-        children
+        props.children
       )}
     </section>
   );

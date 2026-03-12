@@ -9,6 +9,7 @@ import ManageUsersSection from "./ManageUsersSection";
 import ManageSectionsSection from "./ManageSectionsSection";
 import ManageSidebar from "./ManageSidebar";
 import ManageStats from "./ManageStats";
+import type { User, Folder } from "../../types";
 
 // Minimal stubs for event handlers
 const noop = () => {};
@@ -74,15 +75,16 @@ describe("Admin shell render smoke", () => {
     expect(latestSuccessHtml).not.toContain("Boom");
   });
 
-  test("Stats renders only Users, Sections, Verified Lawyers cards", () => {
+  test("Stats renders only Users, Sections, Verified Lawyers cards and omits null metrics", () => {
     const html = renderToStaticMarkup(
-      <ManageStats stats={{ totalUsers: 10, totalSections: 3, verifiedLawyers: 4, pendingLawyerCount: 1, bannedUserCount: 2 }} />,
+      <ManageStats stats={{ totalUsers: 10, totalSections: null, verifiedLawyers: 4 }} />,
     );
     expect(html).toContain("Users");
-    expect(html).toContain("Sections");
     expect(html).toContain("Verified Lawyers");
     expect(html).not.toContain("Pending Verification");
     expect(html).not.toContain("Banned Users");
+    // Omit null metric card
+    expect(html).not.toContain("Sections");
   });
 
   test("ManageUsersSection and ManageSectionsSection render inline retry states", () => {
@@ -91,7 +93,6 @@ describe("Admin shell render smoke", () => {
         title="Users"
         isLoading={false}
         isDataAvailable={false}
-        hasLoaded={false}
         error="Failed to load users"
         onRetry={noop}
       >
@@ -104,7 +105,6 @@ describe("Admin shell render smoke", () => {
         title="Sections"
         isLoading={false}
         isDataAvailable={false}
-        hasLoaded={false}
         error="Failed to load sections"
         onRetry={noop}
       >
@@ -117,13 +117,13 @@ describe("Admin shell render smoke", () => {
   });
 
   test("ManageUsersSection and ManageSectionsSection own their rendering when data is available", () => {
+    const users: User[] = [{ _id: "u1", username: "alice", email: "a@x", role: "tenant" }];
     const usersHtml = renderToStaticMarkup(
       <ManageUsersSection
         title="Users"
         isLoading={false}
         isDataAvailable={true}
-        hasLoaded={true}
-        users={[{ _id: "u1", username: "alice", email: "a@x", role: "tenant" }] as any}
+        users={users}
         currentUserId="u2"
         pendingMarkers={[]}
         onChangeRole={noop}
@@ -135,13 +135,13 @@ describe("Admin shell render smoke", () => {
     expect(usersHtml).toContain("Users");
     expect(usersHtml).toContain("alice");
 
+    const sections: Folder[] = [{ _id: "s1", name: "repairs", displayName: "Repairs", description: "", color: "" }];
     const sectionsHtml = renderToStaticMarkup(
       <ManageSectionsSection
         title="Sections"
         isLoading={false}
         isDataAvailable={true}
-        hasLoaded={true}
-        sections={[{ _id: "s1", name: "repairs", displayName: "Repairs", description: "", color: "" }] as any}
+        sections={sections}
         pendingMarkers={[]}
         onEdit={noop}
         onDelete={noop}
