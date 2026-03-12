@@ -8,9 +8,16 @@ export type Citation = {
   snippet: string;
 };
 
+export type AnswerBullet = {
+  text: string;
+  citationIndices: number[];
+};
+
 export type ChatMessage = {
   role: "user" | "assistant";
   content: string;
+  summary?: string | null;
+  bullets?: AnswerBullet[];
   citations: Citation[];
   createdAt: string;
 };

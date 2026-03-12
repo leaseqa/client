@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Badge, Form, Spinner } from "react-bootstrap";
 import { Clock3, FileText, MessageSquareQuote, Shield } from "lucide-react";
@@ -13,9 +13,24 @@ import AceternityFileUpload from "@/components/ui/AceternityFileUpload";
 import AceternityStatefulButton from "@/components/ui/AceternityStatefulButton";
 import PageLoadingState from "@/components/ui/PageLoadingState";
 import * as client from "./client";
-import { ChatMessage, RagSession } from "./types";
+import { RagSession } from "./types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
+import {
+  CHAT_UPLOAD_ACCEPT,
+  CHAT_UPLOAD_MAX_MB,
+  FILE_SUGGESTED_PROMPTS,
+  AUTO_ANALYZE_QUESTION,
+  getDisplayedSource,
+  getEmptyStateMessage,
+  getInlineCitationItems,
+  getNextRevealLength,
+  getResultsPanelState,
+  getSessionInputPlan,
+  shouldShowLegacyCitationList,
+  TEXT_RETRY_PROMPT_LABEL,
+  getVisibleMessages,
+} from "./view-model";
 
 const formatStatusLabel = (status: RagSession["status"]) => {
   if (status === "ready") {
@@ -55,11 +70,23 @@ export default function AIReviewPage() {
   const [loadingSessions, setLoadingSessions] = useState(false);
   const [creatingSession, setCreatingSession] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
+  const [pendingDraftSource, setPendingDraftSource] = useState<{
+    sourceName: string;
+    sourcePreview: string;
+  } | null>(null);
+  const [pendingUserQuestion, setPendingUserQuestion] = useState<string | null>(null);
+  const [pendingAssistantLabel, setPendingAssistantLabel] = useState<string | null>(null);
+  const [revealingMessage, setRevealingMessage] = useState<{
+    key: string;
+    fullText: string;
+    visibleLength: number;
+  } | null>(null);
   const [toast, setToast] = useState<ToastData>({
     show: false,
     message: "",
     type: "error",
   });
+  const revealTimerRef = useRef<number | null>(null);
 
   const showToast = useCallback((message: string, type: "success" | "error") => {
     setToast({ show: true, message, type });
@@ -85,6 +112,26 @@ export default function AIReviewPage() {
       setLoadingSessions(false);
     }
   }, [showToast]);
+
+  const stopReveal = useCallback(() => {
+    if (revealTimerRef.current) {
+      window.clearTimeout(revealTimerRef.current);
+      revealTimerRef.current = null;
+    }
+    setRevealingMessage(null);
+  }, []);
+
+  const startReveal = useCallback((messageKey: string, fullText: string) => {
+    stopReveal();
+    if (!fullText) {
+      return;
+    }
+    setRevealingMessage({
+      key: messageKey,
+      fullText,
+      visibleLength: 0,
+    });
+  }, [stopReveal]);
 
   const refreshActiveSession = useCallback(async (sessionId: string) => {
     try {
@@ -124,12 +171,143 @@ export default function AIReviewPage() {
     return () => window.clearTimeout(timer);
   }, [activeSession, refreshActiveSession]);
 
+  useEffect(() => {
+    if (!revealingMessage) {
+      return;
+    }
+
+    if (revealingMessage.visibleLength >= revealingMessage.fullText.length) {
+      stopReveal();
+      return;
+    }
+
+    revealTimerRef.current = window.setTimeout(() => {
+      setRevealingMessage((current) => {
+        if (!current) {
+          return current;
+        }
+        const nextLength = getNextRevealLength(
+          current.visibleLength,
+          current.fullText,
+        );
+        if (nextLength >= current.fullText.length) {
+          return null;
+        }
+        return {
+          ...current,
+          visibleLength: nextLength,
+        };
+      });
+      revealTimerRef.current = null;
+    }, 18);
+
+    return () => {
+      if (revealTimerRef.current) {
+        window.clearTimeout(revealTimerRef.current);
+        revealTimerRef.current = null;
+      }
+    };
+  }, [revealingMessage, stopReveal]);
+
+  useEffect(() => {
+    return () => {
+      if (revealTimerRef.current) {
+        window.clearTimeout(revealTimerRef.current);
+      }
+    };
+  }, []);
+
+  const displayedSource = useMemo(
+    () =>
+      getDisplayedSource({
+        activeSession,
+        pendingDraftSource,
+      }),
+    [activeSession, pendingDraftSource],
+  );
+  const showSession = Boolean(displayedSource);
+  const displaySourcePreview = displayedSource?.sourcePreview || "";
+  const displayStatus: RagSession["status"] = displayedSource?.status || "ready";
+  const resultsPanelState = useMemo(
+    () =>
+      getResultsPanelState({
+        activeSession,
+        pendingDraftSource,
+      }),
+    [activeSession, pendingDraftSource],
+  );
+  const activeMessages = useMemo(
+    () => (pendingDraftSource ? [] : getVisibleMessages(activeSession)),
+    [activeSession, pendingDraftSource],
+  );
+
+  const triggerLatestAssistantReveal = useCallback((session: RagSession) => {
+    const visibleMessages = getVisibleMessages(session);
+    const latestAssistantIndex = [...visibleMessages]
+      .reverse()
+      .findIndex((message) => message.role === "assistant");
+    if (latestAssistantIndex === -1) {
+      return;
+    }
+    const actualIndex = visibleMessages.length - 1 - latestAssistantIndex;
+    const latestAssistant = visibleMessages[actualIndex];
+    startReveal(`${latestAssistant.createdAt}-${actualIndex}`, latestAssistant.content);
+  }, [startReveal]);
+
+  const submitQuestion = useCallback(async (rawQuestion: string) => {
+    if (!activeSession) {
+      showToast("Create a chat source first.", "error");
+      return;
+    }
+    if (activeSession.status !== "ready") {
+      showToast("This source is still indexing. Try again in a moment.", "error");
+      return;
+    }
+
+    const trimmedQuestion = rawQuestion.trim();
+    if (!trimmedQuestion) {
+      return;
+    }
+
+    stopReveal();
+    setQuestion("");
+    setPendingUserQuestion(trimmedQuestion);
+    setPendingAssistantLabel("Researching the best supported answer...");
+
+    try {
+      setSendingMessage(true);
+      const result = await client.sendMessage(activeSession._id, trimmedQuestion);
+      setPendingUserQuestion(null);
+      setPendingAssistantLabel(null);
+      setActiveSession(result.session);
+      setSessions((current) => [
+        result.session,
+        ...current.filter((item) => item._id !== result.session._id),
+      ]);
+      triggerLatestAssistantReveal(result.session);
+    } catch (error: any) {
+      setPendingUserQuestion(null);
+      setPendingAssistantLabel(null);
+      setQuestion(trimmedQuestion);
+      showToast(
+        error.response?.data?.error?.message || "Failed to send message.",
+        "error",
+      );
+    } finally {
+      setSendingMessage(false);
+    }
+  }, [activeSession, showToast, stopReveal, triggerLatestAssistantReveal]);
+
   const handleCreateSession = async (
     event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
-    if (!selectedFile && !sourceText.trim()) {
-      showToast("Upload a PDF or paste text first.", "error");
+    const inputPlan = getSessionInputPlan({
+      hasFile: Boolean(selectedFile),
+      sourceText,
+    });
+    if (inputPlan.error) {
+      showToast(inputPlan.error, "error");
       return;
     }
 
@@ -140,10 +318,24 @@ export default function AIReviewPage() {
     if (sourceText.trim()) {
       formData.set("sourceText", sourceText.trim());
     }
+    if (inputPlan.initialQuestion) {
+      formData.set("initialQuestion", inputPlan.initialQuestion);
+      setPendingDraftSource({
+        sourceName: "pasted-text",
+        sourcePreview: sourceText.trim(),
+      });
+      setPendingAssistantLabel("Analyzing this clause against the handbook...");
+    } else {
+      setPendingDraftSource(null);
+      setPendingAssistantLabel(null);
+    }
 
     try {
       setCreatingSession(true);
+      stopReveal();
       const created = await client.createSession(formData);
+      setPendingDraftSource(null);
+      setPendingAssistantLabel(null);
       setActiveSession(created);
       setSessions((current) => [
         created,
@@ -152,13 +344,29 @@ export default function AIReviewPage() {
       setSourceText("");
       setSelectedFile(null);
       setUploadResetKey((current) => current + 1);
-      showToast(
-        created.status === "ready"
-          ? "Source loaded. You can start asking questions now."
-          : "Source uploaded. We are indexing it now.",
-        "success",
-      );
+      if (inputPlan.initialQuestion) {
+        const hasAssistantAnswer = getVisibleMessages(created).some(
+          (message) => message.role === "assistant",
+        );
+        if (hasAssistantAnswer) {
+          triggerLatestAssistantReveal(created);
+        } else {
+          showToast(
+            "The first answer failed. Retry the clause analysis or ask your own question.",
+            "error",
+          );
+        }
+      } else {
+        showToast(
+          created.status === "ready"
+            ? "Source loaded. Pick a suggested question or ask your own."
+            : "Source uploaded. We are indexing it now.",
+          "success",
+        );
+      }
     } catch (error: any) {
+      setPendingDraftSource(null);
+      setPendingAssistantLabel(null);
       showToast(
         error.response?.data?.error?.message || "Failed to load source.",
         "error",
@@ -170,38 +378,8 @@ export default function AIReviewPage() {
 
   const handleSendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!activeSession) {
-      showToast("Create a chat source first.", "error");
-      return;
-    }
-    if (activeSession.status !== "ready") {
-      showToast("This source is still indexing. Try again in a moment.", "error");
-      return;
-    }
-    if (!question.trim()) {
-      return;
-    }
-
-    try {
-      setSendingMessage(true);
-      const result = await client.sendMessage(activeSession._id, question.trim());
-      setActiveSession(result.session);
-      setSessions((current) => [
-        result.session,
-        ...current.filter((item) => item._id !== result.session._id),
-      ]);
-      setQuestion("");
-    } catch (error: any) {
-      showToast(
-        error.response?.data?.error?.message || "Failed to send message.",
-        "error",
-      );
-    } finally {
-      setSendingMessage(false);
-    }
+    await submitQuestion(question);
   };
-
-  const activeMessages: ChatMessage[] = activeSession?.messages || [];
 
   if (session.status === "loading" || session.status === "unauthenticated") {
     return (
@@ -235,8 +413,8 @@ export default function AIReviewPage() {
           <AceternityFileUpload
             key={uploadResetKey}
             name="file"
-            accept="application/pdf,.docx,text/plain,.txt,text/markdown,.md"
-            maxSizeMb={8}
+            accept={CHAT_UPLOAD_ACCEPT}
+            maxSizeMb={CHAT_UPLOAD_MAX_MB}
             onFilesChangeAction={(files) => setSelectedFile(files[0] || null)}
           />
 
@@ -268,7 +446,15 @@ export default function AIReviewPage() {
               status={creatingSession ? "loading" : "idle"}
               className="btn-unified btn-unified-primary btn-unified-md"
             >
-              {creatingSession ? "Loading source" : "Start chat"}
+              {creatingSession
+                ? pendingDraftSource
+                  ? "Analyzing clause"
+                  : "Loading source"
+                : selectedFile
+                  ? "Start chat"
+                  : sourceText.trim()
+                    ? "Analyze clause"
+                    : "Start chat"}
             </AceternityStatefulButton>
           </div>
         </Form>
@@ -320,30 +506,30 @@ export default function AIReviewPage() {
         <div className="review-results-header">
           <div>
             <h2 className="qa-page-title" style={{ fontSize: "1.4rem" }}>
-              {activeSession ? "Ask follow-up questions" : "Chat"}
+              {showSession ? resultsPanelState.title : "Chat"}
             </h2>
             <p className="qa-page-sub">
-              {activeSession
-                ? `Source: ${activeSession.sourceName}`
+              {showSession
+                ? resultsPanelState.subtitle
                 : "Create a source above, then ask questions here."}
             </p>
           </div>
-          {activeSession ? (
-            <Badge bg={formatStatusVariant(activeSession.status)}>
-              {formatStatusLabel(activeSession.status)}
+          {showSession ? (
+            <Badge bg={formatStatusVariant(displayStatus)}>
+              {formatStatusLabel(displayStatus)}
             </Badge>
           ) : null}
         </div>
 
-        {activeSession ? (
+        {showSession ? (
           <>
             <div className="review-recs-panel">
               <div className="qa-sidebar-label">
                 <FileText size={12} />
                 <span>Current source</span>
               </div>
-              <p className="review-summary-text">{activeSession.sourceTextPreview}</p>
-              {activeSession.error ? (
+              <p className="review-summary-text">{displaySourcePreview}</p>
+              {activeSession?.error ? (
                 <p className="text-danger mb-0 small">{activeSession.error}</p>
               ) : null}
             </div>
@@ -351,93 +537,189 @@ export default function AIReviewPage() {
             <div className="review-next-step">
               <div className="qa-sidebar-label">
                 <MessageSquareQuote size={12} />
-                <span>Conversation</span>
+                <span>{resultsPanelState.conversationLabel}</span>
               </div>
               <div className="review-chat-log">
-                {activeMessages.length > 0 ? (
-                  activeMessages.map((message, index) => (
-                    <article
-                      key={`${message.createdAt}-${index}`}
-                      className={`review-chat-message review-chat-message-${message.role}`}
-                    >
-                      <div className="review-chat-role">{message.role}</div>
-                      <div className="review-chat-body">{message.content}</div>
-                      {message.citations.length > 0 ? (
-                        <div className="review-chat-citations">
-                          {message.citations.map((citation, citationIndex) => (
-                            <div
-                              key={`${citation.sourceName}-${citationIndex}`}
-                              className="review-chat-citation"
-                            >
-                              <div className="review-chat-citation-title">
-                                {citation.sourceUrl ? (
-                                  <a
-                                    href={citation.sourceUrl}
-                                    target="_blank"
-                                    rel="noreferrer"
+                {activeMessages.length > 0 || pendingDraftSource || pendingUserQuestion || pendingAssistantLabel ? (
+                  <>
+                    {activeMessages.map((message, index) => {
+                      const messageKey = `${message.createdAt}-${index}`;
+                      const isRevealing = revealingMessage?.key === messageKey;
+                      const messageBody = isRevealing
+                        ? revealingMessage.fullText.slice(0, revealingMessage.visibleLength)
+                        : message.content;
+
+                      return (
+                        <article
+                          key={messageKey}
+                          className={`review-chat-message review-chat-message-${message.role}`}
+                        >
+                          <div className="review-chat-role">{message.role}</div>
+                          {isRevealing || !message.summary || !message.bullets?.length ? (
+                            <>
+                              <div
+                                className={`review-chat-body ${isRevealing ? "is-revealing" : ""}`}
+                              >
+                                {messageBody}
+                              </div>
+                              {shouldShowLegacyCitationList(message) ? (
+                                <div className="review-chat-inline-citations review-chat-inline-citations-block">
+                                  {getInlineCitationItems({
+                                    citations: message.citations,
+                                    citationIndices: message.citations.map((_, citationIndex) => citationIndex),
+                                  }).map((citation, citationIndex) =>
+                                    citation.sourceUrl ? (
+                                      <a
+                                        key={`${messageKey}-legacy-${citationIndex}`}
+                                        href={citation.sourceUrl}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="review-chat-inline-citation"
+                                      >
+                                        {citation.label}
+                                      </a>
+                                    ) : (
+                                      <span
+                                        key={`${messageKey}-legacy-${citationIndex}`}
+                                        className="review-chat-inline-citation is-static"
+                                      >
+                                        {citation.label}
+                                      </span>
+                                    ),
+                                  )}
+                                </div>
+                              ) : null}
+                            </>
+                          ) : (
+                            <div className="review-chat-structured">
+                              <p className="review-chat-summary">{message.summary}</p>
+                              <ul className="review-chat-bullet-list">
+                                {message.bullets.map((bullet, bulletIndex) => (
+                                  <li
+                                    key={`${messageKey}-bullet-${bulletIndex}`}
+                                    className="review-chat-bullet-item"
                                   >
-                                    {citation.sourceName}
-                                    {citation.chapterRef
-                                      ? ` · Chapter ${citation.chapterRef}`
-                                      : ""}
-                                  </a>
-                                ) : (
-                                  <>
-                                    {citation.sourceName}
-                                    {citation.chapterRef
-                                      ? ` · Chapter ${citation.chapterRef}`
-                                      : ""}
-                                  </>
-                                )}
-                              </div>
-                              <div className="review-chat-citation-copy">
-                                {citation.snippet}
-                              </div>
+                                    <span>{bullet.text}</span>
+                                    {bullet.citationIndices.length > 0 ? (
+                                    <span className="review-chat-inline-citations">
+                                        {getInlineCitationItems({
+                                          citations: message.citations,
+                                          citationIndices: bullet.citationIndices,
+                                        }).map((citation, citationIndex) =>
+                                          citation.sourceUrl ? (
+                                            <a
+                                              key={`${messageKey}-${bulletIndex}-${citationIndex}`}
+                                              href={citation.sourceUrl}
+                                              target="_blank"
+                                              rel="noreferrer"
+                                              className="review-chat-inline-citation"
+                                            >
+                                              {citation.label}
+                                            </a>
+                                          ) : (
+                                            <span
+                                              key={`${messageKey}-${bulletIndex}-${citationIndex}`}
+                                              className="review-chat-inline-citation is-static"
+                                            >
+                                              {citation.label}
+                                            </span>
+                                          ),
+                                        )}
+                                      </span>
+                                    ) : null}
+                                  </li>
+                                ))}
+                              </ul>
                             </div>
-                          ))}
+                          )}
+                        </article>
+                      );
+                    })}
+                    {pendingUserQuestion ? (
+                      <article className="review-chat-message review-chat-message-user">
+                        <div className="review-chat-role">user</div>
+                        <div className="review-chat-body">{pendingUserQuestion}</div>
+                      </article>
+                    ) : null}
+                    {pendingAssistantLabel ? (
+                      <article className="review-chat-message review-chat-message-assistant">
+                        <div className="review-chat-role">assistant</div>
+                        <div className="review-chat-body review-chat-body-pending">
+                          {pendingAssistantLabel}
                         </div>
-                      ) : null}
-                    </article>
-                  ))
+                      </article>
+                    ) : null}
+                  </>
                 ) : (
-                  <div className="review-history-inline">
-                    Ask your first question about this source.
-                  </div>
+                  <>
+                    {activeSession?.status === "ready" ? (
+                      <div className="review-prompt-grid">
+                        {(activeSession.sourceKind === "upload"
+                          ? FILE_SUGGESTED_PROMPTS
+                          : [TEXT_RETRY_PROMPT_LABEL]
+                        ).map((prompt) => (
+                          <button
+                            key={prompt}
+                            type="button"
+                            className="review-prompt-chip"
+                            onClick={() =>
+                              void submitQuestion(
+                                activeSession.sourceKind === "upload"
+                                  ? prompt
+                                  : AUTO_ANALYZE_QUESTION,
+                              )
+                            }
+                          >
+                            {prompt}
+                          </button>
+                        ))}
+                      </div>
+                    ) : null}
+                    <div className="review-history-inline">
+                      {getEmptyStateMessage({ activeSession })}
+                    </div>
+                  </>
                 )}
               </div>
             </div>
 
-            <Form onSubmit={handleSendMessage} className="review-upload-stack">
-              <Form.Group>
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  value={question}
-                  onChange={(event) => setQuestion(event.target.value)}
-                  placeholder="Ask a question about this document or your housing issue."
-                  className="review-textarea"
-                />
-              </Form.Group>
+            {activeSession && !pendingDraftSource ? (
+              <Form onSubmit={handleSendMessage} className="review-upload-stack">
+                <Form.Group>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={question}
+                    onChange={(event) => setQuestion(event.target.value)}
+                    placeholder="Ask a question about this document or your housing issue."
+                    className="review-textarea"
+                  />
+                </Form.Group>
 
-              <div className="review-form-footer">
-                <div className="review-note">
-                  <Shield size={14} />
-                  <span>
-                    {activeSession.status === "ready"
-                      ? "Answers cite your source and handbook materials."
-                      : "Wait for indexing to finish before asking a question."}
-                  </span>
+                <div className="review-form-footer">
+                  <div className="review-note">
+                    <Shield size={14} />
+                    <span>
+                      {activeSession.status === "ready"
+                        ? "LeaseQA provides legal information, not legal advice."
+                        : "Wait for indexing to finish before asking a question."}
+                    </span>
+                  </div>
+                  <AceternityStatefulButton
+                    type="submit"
+                    status={sendingMessage ? "loading" : "idle"}
+                    className="btn-unified btn-unified-primary btn-unified-md"
+                    disabled={!question.trim() || activeSession.status !== "ready"}
+                  >
+                    {sendingMessage ? "Sending" : "Send question"}
+                  </AceternityStatefulButton>
                 </div>
-                <AceternityStatefulButton
-                  type="submit"
-                  status={sendingMessage ? "loading" : "idle"}
-                  className="btn-unified btn-unified-primary btn-unified-md"
-                  disabled={!question.trim() || activeSession.status !== "ready"}
-                >
-                  {sendingMessage ? "Sending" : "Send question"}
-                </AceternityStatefulButton>
+              </Form>
+            ) : (
+              <div className="review-history-inline">
+                Finishing the first answer. You can ask follow-up questions in a moment.
               </div>
-            </Form>
+            )}
           </>
         ) : (
           <div className="review-history-inline">

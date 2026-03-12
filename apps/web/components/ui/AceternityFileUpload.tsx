@@ -40,6 +40,12 @@ export default function AceternityFileUpload({
         () => accept.replace(/\s+/g, "") === "application/pdf",
         [accept],
     );
+    const pdfAndDocxOnly = useMemo(
+        () =>
+            accept.replace(/\s+/g, "") ===
+            "application/pdf,.docx",
+        [accept],
+    );
 
     const syncFiles = (nextFiles: File[]) => {
         setFiles(nextFiles);
@@ -92,7 +98,13 @@ export default function AceternityFileUpload({
                     </div>
                     <div>
                         <div className="acet-file-upload-title">
-                            {activeFile ? activeFile.name : pdfOnly ? "Upload a lease PDF" : "Upload a lease file"}
+                            {activeFile
+                                ? activeFile.name
+                                : pdfOnly
+                                    ? "Upload a lease PDF"
+                                    : pdfAndDocxOnly
+                                        ? "Upload a lease PDF or Word file"
+                                        : "Upload a lease file"}
                         </div>
                         <div className="acet-file-upload-note">
                             {isDragActive
@@ -124,7 +136,7 @@ export default function AceternityFileUpload({
                                 </div>
                             </div>
                             <div className="acet-file-upload-card-type">
-                                {activeFile.type || "PDF"}
+                                {activeFile.type || (pdfAndDocxOnly ? "PDF/DOCX" : "PDF")}
                             </div>
                         </motion.div>
                     ) : (
@@ -136,7 +148,11 @@ export default function AceternityFileUpload({
                             className="acet-file-upload-empty"
                         >
                             <div className="acet-file-upload-empty-line">
-                                {pdfOnly ? "PDF only." : "PDF, DOCX, TXT, or Markdown."} One file at a time.
+                                {pdfOnly
+                                    ? "PDF only."
+                                    : pdfAndDocxOnly
+                                        ? "PDF or Word (.docx) only."
+                                        : "PDF, DOCX, TXT, or Markdown."} One file at a time.
                             </div>
                         </motion.div>
                     )}
