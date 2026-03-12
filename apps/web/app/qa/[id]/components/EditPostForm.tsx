@@ -1,3 +1,4 @@
+import React from "react";
 import {FaTimes} from "react-icons/fa";
 import dynamic from "next/dynamic";
 import {Folder} from "../../types";
@@ -28,9 +29,9 @@ export default function EditPostForm({
                                          onDetailsChange,
                                          onUrgencyChange,
                                          onFoldersChange,
-                                         onSave,
-                                         onCancel,
-                                     }: EditPostFormProps) {
+                                     onSave,
+                                     onCancel,
+                                 }: EditPostFormProps) {
     const handleFolderAdd = (folderName: string) => {
         if (folderName && !editFolders.includes(folderName)) {
             onFoldersChange([...editFolders, folderName]);
@@ -43,13 +44,16 @@ export default function EditPostForm({
 
     return (
         <div className="post-edit-form">
-            <input
-                type="text"
-                className="post-edit-title"
-                value={editSummary}
-                onChange={(e) => onSummaryChange(e.target.value.slice(0, 100))}
-                placeholder="Post title"
-            />
+            <div className="post-edit-group post-edit-group-full">
+                <label className="post-edit-label">Title</label>
+                <input
+                    type="text"
+                    className="post-edit-title"
+                    value={editSummary}
+                    onChange={(e) => onSummaryChange(e.target.value.slice(0, 100))}
+                    placeholder="Post title"
+                />
+            </div>
 
             <div className="post-edit-row">
                 <div className="post-edit-group">
@@ -102,13 +106,16 @@ export default function EditPostForm({
                 </div>
             )}
 
-            <div className="post-editor-box">
-                <ReactQuill theme="snow" value={editDetails} onChange={onDetailsChange}/>
+            <div className="post-edit-group post-edit-group-full">
+                <label className="post-edit-label">Details</label>
+                <div className="post-editor-box">
+                    <ReactQuill theme="snow" value={editDetails} onChange={onDetailsChange}/>
+                </div>
             </div>
 
-            <div className="post-editor-actions">
-                <button className="post-btn primary" onClick={onSave}>Save</button>
-                <button className="post-btn secondary" onClick={onCancel}>Cancel</button>
+            <div className="post-editor-actions post-editor-actions-inline">
+                <button className="post-btn primary" onClick={onSave} type="button">Save</button>
+                <button className="post-btn secondary" onClick={onCancel} type="button">Cancel</button>
             </div>
         </div>
     );

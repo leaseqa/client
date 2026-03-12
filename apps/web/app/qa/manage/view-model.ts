@@ -73,3 +73,19 @@ export function getSectionEditorState(input: {
 
   return { canOpen, isDisabled, isOpen } as const;
 }
+
+/**
+ * Decide whether to keep the section editor panel open after a refetch.
+ * Rules:
+ * - Only applies when currently in edit mode
+ * - Keep open if the edited section id still exists in the freshly fetched list
+ * - Otherwise, close and surface an error at the page level
+ */
+export function shouldKeepEditorOpenAfterRefetch(input: {
+  formMode: EditorFormMode;
+  editedSectionId: string | null;
+  sections: Array<{ _id: string }>;
+}) {
+  if (input.formMode !== "edit" || !input.editedSectionId) return false;
+  return input.sections.some((s) => s._id === input.editedSectionId);
+}

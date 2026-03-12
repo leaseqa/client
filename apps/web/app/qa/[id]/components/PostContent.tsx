@@ -1,3 +1,4 @@
+import React from "react";
 import {FaEdit, FaTrash, FaEye, FaMapPin} from "react-icons/fa";
 import {Check} from "lucide-react";
 import {format} from "date-fns";
@@ -29,9 +30,10 @@ export default function PostContent({
     const isAnonymous = (post as any).isAnonymous;
     const authorName = isAnonymous ? "Anonymous" : (post.author?.username || post.author?.email || "Unknown");
     const authorInitial = isAnonymous ? "?" : authorName.charAt(0).toUpperCase();
+    const postTypeLabel = post.postType ? post.postType.replace("_", " ") : "question";
 
     return (
-        <div className="post-detail-card">
+        <section className="post-detail-card post-detail-card-main qa-v2-panel">
             <div className="post-detail-header">
                 <div className="post-detail-author-section">
                     <div className={`icon-circle icon-circle-md ${isAnonymous ? "icon-bg-muted" : "icon-bg-purple"}`}>
@@ -100,10 +102,15 @@ export default function PostContent({
                     onCancel={onCancel}
                 />
             ) : (
-                <>
+                <div className="post-detail-body">
+                    <div className="post-detail-kicker-row">
+                        <span className="post-detail-kicker">
+                            {postTypeLabel.charAt(0).toUpperCase() + postTypeLabel.slice(1)}
+                        </span>
+                    </div>
                     <h1 className="post-detail-title">{post.summary}</h1>
                     <div className="post-detail-content" dangerouslySetInnerHTML={{__html: post.details}}/>
-                </>
+                </div>
             )}
 
             {post.attachments && post.attachments.length > 0 && (
@@ -164,6 +171,6 @@ export default function PostContent({
                     </span>
                 </div>
             )}
-        </div>
+        </section>
     );
 }

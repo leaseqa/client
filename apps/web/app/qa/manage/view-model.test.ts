@@ -4,11 +4,10 @@ import {
   getDisplayMetrics,
   getDatasetState,
   getSectionEditorState,
+  shouldKeepEditorOpenAfterRefetch,
 } from "./view-model";
 
 // Types used in tests-only context
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-
 type Any = any;
 
 describe("deriveManageMetrics", () => {
@@ -198,5 +197,34 @@ describe("getSectionEditorState", () => {
         savePending: true,
       }),
     ).toEqual({ canOpen: false, isDisabled: true, isOpen: false });
+  });
+});
+
+describe("shouldKeepEditorOpenAfterRefetch", () => {
+  test("keeps editor open in edit mode when the edited section still exists after refetch", () => {
+    const keep = shouldKeepEditorOpenAfterRefetch({
+      formMode: "edit",
+      editedSectionId: "s1",
+      sections: [{ _id: "s1" }, { _id: "s2" }] as Any,
+    });
+    expect(keep).toBe(true);
+  });
+
+  test("closes editor when the edited section disappears after refetch", () => {
+    const keep = shouldKeepEditorOpenAfterRefetch({
+      formMode: "edit",
+      editedSectionId: "s1",
+      sections: [{ _id: "s2" }] as Any,
+    });
+    expect(keep).toBe(false);
+  });
+
+  test("closed or create modes never force persistence", () => {
+    expect(
+      shouldKeepEditorOpenAfterRefetch({ formMode: "closed", editedSectionId: "s1", sections: [] as Any }),
+    ).toBe(false);
+    expect(
+      shouldKeepEditorOpenAfterRefetch({ formMode: "create", editedSectionId: "s1", sections: [] as Any }),
+    ).toBe(false);
   });
 });

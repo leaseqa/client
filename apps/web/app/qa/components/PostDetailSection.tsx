@@ -1,7 +1,7 @@
 "use client";
 
 import {useCallback, useEffect, useState} from "react";
-import {Button} from "react-bootstrap";
+import {ArrowLeft} from "lucide-react";
 import {useSelector} from "react-redux";
 import {RootState} from "@/app/store";
 import * as client from "../client";
@@ -198,26 +198,57 @@ export default function PostDetailSection({postId, folders, onCloseAction, onPos
 
     if (loading) {
         return (
-            <div className="d-flex justify-content-center align-items-center py-5">
-                <div className="text-center">
-                    <div className="spinner-border text-primary mb-2" role="status"/>
-                    <div className="text-secondary">Loading post…</div>
+            <section className="post-detail-empty-panel qa-v2-panel">
+                <div className="post-detail-context-bar">
+                    <button className="post-detail-context-link" onClick={onCloseAction} type="button">
+                        <ArrowLeft size={14}/>
+                        Back to questions
+                    </button>
                 </div>
-            </div>
+                <div className="d-flex justify-content-center align-items-center py-4">
+                    <div className="text-center">
+                        <div className="spinner-border text-primary mb-2" role="status"/>
+                        <div className="text-secondary">Loading post…</div>
+                    </div>
+                </div>
+            </section>
         );
     }
 
     if (!post) {
         return (
-            <div className="text-center py-5">
-                <p className="text-danger">Post not found.</p>
-                <Button variant="link" onClick={onCloseAction}>Back to QA</Button>
-            </div>
+            <section className="post-detail-empty-panel qa-v2-panel">
+                <div className="post-detail-context-bar">
+                    <button className="post-detail-context-link" onClick={onCloseAction} type="button">
+                        <ArrowLeft size={14}/>
+                        Back to questions
+                    </button>
+                </div>
+                <div className="post-detail-empty-copy">
+                    <div className="post-section-kicker">Question detail</div>
+                    <h2 className="post-detail-empty-title">{error || "Post not found."}</h2>
+                    <p className="post-empty-note">Choose another thread from the QA list and try again.</p>
+                </div>
+            </section>
         );
     }
 
     return (
-        <>
+        <div className="post-detail-stack">
+            <div className="post-detail-context-bar">
+                <button className="post-detail-context-link" onClick={onCloseAction} type="button">
+                    <ArrowLeft size={14}/>
+                    Back to questions
+                </button>
+                <div className="post-detail-context-meta">
+                    <span className="post-detail-context-chip">
+                        {isAdmin ? "Moderation view" : "Question detail"}
+                    </span>
+                    <span className="post-detail-context-chip">{answers.length} answers</span>
+                    <span className="post-detail-context-chip">{discussions.length} discussions</span>
+                </div>
+            </div>
+
             <PostContent
                 post={post}
                 folders={folders}
@@ -316,6 +347,6 @@ export default function PostDetailSection({postId, folders, onCloseAction, onPos
                     setFollowFocused(false);
                 }}
             />
-        </>
+        </div>
     );
 }

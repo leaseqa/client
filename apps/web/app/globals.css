@@ -2641,9 +2641,6 @@ body {
     background: var(--light-gray);
 }
 
-.manage-table-row.editing {
-    background: #fefce8;
-}
 
 .manage-table-cell {
     padding: 0.75rem 1rem;
@@ -2669,19 +2666,7 @@ body {
     gap: 0.25rem;
 }
 
-.manage-table-cell input,
-.manage-table-cell textarea {
-    width: 100%;
-    padding: 0.4rem 0.6rem;
-    border: 1px solid var(--primary);
-    border-radius: 6px;
-    font-size: 0.85rem;
-}
-
-.manage-table-cell textarea {
-    resize: vertical;
-    min-height: 60px;
-}
+/* Cleanup: inline-edit inputs removed in admin v2 manage */
 
 .manage-folder-name {
     font-weight: 600;

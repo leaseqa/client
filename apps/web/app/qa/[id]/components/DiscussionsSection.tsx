@@ -1,3 +1,4 @@
+import React from "react";
 import {FaEdit, FaReply, FaTrash} from "react-icons/fa";
 import {format} from "date-fns";
 import dynamic from "next/dynamic";
@@ -25,8 +26,8 @@ export default function DiscussionsSection({
                                                onEdit,
                                                onCancelReply,
                                                onCancelEdit,
-                                               onClearFollow,
-                                           }: DiscussionsSectionProps) {
+                                           onClearFollow,
+                                       }: DiscussionsSectionProps) {
     const canEdit = (node: Discussion) => !isGuest && (currentRole === "admin" || node.authorId === currentUserId);
 
     const renderDiscussion = (node: Discussion, depth = 0) => {
@@ -45,10 +46,10 @@ export default function DiscussionsSection({
                     </span>
                     {canEdit(node) && (
                         <div className="post-discussion-actions">
-                            <button onClick={() => onEdit(node._id, node.content)}>
+                            <button onClick={() => onEdit(node._id, node.content)} type="button">
                                 <FaEdit size={12}/>
                             </button>
-                            <button onClick={() => onDelete(node._id)}>
+                            <button onClick={() => onDelete(node._id)} type="button">
                                 <FaTrash size={12}/>
                             </button>
                         </div>
@@ -63,10 +64,10 @@ export default function DiscussionsSection({
                             onChange={(val) => onDraftChange(node._id, val)}
                         />
                         <div className="post-editor-actions">
-                            <button className="post-btn primary" onClick={() => onUpdate(node._id)}>
+                            <button className="post-btn primary" onClick={() => onUpdate(node._id)} type="button">
                                 Save
                             </button>
-                            <button className="post-btn secondary" onClick={onCancelEdit}>
+                            <button className="post-btn secondary" onClick={onCancelEdit} type="button">
                                 Cancel
                             </button>
                         </div>
@@ -76,7 +77,7 @@ export default function DiscussionsSection({
                 )}
 
                 {!isGuest && !isEditing && (
-                    <button className="post-discussion-reply-btn" onClick={() => onReply(node._id)}>
+                    <button className="post-discussion-reply-btn" onClick={() => onReply(node._id)} type="button">
                         <FaReply size={10}/>
                         <span>Reply</span>
                     </button>
@@ -91,10 +92,10 @@ export default function DiscussionsSection({
                             placeholder="Write a reply..."
                         />
                         <div className="post-editor-actions">
-                            <button className="post-btn primary" onClick={() => onSubmit(node._id)}>
+                            <button className="post-btn primary" onClick={() => onSubmit(node._id)} type="button">
                                 Reply
                             </button>
-                            <button className="post-btn secondary" onClick={onCancelReply}>
+                            <button className="post-btn secondary" onClick={onCancelReply} type="button">
                                 Cancel
                             </button>
                         </div>
@@ -111,13 +112,16 @@ export default function DiscussionsSection({
     };
 
     return (
-        <div className="post-detail-card">
+        <section className="post-detail-card post-detail-card-secondary qa-v2-panel">
             <div className="post-section-header">
-                <h2 className="post-section-title">Follow-up Discussion</h2>
+                <div>
+                    <div className="post-section-kicker">Thread</div>
+                    <h2 className="post-section-title">Follow-up Discussion</h2>
+                </div>
             </div>
 
             {!isGuest && !showFollowBox && (
-                <button className="post-btn primary" onClick={onShowFollowBox}>
+                <button className="post-btn primary" onClick={onShowFollowBox} type="button">
                     Write follow-up
                 </button>
             )}
@@ -132,14 +136,18 @@ export default function DiscussionsSection({
                         placeholder="Start a discussion..."
                     />
                     <div className="post-editor-actions">
-                        <button className="post-btn primary" onClick={() => onSubmit(null)}>
+                        <button className="post-btn primary" onClick={() => onSubmit(null)} type="button">
                             Post follow-up
                         </button>
-                        <button className="post-btn secondary" onClick={onClearFollow}>
+                        <button className="post-btn secondary" onClick={onClearFollow} type="button">
                             Cancel
                         </button>
                     </div>
                 </div>
+            )}
+
+            {discussions.length === 0 && !showFollowBox && (
+                <p className="post-empty-note">No follow-up yet. Use this thread to clarify timelines or next steps.</p>
             )}
 
             {discussions.length > 0 && (
@@ -147,6 +155,6 @@ export default function DiscussionsSection({
                     {discussions.map((d) => renderDiscussion(d))}
                 </div>
             )}
-        </div>
+        </section>
     );
 }

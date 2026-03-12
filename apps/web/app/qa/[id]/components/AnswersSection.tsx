@@ -1,3 +1,4 @@
+import React from "react";
 import {useRef} from "react";
 import {FaEdit, FaTrash, FaPaperclip} from "react-icons/fa";
 import {Scale, Home} from "lucide-react";
@@ -36,13 +37,16 @@ export default function AnswersSection({
     const canEditAnswer = (ans: Answer) => !isGuest && (currentRole === "admin" || ans.authorId === currentUserId);
 
     return (
-        <div className="post-detail-card">
+        <section className="post-detail-card post-detail-card-secondary qa-v2-panel">
             <div className="post-section-header">
-                <h2 className="post-section-title">Answers</h2>
+                <div>
+                    <div className="post-section-kicker">Response queue</div>
+                    <h2 className="post-section-title">Answers</h2>
+                </div>
             </div>
 
             {!isGuest && !showAnswerBox && (
-                <button className="post-btn primary" onClick={onShowAnswerBox}>
+                <button className="post-btn primary" onClick={onShowAnswerBox} type="button">
                     Write an answer
                 </button>
             )}
@@ -66,19 +70,24 @@ export default function AnswersSection({
                         <button
                             className="post-btn secondary"
                             onClick={() => fileInputRef.current?.click()}
+                            type="button"
                         >
                             <FaPaperclip size={12}/>
                             {answerFiles.length > 0 ? ` ${answerFiles.length} files` : " Attach"}
                         </button>
-                        <button className="post-btn primary" onClick={onSubmitAnswer}>
+                        <button className="post-btn primary" onClick={onSubmitAnswer} type="button">
                             Post answer
                         </button>
-                        <button className="post-btn secondary" onClick={onClearAnswer}>
+                        <button className="post-btn secondary" onClick={onClearAnswer} type="button">
                             Cancel
                         </button>
                     </div>
                     {error && <div className="post-error">{error}</div>}
                 </div>
+            )}
+
+            {answers.length === 0 && !showAnswerBox && (
+                <p className="post-empty-note">No answers yet. Add one clear response or legal note.</p>
             )}
 
             {answers.length > 0 && (
@@ -109,10 +118,10 @@ export default function AnswersSection({
                                 </span>
                                 {canEditAnswer(ans) && (
                                     <div className="post-answer-actions">
-                                        <button onClick={() => onEditAnswer(ans._id, ans.content)}>
+                                        <button onClick={() => onEditAnswer(ans._id, ans.content)} type="button">
                                             <FaEdit size={12}/>
                                         </button>
-                                        <button onClick={() => onDeleteAnswer(ans._id)}>
+                                        <button onClick={() => onDeleteAnswer(ans._id)} type="button">
                                             <FaTrash size={12}/>
                                         </button>
                                     </div>
@@ -126,10 +135,10 @@ export default function AnswersSection({
                                         onChange={onEditContentChange}
                                     />
                                     <div className="post-editor-actions">
-                                        <button className="post-btn primary" onClick={() => onSaveEdit(ans._id)}>
+                                        <button className="post-btn primary" onClick={() => onSaveEdit(ans._id)} type="button">
                                             Save
                                         </button>
-                                        <button className="post-btn secondary" onClick={onCancelEdit}>
+                                        <button className="post-btn secondary" onClick={onCancelEdit} type="button">
                                             Cancel
                                         </button>
                                     </div>
@@ -141,6 +150,6 @@ export default function AnswersSection({
                     ))}
                 </div>
             )}
-        </div>
+        </section>
     );
 }

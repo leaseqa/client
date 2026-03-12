@@ -1,5 +1,5 @@
 import React from "react";
-import { FaCheck, FaEdit, FaTimes, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { Folder, FolderDraft } from "../../types";
 
 type SectionsTableProps = {
@@ -10,17 +10,11 @@ type SectionsTableProps = {
   // Pending markers `${folderId}:delete|edit`
   pendingMarkers?: string[];
   // Back-compat props to keep old page.tsx compiling (ignored at runtime in Task 2)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   mode?: "list-only" | "inline-edit";
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   editingId?: string | null;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   drafts?: Record<string, FolderDraft>;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onDraftChange?: (id: string, field: keyof FolderDraft, value: string) => void;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onSave?: (id: string) => void;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onCancelEdit?: (id: string) => void;
 };
 
