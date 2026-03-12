@@ -1,9 +1,10 @@
-import {FaBan, FaCheck, FaTrash, FaUserCheck} from "react-icons/fa";
-import {User} from "../../types";
+import { FaBan, FaCheck, FaTrash, FaUserCheck } from "react-icons/fa";
+import { User } from "../../types";
 
 type UsersTableProps = {
     users: User[];
     currentUserId: string;
+    pendingIds?: string[];
     onChangeRole: (userId: string, role: string) => void;
     onVerifyLawyer: (userId: string) => void;
     onToggleBan: (userId: string, banned: boolean) => void;
@@ -13,6 +14,7 @@ type UsersTableProps = {
 export default function UsersTable({
                                        users,
                                        currentUserId,
+                                       pendingIds = [],
                                        onChangeRole,
                                        onVerifyLawyer,
                                        onToggleBan,
@@ -38,8 +40,9 @@ export default function UsersTable({
                         </div>
                         {users.map((user) => {
                             const isSelf = user._id === currentUserId;
+                            const isPending = pendingIds.includes(user._id);
                             return (
-                                <div key={user._id} className={`manage-table-row ${user.banned ? "banned" : ""}`}>
+                                <div key={user._id} className={`manage-table-row ${user.banned ? "banned" : ""} ${isPending ? "pending" : ""}`}>
                                     <div className="manage-table-cell user-name">
                                         <div className="user-info">
                                             <span className="icon-circle icon-circle-sm icon-bg-purple">
@@ -56,7 +59,7 @@ export default function UsersTable({
                                             className="user-role-select"
                                             value={user.role}
                                             onChange={(e) => onChangeRole(user._id, e.target.value)}
-                                            disabled={isSelf}
+                                            disabled={isSelf || isPending}
                                         >
                                             <option value="tenant">Tenant</option>
                                             <option value="lawyer">Lawyer</option>
@@ -81,9 +84,10 @@ export default function UsersTable({
                                             <button
                                                 className="manage-icon-btn verify"
                                                 onClick={() => onVerifyLawyer(user._id)}
+                                                disabled={isPending}
                                                 title="Verify Lawyer"
                                             >
-                                                <FaUserCheck size={12}/>
+                                                <FaUserCheck size={12} />
                                             </button>
                                         )}
                                         {!isSelf && (
@@ -91,16 +95,18 @@ export default function UsersTable({
                                                 <button
                                                     className={`manage-icon-btn ${user.banned ? "unban" : "ban"}`}
                                                     onClick={() => onToggleBan(user._id, !user.banned)}
+                                                    disabled={isPending}
                                                     title={user.banned ? "Unban User" : "Ban User"}
                                                 >
-                                                    {user.banned ? <FaCheck size={12}/> : <FaBan size={12}/>}
+                                                    {user.banned ? <FaCheck size={12} /> : <FaBan size={12} />}
                                                 </button>
                                                 <button
                                                     className="manage-icon-btn delete"
                                                     onClick={() => onDelete(user._id)}
+                                                    disabled={isPending}
                                                     title="Delete User"
                                                 >
-                                                    <FaTrash size={12}/>
+                                                    <FaTrash size={12} />
                                                 </button>
                                             </>
                                         )}

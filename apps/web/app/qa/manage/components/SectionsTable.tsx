@@ -1,27 +1,31 @@
-import {FaCheck, FaEdit, FaTimes, FaTrash} from "react-icons/fa";
-import {Folder, FolderDraft} from "../../types";
+import { FaCheck, FaEdit, FaTimes, FaTrash } from "react-icons/fa";
+import { Folder, FolderDraft } from "../../types";
 
 type SectionsTableProps = {
-    folders: Folder[];
-    editingId: string | null;
-    drafts: Record<string, FolderDraft>;
-    onEdit: (id: string) => void;
-    onDraftChange: (id: string, field: keyof FolderDraft, value: string) => void;
-    onSave: (id: string) => void;
-    onCancelEdit: (id: string) => void;
-    onDelete: (id: string) => void;
+  folders: Folder[];
+  // New simplified contract
+  mode?: "list-only" | "inline-edit";
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
+  // Back-compat props to keep old page.tsx working
+  editingId?: string | null;
+  drafts?: Record<string, FolderDraft>;
+  onDraftChange?: (id: string, field: keyof FolderDraft, value: string) => void;
+  onSave?: (id: string) => void;
+  onCancelEdit?: (id: string) => void;
 };
 
 export default function SectionsTable({
-                                          folders,
-                                          editingId,
-                                          drafts,
-                                          onEdit,
-                                          onDraftChange,
-                                          onSave,
-                                          onCancelEdit,
-                                          onDelete,
-                                      }: SectionsTableProps) {
+  folders,
+  mode = "inline-edit",
+  onEdit,
+  onDelete,
+  editingId = null,
+  drafts = {},
+  onDraftChange,
+  onSave,
+  onCancelEdit,
+}: SectionsTableProps) {
     return (
         <div className="manage-card">
             <div className="manage-card-header">
@@ -42,6 +46,37 @@ export default function SectionsTable({
                             <div className="manage-table-cell actions">Actions</div>
                         </div>
                         {folders.map((folder) => {
+                            const locked = folder.name === "uncategorized";
+                            if (mode === "list-only") {
+                                return (
+                                    <div key={folder._id} className={`manage-table-row`}>
+                                        <div className="manage-table-cell name">
+                                            <span className="manage-folder-name">{folder.displayName}</span>
+                                        </div>
+                                        <div className="manage-table-cell slug">
+                                            <span className="manage-slug">{folder.name}</span>
+                                        </div>
+                                        <div className="manage-table-cell desc">
+                                            <span className="manage-description">{folder.description || "—"}</span>
+                                        </div>
+                                        <div className="manage-table-cell actions">
+                                            <button className="manage-icon-btn edit" onClick={() => onEdit(folder._id)} title="Edit">
+                                                <FaEdit size={12} />
+                                            </button>
+                                            <button
+                                                className="manage-icon-btn delete"
+                                                onClick={() => onDelete(folder._id)}
+                                                disabled={locked}
+                                                title={locked ? "Default section cannot be deleted" : "Delete"}
+                                            >
+                                                <FaTrash size={12} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            }
+
+                            // inline-edit back-compat path
                             const editing = editingId === folder._id;
                             const draft = drafts[folder._id] || {
                                 name: folder.name,
@@ -49,19 +84,14 @@ export default function SectionsTable({
                                 description: folder.description,
                                 color: folder.color,
                             };
-                            const locked = folder.name === "uncategorized";
-
                             return (
-                                <div
-                                    key={folder._id}
-                                    className={`manage-table-row ${editing ? "editing" : ""}`}
-                                >
+                                <div key={folder._id} className={`manage-table-row ${editing ? "editing" : ""}`}>
                                     <div className="manage-table-cell name">
                                         {editing ? (
                                             <input
                                                 type="text"
                                                 value={draft.displayName}
-                                                onChange={(e) => onDraftChange(folder._id, "displayName", e.target.value)}
+                                                onChange={(e) => onDraftChange && onDraftChange(folder._id, "displayName", e.target.value)}
                                             />
                                         ) : (
                                             <span className="manage-folder-name">{folder.displayName}</span>
@@ -75,40 +105,26 @@ export default function SectionsTable({
                                             <textarea
                                                 rows={2}
                                                 value={draft.description}
-                                                onChange={(e) => onDraftChange(folder._id, "description", e.target.value)}
+                                                onChange={(e) => onDraftChange && onDraftChange(folder._id, "description", e.target.value)}
                                             />
                                         ) : (
-                                            <span className="manage-description">
-                                                {folder.description || "—"}
-                                            </span>
+                                            <span className="manage-description">{folder.description || "—"}</span>
                                         )}
                                     </div>
                                     <div className="manage-table-cell actions">
                                         {editing ? (
                                             <>
-                                                <button
-                                                    className="manage-icon-btn save"
-                                                    onClick={() => onSave(folder._id)}
-                                                    title="Save"
-                                                >
-                                                    <FaCheck size={12}/>
+                                                <button className="manage-icon-btn save" onClick={() => onSave && onSave(folder._id)} title="Save">
+                                                    <FaCheck size={12} />
                                                 </button>
-                                                <button
-                                                    className="manage-icon-btn cancel"
-                                                    onClick={() => onCancelEdit(folder._id)}
-                                                    title="Cancel"
-                                                >
-                                                    <FaTimes size={12}/>
+                                                <button className="manage-icon-btn cancel" onClick={() => onCancelEdit && onCancelEdit(folder._id)} title="Cancel">
+                                                    <FaTimes size={12} />
                                                 </button>
                                             </>
                                         ) : (
                                             <>
-                                                <button
-                                                    className="manage-icon-btn edit"
-                                                    onClick={() => onEdit(folder._id)}
-                                                    title="Edit"
-                                                >
-                                                    <FaEdit size={12}/>
+                                                <button className="manage-icon-btn edit" onClick={() => onEdit(folder._id)} title="Edit">
+                                                    <FaEdit size={12} />
                                                 </button>
                                                 <button
                                                     className="manage-icon-btn delete"
@@ -116,7 +132,7 @@ export default function SectionsTable({
                                                     disabled={locked}
                                                     title={locked ? "Default section cannot be deleted" : "Delete"}
                                                 >
-                                                    <FaTrash size={12}/>
+                                                    <FaTrash size={12} />
                                                 </button>
                                             </>
                                         )}
