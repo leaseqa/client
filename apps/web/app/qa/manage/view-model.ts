@@ -57,16 +57,19 @@ export function getDatasetState<T = unknown>(input: DatasetStateInput<T>) {
   } as const;
 }
 
+type EditorFormMode = "closed" | "open" | "create" | "edit";
+
 export function getSectionEditorState(input: {
   hasSectionsLoaded: boolean;
   sectionsError?: string | null;
-  formMode: string; // e.g., "closed" | "open" | "create" | "edit"
+  formMode: EditorFormMode;
   savePending: boolean;
 }) {
   const neverLoaded = !input.hasSectionsLoaded;
-  const isDisabled = neverLoaded;
+  // Disable interaction while saving or if the dataset never loaded successfully.
+  const isDisabled = neverLoaded || input.savePending;
   const isOpen = input.formMode !== "closed";
-  const canOpen = !isOpen && !isDisabled && !input.savePending;
+  const canOpen = !isOpen && !isDisabled;
 
   return { canOpen, isDisabled, isOpen } as const;
 }

@@ -76,6 +76,30 @@ describe("getDisplayMetrics", () => {
       totalSections: 2,
     });
   });
+
+  test("users available but sections unavailable masks only section metrics", () => {
+    expect(
+      getDisplayMetrics({
+        users: {
+          hasLoaded: true,
+          data: [
+            { _id: "u1", role: "lawyer", lawyerVerified: false, banned: false } as Any,
+            { _id: "u2", role: "lawyer", lawyerVerified: true, banned: false } as Any,
+            { _id: "u3", role: "tenant", lawyerVerified: false, banned: true } as Any,
+          ],
+          error: "",
+          isLoading: false,
+        },
+        sections: { hasLoaded: false, data: [], error: "boom", isLoading: false },
+      }),
+    ).toEqual({
+      pendingLawyerCount: 1,
+      verifiedLawyers: 1,
+      bannedUserCount: 1,
+      totalUsers: 3,
+      totalSections: null,
+    });
+  });
 });
 
 describe("getDatasetState", () => {
@@ -124,6 +148,21 @@ describe("getDatasetState", () => {
       disableActions: false,
       showEmptyState: false,
     });
+
+    // Successful empty load: show empty state
+    expect(
+      getDatasetState({
+        hasLoaded: true,
+        data: [],
+        error: "",
+        isLoading: false,
+      }),
+    ).toEqual({
+      showInlineError: false,
+      showStaleRows: false,
+      disableActions: false,
+      showEmptyState: true,
+    });
   });
 });
 
@@ -148,5 +187,16 @@ describe("getSectionEditorState", () => {
         savePending: false,
       }),
     ).toEqual({ canOpen: true, isDisabled: false, isOpen: false });
+  });
+
+  test("disables while a save is pending even after successful load", () => {
+    expect(
+      getSectionEditorState({
+        hasSectionsLoaded: true,
+        sectionsError: "",
+        formMode: "closed",
+        savePending: true,
+      }),
+    ).toEqual({ canOpen: false, isDisabled: true, isOpen: false });
   });
 });
