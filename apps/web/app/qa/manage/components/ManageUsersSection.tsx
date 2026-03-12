@@ -1,4 +1,6 @@
 import React from "react";
+import UsersTable from "./UsersTable";
+import type { User } from "../../types";
 
 type ManageUsersSectionProps = {
   title: string;
@@ -7,6 +9,15 @@ type ManageUsersSectionProps = {
   hasLoaded?: boolean;
   error?: string;
   onRetry?: () => void;
+  // Owned data and actions
+  users?: User[];
+  currentUserId?: string;
+  pendingMarkers?: string[];
+  onChangeRole?: (userId: string, role: string) => void;
+  onVerifyLawyer?: (userId: string) => void;
+  onToggleBan?: (userId: string, banned: boolean) => void;
+  onDelete?: (userId: string) => void;
+  // Narrow back-compat escape hatch
   children?: React.ReactNode;
 };
 
@@ -16,6 +27,13 @@ export default function ManageUsersSection({
   isDataAvailable,
   error,
   onRetry,
+  users = [],
+  currentUserId = "",
+  pendingMarkers = [],
+  onChangeRole,
+  onVerifyLawyer,
+  onToggleBan,
+  onDelete,
   children,
 }: ManageUsersSectionProps) {
   if (!isDataAvailable && error) {
@@ -40,10 +58,24 @@ export default function ManageUsersSection({
       </div>
       {isLoading ? (
         <p className="admin-v2-loading-copy">Loading users…</p>
+      ) : isDataAvailable ? (
+        users.length ? (
+          <UsersTable
+            users={users}
+            currentUserId={currentUserId}
+            pendingMarkers={pendingMarkers}
+            onChangeRole={onChangeRole!}
+            onVerifyLawyer={onVerifyLawyer!}
+            onToggleBan={onToggleBan!}
+            onDelete={onDelete!}
+          />
+        ) : (
+          <div className="manage-empty-state">No users found.</div>
+        )
       ) : (
+        // Back-compat path
         children
       )}
     </section>
   );
 }
-

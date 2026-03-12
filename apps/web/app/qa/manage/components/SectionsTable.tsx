@@ -1,3 +1,4 @@
+import React from "react";
 import { FaCheck, FaEdit, FaTimes, FaTrash } from "react-icons/fa";
 import { Folder, FolderDraft } from "../../types";
 
@@ -13,11 +14,13 @@ type SectionsTableProps = {
   onDraftChange?: (id: string, field: keyof FolderDraft, value: string) => void;
   onSave?: (id: string) => void;
   onCancelEdit?: (id: string) => void;
+  // New contract: pending markers `${folderId}:delete|edit`
+  pendingMarkers?: string[];
 };
 
 export default function SectionsTable({
   folders,
-  mode = "inline-edit",
+  mode,
   onEdit,
   onDelete,
   editingId = null,
@@ -25,7 +28,10 @@ export default function SectionsTable({
   onDraftChange,
   onSave,
   onCancelEdit,
+  pendingMarkers = [],
 }: SectionsTableProps) {
+    const inferredInline = Boolean(onDraftChange && onSave && onCancelEdit);
+    const effectiveMode: "list-only" | "inline-edit" = mode ?? (inferredInline ? "inline-edit" : "list-only");
     return (
         <div className="manage-card">
             <div className="manage-card-header">
@@ -47,9 +53,10 @@ export default function SectionsTable({
                         </div>
                         {folders.map((folder) => {
                             const locked = folder.name === "uncategorized";
-                            if (mode === "list-only") {
+                            const rowPending = pendingMarkers.some((m) => m.startsWith(`${folder._id}:`));
+                            if (effectiveMode === "list-only") {
                                 return (
-                                    <div key={folder._id} className={`manage-table-row`}>
+                                    <div key={folder._id} className={`manage-table-row ${rowPending ? "pending" : ""}`}>
                                         <div className="manage-table-cell name">
                                             <span className="manage-folder-name">{folder.displayName}</span>
                                         </div>
@@ -60,13 +67,13 @@ export default function SectionsTable({
                                             <span className="manage-description">{folder.description || "—"}</span>
                                         </div>
                                         <div className="manage-table-cell actions">
-                                            <button className="manage-icon-btn edit" onClick={() => onEdit(folder._id)} title="Edit">
+                                            <button className="manage-icon-btn edit" onClick={() => onEdit(folder._id)} title="Edit" disabled={rowPending}>
                                                 <FaEdit size={12} />
                                             </button>
                                             <button
                                                 className="manage-icon-btn delete"
                                                 onClick={() => onDelete(folder._id)}
-                                                disabled={locked}
+                                                disabled={locked || rowPending}
                                                 title={locked ? "Default section cannot be deleted" : "Delete"}
                                             >
                                                 <FaTrash size={12} />
@@ -85,7 +92,7 @@ export default function SectionsTable({
                                 color: folder.color,
                             };
                             return (
-                                <div key={folder._id} className={`manage-table-row ${editing ? "editing" : ""}`}>
+                                <div key={folder._id} className={`manage-table-row ${editing ? "editing" : ""} ${rowPending ? "pending" : ""}`}>
                                     <div className="manage-table-cell name">
                                         {editing ? (
                                             <input
@@ -114,22 +121,22 @@ export default function SectionsTable({
                                     <div className="manage-table-cell actions">
                                         {editing ? (
                                             <>
-                                                <button className="manage-icon-btn save" onClick={() => onSave && onSave(folder._id)} title="Save">
+                                                <button className="manage-icon-btn save" onClick={() => onSave && onSave(folder._id)} title="Save" disabled={rowPending}>
                                                     <FaCheck size={12} />
                                                 </button>
-                                                <button className="manage-icon-btn cancel" onClick={() => onCancelEdit && onCancelEdit(folder._id)} title="Cancel">
+                                                <button className="manage-icon-btn cancel" onClick={() => onCancelEdit && onCancelEdit(folder._id)} title="Cancel" disabled={rowPending}>
                                                     <FaTimes size={12} />
                                                 </button>
                                             </>
                                         ) : (
                                             <>
-                                                <button className="manage-icon-btn edit" onClick={() => onEdit(folder._id)} title="Edit">
+                                                <button className="manage-icon-btn edit" onClick={() => onEdit(folder._id)} title="Edit" disabled={rowPending}>
                                                     <FaEdit size={12} />
                                                 </button>
                                                 <button
                                                     className="manage-icon-btn delete"
                                                     onClick={() => onDelete(folder._id)}
-                                                    disabled={locked}
+                                                    disabled={locked || rowPending}
                                                     title={locked ? "Default section cannot be deleted" : "Delete"}
                                                 >
                                                     <FaTrash size={12} />

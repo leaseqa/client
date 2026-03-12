@@ -21,15 +21,10 @@ export default function ManageStats({ stats }: ManageStatsProps) {
           <div className="admin-v2-card-value">{stats.totalSections ?? "—"}</div>
         </div>
         <div className="admin-v2-card">
-          <div className="admin-v2-card-title">Pending Verification</div>
-          <div className="admin-v2-card-value">{stats.pendingLawyerCount ?? "—"}</div>
-        </div>
-        <div className="admin-v2-card">
-          <div className="admin-v2-card-title">Banned Users</div>
-          <div className="admin-v2-card-value">{stats.bannedUserCount ?? "—"}</div>
+          <div className="admin-v2-card-title">Verified Lawyers</div>
+          <div className="admin-v2-card-value">{stats.verifiedLawyers ?? "—"}</div>
         </div>
       </div>
     </section>
   );
 }
-

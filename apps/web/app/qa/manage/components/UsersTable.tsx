@@ -1,24 +1,29 @@
+import React from "react";
 import { FaBan, FaCheck, FaTrash, FaUserCheck } from "react-icons/fa";
 import { User } from "../../types";
 
 type UsersTableProps = {
     users: User[];
     currentUserId: string;
-    pendingIds?: string[];
+    // New contract: action-scoped markers: `${userId}:role|verify|ban|delete`
+    pendingMarkers?: string[];
     onChangeRole: (userId: string, role: string) => void;
     onVerifyLawyer: (userId: string) => void;
     onToggleBan: (userId: string, banned: boolean) => void;
     onDelete: (userId: string) => void;
+    // Back-compat (weak) for legacy callers; if present, OR into pending computation
+    pendingIds?: string[];
 };
 
 export default function UsersTable({
                                        users,
                                        currentUserId,
-                                       pendingIds = [],
+                                       pendingMarkers = [],
                                        onChangeRole,
                                        onVerifyLawyer,
                                        onToggleBan,
                                        onDelete,
+                                       pendingIds = [],
                                    }: UsersTableProps) {
     return (
         <div className="manage-card">
@@ -40,7 +45,7 @@ export default function UsersTable({
                         </div>
                         {users.map((user) => {
                             const isSelf = user._id === currentUserId;
-                            const isPending = pendingIds.includes(user._id);
+                            const isPending = pendingMarkers.some((m) => m.startsWith(`${user._id}:`)) || pendingIds.includes(user._id);
                             return (
                                 <div key={user._id} className={`manage-table-row ${user.banned ? "banned" : ""} ${isPending ? "pending" : ""}`}>
                                     <div className="manage-table-cell user-name">

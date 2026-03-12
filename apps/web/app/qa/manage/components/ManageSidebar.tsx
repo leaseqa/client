@@ -2,6 +2,7 @@ import React from "react";
 
 export type ManageSidebarStats = {
   pendingLawyerCount: number | null;
+  // verifiedLawyers intentionally unused in Sidebar per spec for Task 2
   verifiedLawyers: number | null;
   bannedUserCount: number | null;
   totalUsers: number | null;
@@ -14,7 +15,6 @@ type ManageSidebarProps = {
   sectionsHref?: string;
   moderationHref?: string;
   stats: ManageSidebarStats;
-  showVerifiedLawyersCard?: boolean;
 };
 
 export default function ManageSidebar({
@@ -23,7 +23,6 @@ export default function ManageSidebar({
   sectionsHref = "#sections",
   moderationHref = "/qa",
   stats,
-  showVerifiedLawyersCard = false,
 }: ManageSidebarProps) {
   return (
     <aside className="admin-v2-sidebar">
@@ -34,20 +33,18 @@ export default function ManageSidebar({
       </nav>
 
       <div className="admin-v2-cards">
-        <div className="admin-v2-card">
-          <div className="admin-v2-card-title">Pending Verification</div>
-          <div className="admin-v2-card-value">{stats.pendingLawyerCount ?? "—"}</div>
-        </div>
-        {showVerifiedLawyersCard && (
+        {stats.pendingLawyerCount !== null && (
           <div className="admin-v2-card">
-            <div className="admin-v2-card-title">Verified Lawyers</div>
-            <div className="admin-v2-card-value">{stats.verifiedLawyers ?? "—"}</div>
+            <div className="admin-v2-card-title">Pending Verification</div>
+            <div className="admin-v2-card-value">{stats.pendingLawyerCount}</div>
           </div>
         )}
-        <div className="admin-v2-card">
-          <div className="admin-v2-card-title">Banned Users</div>
-          <div className="admin-v2-card-value">{stats.bannedUserCount ?? "—"}</div>
-        </div>
+        {stats.bannedUserCount !== null && (
+          <div className="admin-v2-card">
+            <div className="admin-v2-card-title">Banned Users</div>
+            <div className="admin-v2-card-value">{stats.bannedUserCount}</div>
+          </div>
+        )}
       </div>
 
       <div className="admin-v2-secondary">
@@ -58,4 +55,3 @@ export default function ManageSidebar({
     </aside>
   );
 }
-

@@ -25,3 +25,4 @@ yarn-error.log*
 .idea
 .vscode/*.log
 CS 5610 FA25 MO (151 unread) _ Piazza QA_files/
+.vercel
