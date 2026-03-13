@@ -1,16 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setSession, signOut } from "@/app/store";
 import { Col, Form, Row, Stack } from "react-bootstrap";
 import {
-  FaBookmark,
-  FaComments,
   FaEnvelope,
-  FaFileAlt,
-  FaHistory,
   FaIdBadge,
   FaRobot,
   FaShieldAlt,
@@ -19,17 +15,7 @@ import {
 } from "react-icons/fa";
 import { Scale, Shield, Home } from "lucide-react";
 import * as client from "./client";
-
-//TODO: not in the database yet
-const recentActions = [
-  { icon: FaFileAlt, text: "Linked AI review to QA post", time: "2 hours ago" },
-  {
-    icon: FaBookmark,
-    text: "Saved draft under Maintenance folder",
-    time: "Yesterday",
-  },
-  { icon: FaComments, text: "Followed 2 attorney answers", time: "3 days ago" },
-];
+import ActivityTimeline from "./components/ActivityTimeline";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -43,6 +29,9 @@ export default function AccountPage() {
   const [editMode, setEditMode] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [activityItems, setActivityItems] = useState<client.ActivityItem[]>([]);
+  const [activityLoading, setActivityLoading] = useState(false);
+  const [activityError, setActivityError] = useState("");
   const [profileForm, setProfileForm] = useState({
     name: user?.name || "",
     email: user?.email || "",
@@ -54,6 +43,31 @@ export default function AccountPage() {
       email: user?.email || "",
     });
   }, [user]);
+
+  const loadActivity = useCallback(async () => {
+    if (!isAuthenticated) {
+      setActivityItems([]);
+      setActivityError("");
+      setActivityLoading(false);
+      return;
+    }
+    setActivityLoading(true);
+    setActivityError("");
+    try {
+      const items = await client.fetchActivity();
+      setActivityItems(items);
+    } catch (err: any) {
+      setActivityError(
+        err.response?.data?.error?.message || "Failed to load activity.",
+      );
+    } finally {
+      setActivityLoading(false);
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    void loadActivity();
+  }, [loadActivity]);
 
   const handleLogout = async () => {
     try {
@@ -305,56 +319,15 @@ export default function AccountPage() {
 
         {(isAuthenticated || isGuest) && (
           <Col lg={6}>
-            <div className="account-card h-100">
-              <div className="d-flex align-items-center gap-3 mb-4">
-                <div className="info-team-icon info-team-icon--terra">
-                  <FaHistory size={18} />
-                </div>
-                <div>
-                  <div className="fw-bold">Recent Activity</div>
-                  <div className="text-secondary small">
-                    {isGuest
-                      ? "Sign in to track activity"
-                      : "Your latest actions"}
-                  </div>
-                </div>
-              </div>
-
-              {isGuest ? (
-                <div className="text-center py-4">
-                  <p className="text-secondary mb-3">
-                    Activity tracking is available for signed-in users.
-                  </p>
-                  <a href="/auth/login" className="btn-warm-outline">
-                    Sign in to track
-                  </a>
-                </div>
-              ) : (
-                <Stack gap={3}>
-                  {recentActions.map((action, index) => (
-                    <div key={index} className="account-field">
-                      <div
-                        className="info-team-icon info-team-icon--muted"
-                        style={{
-                          width: 32,
-                          height: 32,
-                          borderRadius: 8,
-                          marginBottom: 0,
-                        }}
-                      >
-                        <action.icon size={14} />
-                      </div>
-                      <div className="flex-grow-1">
-                        <div className="small">{action.text}</div>
-                        <div className="text-secondary small">
-                          {action.time}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </Stack>
-              )}
-            </div>
+            <ActivityTimeline
+              items={activityItems}
+              loading={activityLoading}
+              error={activityError}
+              isGuest={isGuest}
+              onRetry={() => {
+                void loadActivity();
+              }}
+            />
           </Col>
         )}
       </Row>

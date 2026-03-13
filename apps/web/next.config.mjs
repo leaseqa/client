@@ -1,3 +1,8 @@
+const apiProxyOrigin =
+    process.env.API_PROXY_URL ||
+    process.env.NEXT_PUBLIC_HTTP_SERVER ||
+    "http://localhost:4000";
+
 const nextConfig = {
     experimental: {
         serverActions: {
@@ -18,7 +23,7 @@ const nextConfig = {
         return [
             {
                 source: "/api/:path*",
-                destination: `${process.env.API_PROXY_URL || "http://localhost:4000"}/api/:path*`, // Proxy to Backend
+                destination: `${apiProxyOrigin}/api/:path*`,
             },
         ];
     },

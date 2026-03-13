@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, signOut } from "@/app/store";
@@ -13,11 +13,12 @@ import {
   NavbarBrand,
   Stack,
 } from "react-bootstrap";
-import { FaBell } from "react-icons/fa";
 import AvatarToggle from "./HeaderBar/AvatarToggle";
 import MobileNav from "./HeaderBar/MobileNav";
 import ProfileHeader from "./HeaderBar/ProfileHeader";
 import ProfileMenuItems from "./HeaderBar/ProfileMenuItems";
+import NotificationsMenu from "./HeaderBar/NotificationsMenu";
+import type { NotificationMenuItem } from "./HeaderBar/NotificationsMenu";
 import * as client from "@/app/account/client";
 import { NAV_ITEMS } from "./config";
 
@@ -32,15 +33,15 @@ export default function HeaderBar() {
   const isGuest = session.status === "guest";
 
   const [showMenu, setShowMenu] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
-
-  const notifications: { id: string; title: string; href?: string }[] = [];
+  const [notifications, setNotifications] = useState<client.ActivityItem[]>([]);
+  const [notificationsLoading, setNotificationsLoading] = useState(false);
+  const [notificationsError, setNotificationsError] = useState("");
   const initials = user?.name?.slice(0, 2).toUpperCase() || "?";
 
-  const navigate = (href: string) => {
+  const navigate = useCallback((href: string) => {
     setShowMenu(false);
     router.push(href);
-  };
+  }, [router]);
 
   const handleSignOut = async () => {
     try {
@@ -51,6 +52,43 @@ export default function HeaderBar() {
       navigate("/");
     }
   };
+
+  const loadNotifications = useCallback(async () => {
+    if (!isAuthenticated) {
+      setNotifications([]);
+      setNotificationsError("");
+      return;
+    }
+    try {
+      setNotificationsLoading(true);
+      setNotificationsError("");
+      const items = await client.fetchNotifications();
+      setNotifications(items);
+    } catch (error: any) {
+      setNotificationsError(
+        error.response?.data?.error?.message || "Could not load notifications.",
+      );
+    } finally {
+      setNotificationsLoading(false);
+    }
+  }, [isAuthenticated]);
+
+  const handleSelectNotification = useCallback(
+    async (item: NotificationMenuItem) => {
+      try {
+        await client.markNotificationsRead([item._id]);
+        setNotifications((current) =>
+          current.filter((notification) => notification._id !== item._id),
+        );
+      } catch {
+        // Preserve unread state if marking read fails.
+      }
+      if (item.href) {
+        navigate(item.href);
+      }
+    },
+    [navigate],
+  );
 
   return (
     <header className="site-header">
@@ -94,44 +132,15 @@ export default function HeaderBar() {
           </Nav>
 
           <Stack direction="horizontal" gap={2} className="site-auth">
-            <Dropdown
-              align="end"
-              show={showNotifications}
-              onToggle={setShowNotifications}
-            >
-              <Dropdown.Toggle
-                as="button"
-                className="site-auth-trigger"
-                aria-label="Open notifications"
-              >
-                <div className="icon-circle icon-circle-md icon-bg-muted site-auth-chip site-auth-chip-bell">
-                  <FaBell className="text-secondary" size={16} />
-                </div>
-              </Dropdown.Toggle>
-              <Dropdown.Menu style={{ minWidth: 240 }}>
-                <div className="px-3 py-2 fw-semibold">Notifications</div>
-                <Dropdown.Divider />
-                {notifications.length === 0 ? (
-                  <div className="px-3 py-2 text-secondary small">
-                    No new notifications
-                  </div>
-                ) : (
-                  notifications.map((item) => (
-                    <Dropdown.Item
-                      key={item.id}
-                      onClick={() => {
-                        setShowNotifications(false);
-                        if (item.href) {
-                          navigate(item.href);
-                        }
-                      }}
-                    >
-                      {item.title}
-                    </Dropdown.Item>
-                  ))
-                )}
-              </Dropdown.Menu>
-            </Dropdown>
+            <NotificationsMenu
+              items={notifications}
+              loading={notificationsLoading}
+              error={notificationsError}
+              onOpen={() => {
+                void loadNotifications();
+              }}
+              onSelect={handleSelectNotification}
+            />
 
             <Dropdown align="end" show={showMenu} onToggle={setShowMenu}>
               <Dropdown.Toggle
