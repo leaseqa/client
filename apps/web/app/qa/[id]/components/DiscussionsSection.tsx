@@ -46,10 +46,20 @@ export default function DiscussionsSection({
                     </span>
                     {canEdit(node) && (
                         <div className="post-discussion-actions">
-                            <button onClick={() => onEdit(node._id, node.content)} type="button">
+                            <button
+                                aria-label="Edit discussion"
+                                title="Edit discussion"
+                                onClick={() => onEdit(node._id, node.content)}
+                                type="button"
+                            >
                                 <FaEdit size={12}/>
                             </button>
-                            <button onClick={() => onDelete(node._id)} type="button">
+                            <button
+                                aria-label="Delete discussion"
+                                title="Delete discussion"
+                                onClick={() => onDelete(node._id)}
+                                type="button"
+                            >
                                 <FaTrash size={12}/>
                             </button>
                         </div>
