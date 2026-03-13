@@ -1,124 +1,148 @@
-# System Architecture Design
+# LeaseQA V2 Architecture
 
-## 1. Overall Architecture
+## Overview
 
-LeaseQA uses a monorepo structure with Next.js 14 at its core, enabling unified deployment of both frontend pages and backend APIs.
+LeaseQA v2 runs as two separate application repositories:
 
-```
-apps/
-  web/              # Next.js application (App Router)
-packages/
-  config/           # Shared configurations (Tailwind, ESLint, etc.)
-  ui/               # Reusable components (Button, Badge, Card, etc.)
-docs/               # Documentation
-```
+- `leaseqa-client`
+  - Next.js App Router frontend
+  - deployed to Vercel
+- `leaseqa-server`
+  - Express API and RAG backend
+  - deployed to Render
 
-### 1.1 Unified Frontend & Backend
+This is no longer a unified frontend/backend monorepo runtime. The client proxies `/api/*` requests to the Express backend.
 
-- **Next.js App Router** handles page rendering, Server Actions, and data fetching.
-- **API Routes** (`app/api/*`) handle REST endpoints, combined with middleware for authentication and access control.
-- Uses **Edge/Node runtime**, selected based on performance needs (AI review requires Node runtime).
+## Runtime Topology
 
-### 1.2 Data Flow
+### Client
 
-1. Frontend calls APIs via **React Query** or **SWR**.
-2. APIs invoke the **Service layer**, which encapsulates business logic and uses **Mongoose** to access MongoDB.
-3. Data models are centrally defined in `packages/config/mongoose` or `apps/web/lib/db`.
+- Framework: Next.js App Router
+- State: lightweight Redux session state plus page-local state
+- Hosting: Vercel
+- Public entry points:
+  - `/`
+  - `/ai-review`
+  - `/qa`
+  - `/account`
+  - `/qa/manage`
 
-### 1.3 Authentication & Roles
+### Server
 
-- **NextAuth.js** with Credentials Provider (email/password).
-- After login, the session contains `role`, `lawyerVerification`, and other relevant fields.
-- Frontend controls UI visibility via `useSession`; backend validates access permissions via middleware.
+- Framework: Express
+- Persistence: MongoDB
+- Session auth: `express-session` with Mongo-backed session storage
+- Hosting: Render
+- Public API base: `/api/*`
 
-## 2. Module Breakdown
+### Retrieval Layer
 
-| Module | Description | Key Pages/Endpoints |
-| ------ | ----------- | ------------------- |
-| Landing | Project introduction, team info, GitHub link | `/` |
-| AI Review | Contract upload, progress tracking, results display, export | `/ai-review`, `/api/ai-review` |
-| Q&A List | Post list, sidebar filters, statistics dashboard | `/qa` |
-| Create Post | Multi-tag support, multi-category selection, rich text editor | `/qa/new`, `/api/posts` |
-| Post Details | Lawyer/community answers, nested discussions, resolved status | `/qa/[id]`, `/api/answers`, `/api/discussions` |
-| Admin Panel | Category management, statistics, content moderation | `/admin`, `/api/folders` |
+- Vector retrieval: Milvus / Zilliz
+- Knowledge corpus: MassLegalHelp handbook chapters, handouts, forms, and booklets
+- Document ingestion: pasted text, uploaded `PDF`, uploaded `DOCX`
 
-## 3. Key Technology Choices
+## Authentication Model
 
-| Category | Technology | Notes |
-| -------- | ---------- | ----- |
-| **Styling** | Tailwind CSS | Combined with Headless UI / Radix for component behavior (as needed) |
-| **Rich Text** | React-Quill | Dynamically loaded; backend stores HTML or Delta format |
-| **File Upload** | Next.js Route Handler | Temporary storage to memory/disk, or upload to object storage (TBD); extracted text saved to MongoDB |
-| **AI Integration** | `@anthropic-ai/sdk` | Handles long text segmentation, timeouts, and error retries |
-| **Form Validation** | Zod + React Hook Form | Ensures frontend-backend validation consistency |
-| **Logging & Monitoring** | Sentry / Logtail (optional) | Console + custom logger during development |
+The client does not use NextAuth in the live v2 architecture.
 
-## 4. Data Models (Overview)
+Current auth flow:
 
-```ts
-// Users
-{
-    username: string;                // Required: display name
-    email: string;                   // Required: used for login
-    hashedPassword: string;          // Required: encrypted password
-    role: 'tenant' | 'lawyer' | 'admin';  // Required: determines permissions
-    lawyerVerification: {            // Optional: only required for lawyers
-        barNumber: string;             // Required if lawyer: bar association number
-        state: string;                 // Required if lawyer: state of license
-        verifiedAt: Date;              // Optional: set when admin approves
-    };
-    createdAt: Date;                 // Required: auto-generated timestamp
-}
+1. The user registers or logs in through the Express backend
+2. The backend writes the authenticated user into the session
+3. The client restores session state through `GET /api/auth/session`
+4. Logout destroys the server session and clears the client session state
 
-// AIReviews
-{
-    userId: ObjectId;                // Required: reference to user who requested review
-    contractType: string;            // Optional: e.g., "residential_lease", "commercial"
-    contractFileUrl: string;         // Optional: URL if file was uploaded
-    contractText: string;            // Required: extracted or pasted contract text
-    aiResponse: {
-        summary: string;               // Required: brief overview of the contract
-        highRisk: string[];            // Required: critical issues found
-        mediumRisk: string[];          // Required: moderate concerns
-        lowRisk: string[];             // Required: minor issues
-        recommendations: string[];     // Required: suggested actions
-    };
-    relatedPostId: ObjectId;         // Optional: links to Q&A post if user created one
-    createdAt: Date;                 // Required: auto-generated timestamp
-}
-```
+Guest mode is supported for AI review, but guest users do not receive persisted account history or community write access.
 
-> For additional model details, see `docs/api-design.md`.
+## Major Product Flows
 
-## 5. Middleware & Infrastructure
+## 1. AI Review
 
-| File | Purpose |
-| ---- | ------- |
-| `middleware.ts` | Route protection based on NextAuth session (admin routes, lawyer-only features) |
-| `lib/auth.ts` | Helper functions for permission validation |
-| `lib/db.ts` | Ensures Mongoose connection reuse, preventing duplicate connections during hot reload |
-| `lib/ai/claude.ts` | Wraps Claude API calls with error handling and response formatting |
+1. User opens `/ai-review`
+2. Client creates a RAG session through `/api/rag/sessions`
+3. Backend parses the input, stores the session, and runs retrieval against:
+   - uploaded source material
+   - ingested legal corpus
+4. Backend returns a structured answer with short summary, bullets, and citations
+5. Follow-up questions continue through `/api/rag/sessions/:sessionId/messages`
 
-## 6. Development Workflow
+For signed-in users, successful AI review creation also writes account activity.
 
-1. **Phase 1**: Implement common layout, navigation, and legal disclaimer.
-2. **Phase 2**: Integrate NextAuth and MongoDB connection; complete basic CRUD operations.
-3. **Phase 3**: Connect AI review and post workflows; gradually refine UI.
-4. **Phase 4**: Integrate admin features; complete all Rubric requirements.
-5. **Phase 5**: Write tests, prepare deployment scripts, finalize documentation.
+## 2. Account Activity and Notifications
 
-## 7. Deployment & Operations
+1. Signed-in users open `/account`
+2. Client fetches recent activity from `/api/activity`
+3. The header bell fetches unread notifications from `/api/activity/notifications`
+4. Selecting a notification marks it read through `/api/activity/notifications/read`
 
-| Service | Purpose | Notes |
-| ------- | ------- | ----- |
-| **Vercel** | Frontend & API hosting | Environment variables configured in project settings |
-| **MongoDB Atlas** | Production database | Configure network access and user permissions |
-| **AWS S3 / Cloudflare R2** | File storage (optional) | Required if PDF download feature is supported |
-| **GitHub Actions** | CI/CD pipeline | Runs lint, test, and build to ensure code quality |
+Activity events are written from backend success paths such as:
 
-## 8. Future Extensions
+- AI review creation
+- post creation
+- answer received
+- discussion reply received
+- post status changes
 
-- **Lease Knowledge Base**: Add a searchable repository of lease-related information.
-- **Smart Q&A Chatbot**: AI-powered assistant for common tenant questions.
-- **Notification System**: Email/SMS alerts to notify lawyers of new questions.
-- **Multi-language Support**: English and Chinese localization.
+## 3. Community Q&A
+
+1. Users create posts in `/qa`
+2. Backend stores posts, answers, and discussion trees in MongoDB
+3. Client renders post detail, answers, and nested follow-up discussions
+4. Admin and other role-based controls are enforced on the backend and reflected in the UI
+
+## 4. Admin and Moderation
+
+Admin workflows live primarily in:
+
+- `/qa/manage`
+- post detail moderation surfaces in `/qa`
+
+These flows use the same application shell as the public site, with extra controls for:
+
+- section management
+- role changes
+- lawyer verification
+- bans
+- post status changes
+- pinning
+
+## Data Boundaries
+
+### Client responsibilities
+
+- page composition
+- local UI state
+- session restoration into Redux
+- rendering account activity and notifications
+- rendering AI review sessions and community content
+
+### Server responsibilities
+
+- auth and session persistence
+- domain writes for posts, answers, discussions, folders, and users
+- activity and notification persistence
+- RAG session creation, retrieval, and answer grounding
+
+## Deployment Notes
+
+### Production
+
+- Client: `https://leaseqa-client.vercel.app`
+- Server: `https://leaseqa-server.onrender.com`
+
+### Local
+
+- Client: `http://localhost:3000`
+- Server: `http://localhost:4000`
+
+The client can call the backend directly through `NEXT_PUBLIC_HTTP_SERVER` and also proxies `/api/*` through `API_PROXY_URL` or the same backend origin.
+
+## Documentation Boundaries
+
+For current behavior, use these docs together:
+
+- [product-prd.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/product-prd.md)
+- [api-design.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/api-design.md)
+- [README.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/README.md)
+
+Historical plans and time-stamped design specs are not the source of truth for the live architecture.

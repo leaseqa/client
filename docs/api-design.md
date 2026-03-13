@@ -1,191 +1,240 @@
-# API Design Draft
+# LeaseQA V2 API Design
 
-> REST-style design, all paths based on `/api`. GraphQL or Server Actions versions may be added later.
+This document summarizes the current app-level API contract used by the LeaseQA client. All paths are rooted at `/api` and are served by the Express backend in the `leaseqa-server` repository.
 
 ## 1. Authentication
 
-### POST `/api/auth/register`
-- **Description**: Register a new user (tenant or lawyer applicant).
-- **Request Body**:
-  ```json
-  {
-    "username": "Alice",
-    "email": "alice@example.com",
-    "password": "*******",
-    "role": "tenant",
-    "lawyerVerification": {
-      "barNumber": "12345",
-      "state": "MA"
-    }
+### `POST /api/auth/register`
+
+Creates a new user and establishes a session.
+
+Request fields:
+
+- `username`
+- `email`
+- `password`
+- optional `role`
+- optional `lawyerVerification`
+
+### `POST /api/auth/login`
+
+Authenticates an existing user and establishes a session.
+
+### `POST /api/auth/logout`
+
+Destroys the current session.
+
+### `GET /api/auth/session`
+
+Returns the current signed-in user or an unauthorized error if no authenticated session exists.
+
+## 2. Account and User Management
+
+### `GET /api/users/me`
+
+Returns the current signed-in user.
+
+### `PATCH /api/users/me`
+
+Updates the current user's editable profile fields.
+
+### Admin-only user management
+
+- `GET /api/users`
+- `PATCH /api/users/:userId/role`
+- `PATCH /api/users/:userId/verify-lawyer`
+- `PATCH /api/users/:userId/ban`
+- `DELETE /api/users/:userId`
+
+## 3. Activity and Notifications
+
+### `GET /api/activity`
+
+Returns recent account activity for the signed-in user.
+
+Typical entries include:
+
+- created AI review
+- posted a new question
+- new answer on your question
+- new follow-up on your thread
+- post status changed
+
+### `GET /api/activity/notifications`
+
+Returns unread notification entries for the signed-in user.
+
+### `POST /api/activity/notifications/read`
+
+Marks one or more notification entries as read.
+
+Request body:
+
+```json
+{
+  "ids": ["activity-id-1", "activity-id-2"]
+}
+```
+
+## 4. AI Review and RAG Sessions
+
+### `GET /api/rag/sessions`
+
+Returns the current user's recent AI review sessions where available.
+
+### `GET /api/rag/sessions/:sessionId`
+
+Returns a single AI review session.
+
+### `POST /api/rag/sessions`
+
+Creates a new RAG session from:
+
+- pasted text, or
+- a single uploaded `PDF` / `DOCX`
+
+For pasted text, the request may also include an initial question so the first answer is returned immediately.
+
+### `POST /api/rag/sessions/:sessionId/messages`
+
+Adds a follow-up question to an existing AI review session and returns the updated conversation state.
+
+## 5. Posts
+
+### `GET /api/posts`
+
+Returns the post feed, optionally filtered by:
+
+- `folder`
+- `search`
+- `role`
+- `audience`
+
+### `GET /api/posts/:postId`
+
+Returns a full post detail payload including:
+
+- post metadata
+- answers
+- discussion tree
+- author information
+
+### `POST /api/posts`
+
+Creates a new post.
+
+Key fields:
+
+- `summary`
+- `details`
+- `folders`
+- optional `urgency`
+- optional `audience`
+
+### `PUT /api/posts/:postId`
+
+Updates an existing post.
+
+### `DELETE /api/posts/:postId`
+
+Deletes a post. Admin-only in the current implementation.
+
+### `PATCH /api/posts/:postId/pin`
+
+Pins or unpins a post. Admin-only.
+
+### `POST /api/posts/:postId/attachments`
+
+Adds attachments to a post through multipart upload.
+
+## 6. Answers
+
+### `POST /api/answers`
+
+Creates a new answer for a post.
+
+Key fields:
+
+- `postId`
+- `content`
+- `answerType`
+
+### `PUT /api/answers/:answerId`
+
+Updates an answer.
+
+### `DELETE /api/answers/:answerId`
+
+Deletes an answer.
+
+### `POST /api/answers/:answerId/accept`
+
+Marks an answer as accepted and resolves the related post where allowed.
+
+## 7. Discussions
+
+### `POST /api/discussions`
+
+Creates a root follow-up or nested reply.
+
+Key fields:
+
+- `postId`
+- optional `parentId`
+- `content`
+
+### `PATCH /api/discussions/:discussionId`
+
+Edits a discussion entry.
+
+### `PATCH /api/discussions/:discussionId/resolve`
+
+Toggles resolution state where allowed.
+
+### `DELETE /api/discussions/:discussionId`
+
+Deletes a discussion subtree.
+
+## 8. Sections and Moderation
+
+### Sections
+
+- `GET /api/folders`
+- `POST /api/folders`
+- `PUT /api/folders/:_id`
+- `DELETE /api/folders/:_id`
+
+### Moderation
+
+- `POST /api/moderation/posts/:postId/hide`
+
+### Stats
+
+- `GET /api/stats/overview`
+
+## 9. Error Shape
+
+The backend uses a structured error shape:
+
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Human-readable message",
+    "details": {}
   }
-  ```
-- **Response**: `201 Created`, returns basic user info (excluding password).
+}
+```
 
-### POST `/api/auth/login`
-- Handled by NextAuth Credentials Provider, returns session.
+Common codes include:
 
-### GET `/api/auth/session`
-- Returns current logged-in user info.
+- `UNAUTHORIZED`
+- `FORBIDDEN`
+- `NOT_FOUND`
+- `VALIDATION_ERROR`
+- `INTERNAL_ERROR`
 
-## 2. AI Contract Review
+## 10. Notes
 
-### POST `/api/ai-review`
-- **Auth**: Both tenants and lawyers can call this.
-- **Request Body** (multipart/form-data):
-  - `file`: PDF file (one of two options)
-  - `contractText`: Text content
-  - `contractType`: String (optional)
-- **Flow**:
-  1. Validate that at least file or text is provided.
-  2. If file uploaded, extract text (backend TBD).
-  3. Call Claude API to get analysis results.
-  4. Write to `AIReviews` collection.
-- **Response**:
-  ```json
-  {
-    "reviewId": "6550...",
-    "summary": "...",
-    "riskLevels": {
-      "high": ["..."],
-      "medium": ["..."],
-      "low": ["..."]
-    },
-    "recommendations": ["..."]
-  }
-  ```
-
-### GET `/api/ai-review/:id`
-- Returns specified review result, including original report.
-
-## 3. Posts
-
-### GET `/api/posts`
-- **Query Parameters**:
-  - `folder`: Category filter
-  - `role`: Perspective (optional)
-  - `search`: Search keyword
-- **Response**: List of posts sorted by newest first.
-
-### POST `/api/posts`
-- **Request Body**:
-  ```json
-  {
-    "summary": "Need to confirm if lease transfer clause is legal",
-    "details": "<p>...</p>",
-    "postType": "question",
-    "visibility": "class",         // class | private
-    "folders": ["lease_review", "rent_increase"],
-    "fromAIReview": "6550...",     // optional, linked review
-    "urgency": "high"              // optional
-  }
-  ```
-- **Response**: `201 Created`, returns new post details.
-- **Validation**: Summary ≤ 100 characters, at least one folder required.
-
-### GET `/api/posts/:id`
-- Returns post details, including answers and discussions (can be split into separate queries).
-
-### PUT `/api/posts/:id`
-- Update summary, details, folders, visibility, etc.
-
-### DELETE `/api/posts/:id`
-- Author/lawyer/admin permission; admins can delete rule-violating content.
-
-## 4. Answers
-
-### POST `/api/answers`
-- **Request Body**:
-  ```json
-  {
-    "postId": "654f...",
-    "content": "<p>...</p>",
-    "answerType": "lawyer_opinion"  // or community_answer
-  }
-  ```
-- **Permissions**: `lawyer_opinion` for lawyers only, `community_answer` for both tenants and lawyers.
-
-### PUT `/api/answers/:id`
-- Edit answer, author or admin only.
-
-### DELETE `/api/answers/:id`
-- Author or admin can delete.
-
-## 5. Discussions
-
-### POST `/api/discussions`
-- **Request Body**:
-  ```json
-  {
-    "postId": "654f...",
-    "parentId": "6550...",   // null for top-level
-    "content": "I had a similar experience...",
-    "isResolved": false
-  }
-  ```
-- Top-level discussions for "follow-up discussions", nested levels for replies.
-
-### PATCH `/api/discussions/:id/resolve`
-- **Request Body**: `{ "isResolved": true }`
-- **Permissions**: Post author, lawyer, or admin.
-
-### DELETE `/api/discussions/:id`
-- Author or admin.
-
-## 6. Folders (Categories)
-
-### GET `/api/folders`
-- Returns all folders for frontend filter rendering.
-
-### POST `/api/folders`
-- **Permissions**: Admin only.
-- **Request Body**: `{ "name": "utilities", "displayName": "Utilities" }`
-
-### PUT `/api/folders/:id`
-- Update name/description.
-
-### DELETE `/api/folders/:id`
-- Delete folder (need to handle associated posts strategy).
-
-## 7. Statistics
-
-### GET `/api/stats/overview`
-- Returns metrics required by Rubric:
-  ```json
-  {
-    "unreadPosts": 3,
-    "unansweredPosts": 5,
-    "totalPosts": 42,
-    "lawyerResponses": 18,
-    "tenantResponses": 64,
-    "enrolledUsers": 137
-  }
-  ```
-- Admin permission, other roles see filtered data as needed.
-
-## 8. Moderation Tools
-
-### POST `/api/moderation/posts/:id/hide`
-- Admin hides or restores posts.
-
-### POST `/api/moderation/users/:id/ban`
-- Admin disables user (optional extension).
-
-## 9. Error Response Standard
-
-- Unified response structure:
-  ```json
-  {
-    "error": {
-      "code": "VALIDATION_ERROR",
-      "message": "Summary cannot be empty",
-      "details": { ... }
-    }
-  }
-  ```
-- Common error codes: `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `VALIDATION_ERROR`, `INTERNAL_ERROR`.
-
-## 10. Future Extensions
-
-- WebSocket/Server-Sent Events for real-time updates (new answers, discussions).
-- Admin endpoints for exporting/importing test data.
-- AI review result versioning and feedback endpoints.
+- This is a current behavior summary, not a generated OpenAPI spec
+- Historical references to `/api/ai-review` and NextAuth are stale and should not be used for current client work
