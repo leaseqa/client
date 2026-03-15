@@ -40,7 +40,7 @@ When the answer relies on housing-law guidance, the UI expects handbook support 
 
 - Next.js App Router
 - React
-- `pnpm`
+- `npm`
 - Vercel for the public client deployment
 - Proxy-based API access to the Render backend
 
@@ -49,13 +49,13 @@ When the answer relies on housing-law guidance, the UI expects handbook support 
 Requirements:
 
 - Node `20.x`
-- `pnpm`
+- `npm`
 
 Install and run:
 
 ```bash
-pnpm install
-pnpm dev
+npm install
+npm run dev
 ```
 
 Frontend env:
@@ -83,10 +83,10 @@ The Next.js app also proxies `/api/*` to `API_PROXY_URL`, which defaults to the 
 
 ## Verification Used for the Current Release
 
-- `pnpm --filter @leaseqa/web test`
-- `pnpm --filter @leaseqa/web lint`
-- `pnpm --filter @leaseqa/web build`
-- `pnpm --filter @leaseqa/web e2e`
+- `npm run test --workspace @leaseqa/web`
+- `npm run lint --workspace @leaseqa/web`
+- `npm run build --workspace @leaseqa/web`
+- `npm run e2e --workspace @leaseqa/web`
 
 ## Related Repository
 

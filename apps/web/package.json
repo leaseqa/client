@@ -13,8 +13,8 @@
   "dependencies": {
     "@headlessui/react": "^2.2.5",
     "@hookform/resolvers": "^3.3.4",
-    "@leaseqa/config": "workspace:*",
-    "@leaseqa/ui": "workspace:*",
+    "@leaseqa/config": "*",
+    "@leaseqa/ui": "*",
     "@reduxjs/toolkit": "^2.5.0",
     "@tanstack/react-query": "^5.51.1",
     "@total-typescript/ts-reset": "^0.6.1",
