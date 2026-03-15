@@ -1,5 +1,6 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npx pnpm@10.31.0 install",
-  "buildCommand": "npx pnpm@10.31.0 build"
+  "buildCommand": "npm run build --workspace @leaseqa/web",
+  "installCommand": "npm install",
+  "devCommand": "npm run dev --workspace @leaseqa/web",
+  "outputDirectory": "apps/web/.next"
 }
