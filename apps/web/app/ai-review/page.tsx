@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Badge, Form, Spinner } from "react-bootstrap";
+import { Alert, Badge, Form, Spinner } from "react-bootstrap";
 import { Clock3, FileText, MessageSquareQuote, Shield } from "lucide-react";
 
 import ToastNotification, {
@@ -26,6 +26,7 @@ import {
   getInlineCitationItems,
   getNextRevealLength,
   getResultsPanelState,
+  SALIENT_BOUNDARY_LABEL,
   getSessionInputPlan,
   shouldShowLegacyCitationList,
   TEXT_RETRY_PROMPT_LABEL,
@@ -407,6 +408,10 @@ export default function AIReviewPage() {
           tenant-rights handbook.
         </p>
       </section>
+
+      <Alert variant="warning" className="mb-0">
+        {SALIENT_BOUNDARY_LABEL}
+      </Alert>
 
       <section className="review-input-section">
         <Form onSubmit={handleCreateSession} className="review-upload-stack">

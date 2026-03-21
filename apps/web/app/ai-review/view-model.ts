@@ -12,6 +12,8 @@ export const FILE_SUGGESTED_PROMPTS = [
 ];
 
 export const TEXT_RETRY_PROMPT_LABEL = "Analyze this clause";
+export const SALIENT_BOUNDARY_LABEL =
+  "LeaseQA provides legal information, not legal advice. For advice about your specific situation, consult a licensed attorney or legal aid office.";
 
 export type PendingDraftSource = {
   sourceName: string;

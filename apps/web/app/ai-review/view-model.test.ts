@@ -9,6 +9,7 @@ import {
   getInlineCitationItems,
   getNextRevealLength,
   getResultsPanelState,
+  SALIENT_BOUNDARY_LABEL,
   shouldShowLegacyCitationList,
   getSessionInputPlan,
   getVisibleMessages,
@@ -322,5 +323,13 @@ describe("getNextRevealLength", () => {
 
     expect(getNextRevealLength(0, reply)).toBeGreaterThan(0);
     expect(getNextRevealLength(reply.length - 2, reply)).toBe(reply.length);
+  });
+});
+
+describe("SALIENT_BOUNDARY_LABEL", () => {
+  test("states the legal-information boundary in prominent banner copy", () => {
+    expect(SALIENT_BOUNDARY_LABEL).toBe(
+      "LeaseQA provides legal information, not legal advice. For advice about your specific situation, consult a licensed attorney or legal aid office.",
+    );
   });
 });
