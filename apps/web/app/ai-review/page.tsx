@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Badge, Form, Spinner } from "react-bootstrap";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Alert, Badge, Form, Spinner } from "react-bootstrap";
 import { Clock3, FileText, MessageSquareQuote, Shield } from "lucide-react";
 
 import ToastNotification, {
@@ -14,8 +14,11 @@ import AceternityStatefulButton from "@/components/ui/AceternityStatefulButton";
 import PageLoadingState from "@/components/ui/PageLoadingState";
 import * as client from "./client";
 import { RagSession } from "./types";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
+import * as studyClient from "../study/client";
+import { buildQualtricsReturnUrl } from "../study/qualtrics";
+import { StudySessionView } from "../study/types";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, setGuestSession } from "@/app/store";
 import {
   CHAT_UPLOAD_ACCEPT,
   CHAT_UPLOAD_MAX_MB,
@@ -27,6 +30,8 @@ import {
   getNextRevealLength,
   getResultsPanelState,
   getSessionInputPlan,
+  getStudyQueryState,
+  getStudyUiState,
   shouldShowLegacyCitationList,
   TEXT_RETRY_PROMPT_LABEL,
   getVisibleMessages,
@@ -54,15 +59,28 @@ const formatStatusVariant = (status: RagSession["status"]) => {
 
 export default function AIReviewPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const dispatch = useDispatch();
   const session = useSelector(
     (currentState: RootState) => currentState.session,
   );
   const isAuthenticated = session.status === "authenticated";
   const isGuest = session.status === "guest";
   const hasAccess = isAuthenticated || isGuest;
+  const searchParamsString = searchParams.toString();
+  const studyQuery = useMemo(
+    () => getStudyQueryState(searchParams),
+    [searchParamsString, searchParams],
+  );
+  const isStudyMode = studyQuery.enabled;
+  const configuredReturnUrl =
+    searchParams.get("returnUrl") ||
+    process.env.NEXT_PUBLIC_STUDY_QUALTRICS_RETURN_URL ||
+    "";
 
   const [sessions, setSessions] = useState<RagSession[]>([]);
   const [activeSession, setActiveSession] = useState<RagSession | null>(null);
+  const [studyView, setStudyView] = useState<StudySessionView | null>(null);
   const [sourceText, setSourceText] = useState("");
   const [question, setQuestion] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -70,6 +88,8 @@ export default function AIReviewPage() {
   const [loadingSessions, setLoadingSessions] = useState(false);
   const [creatingSession, setCreatingSession] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
+  const [completingStudy, setCompletingStudy] = useState(false);
+  const [studyCompletionNotice, setStudyCompletionNotice] = useState("");
   const [pendingDraftSource, setPendingDraftSource] = useState<{
     sourceName: string;
     sourcePreview: string;
@@ -92,6 +112,12 @@ export default function AIReviewPage() {
     setToast({ show: true, message, type });
   }, []);
 
+  const applyStudyView = useCallback((nextStudyView: StudySessionView) => {
+    setStudyView(nextStudyView);
+    setActiveSession(nextStudyView.ragSession);
+    setSessions(nextStudyView.ragSession ? [nextStudyView.ragSession] : []);
+  }, []);
+
   const loadSessions = useCallback(async () => {
     try {
       setLoadingSessions(true);
@@ -112,6 +138,45 @@ export default function AIReviewPage() {
       setLoadingSessions(false);
     }
   }, [showToast]);
+
+  const loadStudySession = useCallback(async () => {
+    try {
+      setLoadingSessions(true);
+      const nextStudyView = studyQuery.studySessionId
+        ? await studyClient.fetchStudySession(studyQuery.studySessionId)
+        : await studyClient.createStudySession(
+            studyQuery.participantId,
+            studyQuery.scenarioId,
+          );
+
+      applyStudyView(nextStudyView);
+
+      if (!studyQuery.studySessionId && nextStudyView.studySessionId) {
+        const nextParams = new URLSearchParams(searchParamsString);
+        nextParams.set("study", "1");
+        nextParams.set("participantId", studyQuery.participantId);
+        nextParams.set("scenarioId", studyQuery.scenarioId);
+        nextParams.set("studySessionId", nextStudyView.studySessionId);
+        router.replace(`/ai-review?${nextParams.toString()}`);
+      }
+    } catch (error: any) {
+      showToast(
+        error.response?.data?.error?.message ||
+          "Failed to load the assigned study scenario.",
+        "error",
+      );
+    } finally {
+      setLoadingSessions(false);
+    }
+  }, [
+    applyStudyView,
+    router,
+    searchParamsString,
+    showToast,
+    studyQuery.participantId,
+    studyQuery.scenarioId,
+    studyQuery.studySessionId,
+  ]);
 
   const stopReveal = useCallback(() => {
     if (revealTimerRef.current) {
@@ -151,13 +216,30 @@ export default function AIReviewPage() {
 
   useEffect(() => {
     if (session.status === "unauthenticated") {
+      if (isStudyMode) {
+        localStorage.setItem("guest_session", "true");
+        dispatch(setGuestSession());
+        return;
+      }
       router.replace("/auth/login?next=%2Fai-review");
       return;
     }
     if (hasAccess) {
-      void loadSessions();
+      if (isStudyMode) {
+        void loadStudySession();
+      } else {
+        void loadSessions();
+      }
     }
-  }, [session.status, router, hasAccess, loadSessions]);
+  }, [
+    dispatch,
+    hasAccess,
+    isStudyMode,
+    loadSessions,
+    loadStudySession,
+    router,
+    session.status,
+  ]);
 
   useEffect(() => {
     if (!activeSession || activeSession.status !== "indexing") {
@@ -165,11 +247,31 @@ export default function AIReviewPage() {
     }
 
     const timer = window.setTimeout(() => {
+      if (isStudyMode && studyView?.studySessionId) {
+        void studyClient
+          .fetchStudySession(studyView.studySessionId)
+          .then((nextStudyView) => applyStudyView(nextStudyView))
+          .catch((error: any) =>
+            showToast(
+              error.response?.data?.error?.message ||
+                "Failed to refresh this study chat.",
+              "error",
+            ),
+          );
+        return;
+      }
       void refreshActiveSession(activeSession._id);
     }, 2000);
 
     return () => window.clearTimeout(timer);
-  }, [activeSession, refreshActiveSession]);
+  }, [
+    activeSession,
+    applyStudyView,
+    isStudyMode,
+    refreshActiveSession,
+    showToast,
+    studyView?.studySessionId,
+  ]);
 
   useEffect(() => {
     if (!revealingMessage) {
@@ -256,7 +358,10 @@ export default function AIReviewPage() {
 
   const submitQuestion = useCallback(async (rawQuestion: string) => {
     if (!activeSession) {
-      showToast("Create a chat source first.", "error");
+      showToast(
+        isStudyMode ? "The assigned study source is still loading." : "Create a chat source first.",
+        "error",
+      );
       return;
     }
     if (activeSession.status !== "ready") {
@@ -276,6 +381,23 @@ export default function AIReviewPage() {
 
     try {
       setSendingMessage(true);
+      if (isStudyMode) {
+        if (!studyView?.studySessionId) {
+          throw new Error("Study session is still loading.");
+        }
+        const result = await studyClient.sendStudyMessage(
+          studyView.studySessionId,
+          trimmedQuestion,
+        );
+        setPendingUserQuestion(null);
+        setPendingAssistantLabel(null);
+        applyStudyView(result.studySession);
+        if (result.studySession.ragSession) {
+          triggerLatestAssistantReveal(result.studySession.ragSession);
+        }
+        return;
+      }
+
       const result = await client.sendMessage(activeSession._id, trimmedQuestion);
       setPendingUserQuestion(null);
       setPendingAssistantLabel(null);
@@ -296,7 +418,15 @@ export default function AIReviewPage() {
     } finally {
       setSendingMessage(false);
     }
-  }, [activeSession, showToast, stopReveal, triggerLatestAssistantReveal]);
+  }, [
+    activeSession,
+    applyStudyView,
+    isStudyMode,
+    showToast,
+    stopReveal,
+    studyView?.studySessionId,
+    triggerLatestAssistantReveal,
+  ]);
 
   const handleCreateSession = async (
     event: React.FormEvent<HTMLFormElement>,
@@ -381,11 +511,72 @@ export default function AIReviewPage() {
     await submitQuestion(question);
   };
 
-  if (session.status === "loading" || session.status === "unauthenticated") {
+  const handleCompleteStudy = useCallback(async () => {
+    if (!studyView?.studySessionId) {
+      return;
+    }
+
+    try {
+      setCompletingStudy(true);
+      const completed = await studyClient.completeStudySession(studyView.studySessionId);
+      setStudyView((current) =>
+        current
+          ? {
+              ...current,
+              status: (completed.status as StudySessionView["status"]) || "completed",
+              completedAt: completed.completedAt || current.completedAt || null,
+            }
+          : current,
+      );
+      const returnUrl = buildQualtricsReturnUrl({
+        baseUrl: configuredReturnUrl,
+        participantId: studyQuery.participantId,
+        studySessionId: studyView.studySessionId,
+        conditionId: studyView.conditionId,
+      });
+      if (returnUrl) {
+        window.location.assign(returnUrl);
+        return;
+      }
+      setStudyCompletionNotice(
+        "Study session marked complete. Add a Qualtrics return URL to redirect automatically.",
+      );
+    } catch (error: any) {
+      showToast(
+        error.response?.data?.error?.message ||
+          "Failed to complete this study session.",
+        "error",
+      );
+    } finally {
+      setCompletingStudy(false);
+    }
+  }, [
+    configuredReturnUrl,
+    showToast,
+    studyQuery.participantId,
+    studyView?.conditionId,
+    studyView?.studySessionId,
+  ]);
+
+  const studyUi = useMemo(() => getStudyUiState(studyView), [studyView]);
+  const canSendStudyMainQuestion =
+    isStudyMode && studyUi.canSendFixedQuestion && activeSession?.status === "ready";
+  const canSendStudyFollowUp =
+    isStudyMode && studyUi.canSendFollowUp && activeSession?.status === "ready";
+  const showStudyComposer = isStudyMode && Boolean(studyView);
+
+  if (
+    session.status === "loading" ||
+    (session.status === "unauthenticated" && !isStudyMode) ||
+    (isStudyMode && !hasAccess) ||
+    (isStudyMode && loadingSessions && !studyView)
+  ) {
     return (
       <PageLoadingState
         message={
-          session.status === "loading"
+          isStudyMode && session.status !== "loading"
+            ? "Preparing study session..."
+            : session.status === "loading"
             ? "Loading review tools..."
             : "Redirecting to login..."
         }
@@ -401,72 +592,126 @@ export default function AIReviewPage() {
       />
 
       <section className="review-header-section">
-        <h1 className="qa-page-title">Upload a lease or paste one clause.</h1>
-        <p className="qa-page-sub">
-          Ask questions against your document and compare it with the
-          tenant-rights handbook.
-        </p>
+        {isStudyMode ? (
+          <>
+            <div className="d-flex flex-wrap align-items-center gap-2 mb-3">
+              <Badge bg="dark" pill>
+                UPL study
+              </Badge>
+              {studyView?.conditionId ? (
+                <span className="qa-page-sub">{studyUi.taskTitle}</span>
+              ) : null}
+            </div>
+            <h1 className="qa-page-title">Review the assigned housing scenario.</h1>
+            <p className="qa-page-sub">
+              {studyView?.scenario.taskInstructions ||
+                "Use the assigned scenario in the original LeaseQA interface."}
+            </p>
+          </>
+        ) : (
+          <>
+            <h1 className="qa-page-title">Upload a lease or paste one clause.</h1>
+            <p className="qa-page-sub">
+              Ask questions against your document and compare it with the
+              tenant-rights handbook.
+            </p>
+          </>
+        )}
       </section>
 
+      {isStudyMode && studyUi.banner ? (
+        <Alert variant="warning" className="mb-0">
+          {studyUi.banner}
+        </Alert>
+      ) : null}
+      {isStudyMode && studyCompletionNotice ? (
+        <Alert variant="success" className="mb-0">
+          {studyCompletionNotice}
+        </Alert>
+      ) : null}
+
       <section className="review-input-section">
-        <Form onSubmit={handleCreateSession} className="review-upload-stack">
-          <AceternityFileUpload
-            key={uploadResetKey}
-            name="file"
-            accept={CHAT_UPLOAD_ACCEPT}
-            maxSizeMb={CHAT_UPLOAD_MAX_MB}
-            onFilesChangeAction={(files) => setSelectedFile(files[0] || null)}
-          />
-
-          <div className="review-divider">or paste text</div>
-
-          <Form.Group>
-            <Form.Control
-              as="textarea"
-              name="sourceText"
-              value={sourceText}
-              onChange={(event) => setSourceText(event.target.value)}
-              rows={6}
-              placeholder="Paste the lease clause, notice, or housing text you want to ask about."
-              className="review-textarea"
-            />
-          </Form.Group>
-
-          <div className="review-form-footer">
-            <div className="review-note">
-              <Shield size={14} />
-              <span>
-                {isGuest
-                  ? "Guest chats stay in this browser session."
-                  : "Not legal advice."}
-              </span>
+        {isStudyMode ? (
+          <div className="review-recs-panel">
+            <div className="review-next-steps">
+              <div className="review-next-step">
+                <div className="qa-sidebar-label">
+                  <FileText size={12} />
+                  <span>Scenario</span>
+                </div>
+                <p className="panel-copy mb-0">{studyUi.taskIntroduction}</p>
+              </div>
+              <div className="review-next-step">
+                <div className="qa-sidebar-label">
+                  <MessageSquareQuote size={12} />
+                  <span>Fixed Main Question</span>
+                </div>
+                <p className="panel-copy mb-0">{studyUi.mainQuestion}</p>
+              </div>
             </div>
-            <AceternityStatefulButton
-              type="submit"
-              status={creatingSession ? "loading" : "idle"}
-              className="btn-unified btn-unified-primary btn-unified-md"
-            >
-              {creatingSession
-                ? pendingDraftSource
-                  ? "Analyzing clause"
-                  : "Loading source"
-                : selectedFile
-                  ? "Start chat"
-                  : sourceText.trim()
-                    ? "Analyze clause"
-                    : "Start chat"}
-            </AceternityStatefulButton>
           </div>
-        </Form>
+        ) : (
+          <Form onSubmit={handleCreateSession} className="review-upload-stack">
+            <AceternityFileUpload
+              key={uploadResetKey}
+              name="file"
+              accept={CHAT_UPLOAD_ACCEPT}
+              maxSizeMb={CHAT_UPLOAD_MAX_MB}
+              onFilesChangeAction={(files) => setSelectedFile(files[0] || null)}
+            />
+
+            <div className="review-divider">or paste text</div>
+
+            <Form.Group>
+              <Form.Control
+                as="textarea"
+                name="sourceText"
+                value={sourceText}
+                onChange={(event) => setSourceText(event.target.value)}
+                rows={6}
+                placeholder="Paste the lease clause, notice, or housing text you want to ask about."
+                className="review-textarea"
+              />
+            </Form.Group>
+
+            <div className="review-form-footer">
+              <div className="review-note">
+                <Shield size={14} />
+                <span>
+                  {isGuest
+                    ? "Guest chats stay in this browser session."
+                    : "Not legal advice."}
+                </span>
+              </div>
+              <AceternityStatefulButton
+                type="submit"
+                status={creatingSession ? "loading" : "idle"}
+                className="btn-unified btn-unified-primary btn-unified-md"
+              >
+                {creatingSession
+                  ? pendingDraftSource
+                    ? "Analyzing clause"
+                    : "Loading source"
+                  : selectedFile
+                    ? "Start chat"
+                    : sourceText.trim()
+                      ? "Analyze clause"
+                      : "Start chat"}
+              </AceternityStatefulButton>
+            </div>
+          </Form>
+        )}
       </section>
 
       <section className="review-history-section">
         <div className="review-history-header">
           <div className="qa-sidebar-label">
             <Clock3 size={12} />
-            <span>History</span>
+            <span>{isStudyMode ? "Assigned source" : "History"}</span>
           </div>
-          {isGuest ? (
+          {isStudyMode ? (
+            <span className="review-history-hint">Study mode uses one fixed source</span>
+          ) : isGuest ? (
             <span className="review-history-hint">Temporary for this guest session</span>
           ) : null}
         </div>
@@ -476,6 +721,17 @@ export default function AIReviewPage() {
             <Spinner size="sm" />
             <span>Loading...</span>
           </div>
+        ) : isStudyMode ? (
+          activeSession ? (
+            <div className="review-history-chips">
+              <div className="review-history-chip is-active">
+                <span>{activeSession.sourceName}</span>
+                <span className="review-history-chip-date">Assigned</span>
+              </div>
+            </div>
+          ) : (
+            <div className="review-history-inline">Loading the assigned source...</div>
+          )
         ) : sessions.length > 0 ? (
           <div className="review-history-chips">
             {sessions.map((item) => {
@@ -506,11 +762,17 @@ export default function AIReviewPage() {
         <div className="review-results-header">
           <div>
             <h2 className="qa-page-title" style={{ fontSize: "1.4rem" }}>
-              {showSession ? resultsPanelState.title : "Chat"}
+              {showSession
+                ? isStudyMode
+                  ? "Conversation"
+                  : resultsPanelState.title
+                : "Chat"}
             </h2>
             <p className="qa-page-sub">
               {showSession
-                ? resultsPanelState.subtitle
+                ? isStudyMode
+                  ? studyUi.helperText
+                  : resultsPanelState.subtitle
                 : "Create a source above, then ask questions here."}
             </p>
           </div>
@@ -652,7 +914,7 @@ export default function AIReviewPage() {
                   </>
                 ) : (
                   <>
-                    {activeSession?.status === "ready" ? (
+                    {activeSession?.status === "ready" && !isStudyMode ? (
                       <div className="review-prompt-grid">
                         {(activeSession.sourceKind === "upload"
                           ? FILE_SUGGESTED_PROMPTS
@@ -676,7 +938,9 @@ export default function AIReviewPage() {
                       </div>
                     ) : null}
                     <div className="review-history-inline">
-                      {getEmptyStateMessage({ activeSession })}
+                      {isStudyMode
+                        ? studyUi.helperText
+                        : getEmptyStateMessage({ activeSession })}
                     </div>
                   </>
                 )}
@@ -691,8 +955,13 @@ export default function AIReviewPage() {
                     rows={3}
                     value={question}
                     onChange={(event) => setQuestion(event.target.value)}
-                    placeholder="Ask a question about this document or your housing issue."
+                    placeholder={
+                      isStudyMode
+                        ? studyUi.composerPlaceholder
+                        : "Ask a question about this document or your housing issue."
+                    }
                     className="review-textarea"
+                    disabled={showStudyComposer ? !canSendStudyFollowUp : false}
                   />
                 </Form.Group>
 
@@ -700,19 +969,56 @@ export default function AIReviewPage() {
                   <div className="review-note">
                     <Shield size={14} />
                     <span>
-                      {activeSession.status === "ready"
-                        ? "LeaseQA provides legal information, not legal advice."
-                        : "Wait for indexing to finish before asking a question."}
+                      {showStudyComposer
+                        ? studyUi.footerCue
+                        : activeSession.status === "ready"
+                          ? "LeaseQA provides legal information, not legal advice."
+                          : "Wait for indexing to finish before asking a question."}
                     </span>
                   </div>
-                  <AceternityStatefulButton
-                    type="submit"
-                    status={sendingMessage ? "loading" : "idle"}
-                    className="btn-unified btn-unified-primary btn-unified-md"
-                    disabled={!question.trim() || activeSession.status !== "ready"}
-                  >
-                    {sendingMessage ? "Sending" : "Send question"}
-                  </AceternityStatefulButton>
+                  {showStudyComposer ? (
+                    <div className="d-flex gap-2 flex-wrap">
+                      {canSendStudyMainQuestion ? (
+                        <button
+                          type="button"
+                          className="btn btn-dark"
+                          disabled={sendingMessage}
+                          onClick={() => void submitQuestion(studyUi.mainQuestion)}
+                        >
+                          {sendingMessage ? "Sending..." : "Send fixed question"}
+                        </button>
+                      ) : null}
+                      {studyUi.canSendFollowUp ? (
+                        <AceternityStatefulButton
+                          type="submit"
+                          status={sendingMessage ? "loading" : "idle"}
+                          className="btn-unified btn-unified-primary btn-unified-md"
+                          disabled={!question.trim() || !canSendStudyFollowUp}
+                        >
+                          {sendingMessage ? "Sending" : "Send follow-up"}
+                        </AceternityStatefulButton>
+                      ) : null}
+                      {studyUi.canComplete ? (
+                        <button
+                          type="button"
+                          className="btn btn-dark"
+                          disabled={completingStudy}
+                          onClick={() => void handleCompleteStudy()}
+                        >
+                          {completingStudy ? "Finishing..." : "Continue to survey"}
+                        </button>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <AceternityStatefulButton
+                      type="submit"
+                      status={sendingMessage ? "loading" : "idle"}
+                      className="btn-unified btn-unified-primary btn-unified-md"
+                      disabled={!question.trim() || activeSession.status !== "ready"}
+                    >
+                      {sendingMessage ? "Sending" : "Send question"}
+                    </AceternityStatefulButton>
+                  )}
                 </div>
               </Form>
             ) : (

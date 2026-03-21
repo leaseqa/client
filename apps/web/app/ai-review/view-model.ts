@@ -1,4 +1,6 @@
 import { Citation, ChatMessage, RagSession } from "./types";
+import { getStudyActionState, getStudyShellState } from "../study/view-model";
+import type { StudySessionView } from "../study/types";
 
 export const CHAT_UPLOAD_MAX_MB = 20;
 export const CHAT_UPLOAD_ACCEPT = "application/pdf,.docx";
@@ -29,6 +31,26 @@ export type InlineCitationItem = {
   sourceUrl: string | null;
 };
 
+export type StudyQueryState = {
+  enabled: boolean;
+  participantId: string;
+  scenarioId: string;
+  studySessionId: string | null;
+};
+
+export type StudyUiState = {
+  banner: string | null;
+  footerCue: string;
+  taskTitle: string;
+  taskIntroduction: string;
+  mainQuestion: string;
+  helperText: string;
+  composerPlaceholder: string;
+  canSendFixedQuestion: boolean;
+  canSendFollowUp: boolean;
+  canComplete: boolean;
+};
+
 type SessionInputOptions = {
   hasFile: boolean;
   sourceText: string;
@@ -57,6 +79,50 @@ export function getSessionInputPlan({
   return {
     error: null,
     initialQuestion: hasFile ? null : AUTO_ANALYZE_QUESTION,
+  };
+}
+
+export function getStudyQueryState(
+  searchParams: Pick<URLSearchParams, "get">,
+): StudyQueryState {
+  return {
+    enabled: searchParams.get("study") === "1",
+    participantId:
+      searchParams.get("participantId") ||
+      searchParams.get("ResponseID") ||
+      "pilot-participant",
+    scenarioId: searchParams.get("scenarioId") || "security-deposit",
+    studySessionId: searchParams.get("studySessionId") || null,
+  };
+}
+
+export function getStudyUiState(
+  studyView: StudySessionView | null,
+): StudyUiState {
+  const shellState = getStudyShellState({
+    scenarioTitle: studyView?.scenario.title || "Assigned scenario",
+    boundaryCue: studyView?.boundaryCue || "low",
+  });
+  const actionState = getStudyActionState({
+    turnCount: studyView?.turnCount || 0,
+    remainingFollowUps: studyView?.remainingFollowUps || 0,
+    status: studyView?.status || "active",
+  });
+
+  return {
+    banner: shellState.banner,
+    footerCue: shellState.footerCue,
+    taskTitle: studyView?.scenario.title || "Assigned scenario",
+    taskIntroduction:
+      studyView?.scenario.introduction || "Scenario details unavailable.",
+    mainQuestion: studyView?.scenario.mainQuestion || "",
+    helperText: actionState.helperText,
+    composerPlaceholder: actionState.canSendFollowUp
+      ? "Ask a follow-up question about this scenario."
+      : "Start with the fixed study question to unlock follow-up questions.",
+    canSendFixedQuestion: actionState.canSendMainQuestion,
+    canSendFollowUp: actionState.canSendFollowUp,
+    canComplete: actionState.canComplete,
   };
 }
 

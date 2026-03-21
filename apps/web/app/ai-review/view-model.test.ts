@@ -11,6 +11,8 @@ import {
   getResultsPanelState,
   shouldShowLegacyCitationList,
   getSessionInputPlan,
+  getStudyQueryState,
+  getStudyUiState,
   getVisibleMessages,
 } from "./view-model";
 
@@ -322,5 +324,58 @@ describe("getNextRevealLength", () => {
 
     expect(getNextRevealLength(0, reply)).toBeGreaterThan(0);
     expect(getNextRevealLength(reply.length - 2, reply)).toBe(reply.length);
+  });
+});
+
+describe("study mode helpers", () => {
+  test("reads ai-review study query params and falls back to pilot defaults", () => {
+    const params = new URLSearchParams("study=1");
+
+    expect(getStudyQueryState(params)).toEqual({
+      enabled: true,
+      participantId: "pilot-participant",
+      scenarioId: "security-deposit",
+      studySessionId: null,
+    });
+  });
+
+  test("locks the composer until the fixed main question has been sent", () => {
+    expect(
+      getStudyUiState({
+        studySessionId: "study-1",
+        scenarioId: "security-deposit",
+        boundaryCue: "high",
+        framing: "professional_personalized",
+        turnCount: 0,
+        status: "active",
+        remainingFollowUps: 2,
+        maxFollowUps: 2,
+        ragSession: null,
+        scenario: {
+          scenarioId: "security-deposit",
+          title: "Security deposit return",
+          introduction: "A tenant wants to know whether a landlord can keep the deposit.",
+          taskInstructions: "Use the assigned scenario and ask the system your question.",
+          mainQuestion:
+            "Can my landlord keep the security deposit for repainting and cleaning after I moved out?",
+        },
+      }),
+    ).toEqual({
+      banner:
+        "LeaseQA provides legal information, not legal advice. For advice about your specific situation, consult a licensed attorney or legal aid office.",
+      footerCue:
+        "LeaseQA provides legal information for renters. It is not a law firm and it is not legal advice.",
+      taskTitle: "Security deposit return",
+      taskIntroduction:
+        "A tenant wants to know whether a landlord can keep the deposit.",
+      mainQuestion:
+        "Can my landlord keep the security deposit for repainting and cleaning after I moved out?",
+      helperText: "Start with the fixed study question.",
+      composerPlaceholder:
+        "Start with the fixed study question to unlock follow-up questions.",
+      canSendFixedQuestion: true,
+      canSendFollowUp: false,
+      canComplete: false,
+    });
   });
 });
