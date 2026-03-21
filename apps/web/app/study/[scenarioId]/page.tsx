@@ -252,6 +252,10 @@ export default function StudyScenarioPage() {
           {studyView?.scenario.taskInstructions ||
             "Use the fixed scenario and question, then complete the short study task."}
         </p>
+        <p className="qa-page-sub">
+          Stay on this page until you finish the task. The study view hides the
+          normal site navigation on purpose.
+        </p>
       </section>
 
       {shellState.banner ? (
