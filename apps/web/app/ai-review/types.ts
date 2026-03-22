@@ -8,6 +8,10 @@ export type Citation = {
   snippet: string;
 };
 
+export type ResponseFraming =
+  | "professional_personalized"
+  | "informational_detached";
+
 export type AnswerBullet = {
   text: string;
   citationIndices: number[];

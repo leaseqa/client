@@ -2,6 +2,7 @@ import axios from "axios";
 import {
   CreateSessionResponse,
   RagSession,
+  ResponseFraming,
   SendMessageResponse,
 } from "./types";
 
@@ -37,10 +38,11 @@ export async function createSession(
 export async function sendMessage(
   sessionId: string,
   message: string,
+  responseFraming: ResponseFraming,
 ): Promise<SendMessageResponse> {
   const response = await axiosWithCredentials.post(
     `${API_BASE}/rag/sessions/${sessionId}/messages`,
-    { message },
+    { message, responseFraming },
   );
   return response.data.data;
 }

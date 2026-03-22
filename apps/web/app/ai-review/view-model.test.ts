@@ -3,6 +3,8 @@ import { describe, expect, test } from "vitest";
 import {
   AUTO_ANALYZE_QUESTION,
   FILE_SUGGESTED_PROMPTS,
+  DEFAULT_RESPONSE_FRAMING,
+  RESPONSE_FRAMING_OPTIONS,
   formatCompactCitationLabel,
   getEmptyStateMessage,
   getDisplayedSource,
@@ -331,5 +333,21 @@ describe("SALIENT_BOUNDARY_LABEL", () => {
     expect(SALIENT_BOUNDARY_LABEL).toBe(
       "LeaseQA provides legal information, not legal advice. For advice about your specific situation, consult a licensed attorney or legal aid office.",
     );
+  });
+});
+
+describe("RESPONSE_FRAMING_OPTIONS", () => {
+  test("exposes the two output framing conditions", () => {
+    expect(DEFAULT_RESPONSE_FRAMING).toBe("informational_detached");
+    expect(RESPONSE_FRAMING_OPTIONS).toEqual([
+      {
+        value: "informational_detached",
+        label: "Informational + Detached",
+      },
+      {
+        value: "professional_personalized",
+        label: "Professional + Personalized",
+      },
+    ]);
   });
 });

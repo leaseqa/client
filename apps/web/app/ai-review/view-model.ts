@@ -1,4 +1,4 @@
-import { Citation, ChatMessage, RagSession } from "./types";
+import { Citation, ChatMessage, RagSession, ResponseFraming } from "./types";
 
 export const CHAT_UPLOAD_MAX_MB = 20;
 export const CHAT_UPLOAD_ACCEPT = "application/pdf,.docx";
@@ -14,6 +14,21 @@ export const FILE_SUGGESTED_PROMPTS = [
 export const TEXT_RETRY_PROMPT_LABEL = "Analyze this clause";
 export const SALIENT_BOUNDARY_LABEL =
   "LeaseQA provides legal information, not legal advice. For advice about your specific situation, consult a licensed attorney or legal aid office.";
+export const DEFAULT_RESPONSE_FRAMING: ResponseFraming =
+  "informational_detached";
+export const RESPONSE_FRAMING_OPTIONS: {
+  value: ResponseFraming;
+  label: string;
+}[] = [
+  {
+    value: "informational_detached",
+    label: "Informational + Detached",
+  },
+  {
+    value: "professional_personalized",
+    label: "Professional + Personalized",
+  },
+];
 
 export type PendingDraftSource = {
   sourceName: string;
