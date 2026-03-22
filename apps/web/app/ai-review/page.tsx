@@ -19,10 +19,8 @@ import { RootState } from "@/app/store";
 import {
   CHAT_UPLOAD_ACCEPT,
   CHAT_UPLOAD_MAX_MB,
-  DEFAULT_RESPONSE_FRAMING,
   FILE_SUGGESTED_PROMPTS,
   AUTO_ANALYZE_QUESTION,
-  RESPONSE_FRAMING_OPTIONS,
   getDisplayedSource,
   getEmptyStateMessage,
   getInlineCitationItems,
@@ -66,10 +64,8 @@ export default function AIReviewPage() {
 
   const [sessions, setSessions] = useState<RagSession[]>([]);
   const [activeSession, setActiveSession] = useState<RagSession | null>(null);
-  const [showSalientBoundaryLabel, setShowSalientBoundaryLabel] =
-    useState(false);
-  const [responseFraming, setResponseFraming] =
-    useState<ResponseFraming>(DEFAULT_RESPONSE_FRAMING);
+  const showSalientBoundaryLabel = false;
+  const responseFraming: ResponseFraming = "professional_personalized";
   const [sourceText, setSourceText] = useState("");
   const [question, setQuestion] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -431,45 +427,6 @@ export default function AIReviewPage() {
           {SALIENT_BOUNDARY_LABEL}
         </Alert>
       ) : null}
-
-      <section className="review-recs-panel">
-        <div className="review-next-steps">
-          <div className="review-next-step">
-            <div className="qa-sidebar-label">
-              <Shield size={12} />
-              <span>Boundary Label</span>
-            </div>
-            <Form.Check
-              type="switch"
-              id="boundary-label-toggle"
-              label="Show salient top label"
-              checked={showSalientBoundaryLabel}
-              onChange={(event) =>
-                setShowSalientBoundaryLabel(event.target.checked)
-              }
-            />
-          </div>
-          <div className="review-next-step">
-            <div className="qa-sidebar-label">
-              <MessageSquareQuote size={12} />
-              <span>Output Framing</span>
-            </div>
-            <Form.Select
-              aria-label="Output framing"
-              value={responseFraming}
-              onChange={(event) =>
-                setResponseFraming(event.target.value as ResponseFraming)
-              }
-            >
-              {RESPONSE_FRAMING_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Form.Select>
-          </div>
-        </div>
-      </section>
 
       <section className="review-input-section">
         <Form onSubmit={handleCreateSession} className="review-upload-stack">
