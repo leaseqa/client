@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Alert, Badge, Form, Spinner } from "react-bootstrap";
+import { Badge, Form, Spinner } from "react-bootstrap";
 import { Clock3, FileText, MessageSquareQuote, Shield } from "lucide-react";
 
 import ToastNotification, {
@@ -26,7 +26,9 @@ import {
   getInlineCitationItems,
   getNextRevealLength,
   getResultsPanelState,
-  SALIENT_BOUNDARY_LABEL,
+  SALIENT_BOUNDARY_LABEL_EYEBROW,
+  SALIENT_BOUNDARY_LABEL_SUBTITLE,
+  SALIENT_BOUNDARY_LABEL_TITLE,
   getSessionInputPlan,
   shouldShowLegacyCitationList,
   TEXT_RETRY_PROMPT_LABEL,
@@ -422,12 +424,6 @@ export default function AIReviewPage() {
         </p>
       </section>
 
-      {showSalientBoundaryLabel ? (
-        <Alert variant="warning" className="mb-0">
-          {SALIENT_BOUNDARY_LABEL}
-        </Alert>
-      ) : null}
-
       <section className="review-input-section">
         <Form onSubmit={handleCreateSession} className="review-upload-stack">
           <AceternityFileUpload
@@ -540,6 +536,25 @@ export default function AIReviewPage() {
             </Badge>
           ) : null}
         </div>
+
+        {showSalientBoundaryLabel ? (
+          <div className="review-boundary-banner" role="alert">
+            <div className="review-boundary-banner-icon" aria-hidden="true">
+              !
+            </div>
+            <div className="review-boundary-banner-copy">
+              <p className="review-boundary-banner-eyebrow">
+                {SALIENT_BOUNDARY_LABEL_EYEBROW}
+              </p>
+              <p className="review-boundary-banner-title">
+                {SALIENT_BOUNDARY_LABEL_TITLE}
+              </p>
+              <p className="review-boundary-banner-subtitle">
+                {SALIENT_BOUNDARY_LABEL_SUBTITLE}
+              </p>
+            </div>
+          </div>
+        ) : null}
 
         {showSession ? (
           <>
@@ -716,15 +731,19 @@ export default function AIReviewPage() {
                   />
                 </Form.Group>
 
-                <div className="review-form-footer">
-                  <div className="review-note">
-                    <Shield size={14} />
-                    <span>
-                      {activeSession.status === "ready"
-                        ? "LeaseQA provides legal information, not legal advice."
-                        : "Wait for indexing to finish before asking a question."}
-                    </span>
-                  </div>
+                <div
+                  className={`review-form-footer${showSalientBoundaryLabel ? " is-compact" : ""}`}
+                >
+                  {!showSalientBoundaryLabel ? (
+                    <div className="review-note">
+                      <Shield size={14} />
+                      <span>
+                        {activeSession.status === "ready"
+                          ? "LeaseQA provides legal information, not legal advice."
+                          : "Wait for indexing to finish before asking a question."}
+                      </span>
+                    </div>
+                  ) : null}
                   <AceternityStatefulButton
                     type="submit"
                     status={sendingMessage ? "loading" : "idle"}

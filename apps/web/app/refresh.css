@@ -1213,6 +1213,74 @@ select:focus-visible,
   padding-top: 0.5rem;
 }
 
+.review-boundary-banner {
+  display: grid;
+  grid-template-columns: 2.125rem minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: start;
+  padding: 1rem 1.15rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(217, 119, 6, 0.34);
+  background: linear-gradient(180deg, #fff2cd 0%, #ffe5a3 100%);
+  box-shadow:
+    0 10px 28px rgba(146, 64, 14, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.review-boundary-banner-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.125rem;
+  height: 2.125rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #d97706 0%, #b45309 100%);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28),
+    0 2px 6px rgba(146, 64, 14, 0.18);
+}
+
+.review-boundary-banner-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+}
+
+.review-boundary-banner-eyebrow,
+.review-boundary-banner-title,
+.review-boundary-banner-subtitle {
+  margin: 0;
+}
+
+.review-boundary-banner-eyebrow {
+  color: #9a4f0f;
+  font-size: 0.69rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.review-boundary-banner-title {
+  color: #5b3306;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.review-boundary-banner-subtitle {
+  color: #734316;
+  font-size: 0.81rem;
+  line-height: 1.45;
+  white-space: nowrap;
+}
+
 .review-results-header {
   display: flex;
   align-items: baseline;
@@ -1819,9 +1887,25 @@ select:focus-visible,
   flex-wrap: wrap;
 }
 
+.review-form-footer.is-compact {
+  justify-content: flex-end;
+}
+
 .review-note {
   color: var(--site-muted);
   font-size: 0.92rem;
+}
+
+@media (max-width: 900px) {
+  .review-boundary-banner {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+
+  .review-boundary-banner-title,
+  .review-boundary-banner-subtitle {
+    white-space: normal;
+  }
 }
 
 .acet-stateful-button {
