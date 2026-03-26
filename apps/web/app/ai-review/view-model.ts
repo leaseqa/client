@@ -12,8 +12,11 @@ export const FILE_SUGGESTED_PROMPTS = [
 ];
 
 export const TEXT_RETRY_PROMPT_LABEL = "Analyze this clause";
-export const SALIENT_BOUNDARY_LABEL =
-  "LeaseQA provides legal information, not legal advice. For advice about your specific situation, consult a licensed attorney or legal aid office.";
+export const SALIENT_BOUNDARY_LABEL_EYEBROW = "Boundary Notice";
+export const SALIENT_BOUNDARY_LABEL_TITLE =
+  "LeaseQA provides legal information, not legal advice.";
+export const SALIENT_BOUNDARY_LABEL_SUBTITLE =
+  "For advice about a specific dispute or next step, consult legal aid or a licensed attorney.";
 export const DEFAULT_RESPONSE_FRAMING: ResponseFraming =
   "informational_detached";
 export const RESPONSE_FRAMING_OPTIONS: {

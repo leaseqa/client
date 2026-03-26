@@ -11,7 +11,9 @@ import {
   getInlineCitationItems,
   getNextRevealLength,
   getResultsPanelState,
-  SALIENT_BOUNDARY_LABEL,
+  SALIENT_BOUNDARY_LABEL_EYEBROW,
+  SALIENT_BOUNDARY_LABEL_SUBTITLE,
+  SALIENT_BOUNDARY_LABEL_TITLE,
   shouldShowLegacyCitationList,
   getSessionInputPlan,
   getVisibleMessages,
@@ -328,10 +330,14 @@ describe("getNextRevealLength", () => {
   });
 });
 
-describe("SALIENT_BOUNDARY_LABEL", () => {
-  test("states the legal-information boundary in prominent banner copy", () => {
-    expect(SALIENT_BOUNDARY_LABEL).toBe(
-      "LeaseQA provides legal information, not legal advice. For advice about your specific situation, consult a licensed attorney or legal aid office.",
+describe("salient boundary banner copy", () => {
+  test("splits the banner into eyebrow, title, and subtitle lines", () => {
+    expect(SALIENT_BOUNDARY_LABEL_EYEBROW).toBe("Boundary Notice");
+    expect(SALIENT_BOUNDARY_LABEL_TITLE).toBe(
+      "LeaseQA provides legal information, not legal advice.",
+    );
+    expect(SALIENT_BOUNDARY_LABEL_SUBTITLE).toBe(
+      "For advice about a specific dispute or next step, consult legal aid or a licensed attorney.",
     );
   });
 });
