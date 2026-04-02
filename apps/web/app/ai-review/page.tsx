@@ -69,8 +69,25 @@ export default function AIReviewPage() {
   const studyConditionId = "C1";
   const studyScenarioId = "security-deposit";
   const responseFraming: ResponseFraming = "informational_detached";
-  const studyParticipantId =
-    searchParams.get("participantId") || searchParams.get("ResponseID") || "";
+  const participantParam = useMemo(() => {
+    const candidateKeys = [
+      "participantId",
+      "prolific_id",
+      "PROLIFIC_PID",
+      "ResponseID",
+    ];
+
+    for (const key of candidateKeys) {
+      const value = searchParams.get(key)?.trim();
+      if (value) {
+        return { id: value, source: key };
+      }
+    }
+
+    return { id: "", source: "" };
+  }, [searchParams]);
+  const studyParticipantId = participantParam.id;
+  const studyParticipantSource = participantParam.source;
   const [sourceText, setSourceText] = useState("");
   const [question, setQuestion] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -339,12 +356,13 @@ export default function AIReviewPage() {
     if (sourceText.trim()) {
       formData.set("sourceText", sourceText.trim());
     }
-    formData.set("responseFraming", responseFraming);
-    formData.set("conditionId", studyConditionId);
-    formData.set("scenarioId", studyScenarioId);
-    if (studyParticipantId) {
-      formData.set("participantId", studyParticipantId);
-    }
+      formData.set("responseFraming", responseFraming);
+      formData.set("conditionId", studyConditionId);
+      formData.set("scenarioId", studyScenarioId);
+      if (studyParticipantId) {
+        formData.set("participantId", studyParticipantId);
+        formData.set("participantSource", studyParticipantSource);
+      }
     if (inputPlan.initialQuestion) {
       formData.set("initialQuestion", inputPlan.initialQuestion);
       setPendingDraftSource({
