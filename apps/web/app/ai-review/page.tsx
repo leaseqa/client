@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Alert, Badge, Form, Spinner } from "react-bootstrap";
 import { Clock3, FileText, MessageSquareQuote, Shield } from "lucide-react";
 
@@ -55,6 +55,7 @@ const formatStatusVariant = (status: RagSession["status"]) => {
 
 export default function AIReviewPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const session = useSelector(
     (currentState: RootState) => currentState.session,
   );
@@ -65,7 +66,11 @@ export default function AIReviewPage() {
   const [sessions, setSessions] = useState<RagSession[]>([]);
   const [activeSession, setActiveSession] = useState<RagSession | null>(null);
   const showSalientBoundaryLabel = false;
+  const studyConditionId = "C1";
+  const studyScenarioId = "security-deposit";
   const responseFraming: ResponseFraming = "informational_detached";
+  const studyParticipantId =
+    searchParams.get("participantId") || searchParams.get("ResponseID") || "";
   const [sourceText, setSourceText] = useState("");
   const [question, setQuestion] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -308,6 +313,9 @@ export default function AIReviewPage() {
     responseFraming,
     showToast,
     stopReveal,
+    studyConditionId,
+    studyParticipantId,
+    studyScenarioId,
     triggerLatestAssistantReveal,
   ]);
 
@@ -331,9 +339,14 @@ export default function AIReviewPage() {
     if (sourceText.trim()) {
       formData.set("sourceText", sourceText.trim());
     }
+    formData.set("responseFraming", responseFraming);
+    formData.set("conditionId", studyConditionId);
+    formData.set("scenarioId", studyScenarioId);
+    if (studyParticipantId) {
+      formData.set("participantId", studyParticipantId);
+    }
     if (inputPlan.initialQuestion) {
       formData.set("initialQuestion", inputPlan.initialQuestion);
-      formData.set("responseFraming", responseFraming);
       setPendingDraftSource({
         sourceName: "pasted-text",
         sourcePreview: sourceText.trim(),
