@@ -69,6 +69,8 @@ export default function AIReviewPage() {
   const studyConditionId = "C2";
   const studyScenarioId = "security-deposit";
   const responseFraming: ResponseFraming = "professional_personalized";
+  const studyInitialQuestion =
+    "Can the landlord lawfully keep my security deposit for repainting, cleaning, and minor wall damage in this situation?";
   const participantParam = useMemo(() => {
     const candidateKeys = [
       "participantId",
@@ -348,6 +350,9 @@ export default function AIReviewPage() {
       showToast(inputPlan.error, "error");
       return;
     }
+    const autoInitialQuestion = selectedFile
+      ? studyInitialQuestion
+      : inputPlan.initialQuestion;
 
     const formData = new FormData();
     if (selectedFile) {
@@ -363,13 +368,19 @@ export default function AIReviewPage() {
         formData.set("participantId", studyParticipantId);
         formData.set("participantSource", studyParticipantSource);
       }
-    if (inputPlan.initialQuestion) {
-      formData.set("initialQuestion", inputPlan.initialQuestion);
+    if (autoInitialQuestion) {
+      formData.set("initialQuestion", autoInitialQuestion);
       setPendingDraftSource({
-        sourceName: "pasted-text",
-        sourcePreview: sourceText.trim(),
+        sourceName: selectedFile ? selectedFile.name : "pasted-text",
+        sourcePreview: selectedFile
+          ? "Preparing the first answer from the uploaded document..."
+          : sourceText.trim(),
       });
-      setPendingAssistantLabel("Analyzing this clause against the handbook...");
+      setPendingAssistantLabel(
+        selectedFile
+          ? "Analyzing this document against the handbook..."
+          : "Analyzing this clause against the handbook...",
+      );
     } else {
       setPendingDraftSource(null);
       setPendingAssistantLabel(null);
@@ -389,7 +400,7 @@ export default function AIReviewPage() {
       setSourceText("");
       setSelectedFile(null);
       setUploadResetKey((current) => current + 1);
-      if (inputPlan.initialQuestion) {
+      if (autoInitialQuestion) {
         const hasAssistantAnswer = getVisibleMessages(created).some(
           (message) => message.role === "assistant",
         );
