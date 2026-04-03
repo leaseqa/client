@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import {
   AUTO_ANALYZE_QUESTION,
+  FILE_AUTO_ANALYZE_QUESTION,
   FILE_SUGGESTED_PROMPTS,
   formatCompactCitationLabel,
   getEmptyStateMessage,
@@ -17,6 +18,12 @@ import {
 } from "./view-model";
 
 describe("getSessionInputPlan", () => {
+  test("uses a general document-analysis prompt for uploaded files", () => {
+    expect(FILE_AUTO_ANALYZE_QUESTION).toBe(
+      "Summarize this housing-related document in plain language, identify the main legal issues or disputes it raises, and highlight the most important tenant risks, deadlines, or facts that deserve closer review.",
+    );
+  });
+
   test("requests an automatic first answer for pasted text", () => {
     expect(
       getSessionInputPlan({
@@ -29,7 +36,7 @@ describe("getSessionInputPlan", () => {
     });
   });
 
-  test("does not auto-ask when the source is a file upload", () => {
+  test("requests an automatic first answer for uploaded files", () => {
     expect(
       getSessionInputPlan({
         hasFile: true,
@@ -37,7 +44,7 @@ describe("getSessionInputPlan", () => {
       }),
     ).toEqual({
       error: null,
-      initialQuestion: null,
+      initialQuestion: FILE_AUTO_ANALYZE_QUESTION,
     });
   });
 
@@ -118,6 +125,45 @@ describe("getVisibleMessages", () => {
         ],
       }),
     ).toHaveLength(1);
+  });
+
+  test("hides the generated starter question from uploaded-file chats", () => {
+    expect(
+      getVisibleMessages({
+        _id: "session-3",
+        status: "ready",
+        error: null,
+        sourceKind: "upload",
+        sourceName: "lease.pdf",
+        sourceMimeType: "application/pdf",
+        sourceTextPreview: "Lease preview",
+        sourceCharCount: 128,
+        createdAt: "2026-03-11T00:00:00.000Z",
+        updatedAt: "2026-03-11T00:00:00.000Z",
+        messages: [
+          {
+            role: "user",
+            content: FILE_AUTO_ANALYZE_QUESTION,
+            citations: [],
+            createdAt: "2026-03-11T00:00:00.000Z",
+          },
+          {
+            role: "assistant",
+            content: "This packet describes a security-deposit dispute and the key deadlines.",
+            citations: [],
+            createdAt: "2026-03-11T00:00:01.000Z",
+          },
+        ],
+      }),
+    ).toEqual([
+      {
+        role: "assistant",
+        content:
+          "This packet describes a security-deposit dispute and the key deadlines.",
+        citations: [],
+        createdAt: "2026-03-11T00:00:01.000Z",
+      },
+    ]);
   });
 });
 
