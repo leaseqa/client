@@ -4,6 +4,8 @@ export const CHAT_UPLOAD_MAX_MB = 20;
 export const CHAT_UPLOAD_ACCEPT = "application/pdf,.docx";
 export const AUTO_ANALYZE_QUESTION =
   "Explain this clause in plain language, say whether it appears legal under the tenant-rights handbook, and flag any tenant risks or missing details.";
+export const FILE_AUTO_ANALYZE_QUESTION =
+  "Summarize this housing-related document in plain language, identify the main legal issues or disputes it raises, and highlight the most important tenant risks, deadlines, or facts that deserve closer review.";
 
 export const FILE_SUGGESTED_PROMPTS = [
   "What are the biggest tenant risks in this lease?",
@@ -73,7 +75,9 @@ export function getSessionInputPlan({
 
   return {
     error: null,
-    initialQuestion: hasFile ? null : AUTO_ANALYZE_QUESTION,
+    initialQuestion: hasFile
+      ? FILE_AUTO_ANALYZE_QUESTION
+      : AUTO_ANALYZE_QUESTION,
   };
 }
 
@@ -84,10 +88,12 @@ export function getVisibleMessages(session: RagSession | null): ChatMessage[] {
 
   return session.messages.filter((message, index) => {
     return !(
-      session.sourceKind === "text" &&
+      ["text", "upload"].includes(session.sourceKind) &&
       index === 0 &&
       message.role === "user" &&
-      message.content === AUTO_ANALYZE_QUESTION
+      [AUTO_ANALYZE_QUESTION, FILE_AUTO_ANALYZE_QUESTION].includes(
+        message.content,
+      )
     );
   });
 }
