@@ -7,12 +7,14 @@ const adminPassword =
 export default async function globalSetup() {
   const serverDir = path.resolve(__dirname, "../../../../leaseqa-server");
 
-  execSync("pnpm seed:demo-users", {
+  execSync("npm run seed:demo-users", {
     cwd: serverDir,
     stdio: "inherit",
     env: {
       ...process.env,
       DEMO_PASSWORD: adminPassword,
+      SERVER_ENV: "development",
+      ALLOW_DEMO_ACCOUNTS: "true",
     },
   });
 }

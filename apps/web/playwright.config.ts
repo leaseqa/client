@@ -19,7 +19,7 @@ export default defineConfig({
   },
   webServer: [
     {
-      command: "pnpm start",
+      command: "npm start",
       cwd: serverDir,
       env: {
         ...process.env,
@@ -32,7 +32,7 @@ export default defineConfig({
       timeout: 120_000,
     },
     {
-      command: `pnpm exec next dev --hostname 127.0.0.1 --port ${frontendPort}`,
+      command: `npm run dev -- --hostname 127.0.0.1 --port ${frontendPort}`,
       cwd: clientDir,
       env: {
         ...process.env,
