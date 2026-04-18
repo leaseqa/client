@@ -38,7 +38,9 @@ async function createPostFromComposer(page: Page, title: string, details: string
 
 async function openNotifications(page: Page) {
   await page.getByLabel("Open notifications").click();
-  await expect(page.getByText("Notifications")).toBeVisible();
+  await expect(
+    getNotificationsMenu(page).getByText("Notifications", { exact: true }),
+  ).toBeVisible();
 }
 
 function getNotificationsMenu(page: Page) {
