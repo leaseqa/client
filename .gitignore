@@ -6,6 +6,8 @@ yarn.lock
 # build
 .next
 out
+apps/web/playwright-report
+apps/web/test-results
 
 # env
 /.env
