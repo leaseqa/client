@@ -460,29 +460,6 @@ select:focus-visible,
   transform: translateY(-1px);
 }
 
-.landing-trust {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.landing-trust-tag {
-  font-size: 0.72rem;
-  color: var(--site-text-tertiary, #9a928c);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.landing-trust-tag::before {
-  content: '';
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--site-border-strong);
-}
-
 /* Hero — hot posts column */
 .landing-hero-visual {
   position: relative;

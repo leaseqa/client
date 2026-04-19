@@ -130,11 +130,6 @@ export default function LandingPage() {
               Ask a question
             </Link>
           </div>
-          <div className="landing-trust">
-            <span className="landing-trust-tag">Plain language first</span>
-            <span className="landing-trust-tag">Built for class use</span>
-            <span className="landing-trust-tag">Not legal advice</span>
-          </div>
         </div>
 
         {hotPosts.length > 0 && (
