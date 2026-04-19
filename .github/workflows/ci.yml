@@ -21,10 +21,10 @@ jobs:
       NEXT_PUBLIC_HTTP_SERVER: http://127.0.0.1:4100
     steps:
       - name: Check out client
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6.3.0
         with:
           node-version: 20
           cache: npm
