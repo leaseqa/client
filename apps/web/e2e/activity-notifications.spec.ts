@@ -4,6 +4,7 @@ const ADMIN_EMAIL = "admin@leaseqa.dev";
 const TENANT_EMAIL = "tenant@leaseqa.dev";
 const TEST_PASSWORD =
   process.env.PLAYWRIGHT_ADMIN_PASSWORD || "leaseqa-e2e-admin";
+const SKIP_RAG_ACTIVITY_TEST = process.env.CI_SKIP_RAG === "true";
 const SAMPLE_CLAUSE =
   "The landlord must return the security deposit within 30 days after the tenant moves out, minus any lawful deductions.";
 
@@ -75,6 +76,11 @@ test.describe("activity notifications", () => {
   test("tenant sees ai review and post activity in account history", async ({
     page,
   }) => {
+    test.skip(
+      SKIP_RAG_ACTIVITY_TEST,
+      "AI review activity coverage requires Milvus-backed RAG services.",
+    );
+
     const postTitle = `Playwright activity post ${Date.now()}`;
 
     await loginAsUser(page, TENANT_EMAIL, "/ai-review");
