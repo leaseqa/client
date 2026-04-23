@@ -1,5 +1,9 @@
+# AI Agent Instructions
+AGENTS.md
+
 # dependencies
 node_modules
+
 pnpm-lock.yaml
 yarn.lock
 
