@@ -107,7 +107,7 @@ export default function AccountPage() {
 
   return (
     <div className="mb-4">
-      <section className="page-header-section">
+      <section className="page-header-section" style={{ borderBottom: "none" }}>
         <div className="account-header-row">
           <div className="d-flex align-items-center gap-3">
             <div className="account-avatar">
