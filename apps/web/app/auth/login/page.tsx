@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { FcGoogle } from "react-icons/fc";
+import { FiUser } from "react-icons/fi";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -100,12 +102,19 @@ export default function LoginPage() {
 
             <div className="auth-divider">or</div>
 
+            <a
+              href={`${process.env.NEXT_PUBLIC_HTTP_SERVER || "http://localhost:4000"}/api/auth/google`}
+              className="btn-warm-outline w-100 mb-3 d-block text-center text-decoration-none"
+            >
+              <FcGoogle size={20} className="me-2" />Continue with Google
+            </a>
+
             <button
               type="button"
               className="btn-warm-outline w-100 mb-3"
               onClick={handleGuestLogin}
             >
-              Continue as Guest
+              <FiUser size={20} className="me-2" />Continue as Guest
             </button>
           </Form>
 

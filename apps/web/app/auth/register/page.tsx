@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -127,6 +128,15 @@ export default function RegisterPage() {
             >
               {loading ? "Creating Account..." : "Sign Up"}
             </button>
+
+            <div className="auth-divider">or</div>
+
+            <a
+              href={`${process.env.NEXT_PUBLIC_HTTP_SERVER || "http://localhost:4000"}/api/auth/google`}
+              className="btn-warm-outline w-100 d-block text-center text-decoration-none"
+            >
+              <FcGoogle size={20} className="me-2" />Sign up with Google
+            </a>
           </Form>
 
           <div className="text-center text-secondary small">
