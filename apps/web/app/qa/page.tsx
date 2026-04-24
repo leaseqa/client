@@ -349,7 +349,7 @@ function QAPageInner() {
       </section>
 
       <Row className="g-4 qa-browse-grid">
-        <Col lg={3}>
+        <Col lg={3} className="d-none d-lg-block">
           <div className="qa-sidebar-flat">
             <div className="qa-sidebar-label">Recent</div>
             <RecencySidebar

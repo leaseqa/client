@@ -2845,6 +2845,11 @@ body {
 }
 
 @media (max-width: 768px) {
+    .qa-toolbar-search {
+        max-width: 100%;
+        flex: 1;
+    }
+
     .manage-form-grid {
         grid-template-columns: 1fr;
     }

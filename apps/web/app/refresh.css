@@ -82,7 +82,7 @@ select:focus-visible,
 .page-shell {
   width: min(100%, var(--shell-max-width));
   margin: 0 auto;
-  padding: 1.5rem 0 2.5rem;
+  padding: 1.5rem 1.25rem 2.5rem;
 }
 
 .site-header {
@@ -91,7 +91,7 @@ select:focus-visible,
   z-index: 20;
   backdrop-filter: blur(14px);
   background: rgba(245, 240, 235, 0.88);
-  border-bottom: 1px solid var(--site-border);
+  border-bottom: 1px solid var(--site-border-strong);
 }
 
 .site-header .navbar {
@@ -140,7 +140,7 @@ select:focus-visible,
   letter-spacing: -0.02em;
 }
 
-.site-nav {
+.site-header .site-nav {
   display: none;
   align-items: center;
   justify-content: center;
@@ -163,7 +163,7 @@ select:focus-visible,
     display: none !important;
   }
 
-  .site-nav {
+  .site-header .site-nav {
     display: flex;
     position: static;
     left: auto;
@@ -171,7 +171,7 @@ select:focus-visible,
     justify-self: center;
   }
 
-  .site-nav.navbar-nav {
+  .site-header .site-nav.navbar-nav {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: auto;
@@ -210,8 +210,8 @@ select:focus-visible,
 .site-nav-link.is-active {
   background: linear-gradient(180deg, #fff 0%, #f9f5f0 100%);
   color: var(--site-accent-strong);
-  border-color: rgba(92, 110, 78, 0.14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border-color: rgba(92, 110, 78, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 3px rgba(92, 110, 78, 0.08);
 }
 
 .site-auth {
@@ -819,7 +819,11 @@ select:focus-visible,
 
 @media (max-width: 991px) {
   .page-shell {
-    padding: 1rem 0 2rem;
+    padding: 1rem 1rem 2rem;
+  }
+
+  .review-next-steps {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .site-header .container-fluid {
@@ -906,6 +910,7 @@ select:focus-visible,
 
 .profile-menu {
   min-width: 260px;
+  max-width: calc(100vw - 2rem);
   padding: 0.5rem;
 }
 
@@ -1030,7 +1035,8 @@ select:focus-visible,
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   margin-bottom: 1rem;
 }
 
