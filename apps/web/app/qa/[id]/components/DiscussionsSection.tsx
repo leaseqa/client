@@ -1,10 +1,10 @@
 import React from "react";
-import {FaEdit, FaReply, FaTrash} from "react-icons/fa";
-import {format} from "date-fns";
+import { FaEdit, FaReply, FaTrash } from "react-icons/fa";
+import { format } from "date-fns";
 import dynamic from "next/dynamic";
-import {Discussion, DiscussionsSectionProps} from "../../types";
+import { Discussion, DiscussionsSectionProps } from "../../types";
 
-const ReactQuill = dynamic(() => import("react-quill-new"), {ssr: false});
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 export default function DiscussionsSection({
                                              discussions,
@@ -83,7 +83,7 @@ export default function DiscussionsSection({
             </div>
           </div>
         ) : (
-          <div className="post-discussion-content" dangerouslySetInnerHTML={{__html: node.content}}/>
+          <div className="post-discussion-content" dangerouslySetInnerHTML={{ __html: node.content }}/>
         )}
 
         {!isGuest && !isEditing && (
@@ -94,7 +94,7 @@ export default function DiscussionsSection({
         )}
 
         {isReplying && !isEditing && (
-          <div className="post-editor-box" style={{marginTop: "0.75rem"}}>
+          <div className="post-editor-box" style={{ marginTop: "0.75rem" }}>
             <ReactQuill
               theme="snow"
               value={discussionDrafts[replyKey] || ""}

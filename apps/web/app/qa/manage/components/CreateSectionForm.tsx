@@ -1,5 +1,5 @@
 import React from "react";
-import {FaCheck} from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 
 type FolderDraft = {
   name: string;
@@ -52,7 +52,7 @@ export default function CreateSectionForm({
               name="name"
               readOnly={mode === "edit"}
               disabled={disabled}
-              onChange={(e) => onDraftChange({...draft, name: e.target.value.trim()})}
+              onChange={(e) => onDraftChange({ ...draft, name: e.target.value.trim() })}
             />
             <span className="manage-form-hint">Used in URLs and code</span>
             {errors.name && <div className="manage-field-error">{errors.name}</div>}
@@ -64,7 +64,7 @@ export default function CreateSectionForm({
               placeholder="Repairs & Habitability"
               value={draft.displayName}
               disabled={disabled}
-              onChange={(e) => onDraftChange({...draft, displayName: e.target.value})}
+              onChange={(e) => onDraftChange({ ...draft, displayName: e.target.value })}
             />
             <span className="manage-form-hint">Shown to users</span>
             {errors.displayName && <div className="manage-field-error">{errors.displayName}</div>}
@@ -76,7 +76,7 @@ export default function CreateSectionForm({
               placeholder="Optional helper text for this section"
               value={draft.description}
               disabled={disabled}
-              onChange={(e) => onDraftChange({...draft, description: e.target.value})}
+              onChange={(e) => onDraftChange({ ...draft, description: e.target.value })}
             />
             {errors.description && <div className="manage-field-error">{errors.description}</div>}
           </div>

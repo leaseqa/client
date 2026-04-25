@@ -1,6 +1,6 @@
 import React from "react";
 import SectionsTable from "./SectionsTable";
-import type {Folder} from "../../types";
+import type { Folder } from "../../types";
 
 type SectionsAvailableProps = {
   isDataAvailable: true;
@@ -23,8 +23,8 @@ type ManageSectionsSectionProps = {
 } & (SectionsAvailableProps | SectionsUnavailableProps);
 
 export default function ManageSectionsSection(props: ManageSectionsSectionProps) {
-  const {title, isLoading} = props;
-  if (!props.isDataAvailable && props.error) {
+  const { title, isLoading } = props;
+  if ( !props.isDataAvailable && props.error ) {
     return (
       <section id="sections" className="admin-v2-section">
         <div className="admin-v2-inline-error">

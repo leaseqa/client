@@ -1,6 +1,6 @@
 import React from "react";
-import {renderToStaticMarkup} from "react-dom/server";
-import {describe, expect, test, vi} from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, test, vi } from "vitest";
 import PostContent from "../[id]/components/PostContent";
 import AnswersSection from "../[id]/components/AnswersSection";
 import DiscussionsSection from "../[id]/components/DiscussionsSection";
@@ -25,7 +25,7 @@ describe("moderation render smoke", () => {
           createdAt: "2026-03-12T12:00:00.000Z",
           viewCount: 12,
           isAnonymous: false,
-          author: {username: "alex"},
+          author: { username: "alex" },
         } as any}
         folders={[]}
         canEdit

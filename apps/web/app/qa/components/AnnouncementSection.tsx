@@ -1,22 +1,22 @@
-import {useRouter} from "next/navigation";
-import {FaBullhorn} from "react-icons/fa";
-import {Check} from "lucide-react";
-import {Folder, Post} from "../types";
-import {getFolderDisplayName} from "../utils";
+import { useRouter } from "next/navigation";
+import { FaBullhorn } from "react-icons/fa";
+import { Check } from "lucide-react";
+import { Folder, Post } from "../types";
+import { getFolderDisplayName } from "../utils";
 
 type AnnouncementProps = {
   posts: Post[];
   folders: Folder[];
 };
 
-export default function AnnouncementSection({posts, folders}: AnnouncementProps) {
+export default function AnnouncementSection({ posts, folders }: AnnouncementProps) {
   const router = useRouter();
 
   const announcementPosts = posts
     .filter(p => p.postType === "announcement")
     .slice(0, 5);
 
-  if (!announcementPosts.length) return null;
+  if ( !announcementPosts.length ) return null;
 
   const handlePostClick = (postId: string) => {
     router.push(`/qa?post=${postId}`);

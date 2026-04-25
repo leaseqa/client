@@ -1,4 +1,4 @@
-import {configureStore, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import { configureStore, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type Role = "tenant" | "lawyer" | "admin";
 
@@ -71,6 +71,6 @@ export type AppStore = typeof store;
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-export const {setSession, signOut, signInAsDemo, setGuestSession} = sessionSlice.actions;
+export const { setSession, signOut, signInAsDemo, setGuestSession } = sessionSlice.actions;
 
 export default store;

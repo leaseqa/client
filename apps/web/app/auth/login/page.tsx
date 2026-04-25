@@ -1,13 +1,13 @@
 "use client";
 
-import React, {useState} from "react";
-import {FcGoogle} from "react-icons/fc";
-import {FiUser} from "react-icons/fi";
+import React, { useState } from "react";
+import { FcGoogle } from "react-icons/fc";
+import { FiUser } from "react-icons/fi";
 import Link from "next/link";
-import {useRouter, useSearchParams} from "next/navigation";
-import {useDispatch} from "react-redux";
-import {setGuestSession, setSession} from "@/app/store";
-import {Alert, Form} from "react-bootstrap";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { setGuestSession, setSession } from "@/app/store";
+import { Alert, Form } from "react-bootstrap";
 import * as client from "../client";
 import PageLoadingState from "@/components/ui/PageLoadingState";
 
@@ -18,13 +18,13 @@ export default function LoginPage() {
   const nextHref = searchParams.get("next");
   const safeNextHref = nextHref && nextHref.startsWith("/") ? nextHref : null;
 
-  const [formData, setFormData] = useState({email: "", password: ""});
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
-    setFormData((prev) => ({...prev, [name]: value}));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,7 +37,7 @@ export default function LoginPage() {
       localStorage.removeItem("guest_session");
       dispatch(setSession(user.data || user));
       router.push(safeNextHref || "/account");
-    } catch (err: any) {
+    } catch ( err: any ) {
       const message =
         err.response?.data?.error?.message ||
         err.message ||
@@ -54,7 +54,7 @@ export default function LoginPage() {
     router.push(safeNextHref || "/qa");
   };
 
-  if (loading) {
+  if ( loading ) {
     return <PageLoadingState message="Signing in..."/>;
   }
 

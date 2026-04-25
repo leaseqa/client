@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import {IconType} from "react-icons";
-import {FaExternalLinkAlt} from "react-icons/fa";
+import { IconType } from "react-icons";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 type ResourceItemProps = {
   icon: IconType;
@@ -11,7 +11,7 @@ type ResourceItemProps = {
   link: string;
 };
 
-export default function ResourceItem({icon: Icon, title, summary, link}: ResourceItemProps) {
+export default function ResourceItem({ icon: Icon, title, summary, link }: ResourceItemProps) {
   return (
     <div className="resource-item">
       <div className="resource-item-main">

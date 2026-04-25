@@ -1,7 +1,7 @@
-import {Badge} from "react-bootstrap";
-import {FaEye, FaShieldAlt} from "react-icons/fa";
+import { Badge } from "react-bootstrap";
+import { FaEye, FaShieldAlt } from "react-icons/fa";
 
-import {RootState} from "@/app/store";
+import { RootState } from "@/app/store";
 
 type ProfileHeaderProps = {
   user: RootState["session"]["user"];
@@ -18,7 +18,7 @@ export default function ProfileHeader({
                                       }: ProfileHeaderProps) {
   const hasUser = isAuthenticated || isGuest;
 
-  if (!hasUser) {
+  if ( !hasUser ) {
     return (
       <div className="px-3 py-2">
         <div className="fw-bold mb-1">You are not signed in</div>

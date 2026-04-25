@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const axiosWithCredentials = axios.create({withCredentials: true});
+const axiosWithCredentials = axios.create({ withCredentials: true });
 const HOST = (process.env.NEXT_PUBLIC_HTTP_SERVER || "").replace(/\/$/, "");
 export const API_BASE = HOST ? `${HOST}/api` : "/api";
 
@@ -28,19 +28,19 @@ export async function updateCurrentUser(payload: { username?: string; email?: st
 
 export async function fetchActivity(limit = 20): Promise<ActivityItem[]> {
   const response = await axiosWithCredentials.get(`${API_BASE}/activity`, {
-    params: {limit},
+    params: { limit },
   });
   return response.data.data || [];
 }
 
 export async function fetchNotifications(limit = 5): Promise<ActivityItem[]> {
   const response = await axiosWithCredentials.get(`${API_BASE}/activity/notifications`, {
-    params: {limit},
+    params: { limit },
   });
   return response.data.data || [];
 }
 
 export async function markNotificationsRead(ids: string[]) {
-  const response = await axiosWithCredentials.post(`${API_BASE}/activity/notifications/read`, {ids});
+  const response = await axiosWithCredentials.post(`${API_BASE}/activity/notifications/read`, { ids });
   return response.data.data;
 }

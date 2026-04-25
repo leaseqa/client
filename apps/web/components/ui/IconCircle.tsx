@@ -1,7 +1,7 @@
 "use client";
 
-import {ReactNode} from "react";
-import {LucideIcon} from "lucide-react";
+import { ReactNode } from "react";
+import { LucideIcon } from "lucide-react";
 
 type IconCircleProps = {
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
@@ -25,8 +25,8 @@ export default function IconCircle({
 
   // Determine icon size based on circle size if not provided
   const getIconSize = () => {
-    if (iconSize) return iconSize;
-    switch (size) {
+    if ( iconSize ) return iconSize;
+    switch ( size ) {
       case "xs":
         return 10;
       case "sm":

@@ -63,8 +63,10 @@ access.
 1. User opens `/ai-review`
 2. Client creates a RAG session through `/api/rag/sessions`
 3. Backend parses the input, stores the session, and runs retrieval against:
-  - uploaded source material
-  - ingested legal corpus
+
+- uploaded source material
+- ingested legal corpus
+
 4. Backend returns a structured answer with short summary, bullets, and citations
 5. Follow-up questions continue through `/api/rag/sessions/:sessionId/messages`
 

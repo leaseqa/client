@@ -1,9 +1,9 @@
 "use client";
 
-import {useMemo, useRef, useState} from "react";
-import {AnimatePresence, motion} from "motion/react";
-import {FileText, Upload} from "lucide-react";
-import {useDropzone} from "react-dropzone";
+import { useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { FileText, Upload } from "lucide-react";
+import { useDropzone } from "react-dropzone";
 
 type AceternityFileUploadProps = {
   name: string;
@@ -13,13 +13,13 @@ type AceternityFileUploadProps = {
 };
 
 function toInputAcceptMap(accept?: string) {
-  if (!accept) {
+  if ( !accept ) {
     return undefined;
   }
 
   return accept.split(",").reduce<Record<string, string[]>>((result, type) => {
     const trimmed = type.trim();
-    if (!trimmed) {
+    if ( !trimmed ) {
       return result;
     }
     result[trimmed] = [];
@@ -51,7 +51,7 @@ export default function AceternityFileUpload({
     setFiles(nextFiles);
     onFilesChangeAction?.(nextFiles);
 
-    if (!inputRef.current) {
+    if ( !inputRef.current ) {
       return;
     }
 
@@ -64,7 +64,7 @@ export default function AceternityFileUpload({
     syncFiles(nextFiles.slice(0, 1));
   };
 
-  const {getRootProps, isDragActive, open} = useDropzone({
+  const { getRootProps, isDragActive, open } = useDropzone({
     accept: acceptMap,
     maxFiles: 1,
     maxSize: maxSizeMb * 1024 * 1024,
@@ -87,8 +87,8 @@ export default function AceternityFileUpload({
 
       <motion.button
         type="button"
-        whileHover={{y: -1}}
-        whileTap={{scale: 0.995}}
+        whileHover={{ y: -1 }}
+        whileTap={{ scale: 0.995 }}
         className={`acet-file-upload-surface ${isDragActive ? "is-active" : ""}`}
         onClick={open}
       >
@@ -121,9 +121,9 @@ export default function AceternityFileUpload({
           {activeFile ? (
             <motion.div
               key={activeFile.name}
-              initial={{opacity: 0, y: 14}}
-              animate={{opacity: 1, y: 0}}
-              exit={{opacity: 0, y: -8}}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
               className="acet-file-upload-card"
             >
               <div className="acet-file-upload-card-main">
@@ -142,9 +142,9 @@ export default function AceternityFileUpload({
           ) : (
             <motion.div
               key="empty"
-              initial={{opacity: 0.65}}
-              animate={{opacity: 1, scale: 1}}
-              exit={{opacity: 0}}
+              initial={{ opacity: 0.65 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
               className="acet-file-upload-empty"
             >
               <div className="acet-file-upload-empty-line">

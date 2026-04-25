@@ -1,22 +1,22 @@
-import {useRouter} from "next/navigation";
-import {FaFire} from "react-icons/fa";
-import {Check} from "lucide-react";
-import {Folder, Post} from "../types";
-import {getFolderDisplayName} from "../utils";
+import { useRouter } from "next/navigation";
+import { FaFire } from "react-icons/fa";
+import { Check } from "lucide-react";
+import { Folder, Post } from "../types";
+import { getFolderDisplayName } from "../utils";
 
 type FeedHeaderProps = {
   posts: Post[];
   folders: Folder[];
 };
 
-export default function FeedHeader({folders, posts}: FeedHeaderProps) {
+export default function FeedHeader({ folders, posts }: FeedHeaderProps) {
   const router = useRouter();
 
   const hotPosts = [...posts]
     .sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0))
     .slice(0, 5);
 
-  if (!hotPosts.length) return null;
+  if ( !hotPosts.length ) return null;
 
   const handlePostClick = (postId: string) => {
     router.push(`/qa?post=${postId}`);

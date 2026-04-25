@@ -1,14 +1,14 @@
 "use client";
-import {RiskCardProps} from "@/app/ai-review/types";
+import { RiskCardProps } from "@/app/ai-review/types";
 
 const config = {
-  danger: {label: "High", dotClass: "risk-dot-danger"},
-  warning: {label: "Medium", dotClass: "risk-dot-warning"},
-  success: {label: "Low", dotClass: "risk-dot-success"},
+  danger: { label: "High", dotClass: "risk-dot-danger" },
+  warning: { label: "Medium", dotClass: "risk-dot-warning" },
+  success: { label: "Low", dotClass: "risk-dot-success" },
 };
 
-export default function RiskCard({tone, title, items}: RiskCardProps) {
-  const {label, dotClass} = config[tone];
+export default function RiskCard({ tone, title, items }: RiskCardProps) {
+  const { label, dotClass } = config[tone];
 
   return (
     <div className={`risk-card risk-card-${tone}`}>

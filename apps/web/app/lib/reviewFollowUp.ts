@@ -116,7 +116,7 @@ function escapeHtml(value: string): string {
 function dedupeByTopic<T extends { topic: string }>(items: T[]): T[] {
   const seen = new Set<string>();
   return items.filter((item) => {
-    if (seen.has(item.topic)) {
+    if ( seen.has(item.topic) ) {
       return false;
     }
     seen.add(item.topic);
@@ -150,18 +150,18 @@ function getMatchedTopics(payload: ReviewPayload): TopicMatch[] {
   }));
 
   const uniqueMatches = dedupeByTopic(matches).slice(0, 3);
-  if (uniqueMatches.length > 0) {
+  if ( uniqueMatches.length > 0 ) {
     return uniqueMatches;
   }
 
-  return [{topic: "lease_basics", label: "Lease Basics"}];
+  return [{ topic: "lease_basics", label: "Lease Basics" }];
 }
 
 function getUrgency(payload: ReviewPayload): "low" | "medium" | "high" {
-  if (payload.highRisk.length > 0) {
+  if ( payload.highRisk.length > 0 ) {
     return "high";
   }
-  if (payload.mediumRisk.length > 0) {
+  if ( payload.mediumRisk.length > 0 ) {
     return "medium";
   }
   return "low";
@@ -169,7 +169,7 @@ function getUrgency(payload: ReviewPayload): "low" | "medium" | "high" {
 
 function trimText(value: string): string {
   const normalized = value.replace(/\s+/g, " ").trim();
-  if (normalized.length <= MAX_DETAIL_TEXT) {
+  if ( normalized.length <= MAX_DETAIL_TEXT ) {
     return normalized;
   }
   return `${normalized.slice(0, MAX_DETAIL_TEXT - 3).trimEnd()}...`;
@@ -187,7 +187,7 @@ function makeBulletList(items: string[]): string {
     .map((item) => `<li>${escapeHtml(trimText(item))}</li>`)
     .join("");
 
-  if (!safeItems) {
+  if ( !safeItems ) {
     return "";
   }
 
@@ -199,22 +199,22 @@ function makeDraftDetails(payload: ReviewPayload, topics: TopicMatch[]): string 
     "<p>I reviewed my lease and want help checking these points.</p>",
   ];
 
-  if (payload.summary.trim()) {
+  if ( payload.summary.trim() ) {
     parts.push(`<p><strong>Summary:</strong> ${escapeHtml(trimText(payload.summary))}</p>`);
   }
 
   const issues = [...payload.highRisk, ...payload.mediumRisk, ...payload.lowRisk];
-  if (issues.length > 0) {
+  if ( issues.length > 0 ) {
     parts.push("<p><strong>Points I want to check:</strong></p>");
     parts.push(makeBulletList(issues));
   }
 
-  if (payload.recommendations.length > 0) {
+  if ( payload.recommendations.length > 0 ) {
     parts.push("<p><strong>Suggested follow-up:</strong></p>");
     parts.push(makeBulletList(payload.recommendations));
   }
 
-  if (topics.length > 0) {
+  if ( topics.length > 0 ) {
     parts.push(`<p><strong>Related sections:</strong> ${escapeHtml(topics.map((topic) => topic.label).join(", "))}</p>`);
   }
 

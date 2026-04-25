@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const axiosWithCredentials = axios.create({withCredentials: true});
+const axiosWithCredentials = axios.create({ withCredentials: true });
 const HOST = (process.env.NEXT_PUBLIC_HTTP_SERVER || "").replace(/\/$/, "");
 export const API_BASE = HOST ? `${HOST}/api` : "/api";
 
@@ -35,7 +35,7 @@ export async function deleteFolder(_id: string) {
 }
 
 export async function fetchPosts(params: { folder?: string; search?: string }) {
-  const response = await axiosWithCredentials.get(`${API_BASE}/posts`, {params});
+  const response = await axiosWithCredentials.get(`${API_BASE}/posts`, { params });
   return response.data;
 }
 
@@ -71,7 +71,7 @@ export async function uploadPostAttachments(postId: string, files: File[]) {
   const formData = new FormData();
   files.forEach((file) => formData.append("files", file));
   const response = await axiosWithCredentials.post(`${API_BASE}/posts/${postId}/attachments`, formData, {
-    headers: {"Content-Type": "multipart/form-data"},
+    headers: { "Content-Type": "multipart/form-data" },
   });
   return response.data;
 }
@@ -107,7 +107,7 @@ export async function deleteDiscussion(discussionId: string) {
 }
 
 export async function togglePinPost(postId: string, isPinned: boolean) {
-  const response = await axiosWithCredentials.patch(`${API_BASE}/posts/${postId}/pin`, {isPinned});
+  const response = await axiosWithCredentials.patch(`${API_BASE}/posts/${postId}/pin`, { isPinned });
   return response.data;
 }
 
@@ -122,7 +122,7 @@ export async function fetchAllUsers() {
 }
 
 export async function updateUserRole(userId: string, role: string) {
-  const response = await axiosWithCredentials.patch(`${API_BASE}/users/${userId}/role`, {role});
+  const response = await axiosWithCredentials.patch(`${API_BASE}/users/${userId}/role`, { role });
   return response.data;
 }
 
@@ -132,7 +132,7 @@ export async function verifyLawyer(userId: string) {
 }
 
 export async function banUser(userId: string, banned: boolean) {
-  const response = await axiosWithCredentials.patch(`${API_BASE}/users/${userId}/ban`, {banned});
+  const response = await axiosWithCredentials.patch(`${API_BASE}/users/${userId}/ban`, { banned });
   return response.data;
 }
 

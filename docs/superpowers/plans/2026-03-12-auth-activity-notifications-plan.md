@@ -514,7 +514,9 @@ Run:
 
 - `pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web test`
 -
+
 `pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web e2e --grep "admin smoke|discussion threads|auth session|activity notifications"`
+
 - `pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web lint`
 - `pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web build`
 

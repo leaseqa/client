@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import {Stack} from "react-bootstrap";
-import {FaComments, FaFileAlt, FaHistory, FaRobot,} from "react-icons/fa";
+import { Stack } from "react-bootstrap";
+import { FaComments, FaFileAlt, FaHistory, FaRobot, } from "react-icons/fa";
 
 export type ActivityTimelineItem = {
   _id: string;
@@ -21,10 +21,10 @@ type ActivityTimelineProps = {
 };
 
 const getActivityIcon = (type: string) => {
-  if (type === "ai_review_created") {
+  if ( type === "ai_review_created" ) {
     return FaRobot;
   }
-  if (type === "answer_received" || type === "discussion_received") {
+  if ( type === "answer_received" || type === "discussion_received" ) {
     return FaComments;
   }
   return FaFileAlt;

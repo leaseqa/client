@@ -1,4 +1,4 @@
-import {ChatMessage, Citation, RagSession} from "./types";
+import { ChatMessage, Citation, RagSession } from "./types";
 
 export const CHAT_UPLOAD_MAX_MB = 20;
 export const CHAT_UPLOAD_ACCEPT = "application/pdf,.docx";
@@ -42,14 +42,14 @@ export function getSessionInputPlan({
                                     }: SessionInputOptions) {
   const trimmedSourceText = sourceText.trim();
 
-  if (hasFile && trimmedSourceText) {
+  if ( hasFile && trimmedSourceText ) {
     return {
       error: "Choose either a file upload or pasted text, not both.",
       initialQuestion: null,
     };
   }
 
-  if (!hasFile && !trimmedSourceText) {
+  if ( !hasFile && !trimmedSourceText ) {
     return {
       error: "Upload a PDF or DOCX file, or paste text first.",
       initialQuestion: null,
@@ -65,7 +65,7 @@ export function getSessionInputPlan({
 }
 
 export function getVisibleMessages(session: RagSession | null): ChatMessage[] {
-  if (!session) {
+  if ( !session ) {
     return [];
   }
 
@@ -96,7 +96,7 @@ export function getDisplayedSource({
   activeSession: RagSession | null;
   pendingDraftSource: PendingDraftSource | null;
 }) {
-  if (pendingDraftSource) {
+  if ( pendingDraftSource ) {
     return {
       sourceName: pendingDraftSource.sourceName,
       sourcePreview: pendingDraftSource.sourcePreview,
@@ -104,7 +104,7 @@ export function getDisplayedSource({
     };
   }
 
-  if (!activeSession) {
+  if ( !activeSession ) {
     return null;
   }
 
@@ -128,7 +128,7 @@ const toTitleWords = (text: string) =>
     });
 
 export function formatCompactCitationLabel(citation: Citation) {
-  if (citation.sourceName === "pasted-text" || citation.sourceGroup === "text") {
+  if ( citation.sourceName === "pasted-text" || citation.sourceGroup === "text" ) {
     return "Uploaded Clause";
   }
 
@@ -136,11 +136,11 @@ export function formatCompactCitationLabel(citation: Citation) {
   const normalized = baseName.replace(/^handout_/, "").replace(/^ch\d+_/, "");
   const words = toTitleWords(normalized).slice(0, 3).join(" ");
 
-  if (citation.sourceGroup === "handouts" && citation.chapterRef) {
+  if ( citation.sourceGroup === "handouts" && citation.chapterRef ) {
     return `Handout ${citation.chapterRef} ${words || "Handbook"}`.trim();
   }
 
-  if (citation.chapterRef) {
+  if ( citation.chapterRef ) {
     return `Chap. ${citation.chapterRef} ${words || "Handbook"}`.trim();
   }
 
@@ -165,7 +165,7 @@ export function getInlineCitationItems({
     }))
     .filter((item) => {
       const key = `${item.label}::${item.sourceUrl || ""}`;
-      if (seen.has(key)) {
+      if ( seen.has(key) ) {
         return false;
       }
       seen.add(key);
@@ -180,7 +180,7 @@ export function getResultsPanelState({
   activeSession: RagSession | null;
   pendingDraftSource: PendingDraftSource | null;
 }): ResultsPanelState {
-  if (pendingDraftSource) {
+  if ( pendingDraftSource ) {
     return {
       title: "Analyzing new clause",
       subtitle: `Source: ${pendingDraftSource.sourceName}`,
@@ -188,7 +188,7 @@ export function getResultsPanelState({
     };
   }
 
-  if (activeSession) {
+  if ( activeSession ) {
     return {
       title: "Ask follow-up questions",
       subtitle: `Source: ${activeSession.sourceName}`,
@@ -208,15 +208,15 @@ export function getEmptyStateMessage({
                                      }: {
   activeSession: RagSession | null;
 }) {
-  if (!activeSession) {
+  if ( !activeSession ) {
     return "Create a source above, then ask questions here.";
   }
 
-  if (activeSession.sourceKind === "text" && activeSession.status === "ready") {
+  if ( activeSession.sourceKind === "text" && activeSession.status === "ready" ) {
     return "The first answer failed. Retry the clause analysis or ask your own question.";
   }
 
-  if (activeSession.sourceKind === "upload") {
+  if ( activeSession.sourceKind === "upload" ) {
     return "Pick a suggested question or ask your first question about this file.";
   }
 
@@ -224,10 +224,10 @@ export function getEmptyStateMessage({
 }
 
 export function getRevealChunkSize(totalLength: number) {
-  if (totalLength <= 120) {
+  if ( totalLength <= 120 ) {
     return 4;
   }
-  if (totalLength <= 360) {
+  if ( totalLength <= 360 ) {
     return 8;
   }
   return 14;

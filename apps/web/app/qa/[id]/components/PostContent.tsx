@@ -1,8 +1,8 @@
 import React from "react";
-import {FaEdit, FaEye, FaMapPin, FaTrash} from "react-icons/fa";
-import {Check} from "lucide-react";
-import {format} from "date-fns";
-import {PostContentProps} from "../../types";
+import { FaEdit, FaEye, FaMapPin, FaTrash } from "react-icons/fa";
+import { Check } from "lucide-react";
+import { format } from "date-fns";
+import { PostContentProps } from "../../types";
 import EditPostForm from "./EditPostForm";
 
 export default function PostContent({
@@ -109,7 +109,7 @@ export default function PostContent({
                         </span>
           </div>
           <h1 className="post-detail-title">{post.summary}</h1>
-          <div className="post-detail-content" dangerouslySetInnerHTML={{__html: post.details}}/>
+          <div className="post-detail-content" dangerouslySetInnerHTML={{ __html: post.details }}/>
         </div>
       )}
 

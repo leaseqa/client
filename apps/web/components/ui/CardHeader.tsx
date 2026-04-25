@@ -1,6 +1,6 @@
 "use client";
 
-import {ReactNode} from "react";
+import { ReactNode } from "react";
 import IconCircle from "./IconCircle";
 
 type CardHeaderProps = {

@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import {useSearchParams} from "next/navigation";
-import {Col, Row} from "react-bootstrap";
-import {FaArrowRight, FaBalanceScale, FaHandsHelping, FaHome, FaTools,} from "react-icons/fa";
+import { useSearchParams } from "next/navigation";
+import { Col, Row } from "react-bootstrap";
+import { FaArrowRight, FaBalanceScale, FaHandsHelping, FaHome, FaTools, } from "react-icons/fa";
 
-import {getTopicLabel} from "@/app/lib/reviewFollowUp";
+import { getTopicLabel } from "@/app/lib/reviewFollowUp";
 
 const resources = [
   {

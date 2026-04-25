@@ -1,6 +1,6 @@
 import React from "react";
-import {FaBan, FaCheck, FaTrash, FaUserCheck} from "react-icons/fa";
-import {User} from "../../types";
+import { FaBan, FaCheck, FaTrash, FaUserCheck } from "react-icons/fa";
+import { User } from "../../types";
 
 type UsersTableProps = {
   users: User[];

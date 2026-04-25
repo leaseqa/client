@@ -1,4 +1,4 @@
-import type {Folder, User} from "../types";
+import type { Folder, User } from "../types";
 
 export type DatasetStateInput<T = unknown> = {
   hasLoaded: boolean;
@@ -7,7 +7,7 @@ export type DatasetStateInput<T = unknown> = {
   isLoading: boolean;
 };
 
-export function deriveManageMetrics({users, folders}: { users: User[]; folders: Folder[] }) {
+export function deriveManageMetrics({ users, folders }: { users: User[]; folders: Folder[] }) {
   const pendingLawyerCount = users.filter(
     (user) => user.role === "lawyer" && user.lawyerVerified !== true,
   ).length;
@@ -71,7 +71,7 @@ export function getSectionEditorState(input: {
   const isOpen = input.formMode !== "closed";
   const canOpen = !isOpen && !isDisabled;
 
-  return {canOpen, isDisabled, isOpen} as const;
+  return { canOpen, isDisabled, isOpen } as const;
 }
 
 /**
@@ -86,6 +86,6 @@ export function shouldKeepEditorOpenAfterRefetch(input: {
   editedSectionId: string | null;
   sections: Array<{ _id: string }>;
 }) {
-  if (input.formMode !== "edit" || !input.editedSectionId) return false;
+  if ( input.formMode !== "edit" || !input.editedSectionId ) return false;
   return input.sections.some((s) => s._id === input.editedSectionId);
 }

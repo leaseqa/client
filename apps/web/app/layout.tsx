@@ -1,10 +1,10 @@
 import "@/app/globals.css";
 import "@/app/refresh.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import type {Metadata} from "next";
-import {ReactNode} from "react";
-import {DM_Sans, DM_Serif_Display} from "next/font/google";
-import {Providers} from "@/components/providers";
+import type { Metadata } from "next";
+import { ReactNode } from "react";
+import { DM_Sans, DM_Serif_Display } from "next/font/google";
+import { Providers } from "@/components/providers";
 import HeaderBar from "@/components/navigation/HeaderBar";
 
 const dmSans = DM_Sans({
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     "AI-assisted lease review and legal Q&A platform for Boston renters.",
 };
 
-export default function RootLayout({children}: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
     <body
@@ -42,7 +42,7 @@ export default function RootLayout({children}: { children: ReactNode }) {
           <main
             id="main-content"
             className="flex-grow-1 d-flex flex-column"
-            style={{minHeight: 0}}
+            style={{ minHeight: 0 }}
           >
             <div className="page-shell flex-grow-1 d-flex flex-column">
               {children}

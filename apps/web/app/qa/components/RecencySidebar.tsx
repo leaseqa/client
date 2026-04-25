@@ -1,8 +1,8 @@
-import {FaChevronDown, FaChevronRight} from "react-icons/fa";
-import {Check} from "lucide-react";
-import {format} from "date-fns";
-import {useMemo} from "react";
-import {Post, RecencySidebarProps} from "../types";
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+import { Check } from "lucide-react";
+import { format } from "date-fns";
+import { useMemo } from "react";
+import { Post, RecencySidebarProps } from "../types";
 
 export default function RecencySidebar({
                                          posts,
@@ -15,10 +15,10 @@ export default function RecencySidebar({
   const grouped = useMemo(() => {
     const now = new Date();
     const buckets: Record<string, { label: string; items: Post[] }> = {
-      thisWeek: {label: "This week", items: []},
-      lastWeek: {label: "Last week", items: []},
-      thisMonth: {label: "Earlier this month", items: []},
-      earlier: {label: "Earlier", items: []},
+      thisWeek: { label: "This week", items: [] },
+      lastWeek: { label: "Last week", items: [] },
+      thisMonth: { label: "Earlier this month", items: [] },
+      earlier: { label: "Earlier", items: [] },
     };
 
     const sorted = [...posts].sort((a, b) => {
@@ -30,9 +30,9 @@ export default function RecencySidebar({
     sorted.forEach((p) => {
       const created = new Date(p.createdAt || 0);
       const diffDays = Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
-      if (diffDays <= 6) buckets.thisWeek.items.push(p);
-      else if (diffDays <= 13) buckets.lastWeek.items.push(p);
-      else if (diffDays <= 30) buckets.thisMonth.items.push(p);
+      if ( diffDays <= 6 ) buckets.thisWeek.items.push(p);
+      else if ( diffDays <= 13 ) buckets.lastWeek.items.push(p);
+      else if ( diffDays <= 30 ) buckets.thisMonth.items.push(p);
       else buckets.earlier.items.push(p);
     });
 
@@ -40,10 +40,10 @@ export default function RecencySidebar({
   }, [posts]);
 
   const hasAny = Object.values(grouped).some((b) => b.items.length);
-  if (!hasAny) return null;
+  if ( !hasAny ) return null;
 
   const makeSnippet = (text: string) => {
-    if (!text) return "";
+    if ( !text ) return "";
     const clean = text.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
     return clean;
   };
@@ -58,7 +58,7 @@ export default function RecencySidebar({
   return (
     <div className="post-sidebar">
       {Object.entries(grouped).map(([key, bucket]) => {
-        if (!bucket.items.length) return null;
+        if ( !bucket.items.length ) return null;
         const isOpen = bucketOpen[key] ?? true;
         return (
           <div className="post-sidebar-group" key={key}>

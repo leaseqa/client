@@ -1,4 +1,4 @@
-import {Dropdown} from "react-bootstrap";
+import { Dropdown } from "react-bootstrap";
 
 type ProfileMenuItemsProps = {
   isAuthenticated: boolean;
@@ -13,7 +13,7 @@ export default function ProfileMenuItems({
                                            navigate,
                                            onSignOut
                                          }: ProfileMenuItemsProps) {
-  if (!isAuthenticated && !isGuest) {
+  if ( !isAuthenticated && !isGuest ) {
     return (
       <>
         <Dropdown.Item onClick={() => navigate("/auth/login")}>Sign In</Dropdown.Item>
@@ -22,7 +22,7 @@ export default function ProfileMenuItems({
     );
   }
 
-  if (isGuest) {
+  if ( isGuest ) {
     return (
       <>
         <Dropdown.Item onClick={() => navigate("/account")}>View Profile</Dropdown.Item>

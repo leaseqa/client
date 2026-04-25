@@ -1,4 +1,4 @@
-import {describe, expect, test} from "vitest";
+import { describe, expect, test } from "vitest";
 import {
   deriveManageMetrics,
   getDatasetState,
@@ -15,11 +15,11 @@ describe("deriveManageMetrics", () => {
     expect(
       deriveManageMetrics({
         users: [
-          {_id: "u1", role: "lawyer", lawyerVerified: false, banned: false} as Any,
-          {_id: "u2", role: "lawyer", lawyerVerified: true, banned: false} as Any,
-          {_id: "u3", role: "tenant", lawyerVerified: false, banned: true} as Any,
+          { _id: "u1", role: "lawyer", lawyerVerified: false, banned: false } as Any,
+          { _id: "u2", role: "lawyer", lawyerVerified: true, banned: false } as Any,
+          { _id: "u3", role: "tenant", lawyerVerified: false, banned: true } as Any,
         ] as Any,
-        folders: [{_id: "f1"}, {_id: "f2"}] as Any,
+        folders: [{ _id: "f1" }, { _id: "f2" }] as Any,
       }),
     ).toEqual({
       pendingLawyerCount: 1,
@@ -35,10 +35,10 @@ describe("getDisplayMetrics", () => {
   test("returns null for cards backed by unavailable datasets and includes full shape", () => {
     expect(
       getDisplayMetrics({
-        users: {hasLoaded: false, data: [], error: "Users failed", isLoading: false},
+        users: { hasLoaded: false, data: [], error: "Users failed", isLoading: false },
         sections: {
           hasLoaded: true,
-          data: [{_id: "f1"}] as Any,
+          data: [{ _id: "f1" }] as Any,
           error: "",
           isLoading: false,
         },
@@ -58,14 +58,14 @@ describe("getDisplayMetrics", () => {
         users: {
           hasLoaded: true,
           data: [
-            {_id: "u1", role: "lawyer", lawyerVerified: false, banned: false} as Any,
-            {_id: "u2", role: "lawyer", lawyerVerified: true, banned: false} as Any,
-            {_id: "u3", role: "tenant", lawyerVerified: false, banned: true} as Any,
+            { _id: "u1", role: "lawyer", lawyerVerified: false, banned: false } as Any,
+            { _id: "u2", role: "lawyer", lawyerVerified: true, banned: false } as Any,
+            { _id: "u3", role: "tenant", lawyerVerified: false, banned: true } as Any,
           ],
           error: "",
           isLoading: false,
         },
-        sections: {hasLoaded: true, data: [{_id: "f1"}, {_id: "f2"}] as Any, error: "", isLoading: false},
+        sections: { hasLoaded: true, data: [{ _id: "f1" }, { _id: "f2" }] as Any, error: "", isLoading: false },
       }),
     ).toEqual({
       pendingLawyerCount: 1,
@@ -82,14 +82,14 @@ describe("getDisplayMetrics", () => {
         users: {
           hasLoaded: true,
           data: [
-            {_id: "u1", role: "lawyer", lawyerVerified: false, banned: false} as Any,
-            {_id: "u2", role: "lawyer", lawyerVerified: true, banned: false} as Any,
-            {_id: "u3", role: "tenant", lawyerVerified: false, banned: true} as Any,
+            { _id: "u1", role: "lawyer", lawyerVerified: false, banned: false } as Any,
+            { _id: "u2", role: "lawyer", lawyerVerified: true, banned: false } as Any,
+            { _id: "u3", role: "tenant", lawyerVerified: false, banned: true } as Any,
           ],
           error: "",
           isLoading: false,
         },
-        sections: {hasLoaded: false, data: [], error: "boom", isLoading: false},
+        sections: { hasLoaded: false, data: [], error: "boom", isLoading: false },
       }),
     ).toEqual({
       pendingLawyerCount: 1,
@@ -122,7 +122,7 @@ describe("getDatasetState", () => {
     expect(
       getDatasetState({
         hasLoaded: true,
-        data: [{_id: "u1"}] as Any,
+        data: [{ _id: "u1" }] as Any,
         error: "Refresh failed",
         isLoading: false,
       }),
@@ -137,7 +137,7 @@ describe("getDatasetState", () => {
     expect(
       getDatasetState({
         hasLoaded: true,
-        data: [{_id: "u1"}] as Any,
+        data: [{ _id: "u1" }] as Any,
         error: "",
         isLoading: false,
       }),
@@ -174,7 +174,7 @@ describe("getSectionEditorState", () => {
         formMode: "closed",
         savePending: false,
       }),
-    ).toEqual({canOpen: false, isDisabled: true, isOpen: false});
+    ).toEqual({ canOpen: false, isDisabled: true, isOpen: false });
   });
 
   test("allows opening when there was a prior successful load, even if a later refresh errored", () => {
@@ -185,7 +185,7 @@ describe("getSectionEditorState", () => {
         formMode: "closed",
         savePending: false,
       }),
-    ).toEqual({canOpen: true, isDisabled: false, isOpen: false});
+    ).toEqual({ canOpen: true, isDisabled: false, isOpen: false });
   });
 
   test("disables while a save is pending even after successful load", () => {
@@ -196,7 +196,7 @@ describe("getSectionEditorState", () => {
         formMode: "closed",
         savePending: true,
       }),
-    ).toEqual({canOpen: false, isDisabled: true, isOpen: false});
+    ).toEqual({ canOpen: false, isDisabled: true, isOpen: false });
   });
 });
 
@@ -205,7 +205,7 @@ describe("shouldKeepEditorOpenAfterRefetch", () => {
     const keep = shouldKeepEditorOpenAfterRefetch({
       formMode: "edit",
       editedSectionId: "s1",
-      sections: [{_id: "s1"}, {_id: "s2"}] as Any,
+      sections: [{ _id: "s1" }, { _id: "s2" }] as Any,
     });
     expect(keep).toBe(true);
   });
@@ -214,17 +214,17 @@ describe("shouldKeepEditorOpenAfterRefetch", () => {
     const keep = shouldKeepEditorOpenAfterRefetch({
       formMode: "edit",
       editedSectionId: "s1",
-      sections: [{_id: "s2"}] as Any,
+      sections: [{ _id: "s2" }] as Any,
     });
     expect(keep).toBe(false);
   });
 
   test("closed or create modes never force persistence", () => {
     expect(
-      shouldKeepEditorOpenAfterRefetch({formMode: "closed", editedSectionId: "s1", sections: [] as Any}),
+      shouldKeepEditorOpenAfterRefetch({ formMode: "closed", editedSectionId: "s1", sections: [] as Any }),
     ).toBe(false);
     expect(
-      shouldKeepEditorOpenAfterRefetch({formMode: "create", editedSectionId: "s1", sections: [] as Any}),
+      shouldKeepEditorOpenAfterRefetch({ formMode: "create", editedSectionId: "s1", sections: [] as Any }),
     ).toBe(false);
   });
 });

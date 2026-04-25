@@ -1,19 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import {useCallback, useState} from "react";
-import {usePathname, useRouter} from "next/navigation";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState, signOut} from "@/app/store";
-import {Container, Dropdown, Nav, Navbar, NavbarBrand, Stack,} from "react-bootstrap";
+import { useCallback, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, signOut } from "@/app/store";
+import { Container, Dropdown, Nav, Navbar, NavbarBrand, Stack, } from "react-bootstrap";
 import AvatarToggle from "./HeaderBar/AvatarToggle";
 import MobileNav from "./HeaderBar/MobileNav";
 import ProfileHeader from "./HeaderBar/ProfileHeader";
 import ProfileMenuItems from "./HeaderBar/ProfileMenuItems";
-import type {NotificationMenuItem} from "./HeaderBar/NotificationsMenu";
+import type { NotificationMenuItem } from "./HeaderBar/NotificationsMenu";
 import NotificationsMenu from "./HeaderBar/NotificationsMenu";
 import * as client from "@/app/account/client";
-import {NAV_ITEMS} from "./config";
+import { NAV_ITEMS } from "./config";
 
 export default function HeaderBar() {
   const pathname = usePathname();
@@ -47,7 +47,7 @@ export default function HeaderBar() {
   };
 
   const loadNotifications = useCallback(async () => {
-    if (!isAuthenticated) {
+    if ( !isAuthenticated ) {
       setNotifications([]);
       setNotificationsError("");
       return;
@@ -57,7 +57,7 @@ export default function HeaderBar() {
       setNotificationsError("");
       const items = await client.fetchNotifications();
       setNotifications(items);
-    } catch (error: any) {
+    } catch ( error: any ) {
       setNotificationsError(
         error.response?.data?.error?.message || "Could not load notifications.",
       );
@@ -76,7 +76,7 @@ export default function HeaderBar() {
       } catch {
         // Preserve unread state if marking read fails.
       }
-      if (item.href) {
+      if ( item.href ) {
         navigate(item.href);
       }
     },

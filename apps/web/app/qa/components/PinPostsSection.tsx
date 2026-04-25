@@ -1,22 +1,22 @@
-import {useRouter} from "next/navigation";
-import {FaMapPin} from "react-icons/fa";
-import {Check} from "lucide-react";
-import {Folder, Post} from "../types";
-import {getFolderDisplayName} from "../utils";
+import { useRouter } from "next/navigation";
+import { FaMapPin } from "react-icons/fa";
+import { Check } from "lucide-react";
+import { Folder, Post } from "../types";
+import { getFolderDisplayName } from "../utils";
 
 type PinPostsProps = {
   posts: Post[];
   folders: Folder[];
 };
 
-export default function PinPostsSection({posts, folders}: PinPostsProps) {
+export default function PinPostsSection({ posts, folders }: PinPostsProps) {
   const router = useRouter();
 
   const pinPosts = posts
     .filter(p => p.isPinned)
     .slice(0, 5);
 
-  if (!pinPosts.length) return null;
+  if ( !pinPosts.length ) return null;
 
   const handlePostClick = (postId: string) => {
     router.push(`/qa?post=${postId}`);

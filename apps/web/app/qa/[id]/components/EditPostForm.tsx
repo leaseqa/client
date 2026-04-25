@@ -1,9 +1,9 @@
 import React from "react";
-import {FaTimes} from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import dynamic from "next/dynamic";
-import {Folder} from "../../types";
+import { Folder } from "../../types";
 
-const ReactQuill = dynamic(() => import("react-quill-new"), {ssr: false});
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 type EditPostFormProps = {
   folders: Folder[];
@@ -33,7 +33,7 @@ export default function EditPostForm({
                                        onCancel,
                                      }: EditPostFormProps) {
   const handleFolderAdd = (folderName: string) => {
-    if (folderName && !editFolders.includes(folderName)) {
+    if ( folderName && !editFolders.includes(folderName) ) {
       onFoldersChange([...editFolders, folderName]);
     }
   };

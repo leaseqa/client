@@ -1,4 +1,4 @@
-import {type Browser, expect, type Page, test} from "@playwright/test";
+import { type Browser, expect, type Page, test } from "@playwright/test";
 
 const ADMIN_EMAIL = "admin@leaseqa.dev";
 const TENANT_EMAIL = "tenant@leaseqa.dev";
@@ -10,7 +10,7 @@ async function loginAsUser(page: Page, email: string, nextPath: string) {
   await page.goto(`/auth/login?next=${encodeURIComponent(nextPath)}`);
   await page.locator('input[name="email"]').fill(email);
   await page.locator('input[name="password"]').fill(TEST_PASSWORD);
-  await page.getByRole("button", {name: "Sign In"}).click();
+  await page.getByRole("button", { name: "Sign In" }).click();
 }
 
 async function newLoggedInPage(
@@ -21,15 +21,15 @@ async function newLoggedInPage(
   const context = await browser.newContext();
   const page = await context.newPage();
   await loginAsUser(page, email, nextPath);
-  return {context, page};
+  return { context, page };
 }
 
 async function createPostFromComposer(page: Page, title: string, details: string) {
   await page.locator('input[placeholder*="Short question"]').fill(title);
   await page.locator(".compose-form-editor .ql-editor").fill(details);
-  await page.getByRole("button", {name: "Post"}).click();
-  await expect(page).toHaveURL(/\/qa\?post=/, {timeout: 10_000});
-  await expect(page.getByRole("heading", {name: title})).toBeVisible({
+  await page.getByRole("button", { name: "Post" }).click();
+  await expect(page).toHaveURL(/\/qa\?post=/, { timeout: 10_000 });
+  await expect(page.getByRole("heading", { name: title })).toBeVisible({
     timeout: 10_000,
   });
 }
@@ -38,7 +38,7 @@ async function postRootFollowUp(page: Page, text: string) {
   const discussionCard = page.locator(".post-detail-card", {
     hasText: "Follow-up Discussion",
   });
-  await discussionCard.getByRole("button", {name: "Write follow-up"}).click();
+  await discussionCard.getByRole("button", { name: "Write follow-up" }).click();
   await discussionCard.locator(".ql-editor").last().fill(text);
   const createResponse = page.waitForResponse(
     (response) =>
@@ -46,7 +46,7 @@ async function postRootFollowUp(page: Page, text: string) {
       response.request().method() === "POST" &&
       response.ok(),
   );
-  await discussionCard.getByRole("button", {name: "Post follow-up"}).click();
+  await discussionCard.getByRole("button", { name: "Post follow-up" }).click();
   await createResponse;
   return discussionCard;
 }
@@ -77,14 +77,14 @@ test.describe("discussion threads", () => {
     const tenantReply = `Tenant follow-up about the move-out inspection ${Date.now()}`;
     const tenantReplyUpdated = `${tenantReply} updated`;
 
-    const {context: adminContext, page: adminPage} = await newLoggedInPage(
+    const { context: adminContext, page: adminPage } = await newLoggedInPage(
       browser,
       ADMIN_EMAIL,
       "/qa?compose=1",
     );
 
     await expect(
-      adminPage.getByRole("heading", {name: "Ask one clear question."}),
+      adminPage.getByRole("heading", { name: "Ask one clear question." }),
     ).toBeVisible();
     await createPostFromComposer(
       adminPage,
@@ -95,7 +95,7 @@ test.describe("discussion threads", () => {
     const adminPostUrl = new URL(adminPage.url());
     const postPath = `${adminPostUrl.pathname}${adminPostUrl.search}`;
 
-    const {context: tenantContext, page: tenantPage} = await newLoggedInPage(
+    const { context: tenantContext, page: tenantPage } = await newLoggedInPage(
       browser,
       TENANT_EMAIL,
       postPath,
@@ -130,7 +130,7 @@ test.describe("discussion threads", () => {
         response.request().method() === "PATCH" &&
         response.ok(),
     );
-    await tenantReplyThread.getByRole("button", {name: "Save"}).click();
+    await tenantReplyThread.getByRole("button", { name: "Save" }).click();
     await updateResponse;
     await expect(
       adminThread.locator(".post-discussion-replies .post-discussion-item.post-discussion-reply", {
@@ -163,7 +163,7 @@ test.describe("discussion threads", () => {
     await deleteResponse;
     await tenantPage.reload();
     await expect(
-      tenantPage.locator(".post-discussion-item", {hasText: tenantReplyUpdated}),
+      tenantPage.locator(".post-discussion-item", { hasText: tenantReplyUpdated }),
     ).toHaveCount(0);
 
     await tenantContext.close();
@@ -178,14 +178,14 @@ test.describe("discussion threads", () => {
     const tenantReply = `Tenant asks about the itemized list ${Date.now()}`;
     const adminNestedReply = `Admin clarifies the written statement deadline ${Date.now()}`;
 
-    const {context: adminContext, page: adminPage} = await newLoggedInPage(
+    const { context: adminContext, page: adminPage } = await newLoggedInPage(
       browser,
       ADMIN_EMAIL,
       "/qa?compose=1",
     );
 
     await expect(
-      adminPage.getByRole("heading", {name: "Ask one clear question."}),
+      adminPage.getByRole("heading", { name: "Ask one clear question." }),
     ).toBeVisible();
     await createPostFromComposer(
       adminPage,
@@ -199,7 +199,7 @@ test.describe("discussion threads", () => {
       hasText: rootThread,
     });
 
-    const {context: tenantContext, page: tenantPage} = await newLoggedInPage(
+    const { context: tenantContext, page: tenantPage } = await newLoggedInPage(
       browser,
       TENANT_EMAIL,
       postPath,
@@ -273,14 +273,14 @@ test.describe("discussion threads", () => {
       .click();
     await adminPage.reload();
 
-    await expect(adminPage.locator(".post-discussion-item", {hasText: rootThread})).toHaveCount(
+    await expect(adminPage.locator(".post-discussion-item", { hasText: rootThread })).toHaveCount(
       0,
     );
     await expect(
-      adminPage.locator(".post-discussion-item", {hasText: tenantReply}),
+      adminPage.locator(".post-discussion-item", { hasText: tenantReply }),
     ).toHaveCount(0);
     await expect(
-      adminPage.locator(".post-discussion-item", {hasText: adminNestedReply}),
+      adminPage.locator(".post-discussion-item", { hasText: adminNestedReply }),
     ).toHaveCount(0);
 
     await adminContext.close();

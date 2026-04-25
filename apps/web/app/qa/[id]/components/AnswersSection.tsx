@@ -1,11 +1,11 @@
-import React, {useRef} from "react";
-import {FaEdit, FaPaperclip, FaTrash} from "react-icons/fa";
-import {Home, Scale} from "lucide-react";
-import {format} from "date-fns";
+import React, { useRef } from "react";
+import { FaEdit, FaPaperclip, FaTrash } from "react-icons/fa";
+import { Home, Scale } from "lucide-react";
+import { format } from "date-fns";
 import dynamic from "next/dynamic";
-import {Answer, AnswersSectionProps} from "../../types";
+import { Answer, AnswersSectionProps } from "../../types";
 
-const ReactQuill = dynamic(() => import("react-quill-new"), {ssr: false});
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 export default function AnswersSection({
                                          answers,
@@ -143,7 +143,7 @@ export default function AnswersSection({
                   </div>
                 </div>
               ) : (
-                <div className="post-answer-content" dangerouslySetInnerHTML={{__html: ans.content}}/>
+                <div className="post-answer-content" dangerouslySetInnerHTML={{ __html: ans.content }}/>
               )}
             </div>
           ))}

@@ -1,9 +1,9 @@
 "use client";
 
-import {useEffect, useState} from "react";
-import {useRouter, useSearchParams} from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import * as client from "@/app/qa/client";
-import {Folder} from "../types";
+import { Folder } from "../types";
 
 export default function ScenarioFilter() {
   const router = useRouter();
@@ -15,7 +15,7 @@ export default function ScenarioFilter() {
     try {
       const response = await client.fetchFolders();
       setFolders(response.data || []);
-    } catch (error) {
+    } catch ( error ) {
       console.error("Failed to load folders:", error);
     }
   };
@@ -26,7 +26,7 @@ export default function ScenarioFilter() {
   }, []);
 
   const handleSelect = (value: string) => {
-    if (value === "all") {
+    if ( value === "all" ) {
       router.push("/qa");
     } else {
       router.push(`/qa?scenario=${value}`);

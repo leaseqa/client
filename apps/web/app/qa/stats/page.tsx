@@ -1,9 +1,9 @@
 "use client";
 
-import {useEffect, useState} from "react";
-import {Col, Row} from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Col, Row } from "react-bootstrap";
 
-import {Stat} from "../types";
+import { Stat } from "../types";
 import * as client from "../client";
 
 import PageLoadingState from "@/components/ui/PageLoadingState";
@@ -22,25 +22,25 @@ export default function StatsPage() {
   const loadStats = async () => {
     try {
       const response = await client.fetchStats();
-      if (response.data) {
+      if ( response.data ) {
         setStats([
-          {label: "Total posts", value: response.data.totalPosts || 0},
-          {label: "Open questions", value: response.data.unreadPosts || 0},
-          {label: "Attorney replies", value: response.data.lawyerResponses || 0},
-          {label: "Tenant replies", value: response.data.tenantResponses || 0},
-          {label: "Registered users", value: response.data.enrolledUsers || 0},
-          {label: "Unanswered", value: response.data.unansweredPosts || 0},
+          { label: "Total posts", value: response.data.totalPosts || 0 },
+          { label: "Open questions", value: response.data.unreadPosts || 0 },
+          { label: "Attorney replies", value: response.data.lawyerResponses || 0 },
+          { label: "Tenant replies", value: response.data.tenantResponses || 0 },
+          { label: "Registered users", value: response.data.enrolledUsers || 0 },
+          { label: "Unanswered", value: response.data.unansweredPosts || 0 },
         ]);
         setBreakdown(response.data.breakdown || []);
       }
-    } catch (error) {
+    } catch ( error ) {
       console.error("Failed to load stats:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
+  if ( loading ) {
     return <PageLoadingState message="Loading stats..."/>;
   }
 

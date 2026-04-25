@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import {usePathname} from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const NAV_ITEMS = [
-  {label: "Overview", href: "/"},
-  {label: "AI Review", href: "/ai-review"},
-  {label: "Q&A Board", href: "/qa"},
-  {label: "Admin", href: "/admin"},
+  { label: "Overview", href: "/" },
+  { label: "AI Review", href: "/ai-review" },
+  { label: "Q&A Board", href: "/qa" },
+  { label: "Admin", href: "/admin" },
 ];
 
 //TODO: no usage

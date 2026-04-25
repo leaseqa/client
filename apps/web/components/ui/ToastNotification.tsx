@@ -1,8 +1,8 @@
 "use client";
 
-import {useEffect} from "react";
+import { useEffect } from "react";
 
-import {FaCheckCircle, FaExclamationCircle, FaTimes} from "react-icons/fa";
+import { FaCheckCircle, FaExclamationCircle, FaTimes } from "react-icons/fa";
 
 export type ToastType = "success" | "error";
 
@@ -30,17 +30,17 @@ const config = {
   }
 };
 
-export default function ToastNotification({toast, onClose}: ToastNotificationProps) {
+export default function ToastNotification({ toast, onClose }: ToastNotificationProps) {
   useEffect(() => {
-    if (toast.show) {
+    if ( toast.show ) {
       const timer = setTimeout(onClose, 4000);
       return () => clearTimeout(timer);
     }
   }, [toast.show, onClose]);
 
-  if (!toast.show) return null;
+  if ( !toast.show ) return null;
 
-  const {bgClass, icon, title} = config[toast.type];
+  const { bgClass, icon, title } = config[toast.type];
 
   return (
     <div className="toast-wrapper">

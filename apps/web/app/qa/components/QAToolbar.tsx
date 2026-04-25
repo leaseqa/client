@@ -1,10 +1,10 @@
 "use client";
 
-import React, {useState} from "react";
-import {useRouter} from "next/navigation";
-import {useSelector} from "react-redux";
-import {FaCheck, FaPlus, FaSearch} from "react-icons/fa";
-import {RootState} from "@/app/store";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { FaCheck, FaPlus, FaSearch } from "react-icons/fa";
+import { RootState } from "@/app/store";
 
 type QAToolbarProps = {
   initialSearch?: string;
@@ -30,7 +30,7 @@ export default function QAToolbar({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && search.trim()) {
+    if ( e.key === "Enter" && search.trim() ) {
       router.push(`/qa?search=${encodeURIComponent(search)}`);
     }
   };

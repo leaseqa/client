@@ -1,6 +1,6 @@
 "use client";
 
-import {FileText, Github, Scale, Wrench} from "lucide-react";
+import { FileText, Github, Scale, Wrench } from "lucide-react";
 
 const team = [
   {
@@ -39,7 +39,7 @@ export default function InfoPage() {
 
       <div
         className="small text-secondary mb-3 fw-semibold"
-        style={{letterSpacing: "0.08em"}}
+        style={{ letterSpacing: "0.08em" }}
       >
         TEAM
       </div>
@@ -62,7 +62,7 @@ export default function InfoPage() {
 
       <div
         className="d-flex justify-content-center mt-5 mb-5"
-        style={{paddingTop: "2rem"}}
+        style={{ paddingTop: "2rem" }}
       >
         <a
           href="https://github.com/leaseqa"

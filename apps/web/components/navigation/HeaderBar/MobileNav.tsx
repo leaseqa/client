@@ -1,9 +1,9 @@
 import Link from "next/link";
-import {useRouter} from "next/navigation";
-import {Nav, Navbar, Offcanvas} from "react-bootstrap";
-import {FaBookOpen, FaComments, FaHouse, FaRobot} from "react-icons/fa6";
+import { useRouter } from "next/navigation";
+import { Nav, Navbar, Offcanvas } from "react-bootstrap";
+import { FaBookOpen, FaComments, FaHouse, FaRobot } from "react-icons/fa6";
 
-import {NAV_ITEMS} from "../config";
+import { NAV_ITEMS } from "../config";
 
 const MOBILE_ICONS: Record<string, typeof FaHouse> = {
   "/": FaHouse,
@@ -12,14 +12,14 @@ const MOBILE_ICONS: Record<string, typeof FaHouse> = {
 };
 
 const SECONDARY_ITEMS = [
-  {label: "Resources", href: "/qa/resources", icon: FaBookOpen},
+  { label: "Resources", href: "/qa/resources", icon: FaBookOpen },
 ];
 
 type MobileNavProps = {
   pathname: string;
 };
 
-export default function MobileNav({pathname}: MobileNavProps) {
+export default function MobileNav({ pathname }: MobileNavProps) {
   const router = useRouter();
 
   return (

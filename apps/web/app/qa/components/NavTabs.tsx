@@ -1,14 +1,14 @@
 "use client";
 
-import {usePathname, useRouter} from "next/navigation";
-import {useSelector} from "react-redux";
-import {FaBook, FaChartBar, FaCog, FaComments} from "react-icons/fa";
-import {RootState} from "@/app/store";
+import { usePathname, useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { FaBook, FaChartBar, FaCog, FaComments } from "react-icons/fa";
+import { RootState } from "@/app/store";
 
 const TABS = [
-  {key: "qa", label: "Q&A", icon: FaComments, path: "/qa"},
-  {key: "resources", label: "Resources", icon: FaBook, path: "/qa/resources"},
-  {key: "stats", label: "Stats", icon: FaChartBar, path: "/qa/stats"},
+  { key: "qa", label: "Q&A", icon: FaComments, path: "/qa" },
+  { key: "resources", label: "Resources", icon: FaBook, path: "/qa/resources" },
+  { key: "stats", label: "Stats", icon: FaChartBar, path: "/qa/stats" },
 ];
 
 export default function NavTabs() {
@@ -18,13 +18,13 @@ export default function NavTabs() {
   const isAdmin = session.user?.role === "admin";
 
   const allTabs = isAdmin
-    ? [...TABS, {key: "manage", label: "Manage", icon: FaCog, path: "/qa/manage"}]
+    ? [...TABS, { key: "manage", label: "Manage", icon: FaCog, path: "/qa/manage" }]
     : TABS;
 
   const getActiveTab = () => {
-    if (pathname?.startsWith("/qa/manage")) return "manage";
-    if (pathname?.startsWith("/qa/stats")) return "stats";
-    if (pathname?.startsWith("/qa/resources")) return "resources";
+    if ( pathname?.startsWith("/qa/manage") ) return "manage";
+    if ( pathname?.startsWith("/qa/stats") ) return "stats";
+    if ( pathname?.startsWith("/qa/resources") ) return "resources";
     return "qa";
   };
 

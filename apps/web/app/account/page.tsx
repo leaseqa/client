@@ -1,12 +1,12 @@
 "use client";
 
-import {useCallback, useEffect, useState} from "react";
-import {useRouter} from "next/navigation";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState, setSession, signOut} from "@/app/store";
-import {Col, Form, Row, Stack} from "react-bootstrap";
-import {FaEnvelope, FaIdBadge, FaRobot, FaShieldAlt, FaSignInAlt, FaUserPlus,} from "react-icons/fa";
-import {Home, Scale, Shield} from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, setSession, signOut } from "@/app/store";
+import { Col, Form, Row, Stack } from "react-bootstrap";
+import { FaEnvelope, FaIdBadge, FaRobot, FaShieldAlt, FaSignInAlt, FaUserPlus, } from "react-icons/fa";
+import { Home, Scale, Shield } from "lucide-react";
 import * as client from "./client";
 import ActivityTimeline from "./components/ActivityTimeline";
 
@@ -38,7 +38,7 @@ export default function AccountPage() {
   }, [user]);
 
   const loadActivity = useCallback(async () => {
-    if (!isAuthenticated) {
+    if ( !isAuthenticated ) {
       setActivityItems([]);
       setActivityError("");
       setActivityLoading(false);
@@ -49,7 +49,7 @@ export default function AccountPage() {
     try {
       const items = await client.fetchActivity();
       setActivityItems(items);
-    } catch (err: any) {
+    } catch ( err: any ) {
       setActivityError(
         err.response?.data?.error?.message || "Failed to load activity.",
       );
@@ -82,7 +82,7 @@ export default function AccountPage() {
       const updatedUser = (response as any)?.data || response;
       dispatch(setSession(updatedUser));
       setEditMode(false);
-    } catch (err: any) {
+    } catch ( err: any ) {
       setError(err.message || "Failed to save profile");
     } finally {
       setSaving(false);
@@ -100,17 +100,17 @@ export default function AccountPage() {
 
   return (
     <div className="mb-4">
-      <section className="page-header-section" style={{borderBottom: "none"}}>
+      <section className="page-header-section" style={{ borderBottom: "none" }}>
         <div className="account-header-row">
           <div className="d-flex align-items-center gap-3">
             <div className="account-avatar">
               {user?.name?.slice(0, 2).toUpperCase() || "?"}
             </div>
             <div>
-              <h1 className="qa-page-title" style={{marginBottom: "0.25rem"}}>
+              <h1 className="qa-page-title" style={{ marginBottom: "0.25rem" }}>
                 {user?.name || "Guest User"}
               </h1>
-              <p className="qa-page-sub" style={{marginBottom: 0}}>
+              <p className="qa-page-sub" style={{ marginBottom: 0 }}>
                 {user?.email || "Not signed in"}
               </p>
               {user && (

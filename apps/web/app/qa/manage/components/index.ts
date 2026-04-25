@@ -1,9 +1,9 @@
-export {default as ManageHeader} from "./ManageHeader";
-export {default as ManageAlerts} from "./ManageAlerts";
-export {default as CreateSectionForm} from "./CreateSectionForm";
-export {default as SectionsTable} from "./SectionsTable";
-export {default as UsersTable} from "./UsersTable";
-export {default as ManageSidebar} from "./ManageSidebar";
-export {default as ManageStats} from "./ManageStats";
-export {default as ManageUsersSection} from "./ManageUsersSection";
-export {default as ManageSectionsSection} from "./ManageSectionsSection";
+export { default as ManageHeader } from "./ManageHeader";
+export { default as ManageAlerts } from "./ManageAlerts";
+export { default as CreateSectionForm } from "./CreateSectionForm";
+export { default as SectionsTable } from "./SectionsTable";
+export { default as UsersTable } from "./UsersTable";
+export { default as ManageSidebar } from "./ManageSidebar";
+export { default as ManageStats } from "./ManageStats";
+export { default as ManageUsersSection } from "./ManageUsersSection";
+export { default as ManageSectionsSection } from "./ManageSectionsSection";

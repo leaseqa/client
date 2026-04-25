@@ -1,5 +1,5 @@
 import React from "react";
-import {FaTimes} from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 
 type Latest = { kind: "error" | "success"; message: string } | null | undefined;
 
@@ -25,17 +25,17 @@ export default function ManageAlerts({
   // Determine latest: prefer explicit `latest`.
   // For legacy props, only map when exactly one is set to avoid guessing.
   let resolvedLatest: Latest = latest ?? null;
-  if (!resolvedLatest) {
+  if ( !resolvedLatest ) {
     const hasErr = Boolean(error);
     const hasOk = Boolean(success);
-    if (hasErr !== hasOk) {
-      resolvedLatest = hasErr ? {kind: "error", message: error} : {kind: "success", message: success};
+    if ( hasErr !== hasOk ) {
+      resolvedLatest = hasErr ? { kind: "error", message: error } : { kind: "success", message: success };
     }
   }
 
-  if (!resolvedLatest) return null;
+  if ( !resolvedLatest ) return null;
 
-  if (resolvedLatest.kind === "error") {
+  if ( resolvedLatest.kind === "error" ) {
     return (
       <div className="manage-alert error">
         {resolvedLatest.message}

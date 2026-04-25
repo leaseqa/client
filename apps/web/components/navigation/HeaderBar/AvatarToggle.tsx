@@ -1,5 +1,5 @@
-import React, {forwardRef} from "react";
-import {FaUser} from "react-icons/fa";
+import React, { forwardRef } from "react";
+import { FaUser } from "react-icons/fa";
 
 type AvatarToggleProps = {
   onClick?: (e: React.MouseEvent) => void;
@@ -9,7 +9,7 @@ type AvatarToggleProps = {
 };
 
 const AvatarToggle = forwardRef<HTMLButtonElement, AvatarToggleProps>(
-  ({onClick, initials, isAuthenticated, isGuest = false}, ref) => {
+  ({ onClick, initials, isAuthenticated, isGuest = false }, ref) => {
     const hasUser = isAuthenticated || isGuest;
     const avatarVariantClass = "icon-bg-muted";
     const avatarContent = hasUser ? (

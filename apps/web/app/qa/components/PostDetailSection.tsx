@@ -1,13 +1,13 @@
 "use client";
 
-import {useCallback, useEffect, useState} from "react";
-import {ArrowLeft} from "lucide-react";
-import {useSelector} from "react-redux";
-import {RootState} from "@/app/store";
+import { useCallback, useEffect, useState } from "react";
+import { ArrowLeft } from "lucide-react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 import * as client from "../client";
-import {AnswersSection, DiscussionsSection, PostContent} from "../[id]/components/index";
-import {Folder} from "../types";
-import {Answer, Discussion, PostDetailData} from "../[id]/types";
+import { AnswersSection, DiscussionsSection, PostContent } from "../[id]/components/index";
+import { Folder } from "../types";
+import { Answer, Discussion, PostDetailData } from "../[id]/types";
 
 type PostDetailSectionProps = {
   postId: string;
@@ -66,7 +66,7 @@ export default function PostDetailSection({
       setEditDetails(data.details || "");
       setEditUrgency(data.urgency || "low");
       setEditFolders(data.folders || []);
-    } catch (err: any) {
+    } catch ( err: any ) {
       setError(err.message || "Failed to load post");
     } finally {
       setLoading(false);
@@ -74,7 +74,7 @@ export default function PostDetailSection({
   }, [postId]);
 
   useEffect(() => {
-    if (postId) fetchPost();
+    if ( postId ) fetchPost();
   }, [postId, fetchPost]);
 
   const isAuthor = post && currentUserId && post.authorId?.toString() === currentUserId;
@@ -108,17 +108,17 @@ export default function PostDetailSection({
 
   const handleStatusChange = async (status: "open" | "resolved") => {
     setResolvedStatus(status);
-    await client.updatePost(postId, {isResolved: status === "resolved"});
+    await client.updatePost(postId, { isResolved: status === "resolved" });
     await fetchPost();
   };
 
   const handleTogglePin = async () => {
-    if (!post) return;
+    if ( !post ) return;
     try {
       await client.togglePinPost(postId, !post.isPinned);
       await fetchPost();
       onPostUpdatedAction?.();
-    } catch (err: any) {
+    } catch ( err: any ) {
       console.error("Failed to toggle pin:", err);
     }
   };
@@ -126,7 +126,7 @@ export default function PostDetailSection({
   //TODO: admin answer?
   const handleSubmitAnswer = async () => {
     setError("");
-    if (!answerContent.trim()) {
+    if ( !answerContent.trim() ) {
       setError("Answer content is required");
       return;
     }
@@ -137,7 +137,7 @@ export default function PostDetailSection({
         answerType: currentRole === "lawyer" ? "lawyer_opinion" : "community_answer",
       });
       const newAnswer = (resp as any)?.data || resp;
-      if (newAnswer?._id && answerFiles.length) {
+      if ( newAnswer?._id && answerFiles.length ) {
         await client.uploadPostAttachments(postId, answerFiles).catch(console.error);
       }
       setAnswerContent("");
@@ -145,14 +145,14 @@ export default function PostDetailSection({
       setShowAnswerBox(false);
       setAnswerFocused(false);
       await fetchPost();
-    } catch (err: any) {
+    } catch ( err: any ) {
       setError(err.message || "Failed to submit answer");
     }
   };
 
   const handleSaveAnswerEdit = async (id: string) => {
-    if (!answerEditContent.trim()) return;
-    await client.updateAnswer(id, {content: answerEditContent});
+    if ( !answerEditContent.trim() ) return;
+    await client.updateAnswer(id, { content: answerEditContent });
     setAnswerEditing(null);
     setAnswerEditContent("");
     await fetchPost();
@@ -164,12 +164,12 @@ export default function PostDetailSection({
   };
 
   const updateDraft = (key: string, val: string) => {
-    setDiscussionDrafts(prev => ({...prev, [key]: val}));
+    setDiscussionDrafts(prev => ({ ...prev, [key]: val }));
   };
 
   const clearDraft = (key: string) => {
     setDiscussionDrafts(prev => {
-      const next = {...prev};
+      const next = { ...prev };
       delete next[key];
       return next;
     });
@@ -178,8 +178,8 @@ export default function PostDetailSection({
   const handleSubmitDiscussion = async (parentId: string | null) => {
     const key = parentId ? `reply_${parentId}` : "root";
     const content = discussionDrafts[key] || "";
-    if (!content.trim()) return;
-    await client.createDiscussion({postId, parentId, content});
+    if ( !content.trim() ) return;
+    await client.createDiscussion({ postId, parentId, content });
     clearDraft(key);
     setDiscussionReplying(null);
     setShowFollowBox(false);
@@ -189,8 +189,8 @@ export default function PostDetailSection({
 
   const handleUpdateDiscussion = async (id: string) => {
     const content = discussionDrafts[id] || "";
-    if (!content.trim()) return;
-    await client.updateDiscussion(id, {content});
+    if ( !content.trim() ) return;
+    await client.updateDiscussion(id, { content });
     clearDraft(id);
     setDiscussionEditing(null);
     await fetchPost();
@@ -201,7 +201,7 @@ export default function PostDetailSection({
     await fetchPost();
   };
 
-  if (loading) {
+  if ( loading ) {
     return (
       <section className="post-detail-empty-panel qa-v2-panel">
         <div className="post-detail-context-bar">
@@ -220,7 +220,7 @@ export default function PostDetailSection({
     );
   }
 
-  if (!post) {
+  if ( !post ) {
     return (
       <section className="post-detail-empty-panel qa-v2-panel">
         <div className="post-detail-context-bar">
@@ -336,14 +336,14 @@ export default function PostDetailSection({
         onEdit={(id, content) => {
           setDiscussionEditing(id);
           setDiscussionReplying(null);
-          setDiscussionDrafts(prev => ({...prev, [id]: content}));
+          setDiscussionDrafts(prev => ({ ...prev, [id]: content }));
         }}
         onCancelReply={() => {
-          if (discussionReplying) clearDraft(`reply_${discussionReplying}`);
+          if ( discussionReplying ) clearDraft(`reply_${discussionReplying}`);
           setDiscussionReplying(null);
         }}
         onCancelEdit={() => {
-          if (discussionEditing) clearDraft(discussionEditing);
+          if ( discussionEditing ) clearDraft(discussionEditing);
           setDiscussionEditing(null);
         }}
         onClearFollow={() => {

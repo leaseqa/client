@@ -1,7 +1,7 @@
 "use client";
 
-import {ReactNode} from "react";
-import {Card, CardBody} from "react-bootstrap";
+import { ReactNode } from "react";
+import { Card, CardBody } from "react-bootstrap";
 
 type HeroCardProps = {
   children: ReactNode;

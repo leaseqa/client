@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import useSWR from "swr";
-import {MessageCircle, Scale, Upload} from "lucide-react";
+import { MessageCircle, Scale, Upload } from "lucide-react";
 import * as client from "./client";
 
 type PostItem = {
@@ -20,12 +20,12 @@ const DAY_MS = 86_400_000;
 
 const statsFetcher = async () => {
   const response = await client.fetchStats();
-  if (response && response.data) {
+  if ( response && response.data ) {
     return [
-      {label: "Open questions", value: response.data.unansweredPosts || 0},
-      {label: "Attorney replies", value: response.data.lawyerResponses || 0},
-      {label: "Recent posts", value: response.data.totalPosts || 0},
-      {label: "Notices", value: response.data.adminPosts || 0},
+      { label: "Open questions", value: response.data.unansweredPosts || 0 },
+      { label: "Attorney replies", value: response.data.lawyerResponses || 0 },
+      { label: "Recent posts", value: response.data.totalPosts || 0 },
+      { label: "Notices", value: response.data.adminPosts || 0 },
     ];
   }
   return EMPTY_STATS;
@@ -40,10 +40,10 @@ const hotPostsFetcher = async () => {
 };
 
 const EMPTY_STATS = [
-  {label: "Open questions", value: 0},
-  {label: "Attorney replies", value: 0},
-  {label: "Recent posts", value: 0},
-  {label: "Notices", value: 0},
+  { label: "Open questions", value: 0 },
+  { label: "Attorney replies", value: 0 },
+  { label: "Recent posts", value: 0 },
+  { label: "Notices", value: 0 },
 ];
 
 const STEPS = [
@@ -68,26 +68,26 @@ const STEPS = [
 ];
 
 const getPreviewStatus = (index: number, post: PostItem): PreviewStatus => {
-  if ((post.viewCount || 0) >= 25) {
-    return {label: "Answered", tone: "answered"};
+  if ( (post.viewCount || 0) >= 25 ) {
+    return { label: "Answered", tone: "answered" };
   }
 
-  if (index === 0 || (post.viewCount || 0) >= 10) {
-    return {label: "Active", tone: "active"};
+  if ( index === 0 || (post.viewCount || 0) >= 10 ) {
+    return { label: "Active", tone: "active" };
   }
 
-  return {label: "New", tone: "new"};
+  return { label: "New", tone: "new" };
 };
 
 export default function LandingPage() {
-  const {data: stats = EMPTY_STATS} = useSWR("stats/overview", statsFetcher, {
+  const { data: stats = EMPTY_STATS } = useSWR("stats/overview", statsFetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     dedupingInterval: DAY_MS,
     fallbackData: EMPTY_STATS,
   });
 
-  const {data: hotPosts = []} = useSWR("posts/hot", hotPostsFetcher, {
+  const { data: hotPosts = [] } = useSWR("posts/hot", hotPostsFetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     dedupingInterval: DAY_MS,

@@ -1,5 +1,5 @@
 import React from "react";
-import {FaPlus, FaSync} from "react-icons/fa";
+import { FaPlus, FaSync } from "react-icons/fa";
 
 type FormMode = "closed" | "create" | "edit";
 

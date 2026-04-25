@@ -1,6 +1,6 @@
 import React from "react";
-import {Dropdown} from "react-bootstrap";
-import {FaBell} from "react-icons/fa";
+import { Dropdown } from "react-bootstrap";
+import { FaBell } from "react-icons/fa";
 
 export type NotificationMenuItem = {
   _id: string;
@@ -50,7 +50,7 @@ export default function NotificationsMenu({
           <FaBell className="text-secondary" size={16}/>
         </div>
       </Dropdown.Toggle>
-      <Dropdown.Menu style={{minWidth: 280}}>
+      <Dropdown.Menu style={{ minWidth: 280 }}>
         <div className="px-3 py-2 fw-semibold">Notifications</div>
         <Dropdown.Divider/>
         {loading ? (
@@ -73,7 +73,7 @@ export default function NotificationsMenu({
               {item.summary ? (
                 <div className="text-secondary small">{item.summary}</div>
               ) : null}
-              <div className="text-secondary" style={{fontSize: "0.75rem"}}>
+              <div className="text-secondary" style={{ fontSize: "0.75rem" }}>
                 {formatTime(item.createdAt)}
               </div>
             </Dropdown.Item>

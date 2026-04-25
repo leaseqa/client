@@ -1,7 +1,7 @@
 "use client";
 
-import {useParams, useRouter} from "next/navigation";
-import {useEffect} from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function PostDetailRedirect() {
   const params = useParams();
@@ -9,7 +9,7 @@ export default function PostDetailRedirect() {
   const postId = Array.isArray(params?.id) ? params.id[0] : (params?.id as string);
 
   useEffect(() => {
-    if (postId) {
+    if ( postId ) {
       router.replace(`/qa?post=${postId}`);
     } else {
       router.replace("/qa");

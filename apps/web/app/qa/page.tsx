@@ -1,16 +1,16 @@
 "use client";
 
-import {Suspense, useEffect, useMemo, useState} from "react";
-import {useRouter, useSearchParams} from "next/navigation";
-import {useSelector} from "react-redux";
-import {Col, Row} from "react-bootstrap";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useSelector } from "react-redux";
+import { Col, Row } from "react-bootstrap";
 
-import {RootState} from "@/app/store";
+import { RootState } from "@/app/store";
 
-import {Folder, Post} from "./types";
-import {ComposeState, INITIAL_COMPOSE_STATE} from "./constants";
+import { Folder, Post } from "./types";
+import { ComposeState, INITIAL_COMPOSE_STATE } from "./constants";
 import * as client from "./client";
-import {getTopicLabel} from "@/app/lib/reviewFollowUp";
+import { getTopicLabel } from "@/app/lib/reviewFollowUp";
 
 import ScenarioFilter from "./components/ScenarioFilter";
 import QAToolbar from "./components/QAToolbar";
@@ -55,7 +55,7 @@ function QAPageInner() {
   });
 
   useEffect(() => {
-    if (session.status === "unauthenticated") {
+    if ( session.status === "unauthenticated" ) {
       const query = searchParams.toString();
       const nextHref = query ? `/qa?${query}` : "/qa";
       router.replace(`/auth/login?next=${encodeURIComponent(nextHref)}`);
@@ -72,7 +72,7 @@ function QAPageInner() {
   }, [searchParam, scenario]);
 
   useEffect(() => {
-    if (!composeParam) {
+    if ( !composeParam ) {
       return;
     }
 
@@ -120,7 +120,7 @@ function QAPageInner() {
       setFolders(foldersResponse.data || []);
       const postsResponse = await client.fetchPosts({});
       setPosts(postsResponse.data || []);
-    } catch (error) {
+    } catch ( error ) {
       console.error("Failed to load data:", error);
     } finally {
       setLoading(false);
@@ -129,14 +129,14 @@ function QAPageInner() {
 
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
-      if (showResolved && !post.isResolved) {
+      if ( showResolved && !post.isResolved ) {
         return false;
       }
-      if (!showResolved && post.isResolved) {
+      if ( !showResolved && post.isResolved ) {
         return false;
       }
 
-      if (search) {
+      if ( search ) {
         const query = search.toLowerCase();
         if (
           !post.summary.toLowerCase().includes(query) &&
@@ -146,7 +146,7 @@ function QAPageInner() {
         }
       }
 
-      if (scenario !== "all" && !post.folders.includes(scenario)) {
+      if ( scenario !== "all" && !post.folders.includes(scenario) ) {
         return false;
       }
 
@@ -187,11 +187,11 @@ function QAPageInner() {
 
   const handleSubmitPost = async () => {
     setPostError("");
-    if (!composeState.summary.trim()) {
+    if ( !composeState.summary.trim() ) {
       setPostError("Title is required");
       return;
     }
-    if (!composeState.details.trim()) {
+    if ( !composeState.details.trim() ) {
       setPostError("Content is required");
       return;
     }
@@ -210,17 +210,17 @@ function QAPageInner() {
         isAnonymous: composeState.isAnonymous,
       });
       const newPost = (response as { data?: Post }).data || (response as Post);
-      if (newPost?._id && composeState.files.length > 0) {
+      if ( newPost?._id && composeState.files.length > 0 ) {
         await client
           .uploadPostAttachments(newPost._id, composeState.files)
           .catch(console.error);
       }
       await loadData();
       resetCompose();
-      if (newPost?._id) {
+      if ( newPost?._id ) {
         router.push(`/qa?post=${newPost._id}`);
       }
-    } catch (error: unknown) {
+    } catch ( error: unknown ) {
       const typedError = error as { message?: string };
       setPostError(typedError.message || "Failed to create post");
     } finally {
@@ -228,7 +228,7 @@ function QAPageInner() {
     }
   };
 
-  if (session.status === "loading" || session.status === "unauthenticated") {
+  if ( session.status === "loading" || session.status === "unauthenticated" ) {
     return (
       <PageLoadingState
         message={
@@ -238,11 +238,11 @@ function QAPageInner() {
     );
   }
 
-  if (loading) {
+  if ( loading ) {
     return <PageLoadingState message="Loading questions..."/>;
   }
 
-  if (composeParam) {
+  if ( composeParam ) {
     return (
       <div className="qa-compose-page">
         <section className="qa-compose-header">

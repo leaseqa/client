@@ -1,6 +1,6 @@
 import React from "react";
-import {FaEdit, FaTrash} from "react-icons/fa";
-import {Folder, FolderDraft} from "../../types";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { Folder, FolderDraft } from "../../types";
 
 type SectionsTableProps = {
   folders: Folder[];

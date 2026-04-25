@@ -7,7 +7,7 @@ type TemplateItemProps = {
   onClick?: () => void;
 };
 
-export default function TemplateItem({label, description, index, onClick}: TemplateItemProps) {
+export default function TemplateItem({ label, description, index, onClick }: TemplateItemProps) {
   return (
     <div className={`template-item ${onClick ? "is-clickable" : ""}`} onClick={onClick}>
       <div className="template-item-top">

@@ -1,4 +1,4 @@
-import type {Config} from "tailwindcss";
+import type { Config } from "tailwindcss";
 import sharedConfig from "@leaseqa/config/tailwind-config";
 
 const config: Config = {

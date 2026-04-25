@@ -1,11 +1,11 @@
 "use client";
 
-import React, {useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
-import {setGuestSession, setSession, signOut} from "@/app/store";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setGuestSession, setSession, signOut } from "@/app/store";
 import * as client from "./client";
 
-export default function SessionLoader({children}: { children: React.ReactNode }) {
+export default function SessionLoader({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch();
   const [ready, setReady] = useState(false);
 
@@ -13,13 +13,13 @@ export default function SessionLoader({children}: { children: React.ReactNode })
     const loadSession = async () => {
       try {
         const user = await client.fetchSession();
-        if (user && typeof user === "object") {
+        if ( user && typeof user === "object" ) {
           dispatch(setSession((user as any).data || user));
           localStorage.removeItem("guest_session");
         }
       } catch {
         const isGuest = localStorage.getItem("guest_session") === "true";
-        if (isGuest) {
+        if ( isGuest ) {
           dispatch(setGuestSession());
         } else {
           dispatch(signOut());
@@ -32,7 +32,7 @@ export default function SessionLoader({children}: { children: React.ReactNode })
     loadSession();
   }, [dispatch]);
 
-  if (!ready) {
+  if ( !ready ) {
     return null;
   }
 

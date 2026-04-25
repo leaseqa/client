@@ -5,7 +5,7 @@ type StatBoxProps = {
   value: number | string;
 };
 
-export default function StatBox({label, value}: StatBoxProps) {
+export default function StatBox({ label, value }: StatBoxProps) {
   return (
     <div className="stat-box">
       <div className="text-secondary small mb-1">{label}</div>

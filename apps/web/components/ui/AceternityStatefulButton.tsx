@@ -1,8 +1,8 @@
 "use client";
 
-import {AnimatePresence, motion} from "motion/react";
-import {Check, LoaderCircle} from "lucide-react";
-import type {ButtonHTMLAttributes, ReactNode} from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { Check, LoaderCircle } from "lucide-react";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type ButtonStatus = "idle" | "loading" | "success";
 
@@ -30,7 +30,7 @@ export default function AceternityStatefulButton({
       layout
       type="button"
       className={`acet-stateful-button ${status === "success" ? "is-success" : ""} ${className}`.trim()}
-      whileTap={isDisabled ? undefined : {scale: 0.985}}
+      whileTap={isDisabled ? undefined : { scale: 0.985 }}
       disabled={isDisabled}
       {...props}
     >
@@ -39,9 +39,9 @@ export default function AceternityStatefulButton({
                     {status === "loading" ? (
                       <motion.span
                         key="loading"
-                        initial={{opacity: 0, scale: 0.8}}
-                        animate={{opacity: 1, scale: 1}}
-                        exit={{opacity: 0, scale: 0.8}}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
                         className="acet-stateful-button-icon"
                       >
                         <LoaderCircle size={16} className="acet-stateful-button-spinner"/>
@@ -49,9 +49,9 @@ export default function AceternityStatefulButton({
                     ) : status === "success" ? (
                       <motion.span
                         key="success"
-                        initial={{opacity: 0, scale: 0.8}}
-                        animate={{opacity: 1, scale: 1}}
-                        exit={{opacity: 0, scale: 0.8}}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
                         className="acet-stateful-button-icon"
                       >
                         <Check size={16}/>

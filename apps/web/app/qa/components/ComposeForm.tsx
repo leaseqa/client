@@ -2,13 +2,13 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import {FaPaperclip, FaTimes} from "react-icons/fa";
-import {Scale} from "lucide-react";
+import { FaPaperclip, FaTimes } from "react-icons/fa";
+import { Scale } from "lucide-react";
 
-import {ComposeState} from "../constants";
-import {Folder} from "../types";
+import { ComposeState } from "../constants";
+import { Folder } from "../types";
 
-const ReactQuill = dynamic(() => import("react-quill-new"), {ssr: false});
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 type ComposeFormProps = {
   composeState: ComposeState;
@@ -34,19 +34,19 @@ export default function ComposeForm({
   const isAiReviewDraft = prefillSource === "ai-review";
 
   const handleAddFolder = (value: string) => {
-    if (!value || composeState.folders.includes(value)) {
+    if ( !value || composeState.folders.includes(value) ) {
       return;
     }
-    onUpdateAction({folders: [...composeState.folders, value]});
+    onUpdateAction({ folders: [...composeState.folders, value] });
   };
 
   const handleRemoveFolder = (folder: string) => {
-    onUpdateAction({folders: composeState.folders.filter((currentFolder) => currentFolder !== folder)});
+    onUpdateAction({ folders: composeState.folders.filter((currentFolder) => currentFolder !== folder) });
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
-    onUpdateAction({files});
+    onUpdateAction({ files });
   };
 
   const getFolderLabel = (name: string) => {
@@ -125,7 +125,7 @@ export default function ComposeForm({
               className="compose-form-input"
               placeholder='Short question, for example: "Is this deposit clause normal?"'
               value={composeState.summary}
-              onChange={(event) => onUpdateAction({summary: event.target.value.slice(0, 100)})}
+              onChange={(event) => onUpdateAction({ summary: event.target.value.slice(0, 100) })}
               maxLength={100}
             />
           </div>
@@ -137,7 +137,7 @@ export default function ComposeForm({
               <ReactQuill
                 theme="snow"
                 value={composeState.details}
-                onChange={(value) => onUpdateAction({details: value})}
+                onChange={(value) => onUpdateAction({ details: value })}
               />
             </div>
           </div>
@@ -178,7 +178,7 @@ export default function ComposeForm({
                       type="radio"
                       name="urgency"
                       checked={composeState.urgency === level}
-                      onChange={() => onUpdateAction({urgency: level})}
+                      onChange={() => onUpdateAction({ urgency: level })}
                     />
                     <span>{level.charAt(0).toUpperCase() + level.slice(1)}</span>
                   </label>
@@ -192,7 +192,7 @@ export default function ComposeForm({
                 <input
                   type="checkbox"
                   checked={composeState.isAnonymous}
-                  onChange={(event) => onUpdateAction({isAnonymous: event.target.checked})}
+                  onChange={(event) => onUpdateAction({ isAnonymous: event.target.checked })}
                 />
                 <span>Post anonymously</span>
               </label>

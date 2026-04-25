@@ -1,12 +1,12 @@
 "use client";
 
-import React, {useState} from "react";
-import {FcGoogle} from "react-icons/fc";
+import React, { useState } from "react";
+import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
-import {useRouter} from "next/navigation";
-import {useDispatch} from "react-redux";
-import {setSession} from "@/app/store";
-import {Alert, Form, Modal} from "react-bootstrap";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { setSession } from "@/app/store";
+import { Alert, Form, Modal } from "react-bootstrap";
 import * as client from "../client";
 import PageLoadingState from "@/components/ui/PageLoadingState";
 
@@ -25,15 +25,15 @@ export default function RegisterPage() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
-    setFormData((prev) => ({...prev, [name]: value}));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (formData.password !== formData.confirmPassword) {
+    if ( formData.password !== formData.confirmPassword ) {
       setError("Passwords do not match");
       return;
     }
@@ -49,7 +49,7 @@ export default function RegisterPage() {
       });
       dispatch(setSession(user.data || user));
       setShowSuccess(true);
-    } catch (err: any) {
+    } catch ( err: any ) {
       const message =
         err.response?.data?.error?.message ||
         err.message ||
@@ -60,7 +60,7 @@ export default function RegisterPage() {
     }
   };
 
-  if (loading) {
+  if ( loading ) {
     return <PageLoadingState message="Creating account..."/>;
   }
 

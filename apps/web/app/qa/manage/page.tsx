@@ -1,11 +1,11 @@
 "use client";
 
-import {useCallback, useEffect, useMemo, useState} from "react";
-import {useSelector} from "react-redux";
-import {useRouter} from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 import * as client from "../client";
-import {RootState} from "@/app/store";
-import type {Folder, FolderDraft, User} from "../types";
+import { RootState } from "@/app/store";
+import type { Folder, FolderDraft, User } from "../types";
 import {
   CreateSectionForm,
   ManageAlerts,
@@ -15,9 +15,9 @@ import {
   ManageStats,
   ManageUsersSection,
 } from "./components";
-import {getDisplayMetrics, getSectionEditorState, shouldKeepEditorOpenAfterRefetch} from "./view-model";
+import { getDisplayMetrics, getSectionEditorState, shouldKeepEditorOpenAfterRefetch } from "./view-model";
 
-const EMPTY_DRAFT: FolderDraft = {name: "", displayName: "", description: "", color: ""};
+const EMPTY_DRAFT: FolderDraft = { name: "", displayName: "", description: "", color: "" };
 
 type DatasetState<T> = {
   data: T[];
@@ -68,30 +68,30 @@ export default function ManageSectionsPage() {
 
   // Fetch helpers
   const reloadUsers = useCallback(async (): Promise<ReloadResult<User>> => {
-    setUsersState((s) => ({...s, isLoading: true, error: s.hasLoaded ? s.error : ""}));
+    setUsersState((s) => ({ ...s, isLoading: true, error: s.hasLoaded ? s.error : "" }));
     try {
       const res = await client.fetchAllUsers();
       const data: User[] = (res as any)?.data || res || [];
-      setUsersState({data, isLoading: false, hasLoaded: true, error: ""});
-      return {ok: true, data};
-    } catch (e: any) {
+      setUsersState({ data, isLoading: false, hasLoaded: true, error: "" });
+      return { ok: true, data };
+    } catch ( e: any ) {
       const message = e?.message || "Failed to load users";
-      setUsersState((s) => ({...s, isLoading: false, hasLoaded: s.hasLoaded, error: message}));
-      return {ok: false, error: message};
+      setUsersState((s) => ({ ...s, isLoading: false, hasLoaded: s.hasLoaded, error: message }));
+      return { ok: false, error: message };
     }
   }, []);
 
   const reloadSections = useCallback(async (): Promise<ReloadResult<Folder>> => {
-    setSectionsState((s) => ({...s, isLoading: true, error: s.hasLoaded ? s.error : ""}));
+    setSectionsState((s) => ({ ...s, isLoading: true, error: s.hasLoaded ? s.error : "" }));
     try {
       const res = await client.fetchFolders();
       const data: Folder[] = (res as any)?.data || res || [];
-      setSectionsState({data, isLoading: false, hasLoaded: true, error: ""});
-      return {ok: true, data};
-    } catch (e: any) {
+      setSectionsState({ data, isLoading: false, hasLoaded: true, error: "" });
+      return { ok: true, data };
+    } catch ( e: any ) {
       const message = e?.message || "Failed to load sections";
-      setSectionsState((s) => ({...s, isLoading: false, hasLoaded: s.hasLoaded, error: message}));
-      return {ok: false, error: message};
+      setSectionsState((s) => ({ ...s, isLoading: false, hasLoaded: s.hasLoaded, error: message }));
+      return { ok: false, error: message };
     }
   }, []);
 
@@ -113,28 +113,28 @@ export default function ManageSectionsPage() {
       setFormMode("closed");
       setEditedSectionId(null);
       setSectionDraft(EMPTY_DRAFT);
-      setLatest({kind: "error", message: "The section you were editing no longer exists. Editor closed."});
+      setLatest({ kind: "error", message: "The section you were editing no longer exists. Editor closed." });
       return;
     }
 
-    if (!usersResult.ok && !sectionsResult.ok) {
-      setLatest({kind: "error", message: "Failed to refresh users and sections."});
+    if ( !usersResult.ok && !sectionsResult.ok ) {
+      setLatest({ kind: "error", message: "Failed to refresh users and sections." });
       return;
     }
 
-    if (!usersResult.ok) {
-      setLatest({kind: "error", message: usersResult.error});
+    if ( !usersResult.ok ) {
+      setLatest({ kind: "error", message: usersResult.error });
       return;
     }
 
-    if (!sectionsResult.ok) {
-      setLatest({kind: "error", message: sectionsResult.error});
+    if ( !sectionsResult.ok ) {
+      setLatest({ kind: "error", message: sectionsResult.error });
     }
   }, [formMode, editedSectionId, reloadUsers, reloadSections]);
 
   // Auth gating + initial load
   useEffect(() => {
-    if (!isAdmin) {
+    if ( !isAdmin ) {
       router.push("/qa");
       return;
     }
@@ -177,11 +177,11 @@ export default function ManageSectionsPage() {
         const refresh = await reloadUsers();
         setLatest(
           refresh.ok
-            ? {kind: "success", message: "User role updated."}
-            : {kind: "error", message: "User role updated, but failed to refresh users."},
+            ? { kind: "success", message: "User role updated." }
+            : { kind: "error", message: "User role updated, but failed to refresh users." },
         );
-      } catch (e: any) {
-        setLatest({kind: "error", message: e?.message || "Failed to update user role"});
+      } catch ( e: any ) {
+        setLatest({ kind: "error", message: e?.message || "Failed to update user role" });
       }
     });
   };
@@ -193,11 +193,11 @@ export default function ManageSectionsPage() {
         const refresh = await reloadUsers();
         setLatest(
           refresh.ok
-            ? {kind: "success", message: "Lawyer verified."}
-            : {kind: "error", message: "Lawyer verified, but failed to refresh users."},
+            ? { kind: "success", message: "Lawyer verified." }
+            : { kind: "error", message: "Lawyer verified, but failed to refresh users." },
         );
-      } catch (e: any) {
-        setLatest({kind: "error", message: e?.message || "Failed to verify lawyer"});
+      } catch ( e: any ) {
+        setLatest({ kind: "error", message: e?.message || "Failed to verify lawyer" });
       }
     });
   };
@@ -205,36 +205,36 @@ export default function ManageSectionsPage() {
   const handleToggleBan = async (userId: string, banned: boolean) => {
     const action = banned ? "ban" : "unban";
     const target = usersState.data.find((u) => u._id === userId);
-    if (!window.confirm(`Are you sure you want to ${action} "${target?.username || ""}"?`)) return;
+    if ( !window.confirm(`Are you sure you want to ${action} "${target?.username || ""}"?`) ) return;
     await withUserPending(`${userId}:ban`, async () => {
       try {
         await client.banUser(userId, banned);
         const refresh = await reloadUsers();
         setLatest(
           refresh.ok
-            ? {kind: "success", message: `User ${banned ? "banned" : "unbanned"}.`}
-            : {kind: "error", message: `User ${banned ? "banned" : "unbanned"}, but failed to refresh users.`},
+            ? { kind: "success", message: `User ${banned ? "banned" : "unbanned"}.` }
+            : { kind: "error", message: `User ${banned ? "banned" : "unbanned"}, but failed to refresh users.` },
         );
-      } catch (e: any) {
-        setLatest({kind: "error", message: e?.message || `Failed to ${action} user`});
+      } catch ( e: any ) {
+        setLatest({ kind: "error", message: e?.message || `Failed to ${action} user` });
       }
     });
   };
 
   const handleDeleteUser = async (userId: string) => {
     const target = usersState.data.find((u) => u._id === userId);
-    if (!window.confirm(`Delete user "${target?.username || ""}"? This cannot be undone.`)) return;
+    if ( !window.confirm(`Delete user "${target?.username || ""}"? This cannot be undone.`) ) return;
     await withUserPending(`${userId}:delete`, async () => {
       try {
         await client.deleteUser(userId);
         const refresh = await reloadUsers();
         setLatest(
           refresh.ok
-            ? {kind: "success", message: "User deleted."}
-            : {kind: "error", message: "User deleted, but failed to refresh users."},
+            ? { kind: "success", message: "User deleted." }
+            : { kind: "error", message: "User deleted, but failed to refresh users." },
         );
-      } catch (e: any) {
-        setLatest({kind: "error", message: e?.message || "Failed to delete user"});
+      } catch ( e: any ) {
+        setLatest({ kind: "error", message: e?.message || "Failed to delete user" });
       }
     });
   };
@@ -251,18 +251,18 @@ export default function ManageSectionsPage() {
 
   const handleDeleteSection = async (id: string) => {
     const target = sectionsState.data.find((f) => f._id === id);
-    if (!window.confirm(`Delete section "${target?.displayName || ""}"?`)) return;
+    if ( !window.confirm(`Delete section "${target?.displayName || ""}"?`) ) return;
     await withSectionPending(`${id}:delete`, async () => {
       try {
         await client.deleteFolder(id);
         const refresh = await reloadSections();
         setLatest(
           refresh.ok
-            ? {kind: "success", message: "Section deleted."}
-            : {kind: "error", message: "Section deleted, but failed to refresh sections."},
+            ? { kind: "success", message: "Section deleted." }
+            : { kind: "error", message: "Section deleted, but failed to refresh sections." },
         );
-      } catch (e: any) {
-        setLatest({kind: "error", message: e?.message || "Failed to delete section"});
+      } catch ( e: any ) {
+        setLatest({ kind: "error", message: e?.message || "Failed to delete section" });
       }
     });
   };
@@ -277,7 +277,7 @@ export default function ManageSectionsPage() {
 
   const openEdit = (id: string) => {
     const folder = sectionsState.data.find((f) => f._id === id);
-    if (!folder) return;
+    if ( !folder ) return;
     setFormMode("edit");
     setEditedSectionId(id);
     setSectionDraft({
@@ -302,13 +302,13 @@ export default function ManageSectionsPage() {
     setSubmitError("");
     setRefetchError("");
     // validation
-    if (formMode === "create") {
-      if (!sectionDraft.name.trim() || !sectionDraft.displayName.trim()) {
+    if ( formMode === "create" ) {
+      if ( !sectionDraft.name.trim() || !sectionDraft.displayName.trim() ) {
         setSubmitError("Name and Display Name are required.");
         return;
       }
-    } else if (formMode === "edit") {
-      if (!sectionDraft.displayName.trim()) {
+    } else if ( formMode === "edit" ) {
+      if ( !sectionDraft.displayName.trim() ) {
         setSubmitError("Display Name is required.");
         return;
       }
@@ -318,31 +318,31 @@ export default function ManageSectionsPage() {
 
     try {
       setSavePending(true);
-      if (formMode === "create") {
+      if ( formMode === "create" ) {
         await client.createFolder({
           name: sectionDraft.name.trim(),
           displayName: sectionDraft.displayName.trim(),
           description: sectionDraft.description?.trim() || "",
           color: sectionDraft.color || undefined,
         });
-        setLatest({kind: "success", message: "Section created successfully."});
-      } else if (formMode === "edit" && editedSectionId) {
+        setLatest({ kind: "success", message: "Section created successfully." });
+      } else if ( formMode === "edit" && editedSectionId ) {
         await client.updateFolder(editedSectionId, {
           displayName: sectionDraft.displayName.trim(),
           description: sectionDraft.description?.trim() || "",
           color: sectionDraft.color,
         });
-        setLatest({kind: "success", message: "Section updated successfully."});
+        setLatest({ kind: "success", message: "Section updated successfully." });
       }
 
       // After save, refetch sections BEFORE closing
       const refresh = await reloadSections();
-      if (refresh.ok) {
+      if ( refresh.ok ) {
         cancelEditor();
       } else {
         setRefetchError(refresh.error);
       }
-    } catch (e: any) {
+    } catch ( e: any ) {
       setSubmitError(e?.message || "Failed to save section");
     } finally {
       setSavePending(false);
@@ -351,7 +351,7 @@ export default function ManageSectionsPage() {
 
   const retryRefetchAfterSave = async () => {
     const refresh = await reloadSections();
-    if (refresh.ok) {
+    if ( refresh.ok ) {
       setRefetchError("");
       cancelEditor();
     } else {

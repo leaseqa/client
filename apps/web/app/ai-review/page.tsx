@@ -1,19 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {useRouter} from "next/navigation";
-import {Badge, Form, Spinner} from "react-bootstrap";
-import {Clock3, FileText, MessageSquareQuote, Shield} from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Badge, Form, Spinner } from "react-bootstrap";
+import { Clock3, FileText, MessageSquareQuote, Shield } from "lucide-react";
 
-import ToastNotification, {ToastData,} from "@/components/ui/ToastNotification";
+import ToastNotification, { ToastData, } from "@/components/ui/ToastNotification";
 import AceternityFileUpload from "@/components/ui/AceternityFileUpload";
 import AceternityStatefulButton from "@/components/ui/AceternityStatefulButton";
 import PageLoadingState from "@/components/ui/PageLoadingState";
 import * as client from "./client";
-import {RagSession} from "./types";
-import {useSelector} from "react-redux";
-import {RootState} from "@/app/store";
+import { RagSession } from "./types";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 import {
   AUTO_ANALYZE_QUESTION,
   CHAT_UPLOAD_ACCEPT,
@@ -31,20 +31,20 @@ import {
 } from "./view-model";
 
 const formatStatusLabel = (status: RagSession["status"]) => {
-  if (status === "ready") {
+  if ( status === "ready" ) {
     return "Ready";
   }
-  if (status === "failed") {
+  if ( status === "failed" ) {
     return "Failed";
   }
   return "Indexing";
 };
 
 const formatStatusVariant = (status: RagSession["status"]) => {
-  if (status === "ready") {
+  if ( status === "ready" ) {
     return "success";
   }
-  if (status === "failed") {
+  if ( status === "failed" ) {
     return "danger";
   }
   return "warning";
@@ -87,7 +87,7 @@ export default function AIReviewPage() {
   const revealTimerRef = useRef<number | null>(null);
 
   const showToast = useCallback((message: string, type: "success" | "error") => {
-    setToast({show: true, message, type});
+    setToast({ show: true, message, type });
   }, []);
 
   const loadSessions = useCallback(async () => {
@@ -96,12 +96,12 @@ export default function AIReviewPage() {
       const data = await client.fetchSessions();
       setSessions(data);
       setActiveSession((current) => {
-        if (!current) {
+        if ( !current ) {
           return data[0] || null;
         }
         return data.find((item) => item._id === current._id) || data[0] || null;
       });
-    } catch (error: any) {
+    } catch ( error: any ) {
       showToast(
         error.response?.data?.error?.message || "Failed to load chats.",
         "error",
@@ -112,7 +112,7 @@ export default function AIReviewPage() {
   }, [showToast]);
 
   const stopReveal = useCallback(() => {
-    if (revealTimerRef.current) {
+    if ( revealTimerRef.current ) {
       window.clearTimeout(revealTimerRef.current);
       revealTimerRef.current = null;
     }
@@ -121,7 +121,7 @@ export default function AIReviewPage() {
 
   const startReveal = useCallback((messageKey: string, fullText: string) => {
     stopReveal();
-    if (!fullText) {
+    if ( !fullText ) {
       return;
     }
     setRevealingMessage({
@@ -139,7 +139,7 @@ export default function AIReviewPage() {
         const next = current.filter((item) => item._id !== data._id);
         return [data, ...next];
       });
-    } catch (error: any) {
+    } catch ( error: any ) {
       showToast(
         error.response?.data?.error?.message || "Failed to refresh this chat.",
         "error",
@@ -148,17 +148,17 @@ export default function AIReviewPage() {
   }, [showToast]);
 
   useEffect(() => {
-    if (session.status === "unauthenticated") {
+    if ( session.status === "unauthenticated" ) {
       router.replace("/auth/login?next=%2Fai-review");
       return;
     }
-    if (hasAccess) {
+    if ( hasAccess ) {
       void loadSessions();
     }
   }, [session.status, router, hasAccess, loadSessions]);
 
   useEffect(() => {
-    if (!activeSession || activeSession.status !== "indexing") {
+    if ( !activeSession || activeSession.status !== "indexing" ) {
       return;
     }
 
@@ -170,25 +170,25 @@ export default function AIReviewPage() {
   }, [activeSession, refreshActiveSession]);
 
   useEffect(() => {
-    if (!revealingMessage) {
+    if ( !revealingMessage ) {
       return;
     }
 
-    if (revealingMessage.visibleLength >= revealingMessage.fullText.length) {
+    if ( revealingMessage.visibleLength >= revealingMessage.fullText.length ) {
       stopReveal();
       return;
     }
 
     revealTimerRef.current = window.setTimeout(() => {
       setRevealingMessage((current) => {
-        if (!current) {
+        if ( !current ) {
           return current;
         }
         const nextLength = getNextRevealLength(
           current.visibleLength,
           current.fullText,
         );
-        if (nextLength >= current.fullText.length) {
+        if ( nextLength >= current.fullText.length ) {
           return null;
         }
         return {
@@ -200,7 +200,7 @@ export default function AIReviewPage() {
     }, 18);
 
     return () => {
-      if (revealTimerRef.current) {
+      if ( revealTimerRef.current ) {
         window.clearTimeout(revealTimerRef.current);
         revealTimerRef.current = null;
       }
@@ -209,7 +209,7 @@ export default function AIReviewPage() {
 
   useEffect(() => {
     return () => {
-      if (revealTimerRef.current) {
+      if ( revealTimerRef.current ) {
         window.clearTimeout(revealTimerRef.current);
       }
     };
@@ -244,7 +244,7 @@ export default function AIReviewPage() {
     const latestAssistantIndex = [...visibleMessages]
       .reverse()
       .findIndex((message) => message.role === "assistant");
-    if (latestAssistantIndex === -1) {
+    if ( latestAssistantIndex === -1 ) {
       return;
     }
     const actualIndex = visibleMessages.length - 1 - latestAssistantIndex;
@@ -253,17 +253,17 @@ export default function AIReviewPage() {
   }, [startReveal]);
 
   const submitQuestion = useCallback(async (rawQuestion: string) => {
-    if (!activeSession) {
+    if ( !activeSession ) {
       showToast("Create a chat source first.", "error");
       return;
     }
-    if (activeSession.status !== "ready") {
+    if ( activeSession.status !== "ready" ) {
       showToast("This source is still indexing. Try again in a moment.", "error");
       return;
     }
 
     const trimmedQuestion = rawQuestion.trim();
-    if (!trimmedQuestion) {
+    if ( !trimmedQuestion ) {
       return;
     }
 
@@ -283,7 +283,7 @@ export default function AIReviewPage() {
         ...current.filter((item) => item._id !== result.session._id),
       ]);
       triggerLatestAssistantReveal(result.session);
-    } catch (error: any) {
+    } catch ( error: any ) {
       setPendingUserQuestion(null);
       setPendingAssistantLabel(null);
       setQuestion(trimmedQuestion);
@@ -304,19 +304,19 @@ export default function AIReviewPage() {
       hasFile: Boolean(selectedFile),
       sourceText,
     });
-    if (inputPlan.error) {
+    if ( inputPlan.error ) {
       showToast(inputPlan.error, "error");
       return;
     }
 
     const formData = new FormData();
-    if (selectedFile) {
+    if ( selectedFile ) {
       formData.set("file", selectedFile);
     }
-    if (sourceText.trim()) {
+    if ( sourceText.trim() ) {
       formData.set("sourceText", sourceText.trim());
     }
-    if (inputPlan.initialQuestion) {
+    if ( inputPlan.initialQuestion ) {
       formData.set("initialQuestion", inputPlan.initialQuestion);
       setPendingDraftSource({
         sourceName: "pasted-text",
@@ -342,11 +342,11 @@ export default function AIReviewPage() {
       setSourceText("");
       setSelectedFile(null);
       setUploadResetKey((current) => current + 1);
-      if (inputPlan.initialQuestion) {
+      if ( inputPlan.initialQuestion ) {
         const hasAssistantAnswer = getVisibleMessages(created).some(
           (message) => message.role === "assistant",
         );
-        if (hasAssistantAnswer) {
+        if ( hasAssistantAnswer ) {
           triggerLatestAssistantReveal(created);
         } else {
           showToast(
@@ -362,7 +362,7 @@ export default function AIReviewPage() {
           "success",
         );
       }
-    } catch (error: any) {
+    } catch ( error: any ) {
       setPendingDraftSource(null);
       setPendingAssistantLabel(null);
       showToast(
@@ -379,7 +379,7 @@ export default function AIReviewPage() {
     await submitQuestion(question);
   };
 
-  if (session.status === "loading" || session.status === "unauthenticated") {
+  if ( session.status === "loading" || session.status === "unauthenticated" ) {
     return (
       <PageLoadingState
         message={
@@ -395,7 +395,7 @@ export default function AIReviewPage() {
     <div className="review-flow">
       <ToastNotification
         toast={toast}
-        onClose={() => setToast({...toast, show: false})}
+        onClose={() => setToast({ ...toast, show: false })}
       />
 
       <section className="review-header-section">
@@ -503,7 +503,7 @@ export default function AIReviewPage() {
       <section className="review-results-section">
         <div className="review-results-header">
           <div>
-            <h2 className="qa-page-title" style={{fontSize: "1.4rem"}}>
+            <h2 className="qa-page-title" style={{ fontSize: "1.4rem" }}>
               {showSession ? resultsPanelState.title : "Chat"}
             </h2>
             <p className="qa-page-sub">
@@ -674,7 +674,7 @@ export default function AIReviewPage() {
                       </div>
                     ) : null}
                     <div className="review-history-inline">
-                      {getEmptyStateMessage({activeSession})}
+                      {getEmptyStateMessage({ activeSession })}
                     </div>
                   </>
                 )}
