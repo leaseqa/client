@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const axiosWithCredentials = axios.create({ withCredentials: true });
+const axiosWithCredentials = axios.create({withCredentials: true});
 const HOST = (process.env.NEXT_PUBLIC_HTTP_SERVER || "").replace(/\/$/, "");
 export const API_BASE = HOST ? `${HOST}/api` : "/api";
 
@@ -30,6 +30,6 @@ export async function fetchPosts() {
     return response.data;
   } catch (error) {
     console.error("Failed to fetch posts:", error);
-    return { data: [] };
+    return {data: []};
   }
 }

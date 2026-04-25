@@ -9,7 +9,8 @@ LeaseQA now has a working v2 product across two versioned repositories, but the 
 - server repo README and AGENTS notes
 - historical design records and milestone plans
 
-That split is why product documentation drifts. There is no single versioned source of truth, no doc ownership boundary, and no repository-level instruction that says "if you change feature X, you must also review document Y."
+That split is why product documentation drifts. There is no single versioned source of truth, no doc ownership boundary,
+and no repository-level instruction that says "if you change feature X, you must also review document Y."
 
 This design fixes the problem in two layers:
 
@@ -35,7 +36,8 @@ This design fixes the problem in two layers:
 
 ### Unversioned product brief
 
-The workspace root contains `PRD.md`, but `/Users/Z1nk/Desktop/proj/leaseqa` is not a git repository. That means the product brief is not versioned with either client or server code and can quietly drift.
+The workspace root contains `PRD.md`, but `/Users/Z1nk/Desktop/proj/leaseqa` is not a git repository. That means the
+product brief is not versioned with either client or server code and can quietly drift.
 
 ### Stale implementation docs
 
@@ -49,11 +51,14 @@ Several docs still describe v1 or early prototype assumptions:
 
 ### No documentation contract
 
-There is no root `AGENTS.md` in version control, no client `AGENTS.md`, and the existing server `AGENTS.md` only covers RAG notes. Nothing tells future agents or contributors which docs are authoritative or which must be reviewed when features change.
+There is no root `AGENTS.md` in version control, no client `AGENTS.md`, and the existing server `AGENTS.md` only covers
+RAG notes. Nothing tells future agents or contributors which docs are authoritative or which must be reviewed when
+features change.
 
 ## Recommended Approach
 
-Use the client repo as the canonical home for current product docs and keep the server repo focused on backend-specific operational docs.
+Use the client repo as the canonical home for current product docs and keep the server repo focused on backend-specific
+operational docs.
 
 This is preferred over keeping canonical docs in the workspace root because:
 
@@ -61,7 +66,8 @@ This is preferred over keeping canonical docs in the workspace root because:
 - the client repo already carries the main user-facing product entry points
 - most cross-cutting product decisions are driven by user experience and public behavior
 
-The server repo should still keep its own service-level docs, but they should point back to the canonical product docs where appropriate.
+The server repo should still keep its own service-level docs, but they should point back to the canonical product docs
+where appropriate.
 
 ## Canonical Documentation Set
 
@@ -108,7 +114,8 @@ These should stay available, but the docs map should label them as historical re
 
 ### Workspace-root PRD
 
-The root `PRD.md` should no longer be treated as the canonical product spec. Since it is not versioned, it should either:
+The root `PRD.md` should no longer be treated as the canonical product spec. Since it is not versioned, it should
+either:
 
 - become a short pointer to the versioned canonical PRD in `leaseqa-client/docs/product-prd.md`, or
 - be kept only as a local convenience copy with a clear header stating that the tracked version lives in the client repo
@@ -126,7 +133,8 @@ Create a new client `AGENTS.md` that defines:
 - a feature-to-doc impact checklist:
   - AI review / RAG changes -> review `README.md`, `docs/product-prd.md`, `docs/api-design.md`, `docs/architecture.md`
   - auth/account/notifications changes -> review the same docs plus `docs/release-checklist.md`
-  - Q&A/admin/moderation changes -> review `README.md`, `docs/product-prd.md`, `docs/api-design.md`, `docs/release-checklist.md`
+  - Q&A/admin/moderation changes -> review `README.md`, `docs/product-prd.md`, `docs/api-design.md`,
+    `docs/release-checklist.md`
 - a rule that documentation impact must be checked before claiming feature work is complete
 
 ### Server `AGENTS.md`
@@ -162,7 +170,8 @@ Rewrite to reflect the real architecture:
 
 ### `docs/api-design.md`
 
-Rewrite away from the old `/api/ai-review` and NextAuth assumptions. Cover the current auth, account, activity, posts, answers, discussions, folders, moderation, stats, and rag endpoints at a summary level.
+Rewrite away from the old `/api/ai-review` and NextAuth assumptions. Cover the current auth, account, activity, posts,
+answers, discussions, folders, moderation, stats, and rag endpoints at a summary level.
 
 ### `docs/project-plan.md`
 
@@ -170,7 +179,8 @@ Convert this into an explicitly archived v1 milestone record so it is no longer 
 
 ### `README.md` files
 
-Refresh client and server README files so they are consistent with the canonical docs and include the newly shipped auth/activity/notification capabilities.
+Refresh client and server README files so they are consistent with the canonical docs and include the newly shipped
+auth/activity/notification capabilities.
 
 ## Verification
 

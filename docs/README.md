@@ -31,7 +31,8 @@ These documents remain useful, but they are not the current source of truth:
 ## Cross-Repo Docs
 
 - Server operational docs live in [leaseqa-server/README.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/README.md)
-- Server-specific implementation notes live in [leaseqa-server/AGENTS.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/AGENTS.md)
+- Server-specific implementation notes live
+  in [leaseqa-server/AGENTS.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/AGENTS.md)
 
 ## Maintenance Rule
 

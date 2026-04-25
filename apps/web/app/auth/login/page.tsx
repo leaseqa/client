@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import { FiUser } from "react-icons/fi";
+import React, {useState} from "react";
+import {FcGoogle} from "react-icons/fc";
+import {FiUser} from "react-icons/fi";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { setGuestSession, setSession } from "@/app/store";
-import { Alert, Form } from "react-bootstrap";
+import {useRouter, useSearchParams} from "next/navigation";
+import {useDispatch} from "react-redux";
+import {setGuestSession, setSession} from "@/app/store";
+import {Alert, Form} from "react-bootstrap";
 import * as client from "../client";
 import PageLoadingState from "@/components/ui/PageLoadingState";
 
@@ -18,13 +18,13 @@ export default function LoginPage() {
   const nextHref = searchParams.get("next");
   const safeNextHref = nextHref && nextHref.startsWith("/") ? nextHref : null;
 
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({email: "", password: ""});
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const {name, value} = e.target;
+    setFormData((prev) => ({...prev, [name]: value}));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,7 +55,7 @@ export default function LoginPage() {
   };
 
   if (loading) {
-    return <PageLoadingState message="Signing in..." />;
+    return <PageLoadingState message="Signing in..."/>;
   }
 
   return (
@@ -106,7 +106,7 @@ export default function LoginPage() {
               href={`${process.env.NEXT_PUBLIC_HTTP_SERVER || "http://localhost:4000"}/api/auth/google`}
               className="btn-warm-outline w-100 mb-3 d-block text-center text-decoration-none"
             >
-              <FcGoogle size={20} className="me-2" />Continue with Google
+              <FcGoogle size={20} className="me-2"/>Continue with Google
             </a>
 
             <button
@@ -114,7 +114,7 @@ export default function LoginPage() {
               className="btn-warm-outline w-100 mb-3"
               onClick={handleGuestLogin}
             >
-              <FiUser size={20} className="me-2" />Continue as Guest
+              <FiUser size={20} className="me-2"/>Continue as Guest
             </button>
           </Form>
 

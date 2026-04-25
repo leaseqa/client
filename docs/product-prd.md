@@ -2,7 +2,8 @@
 
 ## Product Summary
 
-LeaseQA helps Boston-area renters understand lease language, compare it against Massachusetts tenant-rights guidance, and ask follow-up questions in a community workflow that includes tenants, lawyers, and admins.
+LeaseQA helps Boston-area renters understand lease language, compare it against Massachusetts tenant-rights guidance,
+and ask follow-up questions in a community workflow that includes tenants, lawyers, and admins.
 
 The live v2 product combines:
 
@@ -109,7 +110,8 @@ The AI review experience is grounded in two source classes:
 - Uploaded user material: pasted clause text, uploaded `PDF`, or uploaded `DOCX`
 - Ingested tenant-rights materials: MassLegalHelp handbook chapters, handouts, forms, and booklets
 
-When an answer makes a legal comparison or explains a rule, the system is expected to show handbook support instead of only citing the uploaded text.
+When an answer makes a legal comparison or explains a rule, the system is expected to show handbook support instead of
+only citing the uploaded text.
 
 ## Auth and Session Behavior
 
@@ -165,4 +167,5 @@ When an answer makes a legal comparison or explains a rule, the system is expect
 
 ## Release Notes Boundary
 
-This PRD describes the current live v2 product. Historical design docs and milestone plans remain useful references, but they are not the source of truth for current behavior.
+This PRD describes the current live v2 product. Historical design docs and milestone plans remain useful references, but
+they are not the source of truth for current behavior.

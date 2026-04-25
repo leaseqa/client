@@ -1,4 +1,5 @@
 import React from "react";
+
 type StatsMetrics = {
   totalUsers: number | null;
   totalSections: number | null;
@@ -9,7 +10,7 @@ type ManageStatsProps = {
   stats: StatsMetrics;
 };
 
-export default function ManageStats({ stats }: ManageStatsProps) {
+export default function ManageStats({stats}: ManageStatsProps) {
   return (
     <section id="overview" className="admin-v2-section">
       <div className="admin-v2-section-heading">

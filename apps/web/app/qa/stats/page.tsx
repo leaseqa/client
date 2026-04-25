@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import {useEffect, useState} from "react";
+import {Col, Row} from "react-bootstrap";
 
-import { Stat } from "../types";
+import {Stat} from "../types";
 import * as client from "../client";
 
 import PageLoadingState from "@/components/ui/PageLoadingState";
@@ -15,33 +15,33 @@ export default function StatsPage() {
   const [breakdown, setBreakdown] = useState<Stat[]>([]);
   const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        loadStats();
-    }, []);
+  useEffect(() => {
+    loadStats();
+  }, []);
 
-    const loadStats = async () => {
-        try {
+  const loadStats = async () => {
+    try {
       const response = await client.fetchStats();
       if (response.data) {
         setStats([
-          { label: "Total posts", value: response.data.totalPosts || 0 },
-          { label: "Open questions", value: response.data.unreadPosts || 0 },
-          { label: "Attorney replies", value: response.data.lawyerResponses || 0 },
-          { label: "Tenant replies", value: response.data.tenantResponses || 0 },
-          { label: "Registered users", value: response.data.enrolledUsers || 0 },
-          { label: "Unanswered", value: response.data.unansweredPosts || 0 },
+          {label: "Total posts", value: response.data.totalPosts || 0},
+          {label: "Open questions", value: response.data.unreadPosts || 0},
+          {label: "Attorney replies", value: response.data.lawyerResponses || 0},
+          {label: "Tenant replies", value: response.data.tenantResponses || 0},
+          {label: "Registered users", value: response.data.enrolledUsers || 0},
+          {label: "Unanswered", value: response.data.unansweredPosts || 0},
         ]);
         setBreakdown(response.data.breakdown || []);
       }
-        } catch (error) {
-            console.error("Failed to load stats:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    } catch (error) {
+      console.error("Failed to load stats:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
-    return <PageLoadingState message="Loading stats..." />;
+    return <PageLoadingState message="Loading stats..."/>;
   }
 
   const maxBreakdown = Math.max(...breakdown.map((b) => b.value), 1);
@@ -68,7 +68,7 @@ export default function StatsPage() {
             <Row className="g-3 qa-stats-overview-grid">
               {stats.map((item) => (
                 <Col xs={6} md={4} lg={6} key={item.label}>
-                  <StatBox label={item.label} value={item.value} />
+                  <StatBox label={item.label} value={item.value}/>
                 </Col>
               ))}
             </Row>

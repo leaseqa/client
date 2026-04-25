@@ -61,4 +61,5 @@ Use this checklist before calling a client-facing release ready.
 - Review [product-prd.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/product-prd.md)
 - Review [architecture.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/architecture.md)
 - Review [api-design.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/api-design.md)
-- Review [leaseqa-server/README.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/README.md) if backend behavior changed
+- Review [leaseqa-server/README.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/README.md) if backend behavior
+  changed

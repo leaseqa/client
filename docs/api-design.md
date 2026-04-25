@@ -1,6 +1,7 @@
 # LeaseQA V2 API Design
 
-This document summarizes the current app-level API contract used by the LeaseQA client. All paths are rooted at `/api` and are served by the Express backend in the `leaseqa-server` repository.
+This document summarizes the current app-level API contract used by the LeaseQA client. All paths are rooted at `/api`
+and are served by the Express backend in the `leaseqa-server` repository.
 
 ## 1. Authentication
 

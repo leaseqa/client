@@ -1,12 +1,18 @@
 # Admin UI v2 Implementation Plan
 
-> **For agentic workers:** REQUIRED: Use superpowers:subagent-driven-development (if subagents available) or superpowers:executing-plans to implement this plan. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED: Use superpowers:subagent-driven-development (if subagents available) or
+> superpowers:executing-plans to implement this plan. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Rebuild the admin workspace at `/qa/manage` into the approved v2 layout and visually align post moderation surfaces on `/qa` without changing backend APIs or moderation semantics.
+**Goal:** Rebuild the admin workspace at `/qa/manage` into the approved v2 layout and visually align post moderation
+surfaces on `/qa` without changing backend APIs or moderation semantics.
 
-**Architecture:** Keep `apps/web/app/qa/manage/page.tsx` as the orchestration layer for admin data and mutations, but move pure derivation into a small `view-model.ts` helper so the new load-state and metric rules are testable. Implement the approved shell by adding focused presentational components, then restyle moderation in place by updating `PostDetailSection` and its visible children plus the shared `post-*` CSS already loaded by the app.
+**Architecture:** Keep `apps/web/app/qa/manage/page.tsx` as the orchestration layer for admin data and mutations, but
+move pure derivation into a small `view-model.ts` helper so the new load-state and metric rules are testable. Implement
+the approved shell by adding focused presentational components, then restyle moderation in place by updating
+`PostDetailSection` and its visible children plus the shared `post-*` CSS already loaded by the app.
 
-**Tech Stack:** Next.js App Router, React 19 client components, Redux session state, Vitest, global CSS via `apps/web/app/globals.css` and `apps/web/app/refresh.css`, `react-icons`, `lucide-react`.
+**Tech Stack:** Next.js App Router, React 19 client components, Redux session state, Vitest, global CSS via
+`apps/web/app/globals.css` and `apps/web/app/refresh.css`, `react-icons`, `lucide-react`.
 
 ---
 
@@ -47,6 +53,7 @@
 ### Task 1: Add the admin view-model helper and lock the state rules with tests
 
 **Files:**
+
 - Create: `apps/web/app/qa/manage/view-model.ts`
 - Create: `apps/web/app/qa/manage/view-model.test.ts`
 - Reference: `apps/web/app/qa/types.ts`
@@ -222,6 +229,7 @@ git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "test: cover ad
 ### Task 2: Build the new admin shell components and widen the existing component contracts
 
 **Files:**
+
 - Create: `apps/web/app/qa/manage/components/ManageSidebar.tsx`
 - Create: `apps/web/app/qa/manage/components/ManageStats.tsx`
 - Create: `apps/web/app/qa/manage/components/ManageUsersSection.tsx`
@@ -400,12 +408,16 @@ export default function ManageUsersSection({
 ```
 
 Implementation notes for this step:
+
 - `ManageHeader` must accept `isRefreshing`, `isRefreshDisabled`, `formMode`, and `sectionsAvailable`.
 - `ManageAlerts` must expose only the latest page-level mutation result.
-- `CreateSectionForm` must support both `create` and `edit` labels, disabled states, submit errors, and refetch-retry copy.
+- `CreateSectionForm` must support both `create` and `edit` labels, disabled states, submit errors, and refetch-retry
+  copy.
 - `UsersTable` must accept row-pending markers and disable the full row while a user action is in flight.
 - `SectionsTable` must stop owning inline edit controls; it only lists rows and emits edit/delete intents.
-- `render.test.tsx` must exercise the widened contracts for `ManageSidebar`, `ManageHeader`, `ManageAlerts`, `ManageUsersSection`, `ManageSectionsSection`, and `CreateSectionForm` so the new shell cannot silently drift from the spec.
+- `render.test.tsx` must exercise the widened contracts for `ManageSidebar`, `ManageHeader`, `ManageAlerts`,
+  `ManageUsersSection`, `ManageSectionsSection`, and `CreateSectionForm` so the new shell cannot silently drift from the
+  spec.
 
 - [ ] **Step 4: Re-run the component render tests**
 
@@ -438,6 +450,7 @@ git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "feat: add admi
 ### Task 3: Refactor `page.tsx` orchestration and wire the `admin-v2-*` visual system
 
 **Files:**
+
 - Modify: `apps/web/app/qa/manage/page.tsx`
 - Modify: `apps/web/app/qa/manage/view-model.ts`
 - Modify: `apps/web/app/qa/manage/view-model.test.ts`
@@ -519,12 +532,15 @@ const pageRegions = getPageRegions({
 ```
 
 Implementation notes for this step:
+
 - Keep initial auth gating intact: non-admin users still redirect to `/qa`.
-- `loadUsers`, `loadSections`, and `refreshAll` should be separate async functions so partial reload and retry behavior matches the spec.
+- `loadUsers`, `loadSections`, and `refreshAll` should be separate async functions so partial reload and retry behavior
+  matches the spec.
 - Use row markers like `${userId}:role` and `${sectionId}:delete` to disable only the intended actions.
 - The section side panel must stay open during manual refresh if the edited section still exists after reload.
 - Move the new `admin-v2-*` shell layout, nav, stats, inline error, and side-panel styles into `refresh.css`.
-- Leave untouched legacy `manage-*` rules in `globals.css` only where other QA surfaces still rely on them; remove or override the ones this page no longer uses.
+- Leave untouched legacy `manage-*` rules in `globals.css` only where other QA surfaces still rely on them; remove or
+  override the ones this page no longer uses.
 
 - [ ] **Step 4: Run the focused tests, then the full frontend verification**
 
@@ -548,20 +564,24 @@ pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web
 ```
 
 Manual checklist:
+
 - Log in with the current admin account already configured for this environment.
 - Open `/qa/manage`.
 - Confirm the left rail anchors scroll to overview, users, and sections.
 - Confirm the left rail moderation entry links to `/qa`.
 - Confirm the create button is disabled whenever sections are unavailable.
 - Confirm users-only failure still leaves sections visible, and sections-only failure still leaves users visible.
-- Confirm the dual-failure state shows the shell error surface, keeps both regions mounted with inline errors, and hides the section form.
+- Confirm the dual-failure state shows the shell error surface, keeps both regions mounted with inline errors, and hides
+  the section form.
 - Confirm refresh is disabled while a user-row mutation or section save is pending.
 - Confirm create, edit, and delete section flows work, and that edit mode keeps the `name` field read-only.
-- Confirm a successful save followed by folders-refetch failure keeps the panel open, shows the refetch retry action, and disables re-save until recovery.
+- Confirm a successful save followed by folders-refetch failure keeps the panel open, shows the refetch retry action,
+  and disables re-save until recovery.
 - Confirm a manual refresh while editing keeps the panel open if the section still exists.
 - Confirm the edit panel closes with a concise error if the edited section disappears after reload.
 - Confirm role change, verify lawyer, ban/unban, and delete user each lock only the targeted row.
-- Confirm the layout stacks into header -> sidebar -> alerts -> stats -> main sections -> section form around the `992px` breakpoint.
+- Confirm the layout stacks into header -> sidebar -> alerts -> stats -> main sections -> section form around the
+  `992px` breakpoint.
 
 - [ ] **Step 6: Commit chunk 1**
 
@@ -580,6 +600,7 @@ git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "feat: redesign
 ### Task 4: Add render smoke tests for the moderation components that will be restyled
 
 **Files:**
+
 - Create: `apps/web/app/qa/components/post-detail-render.test.tsx`
 - Reference: `apps/web/app/qa/[id]/components/PostContent.tsx`
 - Reference: `apps/web/app/qa/[id]/components/AnswersSection.tsx`
@@ -735,6 +756,7 @@ git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "test: cover mo
 ### Task 5: Restyle `PostDetailSection` and its visible children to match the v2 admin system
 
 **Files:**
+
 - Modify: `apps/web/app/qa/components/PostDetailSection.tsx`
 - Modify: `apps/web/app/qa/[id]/components/PostContent.tsx`
 - Modify: `apps/web/app/qa/[id]/components/AnswersSection.tsx`
@@ -758,9 +780,11 @@ return (
 );
 ```
 
-- [ ] **Step 2: Align `PostContent`, `AnswersSection`, and `DiscussionsSection` while preserving their action ownership**
+- [ ] **Step 2: Align `PostContent`, `AnswersSection`, and `DiscussionsSection` while preserving their action ownership
+  **
 
 Implementation notes for this step:
+
 - Keep all fetch and mutation logic inside `PostDetailSection`.
 - Keep answer and discussion submit/edit/delete handlers in the same components that already own them.
 - Update badges, buttons, list containers, editor boxes, and spacing only.
@@ -812,6 +836,7 @@ pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web
 ```
 
 Manual checklist:
+
 - Open `/qa`, choose a post, and confirm `PostDetailSection` uses the new surfaces.
 - Confirm pin toggle, status toggle, edit, delete, answer, and discussion actions still work.
 - Confirm pending moderation actions disable only the clicked control.
@@ -854,6 +879,7 @@ Expected: PASS.
 - [ ] **Step 3: Record manual QA outcomes before any release work**
 
 Checklist:
+
 - `/qa/manage` works end to end for the current admin account.
 - `/qa/manage` handles partial dataset failures correctly.
 - `/qa` moderation still supports edit, pin, resolve, answer, and discussion flows.

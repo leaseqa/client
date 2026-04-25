@@ -2,14 +2,18 @@
 
 ## Summary
 
-LeaseQA v2 already has working AI review, Q&A, moderation, and session-backed login flows, but the user-facing account surfaces are still partially stubbed. The gaps are concentrated in four places:
+LeaseQA v2 already has working AI review, Q&A, moderation, and session-backed login flows, but the user-facing account
+surfaces are still partially stubbed. The gaps are concentrated in four places:
 
 - registration, login persistence, and logout are implemented but under-tested
 - the account page shows hard-coded recent activity
 - the header notification bell is UI-only
 - logged-in AI review history is mixed between real session data and placeholder client state
 
-This design makes those surfaces real without introducing a second UI language or a separate event platform. The system will use one shared activity record model. `/account` renders the full feed, the header bell renders unread notification entries from the same feed, and AI review history remains session-centric while also producing activity records for the owning user.
+This design makes those surfaces real without introducing a second UI language or a separate event platform. The system
+will use one shared activity record model. `/account` renders the full feed, the header bell renders unread notification
+entries from the same feed, and AI review history remains session-centric while also producing activity records for the
+owning user.
 
 ## Goals
 
@@ -31,10 +35,13 @@ This design makes those surfaces real without introducing a second UI language o
 
 ### Frontend
 
-- `/account` already supports profile edit and logout, but `recentActions` is hard-coded in `apps/web/app/account/page.tsx`
-- `HeaderBar` already has a notification dropdown shell, but the notifications array is empty in `apps/web/components/navigation/HeaderBar.tsx`
+- `/account` already supports profile edit and logout, but `recentActions` is hard-coded in
+  `apps/web/app/account/page.tsx`
+- `HeaderBar` already has a notification dropdown shell, but the notifications array is empty in
+  `apps/web/components/navigation/HeaderBar.tsx`
 - `SessionLoader` already restores sessions from `/api/auth/session`
-- `ai-review` already uses real RAG sessions, but client-side placeholder history still exists in `apps/web/app/store.ts`
+- `ai-review` already uses real RAG sessions, but client-side placeholder history still exists in
+  `apps/web/app/store.ts`
 
 ### Backend
 
@@ -46,9 +53,12 @@ This design makes those surfaces real without introducing a second UI language o
 
 ## Recommended Approach
 
-Use a single persisted `Activity` model with a thin notification view instead of building separate recent-history and notification systems.
+Use a single persisted `Activity` model with a thin notification view instead of building separate recent-history and
+notification systems.
 
-Each activity record belongs to one user and carries enough metadata to render both the account feed and the bell dropdown. Some activity types are informational only and appear only on `/account`; some are actionable and appear in both `/account` and the bell.
+Each activity record belongs to one user and carries enough metadata to render both the account feed and the bell
+dropdown. Some activity types are informational only and appear only on `/account`; some are actionable and appear in
+both `/account` and the bell.
 
 This approach is preferred because it:
 
@@ -69,7 +79,8 @@ Add a new `Activity` collection with the following fields:
 - `surface`: enum of `account`, `notification`, or `both`
 - `readAt`: nullable timestamp used only for notification-capable entries
 - `createdAt`: timestamp
-- `metadata`: object for lightweight event-specific data such as `postId`, `sessionId`, `answerId`, `discussionId`, or `actorId`
+- `metadata`: object for lightweight event-specific data such as `postId`, `sessionId`, `answerId`, `discussionId`, or
+  `actorId`
 
 ### Event Types in Scope
 
@@ -106,8 +117,10 @@ Add a new `Activity` collection with the following fields:
 
 ### Discussions
 
-- When a discussion is created as a root follow-up, write a `discussion_received` activity for the post author if the actor differs
-- When a discussion is created as a reply, prefer notifying the parent discussion author; if that is the same person as the actor, fall back to the post author if different
+- When a discussion is created as a root follow-up, write a `discussion_received` activity for the post author if the
+  actor differs
+- When a discussion is created as a reply, prefer notifying the parent discussion author; if that is the same person as
+  the actor, fall back to the post author if different
 - Do not fan out to multiple recipients for one discussion in this iteration
 
 ## API Design
@@ -157,7 +170,8 @@ Auth routes already exist, so this project completes them primarily through test
 
 - register should create a user, establish a session, and land the user in an authenticated state
 - login should establish the session and survive refresh via `SessionLoader`
-- logout should clear the server session, clear any guest-session client markers, and return the UI to the signed-out state
+- logout should clear the server session, clear any guest-session client markers, and return the UI to the signed-out
+  state
 - account, notifications, and persisted history should gracefully handle `unauthenticated` and `guest` states
 
 ## Error Handling
@@ -165,7 +179,8 @@ Auth routes already exist, so this project completes them primarily through test
 - If `/api/activity` fails on `/account`, keep profile content visible and show an inline feed error with retry
 - If `/api/activity/notifications` fails, keep the bell operable and show a small dropdown error state
 - Failed mark-read calls should not crash navigation; preserve unread state and show the item again next open
-- Activity write failures on the backend should not roll back the primary user action in this iteration; they should log and fail soft
+- Activity write failures on the backend should not roll back the primary user action in this iteration; they should log
+  and fail soft
 
 ## Testing Strategy
 
@@ -196,4 +211,5 @@ This project will be implemented with TDD.
 
 - The implementation should not change public routing structure
 - The existing UI language in `refresh.css` remains the source of truth
-- Because the feature spans both repos, the design doc lives once in the client repo docs and the server README/API notes can link back to it if needed
+- Because the feature spans both repos, the design doc lives once in the client repo docs and the server README/API
+  notes can link back to it if needed

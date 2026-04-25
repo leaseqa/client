@@ -1,12 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import { Stack } from "react-bootstrap";
-import {
-  FaComments,
-  FaFileAlt,
-  FaHistory,
-  FaRobot,
-} from "react-icons/fa";
+import {Stack} from "react-bootstrap";
+import {FaComments, FaFileAlt, FaHistory, FaRobot,} from "react-icons/fa";
 
 export type ActivityTimelineItem = {
   _id: string;
@@ -44,17 +39,17 @@ const formatTime = (value: string) => {
 };
 
 export default function ActivityTimeline({
-  items,
-  loading,
-  error,
-  isGuest,
-  onRetry,
-}: ActivityTimelineProps) {
+                                           items,
+                                           loading,
+                                           error,
+                                           isGuest,
+                                           onRetry,
+                                         }: ActivityTimelineProps) {
   return (
     <div className="account-card h-100">
       <div className="d-flex align-items-center gap-3 mb-4">
         <div className="info-team-icon info-team-icon--terra">
-          <FaHistory size={18} />
+          <FaHistory size={18}/>
         </div>
         <div>
           <div className="fw-bold">Recent Activity</div>
@@ -97,7 +92,7 @@ export default function ActivityTimeline({
                     marginBottom: 0,
                   }}
                 >
-                  <Icon size={14} />
+                  <Icon size={14}/>
                 </div>
                 <div className="flex-grow-1">
                   <div className="small fw-semibold">{item.title}</div>

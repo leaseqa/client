@@ -2,11 +2,13 @@
 
 ## Overview
 
-The button system follows a consistent design pattern with standardized variants and sizes, aligned with the 60-30-10 color rule.
+The button system follows a consistent design pattern with standardized variants and sizes, aligned with the 60-30-10
+color rule.
 
 ## Button Variants
 
 ### Primary (Main CTA)
+
 - **Usage**: Primary actions, main CTAs
 - **Color**: Uses 10% accent color (`--color-accent-primary`)
 - **Example**: "Start AI Review", "Submit", "Save"
@@ -18,6 +20,7 @@ The button system follows a consistent design pattern with standardized variants
 ```
 
 ### Secondary
+
 - **Usage**: Secondary actions, alternative options
 - **Color**: White background with border
 - **Example**: "Cancel", "Back", alternative navigation
@@ -29,6 +32,7 @@ The button system follows a consistent design pattern with standardized variants
 ```
 
 ### Outline
+
 - **Usage**: Outlined style, less prominent actions
 - **Color**: Transparent with colored border
 - **Example**: "Learn More", "View Details"
@@ -40,6 +44,7 @@ The button system follows a consistent design pattern with standardized variants
 ```
 
 ### Ghost
+
 - **Usage**: Minimal style, subtle actions
 - **Color**: Transparent, text only
 - **Example**: "Skip", "Dismiss"
@@ -51,6 +56,7 @@ The button system follows a consistent design pattern with standardized variants
 ```
 
 ### Danger
+
 - **Usage**: Destructive actions
 - **Color**: Error color (`--color-accent-error`)
 - **Example**: "Delete", "Remove", "Cancel Subscription"
@@ -62,6 +68,7 @@ The button system follows a consistent design pattern with standardized variants
 ```
 
 ### Success
+
 - **Usage**: Success/confirmation actions
 - **Color**: Success color (`--color-accent-success`)
 - **Example**: "Confirm", "Approve"
@@ -75,16 +82,19 @@ The button system follows a consistent design pattern with standardized variants
 ## Button Sizes
 
 ### Small (`btn-unified-sm`)
+
 - **Padding**: `0.375rem 0.875rem`
 - **Font Size**: `0.8125rem`
 - **Usage**: Compact spaces, inline actions
 
 ### Medium (`btn-unified-md`) - Default
+
 - **Padding**: `0.5rem 1.25rem`
 - **Font Size**: `0.875rem`
 - **Usage**: Standard buttons, most common size
 
 ### Large (`btn-unified-lg`)
+
 - **Padding**: `0.75rem 1.75rem`
 - **Font Size**: `0.9375rem`
 - **Usage**: Hero sections, prominent CTAs
@@ -92,6 +102,7 @@ The button system follows a consistent design pattern with standardized variants
 ## Usage Examples
 
 ### Hero Section CTA
+
 ```html
 <a href="/ai-review" class="btn-unified btn-unified-primary btn-unified-lg">
     Start AI Review
@@ -99,6 +110,7 @@ The button system follows a consistent design pattern with standardized variants
 ```
 
 ### Card Action Button
+
 ```html
 <a href="/qa" class="btn-unified btn-unified-primary btn-unified-md">
     Open Q&A →
@@ -106,6 +118,7 @@ The button system follows a consistent design pattern with standardized variants
 ```
 
 ### Secondary Navigation
+
 ```html
 <a href="/explore" class="btn-unified btn-unified-outline btn-unified-lg">
     Explore Q&A
@@ -113,6 +126,7 @@ The button system follows a consistent design pattern with standardized variants
 ```
 
 ### Form Actions
+
 ```html
 <div class="d-flex gap-2">
     <button type="submit" class="btn-unified btn-unified-primary btn-unified-md">
@@ -125,6 +139,7 @@ The button system follows a consistent design pattern with standardized variants
 ```
 
 ### Destructive Action
+
 ```html
 <button type="button" class="btn-unified btn-unified-danger btn-unified-sm">
     Delete Post
@@ -134,13 +149,16 @@ The button system follows a consistent design pattern with standardized variants
 ## Button States
 
 ### Hover
+
 - Primary/Secondary/Danger/Success: Slight lift (`translateY(-1px)`) with shadow
 - Outline/Ghost: Background color change
 
 ### Active
+
 - Slight press effect (`translateY(0)`)
 
 ### Disabled
+
 - `opacity: 0.6`
 - `cursor: not-allowed`
 - No hover effects
@@ -156,6 +174,7 @@ The button system follows a consistent design pattern with standardized variants
 ## Migration from Old System
 
 ### Old (React Bootstrap)
+
 ```jsx
 <Button href="/action" variant="danger" className="btn-pill-lg">
     Action
@@ -163,6 +182,7 @@ The button system follows a consistent design pattern with standardized variants
 ```
 
 ### New (Unified System)
+
 ```html
 <a href="/action" class="btn-unified btn-unified-primary btn-unified-lg">
     Action

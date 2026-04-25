@@ -1,26 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, signOut } from "@/app/store";
-import {
-  Container,
-  Dropdown,
-  Nav,
-  Navbar,
-  NavbarBrand,
-  Stack,
-} from "react-bootstrap";
+import {useCallback, useState} from "react";
+import {usePathname, useRouter} from "next/navigation";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState, signOut} from "@/app/store";
+import {Container, Dropdown, Nav, Navbar, NavbarBrand, Stack,} from "react-bootstrap";
 import AvatarToggle from "./HeaderBar/AvatarToggle";
 import MobileNav from "./HeaderBar/MobileNav";
 import ProfileHeader from "./HeaderBar/ProfileHeader";
 import ProfileMenuItems from "./HeaderBar/ProfileMenuItems";
+import type {NotificationMenuItem} from "./HeaderBar/NotificationsMenu";
 import NotificationsMenu from "./HeaderBar/NotificationsMenu";
-import type { NotificationMenuItem } from "./HeaderBar/NotificationsMenu";
 import * as client from "@/app/account/client";
-import { NAV_ITEMS } from "./config";
+import {NAV_ITEMS} from "./config";
 
 export default function HeaderBar() {
   const pathname = usePathname();
@@ -113,7 +106,7 @@ export default function HeaderBar() {
             </NavbarBrand>
           </div>
 
-          <MobileNav pathname={pathname} />
+          <MobileNav pathname={pathname}/>
 
           <Nav className="site-nav">
             {NAV_ITEMS.map((item) => {
@@ -156,7 +149,7 @@ export default function HeaderBar() {
                   isAuthenticated={isAuthenticated}
                   isGuest={isGuest}
                 />
-                <Dropdown.Divider />
+                <Dropdown.Divider/>
                 <ProfileMenuItems
                   isAuthenticated={isAuthenticated}
                   isGuest={isGuest}

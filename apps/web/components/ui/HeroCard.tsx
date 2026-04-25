@@ -4,21 +4,21 @@ import {ReactNode} from "react";
 import {Card, CardBody} from "react-bootstrap";
 
 type HeroCardProps = {
-    children: ReactNode;
-    className?: string;
-    padding?: string;
+  children: ReactNode;
+  className?: string;
+  padding?: string;
 };
 
 export default function HeroCard({
-                                     children,
-                                     className = "",
-                                     padding = "p-4 p-lg-5"
+                                   children,
+                                   className = "",
+                                   padding = "p-4 p-lg-5"
                                  }: HeroCardProps) {
-    return (
-        <Card className={`card-hero border-0 ${className}`}>
-            <CardBody className={padding}>
-                {children}
-            </CardBody>
-        </Card>
-    );
+  return (
+    <Card className={`card-hero border-0 ${className}`}>
+      <CardBody className={padding}>
+        {children}
+      </CardBody>
+    </Card>
+  );
 }

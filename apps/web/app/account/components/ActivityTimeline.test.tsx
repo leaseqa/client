@@ -1,6 +1,6 @@
 import React from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, test } from "vitest";
+import {renderToStaticMarkup} from "react-dom/server";
+import {describe, expect, test} from "vitest";
 
 import ActivityTimeline from "./ActivityTimeline";
 
@@ -21,7 +21,8 @@ describe("ActivityTimeline", () => {
             createdAt: "2026-03-12T15:00:00.000Z",
           },
         ]}
-        onRetry={() => {}}
+        onRetry={() => {
+        }}
       />,
     );
 
@@ -38,7 +39,8 @@ describe("ActivityTimeline", () => {
         error=""
         isGuest
         items={[]}
-        onRetry={() => {}}
+        onRetry={() => {
+        }}
       />,
     );
 
@@ -52,7 +54,8 @@ describe("ActivityTimeline", () => {
         error="Activity unavailable"
         isGuest={false}
         items={[]}
-        onRetry={() => {}}
+        onRetry={() => {
+        }}
       />,
     );
 

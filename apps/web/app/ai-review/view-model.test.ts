@@ -1,18 +1,18 @@
-import { describe, expect, test } from "vitest";
+import {describe, expect, test} from "vitest";
 
 import {
   AUTO_ANALYZE_QUESTION,
   FILE_AUTO_ANALYZE_QUESTION,
   FILE_SUGGESTED_PROMPTS,
   formatCompactCitationLabel,
-  getEmptyStateMessage,
   getDisplayedSource,
+  getEmptyStateMessage,
   getInlineCitationItems,
   getNextRevealLength,
   getResultsPanelState,
-  shouldShowLegacyCitationList,
   getSessionInputPlan,
   getVisibleMessages,
+  shouldShowLegacyCitationList,
 } from "./view-model";
 
 describe("getSessionInputPlan", () => {

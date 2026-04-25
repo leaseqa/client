@@ -1,6 +1,6 @@
 import React from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, test } from "vitest";
+import {renderToStaticMarkup} from "react-dom/server";
+import {describe, expect, test} from "vitest";
 
 import NotificationsMenu from "./NotificationsMenu";
 
@@ -19,8 +19,10 @@ describe("NotificationsMenu", () => {
         ]}
         loading={false}
         error=""
-        onOpen={() => {}}
-        onSelect={async () => {}}
+        onOpen={() => {
+        }}
+        onSelect={async () => {
+        }}
       />,
     );
 
@@ -36,8 +38,10 @@ describe("NotificationsMenu", () => {
         items={[]}
         loading={false}
         error=""
-        onOpen={() => {}}
-        onSelect={async () => {}}
+        onOpen={() => {
+        }}
+        onSelect={async () => {
+        }}
       />,
     );
 

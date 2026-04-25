@@ -1,7 +1,7 @@
 const pages = [
-  { path: "/", selector: ".landing-hero-copy", label: "home" },
-  { path: "/ai-review", selector: ".review-header-section", label: "review" },
-  { path: "/qa", selector: ".qa-feed-stack, .qa-compose-page, .auth-container-narrow", label: "qa" },
+  {path: "/", selector: ".landing-hero-copy", label: "home"},
+  {path: "/ai-review", selector: ".review-header-section", label: "review"},
+  {path: "/qa", selector: ".qa-feed-stack, .qa-compose-page, .auth-container-narrow", label: "qa"},
   {
     path: "/qa/resources",
     selector: ".resources-main-card, .auth-container-narrow",
@@ -53,7 +53,7 @@ async function withPage(wsUrl, fn) {
         pending.delete(messageId);
         resolve(message);
       });
-      ws.send(JSON.stringify({ id: messageId, method, params }));
+      ws.send(JSON.stringify({id: messageId, method, params}));
     });
 
   await send("Page.enable");
@@ -80,7 +80,7 @@ async function setGuestSession() {
   const target = await openTarget(previewBase);
 
   await withPage(target.webSocketDebuggerUrl, async (send) => {
-    await send("Page.navigate", { url: `${previewBase}/` });
+    await send("Page.navigate", {url: `${previewBase}/`});
     await new Promise((resolve) => setTimeout(resolve, 700));
     await send("Runtime.evaluate", {
       expression: `localStorage.setItem("guest_session", "true")`,

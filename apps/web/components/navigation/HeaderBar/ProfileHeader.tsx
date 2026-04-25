@@ -1,7 +1,7 @@
-import { Badge } from "react-bootstrap";
-import { FaEye, FaShieldAlt } from "react-icons/fa";
+import {Badge} from "react-bootstrap";
+import {FaEye, FaShieldAlt} from "react-icons/fa";
 
-import { RootState } from "@/app/store";
+import {RootState} from "@/app/store";
 
 type ProfileHeaderProps = {
   user: RootState["session"]["user"];
@@ -11,11 +11,11 @@ type ProfileHeaderProps = {
 };
 
 export default function ProfileHeader({
-  user,
-  initials,
-  isAuthenticated,
-  isGuest = false,
-}: ProfileHeaderProps) {
+                                        user,
+                                        initials,
+                                        isAuthenticated,
+                                        isGuest = false,
+                                      }: ProfileHeaderProps) {
   const hasUser = isAuthenticated || isGuest;
 
   if (!hasUser) {
@@ -46,7 +46,7 @@ export default function ProfileHeader({
               text="dark"
               className="d-inline-flex align-items-center gap-1"
             >
-              <FaShieldAlt size={12} />
+              <FaShieldAlt size={12}/>
               <span className="text-capitalize">{user?.role || "tenant"}</span>
             </Badge>
             {isGuest && (
@@ -54,7 +54,7 @@ export default function ProfileHeader({
                 bg="secondary"
                 className="d-inline-flex align-items-center gap-1"
               >
-                <FaEye size={10} />
+                <FaEye size={10}/>
                 <span>Read-only</span>
               </Badge>
             )}

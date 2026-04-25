@@ -1,16 +1,16 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useSelector } from "react-redux";
-import { Col, Row } from "react-bootstrap";
+import {Suspense, useEffect, useMemo, useState} from "react";
+import {useRouter, useSearchParams} from "next/navigation";
+import {useSelector} from "react-redux";
+import {Col, Row} from "react-bootstrap";
 
-import { RootState } from "@/app/store";
+import {RootState} from "@/app/store";
 
-import { Folder, Post } from "./types";
-import { ComposeState, INITIAL_COMPOSE_STATE } from "./constants";
+import {Folder, Post} from "./types";
+import {ComposeState, INITIAL_COMPOSE_STATE} from "./constants";
 import * as client from "./client";
-import { getTopicLabel } from "@/app/lib/reviewFollowUp";
+import {getTopicLabel} from "@/app/lib/reviewFollowUp";
 
 import ScenarioFilter from "./components/ScenarioFilter";
 import QAToolbar from "./components/QAToolbar";
@@ -239,7 +239,7 @@ function QAPageInner() {
   }
 
   if (loading) {
-    return <PageLoadingState message="Loading questions..." />;
+    return <PageLoadingState message="Loading questions..."/>;
   }
 
   if (composeParam) {
@@ -336,7 +336,7 @@ function QAPageInner() {
         </div>
 
         <div className="qa-controls-row">
-          <ScenarioFilter />
+          <ScenarioFilter/>
           <QAToolbar
             initialSearch={searchParam}
             onSearchChangeAction={setSearch}
@@ -373,12 +373,12 @@ function QAPageInner() {
             <div className="qa-feed-stack">
               {filteredPosts.length > 0 ? (
                 <>
-                  <PinPostsSection posts={filteredPosts} folders={folders} />
+                  <PinPostsSection posts={filteredPosts} folders={folders}/>
                   <AnnouncementSection
                     posts={filteredPosts}
                     folders={folders}
                   />
-                  <FeedHeader folders={folders} posts={filteredPosts} />
+                  <FeedHeader folders={folders} posts={filteredPosts}/>
                 </>
               ) : (
                 <div className="qa-empty-flat">
@@ -407,8 +407,8 @@ function QAPageInner() {
 
 export default function QAPage() {
   return (
-    <Suspense fallback={<PageLoadingState message="Loading questions..." />}>
-      <QAPageInner />
+    <Suspense fallback={<PageLoadingState message="Loading questions..."/>}>
+      <QAPageInner/>
     </Suspense>
   );
 }

@@ -31,7 +31,7 @@ async function evaluateInPage(wsUrl, expression) {
         pending.delete(messageId);
         resolve(message);
       });
-      ws.send(JSON.stringify({ id: messageId, method, params }));
+      ws.send(JSON.stringify({id: messageId, method, params}));
     });
 
   await send("Page.enable");
@@ -48,7 +48,7 @@ async function evaluateInPage(wsUrl, expression) {
 async function measurePage(path) {
   const target = await getJson(
     `${devtoolsBase}/json/new?${encodeURIComponent(`${previewBase}${path}`)}`,
-    { method: "PUT" },
+    {method: "PUT"},
   );
 
   await new Promise((resolve) => setTimeout(resolve, 900));

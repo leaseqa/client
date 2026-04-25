@@ -1,4 +1,4 @@
-import { Citation, ChatMessage, RagSession } from "./types";
+import {ChatMessage, Citation, RagSession} from "./types";
 
 export const CHAT_UPLOAD_MAX_MB = 20;
 export const CHAT_UPLOAD_ACCEPT = "application/pdf,.docx";
@@ -37,9 +37,9 @@ type SessionInputOptions = {
 };
 
 export function getSessionInputPlan({
-  hasFile,
-  sourceText,
-}: SessionInputOptions) {
+                                      hasFile,
+                                      sourceText,
+                                    }: SessionInputOptions) {
   const trimmedSourceText = sourceText.trim();
 
   if (hasFile && trimmedSourceText) {
@@ -90,9 +90,9 @@ export function shouldShowLegacyCitationList(message: ChatMessage) {
 }
 
 export function getDisplayedSource({
-  activeSession,
-  pendingDraftSource,
-}: {
+                                     activeSession,
+                                     pendingDraftSource,
+                                   }: {
   activeSession: RagSession | null;
   pendingDraftSource: PendingDraftSource | null;
 }) {
@@ -148,9 +148,9 @@ export function formatCompactCitationLabel(citation: Citation) {
 }
 
 export function getInlineCitationItems({
-  citations,
-  citationIndices,
-}: {
+                                         citations,
+                                         citationIndices,
+                                       }: {
   citations: Citation[];
   citationIndices: number[];
 }): InlineCitationItem[] {
@@ -174,9 +174,9 @@ export function getInlineCitationItems({
 }
 
 export function getResultsPanelState({
-  activeSession,
-  pendingDraftSource,
-}: {
+                                       activeSession,
+                                       pendingDraftSource,
+                                     }: {
   activeSession: RagSession | null;
   pendingDraftSource: PendingDraftSource | null;
 }): ResultsPanelState {
@@ -204,8 +204,8 @@ export function getResultsPanelState({
 }
 
 export function getEmptyStateMessage({
-  activeSession,
-}: {
+                                       activeSession,
+                                     }: {
   activeSession: RagSession | null;
 }) {
   if (!activeSession) {

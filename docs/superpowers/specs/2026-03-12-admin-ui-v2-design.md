@@ -7,7 +7,8 @@
 
 ## Goal
 
-Refresh the admin and moderation experience in `apps/web/app/qa/manage` so it visually aligns with the new public-facing v2 UI while preserving the speed and information density of an internal operations console.
+Refresh the admin and moderation experience in `apps/web/app/qa/manage` so it visually aligns with the new public-facing
+v2 UI while preserving the speed and information density of an internal operations console.
 
 ## Scope
 
@@ -31,24 +32,32 @@ The current admin page is functional but visually disconnected from the rest of 
 
 - It relies on a legacy `manage-*` dashboard style in `apps/web/app/globals.css`
 - It uses a dense card-and-table layout that reads more like a generic admin template than a legal product
-- The admin page and post moderation flow do not share the newer palette, spacing, and surface treatment used by the refreshed home and AI review pages
-- Operators can already create sections, edit sections, update user roles, verify lawyers, ban or unban users, delete users, and moderate posts, so the problem is presentation and flow clarity rather than missing business logic
+- The admin page and post moderation flow do not share the newer palette, spacing, and surface treatment used by the
+  refreshed home and AI review pages
+- Operators can already create sections, edit sections, update user roles, verify lawyers, ban or unban users, delete
+  users, and moderate posts, so the problem is presentation and flow clarity rather than missing business logic
 
 ## Design Principles
 
 1. Keep the page operational first. Admin users should still be able to scan rows and act quickly.
-2. Align with the v2 product look. Use the same warm neutrals, muted green accents, soft borders, rounded cards, and calmer hierarchy.
+2. Align with the v2 product look. Use the same warm neutrals, muted green accents, soft borders, rounded cards, and
+   calmer hierarchy.
 3. Reduce visual noise. Remove oversized dashboard chrome, duplicate explanations, and unnecessary decorative panels.
-4. Keep section editing close to the data. Section management should stay on-page instead of feeling like a context switch, while post moderation remains in the existing QA flow.
+4. Keep section editing close to the data. Section management should stay on-page instead of feeling like a context
+   switch, while post moderation remains in the existing QA flow.
 5. Avoid a “marketing page” admin. This should feel polished, not theatrical.
 
 ## Terminology Boundary
 
 - Backend APIs, client functions, and persisted models continue using the existing `folder` / `folders` naming.
 - All operator-facing copy in this redesign uses `section` / `sections`.
-- `qa/manage/page.tsx` owns the translation boundary between API-facing `folders` data and UI-facing `sections` language.
-- In this phase, no separate `SectionViewModel` layer is introduced. Existing admin components that already operate on raw folder records continue receiving those records directly, while headings, labels, and status copy refer to them as sections.
-- New admin shell components may name props by UI intent (`sectionCount`, `sectionsError`, `sectionsAnchor`), but mutation handlers and client calls continue passing raw folder ids and folder draft shapes.
+- `qa/manage/page.tsx` owns the translation boundary between API-facing `folders` data and UI-facing `sections`
+  language.
+- In this phase, no separate `SectionViewModel` layer is introduced. Existing admin components that already operate on
+  raw folder records continue receiving those records directly, while headings, labels, and status copy refer to them as
+  sections.
+- New admin shell components may name props by UI intent (`sectionCount`, `sectionsError`, `sectionsAnchor`), but
+  mutation handlers and client calls continue passing raw folder ids and folder draft shapes.
 
 ## Information Architecture
 
@@ -142,7 +151,8 @@ On smaller screens:
 - Left rail stacks above the main content
 - The main content column remains primary
 - The section form panel drops below the main column rather than compressing both columns too aggressively
-- Use the app’s existing desktop breakpoint behavior around `992px`; below that width the sidebar and section form stack vertically
+- Use the app’s existing desktop breakpoint behavior around `992px`; below that width the sidebar and section form stack
+  vertically
 
 ## Component Responsibilities
 
@@ -176,7 +186,8 @@ Fetch architecture:
 - Summary cards render only the metrics supported by the datasets that are currently available
 - The page shell remains mounted even if one or both requests fail
 - Row-level pending markers are keyed by entity id plus action type
-- Concurrent actions on different rows are allowed; duplicate clicks on the same row action are blocked while that action is pending
+- Concurrent actions on different rows are allowed; duplicate clicks on the same row action are blocked while that
+  action is pending
 
 Pending marker shape:
 
@@ -192,7 +203,8 @@ Request coordination:
 
 Planning boundary:
 
-- `page.tsx` remains the orchestration file, but implementation should treat users management and sections management as separate UI subtrees with explicit props and callbacks
+- `page.tsx` remains the orchestration file, but implementation should treat users management and sections management as
+  separate UI subtrees with explicit props and callbacks
 - The admin shell should not directly interleave users-specific retry UI with sections-specific retry UI
 
 ### `qa/manage/components/ManageSidebar.tsx`
@@ -342,14 +354,21 @@ Rules:
 - Validation errors keep the current draft intact for retry
 - When the form mode is `closed`, the side panel unmounts
 - Unsaved drafts do not survive switching between `create` and `edit`
-- If the folders dataset reloads and the edited section no longer exists, the panel closes and the page shows a concise error
-- If the folders dataset fails while editing, the current draft stays visible but save remains disabled until folders data becomes available again
-- If the sections dataset is unavailable on initial load, the section form cannot open and all section create/edit entry points stay disabled until sections data reload succeeds
-- If the currently edited section is deleted successfully, the panel closes, clears its draft, and relies on the folders reload to reconcile the list
+- If the folders dataset reloads and the edited section no longer exists, the panel closes and the page shows a concise
+  error
+- If the folders dataset fails while editing, the current draft stays visible but save remains disabled until folders
+  data becomes available again
+- If the sections dataset is unavailable on initial load, the section form cannot open and all section create/edit entry
+  points stay disabled until sections data reload succeeds
+- If the currently edited section is deleted successfully, the panel closes, clears its draft, and relies on the folders
+  reload to reconcile the list
 - After a successful create or edit mutation, the client refetches folders before closing the panel
-- If the mutation succeeds but the refetch fails, the panel stays open and the page shows a concise error so the admin can retry the refetch without losing context
-- In that refetch-failure recovery state, form fields stay visible but save remains disabled until retry succeeds or the admin cancels
-- If a manual refresh succeeds while an edit draft is open and the section still exists, the local draft remains authoritative until the admin cancels or saves
+- If the mutation succeeds but the refetch fails, the panel stays open and the page shows a concise error so the admin
+  can retry the refetch without losing context
+- In that refetch-failure recovery state, form fields stay visible but save remains disabled until retry succeeds or the
+  admin cancels
+- If a manual refresh succeeds while an edit draft is open and the section still exists, the local draft remains
+  authoritative until the admin cancels or saves
 - `page.tsx` owns the retry-refetch callback and passes it to `CreateSectionForm` when needed
 
 ### `qa/manage/components/ManageHeader.tsx`
@@ -515,21 +534,27 @@ Changes:
 - Align buttons, cards, badges, and spacing with the admin v2 system
 - Preserve existing moderation actions and data flow
 - Remain on the existing post detail route rather than being embedded into `/qa/manage`
-- Limit this phase to token, spacing, badge, and button treatment updates plus only the minimal markup changes required to apply those styles
+- Limit this phase to token, spacing, badge, and button treatment updates plus only the minimal markup changes required
+  to apply those styles
 - Do not redesign the moderation information architecture or introduce new moderation actions
-- Small local state-management fixes are allowed only when required to preserve the existing success, error, or pending behavior during the visual refresh
+- Small local state-management fixes are allowed only when required to preserve the existing success, error, or pending
+  behavior during the visual refresh
 
 Allowed changes:
 
 - Update class names, spacing wrappers, badge treatment, button treatment, and card surfaces
 - Make only the minimal markup adjustments needed to attach the new visual treatment
-- Add only the minimal local state wiring required to preserve existing pending, success, and error behavior during the visual pass
+- Add only the minimal local state wiring required to preserve existing pending, success, and error behavior during the
+  visual pass
 
 Implementation boundary:
 
-- Shared visual primitives for this chunk live in existing QA-local class names and shared site tokens, not in the `/qa/manage` shell component tree
-- Any minimal pending, success, or error preservation fixes live inside the touched moderation component that already owns that behavior; do not move moderation state upward into unrelated parents during the visual pass
-- Chunk 2 test ownership stays with `PostDetailSection` plus whichever of `PostContent`, `AnswersSection`, and `DiscussionsSection` receive markup or state-touching changes
+- Shared visual primitives for this chunk live in existing QA-local class names and shared site tokens, not in the
+  `/qa/manage` shell component tree
+- Any minimal pending, success, or error preservation fixes live inside the touched moderation component that already
+  owns that behavior; do not move moderation state upward into unrelated parents during the visual pass
+- Chunk 2 test ownership stays with `PostDetailSection` plus whichever of `PostContent`, `AnswersSection`, and
+  `DiscussionsSection` receive markup or state-touching changes
 - Chunk 2 does not introduce a new shared moderation state container, route wrapper, or data-loading abstraction
 
 Unchanged areas:
@@ -551,7 +576,8 @@ Use:
 - Muted green as the primary action and emphasis color
 - Soft orange only for warning/high-attention accents
 - Rounded corners and low-contrast borders
-- Serif brand accents only where the main app already uses them; do not turn the admin interior into a display-heavy page
+- Serif brand accents only where the main app already uses them; do not turn the admin interior into a display-heavy
+  page
 
 Avoid:
 
@@ -566,16 +592,20 @@ Avoid:
 - Use the same color variables and surface tokens already established by v2
 - Migrate refreshed admin components away from the older `manage-*` visual treatment as they are touched
 - Do not introduce a separate third theme for admin pages
-- Cross-route moderation surfaces such as `PostDetailSection` should reuse shared site-level v2 tokens and QA-local classes rather than importing `admin-v2-*` shell classes directly
+- Cross-route moderation surfaces such as `PostDetailSection` should reuse shared site-level v2 tokens and QA-local
+  classes rather than importing `admin-v2-*` shell classes directly
 
 In practice:
 
 - `/qa/manage` uses `admin-v2-*` layout and component classes
 - `PostDetailSection` uses the existing QA structure plus shared site tokens and QA-local classes
-- The moderation entry in the left rail links to `/qa`, where admins select a post and open `PostDetailSection` inside the existing QA flow
-- The authoritative v2 token source remains the existing site variables and shared surface styles already defined in `apps/web/app/refresh.css`
+- The moderation entry in the left rail links to `/qa`, where admins select a post and open `PostDetailSection` inside
+  the existing QA flow
+- The authoritative v2 token source remains the existing site variables and shared surface styles already defined in
+  `apps/web/app/refresh.css`
 - Add new admin-specific classes only when an equivalent site-level token or utility does not already exist
-- `PostDetailSection` should specifically reuse the `--site-*` variables, shared panel surface treatment, shared border/radius/shadow patterns, and shared button spacing conventions already expressed in `refresh.css`
+- `PostDetailSection` should specifically reuse the `--site-*` variables, shared panel surface treatment, shared
+  border/radius/shadow patterns, and shared button spacing conventions already expressed in `refresh.css`
 
 ## Interaction Design
 
@@ -587,9 +617,12 @@ In practice:
 - Destructive actions still require confirmation
 - While a row action is pending, the full user row disables and shows a busy state
 - If an action fails, the row returns to its prior interactive state and the page shows a concise error
-- Existing self-targeting guardrails remain unchanged: admins cannot ban, delete, or demote their own account from this table
-- If the first users load fails before any successful users response, render only the users error block and retry action for that region
-- If a later users refresh fails after at least one successful users load, keep the last rendered rows visible for context but disable all user actions until users reload succeeds
+- Existing self-targeting guardrails remain unchanged: admins cannot ban, delete, or demote their own account from this
+  table
+- If the first users load fails before any successful users response, render only the users error block and retry action
+  for that region
+- If a later users refresh fails after at least one successful users load, keep the last rendered rows visible for
+  context but disable all user actions until users reload succeeds
 
 ### Section Management
 
@@ -598,8 +631,10 @@ In practice:
 - Save and cancel actions remain explicit and visible
 - Save, delete, and create actions disable while their request is pending
 - A failed section action preserves the current draft so the admin can retry
-- If the first sections load fails before any successful sections response, render only the sections error block and retry action for that region
-- If a later sections refresh fails after at least one successful sections load, keep the last rendered rows visible for context but disable section create, edit, and delete actions until sections reload succeeds
+- If the first sections load fails before any successful sections response, render only the sections error block and
+  retry action for that region
+- If a later sections refresh fails after at least one successful sections load, keep the last rendered rows visible for
+  context but disable section create, edit, and delete actions until sections reload succeeds
 
 ### Post Moderation
 
@@ -614,44 +649,46 @@ In practice:
 - Empty states should be short and operational, not playful
 - Errors should explain the failed action in plain language and remain dismissible
 - Success messages should confirm the completed action without dominating the page
-- Success confirmation uses the same lightweight inline success treatment already present on the page, not a new toast system
+- Success confirmation uses the same lightweight inline success treatment already present on the page, not a new toast
+  system
 
 ### Interaction State Matrix
 
-| Area | Pending Behavior | Error Behavior | Success Behavior |
-|------|------------------|----------------|------------------|
-| Refresh/load | Keep shell visible, disable refresh button, show loading copy in content area | Dismissible page-level error | Silent data refresh |
-| Role change | Disable the full user row during request | Restore prior value and re-enable the row with a concise page-level error | Small success confirmation |
-| Verify lawyer | Disable the full user row during request | Re-enable the row and show concise error | Update badges immediately after reload |
-| Ban/unban | Disable the full user row during request | Re-enable the row and preserve previous state | Update row badge after reload |
-| Delete user | Disable the full user row after confirmation | Re-enable the row and show concise error | Remove row after reload |
-| Create/edit section | Disable save button only for the active side-panel form | Preserve draft and show concise error | Keep updated data visible after reload |
-| Delete section | Disable delete control for that row after confirmation | Re-enable row and show concise error | Remove row after reload |
-| Post moderation actions | Disable only the clicked control while request is active | Restore control state and show concise error | Refresh post state inline |
+| Area                    | Pending Behavior                                                              | Error Behavior                                                            | Success Behavior                       |
+|-------------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------|----------------------------------------|
+| Refresh/load            | Keep shell visible, disable refresh button, show loading copy in content area | Dismissible page-level error                                              | Silent data refresh                    |
+| Role change             | Disable the full user row during request                                      | Restore prior value and re-enable the row with a concise page-level error | Small success confirmation             |
+| Verify lawyer           | Disable the full user row during request                                      | Re-enable the row and show concise error                                  | Update badges immediately after reload |
+| Ban/unban               | Disable the full user row during request                                      | Re-enable the row and preserve previous state                             | Update row badge after reload          |
+| Delete user             | Disable the full user row after confirmation                                  | Re-enable the row and show concise error                                  | Remove row after reload                |
+| Create/edit section     | Disable save button only for the active side-panel form                       | Preserve draft and show concise error                                     | Keep updated data visible after reload |
+| Delete section          | Disable delete control for that row after confirmation                        | Re-enable row and show concise error                                      | Remove row after reload                |
+| Post moderation actions | Disable only the clicked control while request is active                      | Restore control state and show concise error                              | Refresh post state inline              |
 
 ### Mutation Reload Matrix
 
-| Action | Optimistic Update | Reload Behavior |
-|--------|-------------------|-----------------|
-| User role change | No | Reload users only; if reload fails, unlock the row and surface a users retry path plus a concise page-level error |
-| Verify lawyer | No | Reload users only; if reload fails, unlock the row and surface a users retry path plus a concise page-level error |
-| Ban/unban user | No | Reload users only; if reload fails, unlock the row and surface a users retry path plus a concise page-level error |
-| Delete user | No | Reload users only; if reload fails, keep the last rendered list visible, surface a users retry path plus a concise page-level error, and rely on the successful retry to reconcile the missing row |
-| Create section | No | Reload folders before closing panel |
-| Edit section | No | Reload folders before closing panel |
-| Delete section | No | Reload folders only; if reload fails, keep the last rendered list visible, surface a sections retry path plus a concise page-level error, and rely on the successful retry to reconcile the removed row |
+| Action           | Optimistic Update | Reload Behavior                                                                                                                                                                                         |
+|------------------|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| User role change | No                | Reload users only; if reload fails, unlock the row and surface a users retry path plus a concise page-level error                                                                                       |
+| Verify lawyer    | No                | Reload users only; if reload fails, unlock the row and surface a users retry path plus a concise page-level error                                                                                       |
+| Ban/unban user   | No                | Reload users only; if reload fails, unlock the row and surface a users retry path plus a concise page-level error                                                                                       |
+| Delete user      | No                | Reload users only; if reload fails, keep the last rendered list visible, surface a users retry path plus a concise page-level error, and rely on the successful retry to reconcile the missing row      |
+| Create section   | No                | Reload folders before closing panel                                                                                                                                                                     |
+| Edit section     | No                | Reload folders before closing panel                                                                                                                                                                     |
+| Delete section   | No                | Reload folders only; if reload fails, keep the last rendered list visible, surface a sections retry path plus a concise page-level error, and rely on the successful retry to reconcile the removed row |
 
 ### Initial Load Matrix
 
-| Users Load | Sections Load | Page Result |
-|-----------|----------------|-------------|
-| Success | Success | Render the full shell and all summary data |
-| Success | Failure | Render the shell, user moderation content, and a dismissible section-specific error with retry |
-| Failure | Success | Render the shell, section management content, and a dismissible user-specific error with retry |
-| Failure | Failure | Render the header and sidebar, keep the main users and sections regions mounted with their inline error blocks, hide the section form panel, and show the global refresh action; do not render stale rows because neither dataset has ever loaded successfully |
-| Refresh fails after prior success | Any | Keep the last successful content visible, surface the relevant inline retry path, and do not replace visible content with empty states |
+| Users Load                        | Sections Load | Page Result                                                                                                                                                                                                                                                    |
+|-----------------------------------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Success                           | Success       | Render the full shell and all summary data                                                                                                                                                                                                                     |
+| Success                           | Failure       | Render the shell, user moderation content, and a dismissible section-specific error with retry                                                                                                                                                                 |
+| Failure                           | Success       | Render the shell, section management content, and a dismissible user-specific error with retry                                                                                                                                                                 |
+| Failure                           | Failure       | Render the header and sidebar, keep the main users and sections regions mounted with their inline error blocks, hide the section form panel, and show the global refresh action; do not render stale rows because neither dataset has ever loaded successfully |
+| Refresh fails after prior success | Any           | Keep the last successful content visible, surface the relevant inline retry path, and do not replace visible content with empty states                                                                                                                         |
 
-Partial rendering is allowed when exactly one dataset succeeds. The page should not hide all successful content because a sibling request failed.
+Partial rendering is allowed when exactly one dataset succeeds. The page should not hide all successful content because
+a sibling request failed.
 
 Stale-data rule:
 
@@ -660,11 +697,11 @@ Stale-data rule:
 
 ### Per-Region Loading Matrix
 
-| Users | Sections | Region Behavior |
-|-------|----------|-----------------|
-| Loading | Loading | Keep shell mounted, show loading state in both main sections, hide section form interactions |
-| Loading | Ready | Render sections content normally; users area shows its loading state |
-| Ready | Loading | Render users content normally; sections area shows its loading state and section form stays disabled |
+| Users   | Sections | Region Behavior                                                                                      |
+|---------|----------|------------------------------------------------------------------------------------------------------|
+| Loading | Loading  | Keep shell mounted, show loading state in both main sections, hide section form interactions         |
+| Loading | Ready    | Render sections content normally; users area shows its loading state                                 |
+| Ready   | Loading  | Render users content normally; sections area shows its loading state and section form stays disabled |
 
 Retry rules:
 
@@ -678,17 +715,18 @@ Dataset-specific error ownership:
 - `ManageSectionsSection` renders sections-specific load errors and retry controls inline
 - `ManageAlerts` remains reserved for the latest page-level action outcome
 - `page.tsx` renders the shell-level load error when both datasets fail at once
-- In the dual-failure state, the shell-level load error appears above the main content regions while the header refresh action remains available
+- In the dual-failure state, the shell-level load error appears above the main content regions while the header refresh
+  action remains available
 
 ### Feedback Routing Matrix
 
-| Outcome | Surface |
-|---------|---------|
-| User or section mutation success | `ManageAlerts` only |
-| User or section mutation failure | `ManageAlerts` only |
-| Users dataset load failure | Inline in `ManageUsersSection` |
-| Sections dataset load failure | Inline in `ManageSectionsSection` |
-| Dual dataset load failure | Shell Error Surface |
+| Outcome                                | Surface                                             |
+|----------------------------------------|-----------------------------------------------------|
+| User or section mutation success       | `ManageAlerts` only                                 |
+| User or section mutation failure       | `ManageAlerts` only                                 |
+| Users dataset load failure             | Inline in `ManageUsersSection`                      |
+| Sections dataset load failure          | Inline in `ManageSectionsSection`                   |
+| Dual dataset load failure              | Shell Error Surface                                 |
 | Post-save refetch failure for sections | Inline inside `CreateSectionForm` plus retry action |
 
 Alert concurrency rule:
@@ -698,13 +736,13 @@ Alert concurrency rule:
 
 ### Empty State Matrix
 
-| Area | Empty Condition | Required UI |
-|------|-----------------|-------------|
-| Users list | Users request succeeds with zero users | Show short operational copy in the users section: no users found |
-| Sections list | Folders request succeeds with zero sections | Show short operational copy and keep the create action visible |
-| Sidebar attention cards | Relevant count is zero | Render a `0` state without warning styling rather than hiding the card |
-| Sidebar attention cards | Users dataset fails | Omit user-derived cards and keep only section-independent navigation plus the moderation link |
-| Main stats | A metric depends on a failed dataset | Omit that metric and render the remaining successful stats only |
+| Area                    | Empty Condition                             | Required UI                                                                                   |
+|-------------------------|---------------------------------------------|-----------------------------------------------------------------------------------------------|
+| Users list              | Users request succeeds with zero users      | Show short operational copy in the users section: no users found                              |
+| Sections list           | Folders request succeeds with zero sections | Show short operational copy and keep the create action visible                                |
+| Sidebar attention cards | Relevant count is zero                      | Render a `0` state without warning styling rather than hiding the card                        |
+| Sidebar attention cards | Users dataset fails                         | Omit user-derived cards and keep only section-independent navigation plus the moderation link |
+| Main stats              | A metric depends on a failed dataset        | Omit that metric and render the remaining successful stats only                               |
 
 ### `PostDetailSection` Acceptance Checklist
 
@@ -747,7 +785,9 @@ The refreshed page continues using:
 - Existing role, verification, ban, and delete user calls
 - Existing post update and moderation calls used by `PostDetailSection`
 
-Derived summary counts should be computed from already-loaded user and folder data. No new post-count or moderation-summary API is introduced in this phase. This keeps the redesign self-contained and avoids coupling UI polish to new server work.
+Derived summary counts should be computed from already-loaded user and folder data. No new post-count or
+moderation-summary API is introduced in this phase. This keeps the redesign self-contained and avoids coupling UI polish
+to new server work.
 
 ## Testing Strategy
 
@@ -769,7 +809,8 @@ Testing for implementation should cover:
 - Post moderation restyle does not regress pending, success, and error feedback for moderation actions
 - `PostDetailSection` still satisfies the acceptance checklist above without route or IA changes
 
-The implementation should favor focused component tests and existing frontend test patterns before introducing broad E2E coverage.
+The implementation should favor focused component tests and existing frontend test patterns before introducing broad E2E
+coverage.
 
 ## Risks and Mitigations
 
@@ -780,7 +821,8 @@ Mitigation:
 - Keep business logic and handlers largely in place
 - Limit the first pass to presentation and local composition changes
 - Verify all existing actions manually after the redesign
-- Preserve existing self-targeting and destructive-action guardrails, including browser confirmation flows already used by the page
+- Preserve existing self-targeting and destructive-action guardrails, including browser confirmation flows already used
+  by the page
 
 ### Risk: too much “v2 polish” reduces density
 

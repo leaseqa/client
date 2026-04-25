@@ -1,17 +1,16 @@
 import React from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, test, vi } from "vitest";
+import {renderToStaticMarkup} from "react-dom/server";
+import {describe, expect, test, vi} from "vitest";
+import PostContent from "../[id]/components/PostContent";
+import AnswersSection from "../[id]/components/AnswersSection";
+import DiscussionsSection from "../[id]/components/DiscussionsSection";
 
 vi.mock("next/dynamic", () => ({
   default: () =>
     function MockDynamicEditor() {
-      return <div data-testid="mock-editor" />;
+      return <div data-testid="mock-editor"/>;
     },
 }));
-
-import PostContent from "../[id]/components/PostContent";
-import AnswersSection from "../[id]/components/AnswersSection";
-import DiscussionsSection from "../[id]/components/DiscussionsSection";
 
 describe("moderation render smoke", () => {
   test("PostContent keeps pin and status controls visible for admins on the v2 surface", () => {
@@ -26,7 +25,7 @@ describe("moderation render smoke", () => {
           createdAt: "2026-03-12T12:00:00.000Z",
           viewCount: 12,
           isAnonymous: false,
-          author: { username: "alex" },
+          author: {username: "alex"},
         } as any}
         folders={[]}
         canEdit
@@ -37,16 +36,26 @@ describe("moderation render smoke", () => {
         editFolders={[]}
         resolvedStatus="open"
         isAdmin
-        onStatusChange={() => {}}
-        onEdit={() => {}}
-        onDelete={() => {}}
-        onSave={() => {}}
-        onCancel={() => {}}
-        onSummaryChange={() => {}}
-        onDetailsChange={() => {}}
-        onUrgencyChange={() => {}}
-        onFoldersChange={() => {}}
-        onTogglePin={() => {}}
+        onStatusChange={() => {
+        }}
+        onEdit={() => {
+        }}
+        onDelete={() => {
+        }}
+        onSave={() => {
+        }}
+        onCancel={() => {
+        }}
+        onSummaryChange={() => {
+        }}
+        onDetailsChange={() => {
+        }}
+        onUrgencyChange={() => {
+        }}
+        onFoldersChange={() => {
+        }}
+        onTogglePin={() => {
+        }}
       />,
     );
 
@@ -69,17 +78,28 @@ describe("moderation render smoke", () => {
         answerEditing={null}
         answerEditContent=""
         error=""
-        onShowAnswerBox={() => {}}
-        onAnswerContentChange={() => {}}
-        onAnswerFocus={() => {}}
-        onAnswerFilesChange={() => {}}
-        onSubmitAnswer={() => {}}
-        onClearAnswer={() => {}}
-        onEditAnswer={() => {}}
-        onEditContentChange={() => {}}
-        onSaveEdit={() => {}}
-        onCancelEdit={() => {}}
-        onDeleteAnswer={() => {}}
+        onShowAnswerBox={() => {
+        }}
+        onAnswerContentChange={() => {
+        }}
+        onAnswerFocus={() => {
+        }}
+        onAnswerFilesChange={() => {
+        }}
+        onSubmitAnswer={() => {
+        }}
+        onClearAnswer={() => {
+        }}
+        onEditAnswer={() => {
+        }}
+        onEditContentChange={() => {
+        }}
+        onSaveEdit={() => {
+        }}
+        onCancelEdit={() => {
+        }}
+        onDeleteAnswer={() => {
+        }}
       />,
     );
 
@@ -100,17 +120,28 @@ describe("moderation render smoke", () => {
         discussionDrafts={{}}
         discussionReplying={null}
         discussionEditing={null}
-        onShowFollowBox={() => {}}
-        onFollowFocus={() => {}}
-        onDraftChange={() => {}}
-        onSubmit={() => {}}
-        onUpdate={() => {}}
-        onDelete={() => {}}
-        onReply={() => {}}
-        onEdit={() => {}}
-        onCancelReply={() => {}}
-        onCancelEdit={() => {}}
-        onClearFollow={() => {}}
+        onShowFollowBox={() => {
+        }}
+        onFollowFocus={() => {
+        }}
+        onDraftChange={() => {
+        }}
+        onSubmit={() => {
+        }}
+        onUpdate={() => {
+        }}
+        onDelete={() => {
+        }}
+        onReply={() => {
+        }}
+        onEdit={() => {
+        }}
+        onCancelReply={() => {
+        }}
+        onCancelEdit={() => {
+        }}
+        onClearFollow={() => {
+        }}
       />,
     );
 

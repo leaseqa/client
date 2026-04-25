@@ -1,35 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Badge, Form, Spinner } from "react-bootstrap";
-import { Clock3, FileText, MessageSquareQuote, Shield } from "lucide-react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {useRouter} from "next/navigation";
+import {Badge, Form, Spinner} from "react-bootstrap";
+import {Clock3, FileText, MessageSquareQuote, Shield} from "lucide-react";
 
-import ToastNotification, {
-  ToastData,
-} from "@/components/ui/ToastNotification";
+import ToastNotification, {ToastData,} from "@/components/ui/ToastNotification";
 import AceternityFileUpload from "@/components/ui/AceternityFileUpload";
 import AceternityStatefulButton from "@/components/ui/AceternityStatefulButton";
 import PageLoadingState from "@/components/ui/PageLoadingState";
 import * as client from "./client";
-import { RagSession } from "./types";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
+import {RagSession} from "./types";
+import {useSelector} from "react-redux";
+import {RootState} from "@/app/store";
 import {
+  AUTO_ANALYZE_QUESTION,
   CHAT_UPLOAD_ACCEPT,
   CHAT_UPLOAD_MAX_MB,
   FILE_SUGGESTED_PROMPTS,
-  AUTO_ANALYZE_QUESTION,
   getDisplayedSource,
   getEmptyStateMessage,
   getInlineCitationItems,
   getNextRevealLength,
   getResultsPanelState,
   getSessionInputPlan,
+  getVisibleMessages,
   shouldShowLegacyCitationList,
   TEXT_RETRY_PROMPT_LABEL,
-  getVisibleMessages,
 } from "./view-model";
 
 const formatStatusLabel = (status: RagSession["status"]) => {
@@ -89,7 +87,7 @@ export default function AIReviewPage() {
   const revealTimerRef = useRef<number | null>(null);
 
   const showToast = useCallback((message: string, type: "success" | "error") => {
-    setToast({ show: true, message, type });
+    setToast({show: true, message, type});
   }, []);
 
   const loadSessions = useCallback(async () => {
@@ -397,7 +395,7 @@ export default function AIReviewPage() {
     <div className="review-flow">
       <ToastNotification
         toast={toast}
-        onClose={() => setToast({ ...toast, show: false })}
+        onClose={() => setToast({...toast, show: false})}
       />
 
       <section className="review-header-section">
@@ -434,7 +432,7 @@ export default function AIReviewPage() {
 
           <div className="review-form-footer">
             <div className="review-note">
-              <Shield size={14} />
+              <Shield size={14}/>
               <span>
                 {isGuest
                   ? "Guest chats stay in this browser session."
@@ -463,7 +461,7 @@ export default function AIReviewPage() {
       <section className="review-history-section">
         <div className="review-history-header">
           <div className="qa-sidebar-label">
-            <Clock3 size={12} />
+            <Clock3 size={12}/>
             <span>History</span>
           </div>
           {isGuest ? (
@@ -473,7 +471,7 @@ export default function AIReviewPage() {
 
         {loadingSessions ? (
           <div className="review-history-inline">
-            <Spinner size="sm" />
+            <Spinner size="sm"/>
             <span>Loading...</span>
           </div>
         ) : sessions.length > 0 ? (
@@ -505,7 +503,7 @@ export default function AIReviewPage() {
       <section className="review-results-section">
         <div className="review-results-header">
           <div>
-            <h2 className="qa-page-title" style={{ fontSize: "1.4rem" }}>
+            <h2 className="qa-page-title" style={{fontSize: "1.4rem"}}>
               {showSession ? resultsPanelState.title : "Chat"}
             </h2>
             <p className="qa-page-sub">
@@ -525,7 +523,7 @@ export default function AIReviewPage() {
           <>
             <div className="review-recs-panel">
               <div className="qa-sidebar-label">
-                <FileText size={12} />
+                <FileText size={12}/>
                 <span>Current source</span>
               </div>
               <p className="review-summary-text">{displaySourcePreview}</p>
@@ -536,7 +534,7 @@ export default function AIReviewPage() {
 
             <div className="review-next-step">
               <div className="qa-sidebar-label">
-                <MessageSquareQuote size={12} />
+                <MessageSquareQuote size={12}/>
                 <span>{resultsPanelState.conversationLabel}</span>
               </div>
               <div className="review-chat-log">
@@ -601,7 +599,7 @@ export default function AIReviewPage() {
                                   >
                                     <span>{bullet.text}</span>
                                     {bullet.citationIndices.length > 0 ? (
-                                    <span className="review-chat-inline-citations">
+                                      <span className="review-chat-inline-citations">
                                         {getInlineCitationItems({
                                           citations: message.citations,
                                           citationIndices: bullet.citationIndices,
@@ -655,8 +653,8 @@ export default function AIReviewPage() {
                     {activeSession?.status === "ready" ? (
                       <div className="review-prompt-grid">
                         {(activeSession.sourceKind === "upload"
-                          ? FILE_SUGGESTED_PROMPTS
-                          : [TEXT_RETRY_PROMPT_LABEL]
+                            ? FILE_SUGGESTED_PROMPTS
+                            : [TEXT_RETRY_PROMPT_LABEL]
                         ).map((prompt) => (
                           <button
                             key={prompt}
@@ -676,7 +674,7 @@ export default function AIReviewPage() {
                       </div>
                     ) : null}
                     <div className="review-history-inline">
-                      {getEmptyStateMessage({ activeSession })}
+                      {getEmptyStateMessage({activeSession})}
                     </div>
                   </>
                 )}
@@ -698,7 +696,7 @@ export default function AIReviewPage() {
 
                 <div className="review-form-footer">
                   <div className="review-note">
-                    <Shield size={14} />
+                    <Shield size={14}/>
                     <span>
                       {activeSession.status === "ready"
                         ? "LeaseQA provides legal information, not legal advice."

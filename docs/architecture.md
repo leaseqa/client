@@ -11,7 +11,8 @@ LeaseQA v2 runs as two separate application repositories:
   - Express API and RAG backend
   - deployed to Render
 
-This is no longer a unified frontend/backend monorepo runtime. The client proxies `/api/*` requests to the Express backend.
+This is no longer a unified frontend/backend monorepo runtime. The client proxies `/api/*` requests to the Express
+backend.
 
 ## Runtime Topology
 
@@ -52,7 +53,8 @@ Current auth flow:
 3. The client restores session state through `GET /api/auth/session`
 4. Logout destroys the server session and clears the client session state
 
-Guest mode is supported for AI review, but guest users do not receive persisted account history or community write access.
+Guest mode is supported for AI review, but guest users do not receive persisted account history or community write
+access.
 
 ## Major Product Flows
 
@@ -61,8 +63,8 @@ Guest mode is supported for AI review, but guest users do not receive persisted 
 1. User opens `/ai-review`
 2. Client creates a RAG session through `/api/rag/sessions`
 3. Backend parses the input, stores the session, and runs retrieval against:
-   - uploaded source material
-   - ingested legal corpus
+  - uploaded source material
+  - ingested legal corpus
 4. Backend returns a structured answer with short summary, bullets, and citations
 5. Follow-up questions continue through `/api/rag/sessions/:sessionId/messages`
 
@@ -135,7 +137,8 @@ These flows use the same application shell as the public site, with extra contro
 - Client: `http://localhost:3000`
 - Server: `http://localhost:4000`
 
-The client can call the backend directly through `NEXT_PUBLIC_HTTP_SERVER` and also proxies `/api/*` through `API_PROXY_URL` or the same backend origin.
+The client can call the backend directly through `NEXT_PUBLIC_HTTP_SERVER` and also proxies `/api/*` through
+`API_PROXY_URL` or the same backend origin.
 
 ## Documentation Boundaries
 

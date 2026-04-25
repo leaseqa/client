@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Scale, Wrench, Github } from "lucide-react";
+import {FileText, Github, Scale, Wrench} from "lucide-react";
 
 const team = [
   {
@@ -39,7 +39,7 @@ export default function InfoPage() {
 
       <div
         className="small text-secondary mb-3 fw-semibold"
-        style={{ letterSpacing: "0.08em" }}
+        style={{letterSpacing: "0.08em"}}
       >
         TEAM
       </div>
@@ -50,7 +50,7 @@ export default function InfoPage() {
               <div
                 className={`info-team-icon info-team-icon--${member.accent}`}
               >
-                <member.icon size={20} />
+                <member.icon size={20}/>
               </div>
               <div className="fw-bold mb-1">{member.name}</div>
               <span className="info-role-pill mb-2">{member.role}</span>
@@ -62,7 +62,7 @@ export default function InfoPage() {
 
       <div
         className="d-flex justify-content-center mt-5 mb-5"
-        style={{ paddingTop: "2rem" }}
+        style={{paddingTop: "2rem"}}
       >
         <a
           href="https://github.com/leaseqa"
@@ -71,7 +71,7 @@ export default function InfoPage() {
           className="text-decoration-none"
           aria-label="Visit LeaseQA on GitHub"
         >
-          <Github size={48} className="text-secondary" />
+          <Github size={48} className="text-secondary"/>
         </a>
       </div>
     </div>

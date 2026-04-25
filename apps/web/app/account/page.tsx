@@ -1,19 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, setSession, signOut } from "@/app/store";
-import { Col, Form, Row, Stack } from "react-bootstrap";
-import {
-  FaEnvelope,
-  FaIdBadge,
-  FaRobot,
-  FaShieldAlt,
-  FaSignInAlt,
-  FaUserPlus,
-} from "react-icons/fa";
-import { Scale, Shield, Home } from "lucide-react";
+import {useCallback, useEffect, useState} from "react";
+import {useRouter} from "next/navigation";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState, setSession, signOut} from "@/app/store";
+import {Col, Form, Row, Stack} from "react-bootstrap";
+import {FaEnvelope, FaIdBadge, FaRobot, FaShieldAlt, FaSignInAlt, FaUserPlus,} from "react-icons/fa";
+import {Home, Scale, Shield} from "lucide-react";
 import * as client from "./client";
 import ActivityTimeline from "./components/ActivityTimeline";
 
@@ -107,28 +100,28 @@ export default function AccountPage() {
 
   return (
     <div className="mb-4">
-      <section className="page-header-section" style={{ borderBottom: "none" }}>
+      <section className="page-header-section" style={{borderBottom: "none"}}>
         <div className="account-header-row">
           <div className="d-flex align-items-center gap-3">
             <div className="account-avatar">
               {user?.name?.slice(0, 2).toUpperCase() || "?"}
             </div>
             <div>
-              <h1 className="qa-page-title" style={{ marginBottom: "0.25rem" }}>
+              <h1 className="qa-page-title" style={{marginBottom: "0.25rem"}}>
                 {user?.name || "Guest User"}
               </h1>
-              <p className="qa-page-sub" style={{ marginBottom: 0 }}>
+              <p className="qa-page-sub" style={{marginBottom: 0}}>
                 {user?.email || "Not signed in"}
               </p>
               {user && (
                 <div className="d-flex align-items-center gap-2 mt-2">
                   <span className="info-role-pill text-capitalize">
                     {user.role === "lawyer" ? (
-                      <Scale size={12} className="me-1" />
+                      <Scale size={12} className="me-1"/>
                     ) : user.role === "admin" ? (
-                      <Shield size={12} className="me-1" />
+                      <Shield size={12} className="me-1"/>
                     ) : (
-                      <Home size={12} className="me-1" />
+                      <Home size={12} className="me-1"/>
                     )}
                     {user.role}
                   </span>
@@ -139,7 +132,7 @@ export default function AccountPage() {
           </div>
           {isAuthenticated && (
             <a href="/ai-review" className="btn-warm-primary">
-              <FaRobot />
+              <FaRobot/>
               Use AI Review
             </a>
           )}
@@ -153,7 +146,7 @@ export default function AccountPage() {
               <div>
                 <div className="d-flex align-items-center gap-3 mb-4">
                   <div className="info-team-icon info-team-icon--olive">
-                    <FaIdBadge size={18} />
+                    <FaIdBadge size={18}/>
                   </div>
                   <div>
                     <div className="fw-bold">Profile overview</div>
@@ -165,7 +158,7 @@ export default function AccountPage() {
 
                 <Stack gap={3}>
                   <div className="account-field">
-                    <FaIdBadge className="account-field-icon" />
+                    <FaIdBadge className="account-field-icon"/>
                     <div className="w-100">
                       <div className="fw-semibold mb-1">Name</div>
                       {editMode ? (
@@ -186,7 +179,7 @@ export default function AccountPage() {
                   </div>
 
                   <div className="account-field">
-                    <FaEnvelope className="account-field-icon" />
+                    <FaEnvelope className="account-field-icon"/>
                     <div className="w-100">
                       <div className="fw-semibold mb-1">Email</div>
                       {editMode ? (
@@ -210,7 +203,7 @@ export default function AccountPage() {
                   </div>
 
                   <div className="account-field">
-                    <FaShieldAlt className="account-field-icon" />
+                    <FaShieldAlt className="account-field-icon"/>
                     <div>
                       <div className="fw-semibold">Role</div>
                       <div className="text-secondary small text-capitalize">
@@ -231,7 +224,7 @@ export default function AccountPage() {
                         href="/auth/login"
                         className="btn-warm-primary w-100 justify-content-center"
                       >
-                        <FaSignInAlt />
+                        <FaSignInAlt/>
                         Sign In for Full Access
                       </a>
                     </Stack>
@@ -281,7 +274,7 @@ export default function AccountPage() {
               <div>
                 <div className="d-flex align-items-center gap-3 mb-4">
                   <div className="info-team-icon info-team-icon--terra">
-                    <FaShieldAlt size={18} />
+                    <FaShieldAlt size={18}/>
                   </div>
                   <div>
                     <div className="fw-bold">Access Control</div>
@@ -301,14 +294,14 @@ export default function AccountPage() {
                     href="/auth/login"
                     className="btn-warm-primary w-100 justify-content-center"
                   >
-                    <FaSignInAlt />
+                    <FaSignInAlt/>
                     Sign In
                   </a>
                   <a
                     href="/auth/register"
                     className="btn-warm-outline w-100 justify-content-center"
                   >
-                    <FaUserPlus />
+                    <FaUserPlus/>
                     Create Account
                   </a>
                 </Stack>

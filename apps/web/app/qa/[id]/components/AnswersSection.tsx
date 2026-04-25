@@ -1,7 +1,6 @@
-import React from "react";
-import {useRef} from "react";
-import {FaEdit, FaTrash, FaPaperclip} from "react-icons/fa";
-import {Scale, Home} from "lucide-react";
+import React, {useRef} from "react";
+import {FaEdit, FaPaperclip, FaTrash} from "react-icons/fa";
+import {Home, Scale} from "lucide-react";
 import {format} from "date-fns";
 import dynamic from "next/dynamic";
 import {Answer, AnswersSectionProps} from "../../types";
@@ -9,147 +8,147 @@ import {Answer, AnswersSectionProps} from "../../types";
 const ReactQuill = dynamic(() => import("react-quill-new"), {ssr: false});
 
 export default function AnswersSection({
-    answers,
-    currentUserId,
-    currentRole,
-    isGuest = false,
-    showAnswerBox,
-    answerContent,
-    answerFocused,
-    answerFiles,
-    answerEditing,
-    answerEditContent,
-    error,
-    onShowAnswerBox,
-    onAnswerContentChange,
-    onAnswerFocus,
-    onAnswerFilesChange,
-    onSubmitAnswer,
-    onClearAnswer,
-    onEditAnswer,
-    onEditContentChange,
-    onSaveEdit,
-    onCancelEdit,
-    onDeleteAnswer,
-}: AnswersSectionProps) {
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
+                                         answers,
+                                         currentUserId,
+                                         currentRole,
+                                         isGuest = false,
+                                         showAnswerBox,
+                                         answerContent,
+                                         answerFocused,
+                                         answerFiles,
+                                         answerEditing,
+                                         answerEditContent,
+                                         error,
+                                         onShowAnswerBox,
+                                         onAnswerContentChange,
+                                         onAnswerFocus,
+                                         onAnswerFilesChange,
+                                         onSubmitAnswer,
+                                         onClearAnswer,
+                                         onEditAnswer,
+                                         onEditContentChange,
+                                         onSaveEdit,
+                                         onCancelEdit,
+                                         onDeleteAnswer,
+                                       }: AnswersSectionProps) {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    const canEditAnswer = (ans: Answer) => !isGuest && (currentRole === "admin" || ans.authorId === currentUserId);
+  const canEditAnswer = (ans: Answer) => !isGuest && (currentRole === "admin" || ans.authorId === currentUserId);
 
-    return (
-        <section className="post-detail-card post-detail-card-secondary qa-v2-panel">
-            <div className="post-section-header">
-                <div>
-                    <div className="post-section-kicker">Response queue</div>
-                    <h2 className="post-section-title">Answers</h2>
-                </div>
-            </div>
+  return (
+    <section className="post-detail-card post-detail-card-secondary qa-v2-panel">
+      <div className="post-section-header">
+        <div>
+          <div className="post-section-kicker">Response queue</div>
+          <h2 className="post-section-title">Answers</h2>
+        </div>
+      </div>
 
-            {!isGuest && !showAnswerBox && (
-                <button className="post-btn primary" onClick={onShowAnswerBox} type="button">
-                    Write an answer
-                </button>
-            )}
+      {!isGuest && !showAnswerBox && (
+        <button className="post-btn primary" onClick={onShowAnswerBox} type="button">
+          Write an answer
+        </button>
+      )}
 
-            {!isGuest && showAnswerBox && (
-                <div className="post-editor-box">
-                    <ReactQuill
-                        theme="snow"
-                        value={answerContent}
-                        onChange={onAnswerContentChange}
-                        onFocus={onAnswerFocus}
-                    />
-                    <div className="post-editor-actions">
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            multiple
-                            hidden
-                            onChange={(e) => onAnswerFilesChange(Array.from(e.target.files || []))}
-                        />
-                        <button
-                            className="post-btn secondary"
-                            onClick={() => fileInputRef.current?.click()}
-                            type="button"
-                        >
-                            <FaPaperclip size={12}/>
-                            {answerFiles.length > 0 ? ` ${answerFiles.length} files` : " Attach"}
-                        </button>
-                        <button className="post-btn primary" onClick={onSubmitAnswer} type="button">
-                            Post answer
-                        </button>
-                        <button className="post-btn secondary" onClick={onClearAnswer} type="button">
-                            Cancel
-                        </button>
-                    </div>
-                    {error && <div className="post-error">{error}</div>}
-                </div>
-            )}
+      {!isGuest && showAnswerBox && (
+        <div className="post-editor-box">
+          <ReactQuill
+            theme="snow"
+            value={answerContent}
+            onChange={onAnswerContentChange}
+            onFocus={onAnswerFocus}
+          />
+          <div className="post-editor-actions">
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              hidden
+              onChange={(e) => onAnswerFilesChange(Array.from(e.target.files || []))}
+            />
+            <button
+              className="post-btn secondary"
+              onClick={() => fileInputRef.current?.click()}
+              type="button"
+            >
+              <FaPaperclip size={12}/>
+              {answerFiles.length > 0 ? ` ${answerFiles.length} files` : " Attach"}
+            </button>
+            <button className="post-btn primary" onClick={onSubmitAnswer} type="button">
+              Post answer
+            </button>
+            <button className="post-btn secondary" onClick={onClearAnswer} type="button">
+              Cancel
+            </button>
+          </div>
+          {error && <div className="post-error">{error}</div>}
+        </div>
+      )}
 
-            {answers.length === 0 && !showAnswerBox && (
-                <p className="post-empty-note">No answers yet. Add one clear response or legal note.</p>
-            )}
+      {answers.length === 0 && !showAnswerBox && (
+        <p className="post-empty-note">No answers yet. Add one clear response or legal note.</p>
+      )}
 
-            {answers.length > 0 && (
-                <div className="post-answers-list">
-                    {answers.map((ans) => (
-                        <div key={ans._id} className="post-answer-item">
-                            <div className="post-answer-header">
+      {answers.length > 0 && (
+        <div className="post-answers-list">
+          {answers.map((ans) => (
+            <div key={ans._id} className="post-answer-item">
+              <div className="post-answer-header">
                                 <span className="post-answer-author">
                                     {ans.author?.username || ans.author?.email || "Unknown"}
                                 </span>
-                                <span className="post-answer-type">
+                <span className="post-answer-type">
                                     <span className="d-inline-flex align-items-center">
                                         {ans.answerType === "lawyer_opinion" ? (
-                                            <>
-                                                <Scale size={14} className="me-1" />
-                                                Lawyer
-                                            </>
+                                          <>
+                                            <Scale size={14} className="me-1"/>
+                                            Lawyer
+                                          </>
                                         ) : (
-                                            <>
-                                                <Home size={14} className="me-1" />
-                                                Community
-                                            </>
+                                          <>
+                                            <Home size={14} className="me-1"/>
+                                            Community
+                                          </>
                                         )}
                                     </span>
                                 </span>
-                                <span className="post-answer-date">
+                <span className="post-answer-date">
                                     {ans.createdAt ? format(new Date(ans.createdAt), "MMM d, yyyy") : ""}
                                 </span>
-                                {canEditAnswer(ans) && (
-                                    <div className="post-answer-actions">
-                                        <button onClick={() => onEditAnswer(ans._id, ans.content)} type="button">
-                                            <FaEdit size={12}/>
-                                        </button>
-                                        <button onClick={() => onDeleteAnswer(ans._id)} type="button">
-                                            <FaTrash size={12}/>
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                            {answerEditing === ans._id ? (
-                                <div className="post-editor-box">
-                                    <ReactQuill
-                                        theme="snow"
-                                        value={answerEditContent}
-                                        onChange={onEditContentChange}
-                                    />
-                                    <div className="post-editor-actions">
-                                        <button className="post-btn primary" onClick={() => onSaveEdit(ans._id)} type="button">
-                                            Save
-                                        </button>
-                                        <button className="post-btn secondary" onClick={onCancelEdit} type="button">
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="post-answer-content" dangerouslySetInnerHTML={{__html: ans.content}}/>
-                            )}
-                        </div>
-                    ))}
+                {canEditAnswer(ans) && (
+                  <div className="post-answer-actions">
+                    <button onClick={() => onEditAnswer(ans._id, ans.content)} type="button">
+                      <FaEdit size={12}/>
+                    </button>
+                    <button onClick={() => onDeleteAnswer(ans._id)} type="button">
+                      <FaTrash size={12}/>
+                    </button>
+                  </div>
+                )}
+              </div>
+              {answerEditing === ans._id ? (
+                <div className="post-editor-box">
+                  <ReactQuill
+                    theme="snow"
+                    value={answerEditContent}
+                    onChange={onEditContentChange}
+                  />
+                  <div className="post-editor-actions">
+                    <button className="post-btn primary" onClick={() => onSaveEdit(ans._id)} type="button">
+                      Save
+                    </button>
+                    <button className="post-btn secondary" onClick={onCancelEdit} type="button">
+                      Cancel
+                    </button>
+                  </div>
                 </div>
-            )}
-        </section>
-    );
+              ) : (
+                <div className="post-answer-content" dangerouslySetInnerHTML={{__html: ans.content}}/>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
 }

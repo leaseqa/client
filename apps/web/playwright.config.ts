@@ -1,5 +1,5 @@
 import path from "node:path";
-import { defineConfig } from "@playwright/test";
+import {defineConfig} from "@playwright/test";
 
 const frontendPort = process.env.PLAYWRIGHT_FRONTEND_PORT || "3100";
 const backendPort = process.env.PLAYWRIGHT_BACKEND_PORT || "4100";

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import useSWR from "swr";
-import { Upload, MessageCircle, Scale } from "lucide-react";
+import {MessageCircle, Scale, Upload} from "lucide-react";
 import * as client from "./client";
 
 type PostItem = {
@@ -22,10 +22,10 @@ const statsFetcher = async () => {
   const response = await client.fetchStats();
   if (response && response.data) {
     return [
-      { label: "Open questions", value: response.data.unansweredPosts || 0 },
-      { label: "Attorney replies", value: response.data.lawyerResponses || 0 },
-      { label: "Recent posts", value: response.data.totalPosts || 0 },
-      { label: "Notices", value: response.data.adminPosts || 0 },
+      {label: "Open questions", value: response.data.unansweredPosts || 0},
+      {label: "Attorney replies", value: response.data.lawyerResponses || 0},
+      {label: "Recent posts", value: response.data.totalPosts || 0},
+      {label: "Notices", value: response.data.adminPosts || 0},
     ];
   }
   return EMPTY_STATS;
@@ -40,10 +40,10 @@ const hotPostsFetcher = async () => {
 };
 
 const EMPTY_STATS = [
-  { label: "Open questions", value: 0 },
-  { label: "Attorney replies", value: 0 },
-  { label: "Recent posts", value: 0 },
-  { label: "Notices", value: 0 },
+  {label: "Open questions", value: 0},
+  {label: "Attorney replies", value: 0},
+  {label: "Recent posts", value: 0},
+  {label: "Notices", value: 0},
 ];
 
 const STEPS = [
@@ -69,25 +69,25 @@ const STEPS = [
 
 const getPreviewStatus = (index: number, post: PostItem): PreviewStatus => {
   if ((post.viewCount || 0) >= 25) {
-    return { label: "Answered", tone: "answered" };
+    return {label: "Answered", tone: "answered"};
   }
 
   if (index === 0 || (post.viewCount || 0) >= 10) {
-    return { label: "Active", tone: "active" };
+    return {label: "Active", tone: "active"};
   }
 
-  return { label: "New", tone: "new" };
+  return {label: "New", tone: "new"};
 };
 
 export default function LandingPage() {
-  const { data: stats = EMPTY_STATS } = useSWR("stats/overview", statsFetcher, {
+  const {data: stats = EMPTY_STATS} = useSWR("stats/overview", statsFetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     dedupingInterval: DAY_MS,
     fallbackData: EMPTY_STATS,
   });
 
-  const { data: hotPosts = [] } = useSWR("posts/hot", hotPostsFetcher, {
+  const {data: hotPosts = []} = useSWR("posts/hot", hotPostsFetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     dedupingInterval: DAY_MS,
@@ -102,7 +102,7 @@ export default function LandingPage() {
           <span className="landing-eyebrow">For Boston renters</span>
           <h1 className="landing-hero-title">
             Read the lease.
-            <br />
+            <br/>
             Ask the <em>next</em> question.
           </h1>
           <p className="landing-hero-sub">
@@ -122,8 +122,8 @@ export default function LandingPage() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
               </svg>
             </Link>
             <Link href="/qa" className="landing-hero-cta-outline">
@@ -141,22 +141,22 @@ export default function LandingPage() {
               {hotPosts.map((post, i) => {
                 const status = getPreviewStatus(i, post);
                 return (
-                <Link
-                  key={post._id}
-                  href={`/qa?post=${post._id}`}
-                  className="landing-preview-item"
-                >
+                  <Link
+                    key={post._id}
+                    href={`/qa?post=${post._id}`}
+                    className="landing-preview-item"
+                  >
                   <span
                     className={`landing-preview-dot landing-preview-dot-${status.tone}`}
                     aria-hidden
                   />
-                  <span className="landing-preview-title">{post.summary}</span>
-                  <span
-                    className={`landing-preview-status landing-preview-status-${status.tone}`}
-                  >
+                    <span className="landing-preview-title">{post.summary}</span>
+                    <span
+                      className={`landing-preview-status landing-preview-status-${status.tone}`}
+                    >
                     {status.label}
                   </span>
-                </Link>
+                  </Link>
                 );
               })}
             </div>
@@ -177,7 +177,7 @@ export default function LandingPage() {
               <div key={step.num} className="landing-how-step">
                 <div className="landing-how-num">{step.num}</div>
                 <div className="landing-how-icon">
-                  <Icon size={18} strokeWidth={1.8} />
+                  <Icon size={18} strokeWidth={1.8}/>
                 </div>
                 <h3 className="landing-how-title">{step.title}</h3>
                 <p className="landing-how-desc">{step.desc}</p>
@@ -197,7 +197,7 @@ export default function LandingPage() {
           <div className="landing-stats-header">
             <span className="landing-stats-title">Community pulse</span>
             <span className="landing-stats-live">
-              <span className="landing-live-dot" />
+              <span className="landing-live-dot"/>
               Live
             </span>
           </div>

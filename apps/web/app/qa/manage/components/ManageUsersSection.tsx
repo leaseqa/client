@@ -1,6 +1,6 @@
 import React from "react";
 import UsersTable from "./UsersTable";
-import type { User } from "../../types";
+import type {User} from "../../types";
 
 type UsersAvailableProps = {
   isDataAvailable: true;
@@ -26,7 +26,7 @@ type ManageUsersSectionProps = {
 } & (UsersAvailableProps | UsersUnavailableProps);
 
 export default function ManageUsersSection(props: ManageUsersSectionProps) {
-  const { title, isLoading } = props;
+  const {title, isLoading} = props;
   if (!props.isDataAvailable && props.error) {
     return (
       <section id="users" className="admin-v2-section">

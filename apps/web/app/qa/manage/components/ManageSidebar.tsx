@@ -18,12 +18,12 @@ type ManageSidebarProps = {
 };
 
 export default function ManageSidebar({
-  overviewHref = "#overview",
-  usersHref = "#users",
-  sectionsHref = "#sections",
-  moderationHref = "/qa",
-  stats,
-}: ManageSidebarProps) {
+                                        overviewHref = "#overview",
+                                        usersHref = "#users",
+                                        sectionsHref = "#sections",
+                                        moderationHref = "/qa",
+                                        stats,
+                                      }: ManageSidebarProps) {
   return (
     <aside className="admin-v2-sidebar">
       <nav className="admin-v2-nav">

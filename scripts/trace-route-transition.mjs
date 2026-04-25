@@ -2,11 +2,11 @@ const previewBase = process.env.LEASEQA_PREVIEW_URL || "http://127.0.0.1:3000";
 const devtoolsBase = process.env.LEASEQA_DEVTOOLS_URL || "http://127.0.0.1:9223";
 
 const transitions = [
-  { name: "home-to-review", start: "/", clickSelector: '.site-nav-link[href="/ai-review"]' },
-  { name: "home-to-qa", start: "/", clickSelector: '.site-nav-link[href="/qa"]' },
-  { name: "review-to-qa", start: "/ai-review", clickSelector: '.site-nav-link[href="/qa"]' },
-  { name: "qa-to-resources", start: "/qa", clickSelector: '.qa-nav-tab:nth-child(2)' },
-  { name: "qa-to-stats", start: "/qa", clickSelector: '.qa-nav-tab:nth-child(3)' },
+  {name: "home-to-review", start: "/", clickSelector: '.site-nav-link[href="/ai-review"]'},
+  {name: "home-to-qa", start: "/", clickSelector: '.site-nav-link[href="/qa"]'},
+  {name: "review-to-qa", start: "/ai-review", clickSelector: '.site-nav-link[href="/qa"]'},
+  {name: "qa-to-resources", start: "/qa", clickSelector: '.qa-nav-tab:nth-child(2)'},
+  {name: "qa-to-stats", start: "/qa", clickSelector: '.qa-nav-tab:nth-child(3)'},
 ];
 
 async function getJson(url, options) {
@@ -44,7 +44,7 @@ async function withPage(wsUrl, fn) {
         pending.delete(messageId);
         resolve(message);
       });
-      ws.send(JSON.stringify({ id: messageId, method, params }));
+      ws.send(JSON.stringify({id: messageId, method, params}));
     });
 
   await send("Page.enable");
@@ -60,7 +60,7 @@ async function withPage(wsUrl, fn) {
 async function setGuestSession() {
   const target = await openTarget(previewBase);
   await withPage(target.webSocketDebuggerUrl, async (send) => {
-    await send("Page.navigate", { url: `${previewBase}/` });
+    await send("Page.navigate", {url: `${previewBase}/`});
     await new Promise((resolve) => setTimeout(resolve, 700));
     await send("Runtime.evaluate", {
       expression: `localStorage.setItem("guest_session", "true")`,
@@ -72,7 +72,7 @@ async function traceTransition(transition) {
   const target = await openTarget(`${previewBase}${transition.start}`);
 
   return withPage(target.webSocketDebuggerUrl, async (send) => {
-    await send("Page.navigate", { url: `${previewBase}${transition.start}` });
+    await send("Page.navigate", {url: `${previewBase}${transition.start}`});
     await new Promise((resolve) => setTimeout(resolve, 900));
 
     const expression = `(() => new Promise((resolve) => {

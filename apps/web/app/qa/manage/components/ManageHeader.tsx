@@ -1,5 +1,5 @@
 import React from "react";
-import { FaPlus, FaSync } from "react-icons/fa";
+import {FaPlus, FaSync} from "react-icons/fa";
 
 type FormMode = "closed" | "create" | "edit";
 
@@ -17,15 +17,15 @@ type ManageHeaderProps = {
 };
 
 export default function ManageHeader({
-  loading = false,
-  showCreateForm = false,
-  onRefresh,
-  onShowCreate,
-  isRefreshing,
-  isRefreshDisabled,
-  formMode,
-  sectionsAvailable,
-}: ManageHeaderProps) {
+                                       loading = false,
+                                       showCreateForm = false,
+                                       onRefresh,
+                                       onShowCreate,
+                                       isRefreshing,
+                                       isRefreshDisabled,
+                                       formMode,
+                                       sectionsAvailable,
+                                     }: ManageHeaderProps) {
   // Derive refresh UI state from widened props when present
   const refreshing = isRefreshing ?? loading;
   const refreshDisabled = isRefreshDisabled ?? loading;
@@ -45,12 +45,12 @@ export default function ManageHeader({
       </div>
       <div className="manage-header-actions">
         <button className="manage-btn secondary" onClick={onRefresh} disabled={refreshDisabled}>
-          <FaSync size={12} className={refreshing ? "spin" : ""} />
+          <FaSync size={12} className={refreshing ? "spin" : ""}/>
           <span>Refresh</span>
         </button>
         {!isFormOpen && (
           <button className="manage-btn primary" onClick={onShowCreate} disabled={createDisabled}>
-            <FaPlus size={12} />
+            <FaPlus size={12}/>
             <span>New Section</span>
           </button>
         )}

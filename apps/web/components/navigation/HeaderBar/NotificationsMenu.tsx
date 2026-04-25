@@ -1,6 +1,6 @@
 import React from "react";
-import { Dropdown } from "react-bootstrap";
-import { FaBell } from "react-icons/fa";
+import {Dropdown} from "react-bootstrap";
+import {FaBell} from "react-icons/fa";
 
 export type NotificationMenuItem = {
   _id: string;
@@ -27,12 +27,12 @@ const formatTime = (value: string) => {
 };
 
 export default function NotificationsMenu({
-  items,
-  loading,
-  error,
-  onOpen,
-  onSelect,
-}: NotificationsMenuProps) {
+                                            items,
+                                            loading,
+                                            error,
+                                            onOpen,
+                                            onSelect,
+                                          }: NotificationsMenuProps) {
   const hasUnread = items.length > 0;
 
   return (
@@ -47,12 +47,12 @@ export default function NotificationsMenu({
             hasUnread ? "has-unread" : ""
           }`}
         >
-          <FaBell className="text-secondary" size={16} />
+          <FaBell className="text-secondary" size={16}/>
         </div>
       </Dropdown.Toggle>
-      <Dropdown.Menu style={{ minWidth: 280 }}>
+      <Dropdown.Menu style={{minWidth: 280}}>
         <div className="px-3 py-2 fw-semibold">Notifications</div>
-        <Dropdown.Divider />
+        <Dropdown.Divider/>
         {loading ? (
           <div className="px-3 py-2 text-secondary small">Loading...</div>
         ) : error ? (
@@ -73,7 +73,7 @@ export default function NotificationsMenu({
               {item.summary ? (
                 <div className="text-secondary small">{item.summary}</div>
               ) : null}
-              <div className="text-secondary" style={{ fontSize: "0.75rem" }}>
+              <div className="text-secondary" style={{fontSize: "0.75rem"}}>
                 {formatTime(item.createdAt)}
               </div>
             </Dropdown.Item>

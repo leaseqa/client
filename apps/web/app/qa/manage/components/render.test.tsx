@@ -1,6 +1,6 @@
-import { describe, expect, test } from "vitest";
+import {describe, expect, test} from "vitest";
 import React from "react";
-import { renderToStaticMarkup } from "react-dom/server";
+import {renderToStaticMarkup} from "react-dom/server";
 
 import ManageHeader from "./ManageHeader";
 import ManageAlerts from "./ManageAlerts";
@@ -9,10 +9,11 @@ import ManageUsersSection from "./ManageUsersSection";
 import ManageSectionsSection from "./ManageSectionsSection";
 import ManageSidebar from "./ManageSidebar";
 import ManageStats from "./ManageStats";
-import type { User, Folder } from "../../types";
+import type {Folder, User} from "../../types";
 
 // Minimal stubs for event handlers
-const noop = () => {};
+const noop = () => {
+};
 
 describe("Admin shell render smoke", () => {
   test("Sidebar renders anchors, pending/banned when available, moderation link, and never verified-lawyers card", () => {
@@ -22,7 +23,7 @@ describe("Admin shell render smoke", () => {
         usersHref="#users"
         sectionsHref="#sections"
         moderationHref="/qa"
-        stats={{ pendingLawyerCount: 3, bannedUserCount: 2, verifiedLawyers: 7, totalUsers: 12, totalSections: 4 }}
+        stats={{pendingLawyerCount: 3, bannedUserCount: 2, verifiedLawyers: 7, totalUsers: 12, totalSections: 4}}
       />,
     );
 
@@ -36,7 +37,13 @@ describe("Admin shell render smoke", () => {
 
     const htmlOmit = renderToStaticMarkup(
       <ManageSidebar
-        stats={{ pendingLawyerCount: null, bannedUserCount: null, verifiedLawyers: 5, totalUsers: null, totalSections: null }}
+        stats={{
+          pendingLawyerCount: null,
+          bannedUserCount: null,
+          verifiedLawyers: 5,
+          totalUsers: null,
+          totalSections: null
+        }}
       />,
     );
     expect(htmlOmit).not.toContain("Pending Verification");
@@ -63,10 +70,10 @@ describe("Admin shell render smoke", () => {
 
   test("Alerts render only the latest surface (error or success)", () => {
     const latestErrorHtml = renderToStaticMarkup(
-      <ManageAlerts latest={{ kind: "error", message: "Boom" }} onClearLatest={noop} />,
+      <ManageAlerts latest={{kind: "error", message: "Boom"}} onClearLatest={noop}/>,
     );
     const latestSuccessHtml = renderToStaticMarkup(
-      <ManageAlerts latest={{ kind: "success", message: "Saved" }} onClearLatest={noop} />,
+      <ManageAlerts latest={{kind: "success", message: "Saved"}} onClearLatest={noop}/>,
     );
 
     expect(latestErrorHtml).toContain("Boom");
@@ -77,7 +84,7 @@ describe("Admin shell render smoke", () => {
 
   test("Stats renders only Users, Sections, Verified Lawyers cards and omits null metrics", () => {
     const html = renderToStaticMarkup(
-      <ManageStats stats={{ totalUsers: 10, totalSections: null, verifiedLawyers: 4 }} />,
+      <ManageStats stats={{totalUsers: 10, totalSections: null, verifiedLawyers: 4}}/>,
     );
     expect(html).toContain("Users");
     expect(html).toContain("Verified Lawyers");
@@ -117,7 +124,7 @@ describe("Admin shell render smoke", () => {
   });
 
   test("ManageUsersSection and ManageSectionsSection own their rendering when data is available", () => {
-    const users: User[] = [{ _id: "u1", username: "alice", email: "a@x", role: "tenant" }];
+    const users: User[] = [{_id: "u1", username: "alice", email: "a@x", role: "tenant"}];
     const usersHtml = renderToStaticMarkup(
       <ManageUsersSection
         title="Users"
@@ -135,7 +142,7 @@ describe("Admin shell render smoke", () => {
     expect(usersHtml).toContain("Users");
     expect(usersHtml).toContain("alice");
 
-    const sections: Folder[] = [{ _id: "s1", name: "repairs", displayName: "Repairs", description: "", color: "" }];
+    const sections: Folder[] = [{_id: "s1", name: "repairs", displayName: "Repairs", description: "", color: ""}];
     const sectionsHtml = renderToStaticMarkup(
       <ManageSectionsSection
         title="Sections"
@@ -154,7 +161,7 @@ describe("Admin shell render smoke", () => {
   test("CreateSectionForm in edit mode shows edit heading and a read-only name field", () => {
     const html = renderToStaticMarkup(
       <CreateSectionForm
-        draft={{ name: "repairs", displayName: "Repairs", description: "", color: "" }}
+        draft={{name: "repairs", displayName: "Repairs", description: "", color: ""}}
         mode="edit"
         loading={false}
         disabled={false}

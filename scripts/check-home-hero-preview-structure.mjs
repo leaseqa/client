@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import {readFileSync} from "node:fs";
 
 const filePath =
   "/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client-frontend/apps/web/app/page.tsx";

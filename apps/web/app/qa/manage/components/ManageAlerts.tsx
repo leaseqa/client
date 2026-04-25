@@ -1,5 +1,5 @@
 import React from "react";
-import { FaTimes } from "react-icons/fa";
+import {FaTimes} from "react-icons/fa";
 
 type Latest = { kind: "error" | "success"; message: string } | null | undefined;
 
@@ -15,13 +15,13 @@ type ManageAlertsProps = {
 };
 
 export default function ManageAlerts({
-  latest,
-  onClearLatest,
-  error = "",
-  success = "",
-  onClearError,
-  onClearSuccess,
-}: ManageAlertsProps) {
+                                       latest,
+                                       onClearLatest,
+                                       error = "",
+                                       success = "",
+                                       onClearError,
+                                       onClearSuccess,
+                                     }: ManageAlertsProps) {
   // Determine latest: prefer explicit `latest`.
   // For legacy props, only map when exactly one is set to avoid guessing.
   let resolvedLatest: Latest = latest ?? null;
@@ -29,7 +29,7 @@ export default function ManageAlerts({
     const hasErr = Boolean(error);
     const hasOk = Boolean(success);
     if (hasErr !== hasOk) {
-      resolvedLatest = hasErr ? { kind: "error", message: error } : { kind: "success", message: success };
+      resolvedLatest = hasErr ? {kind: "error", message: error} : {kind: "success", message: success};
     }
   }
 
@@ -40,7 +40,7 @@ export default function ManageAlerts({
       <div className="manage-alert error">
         {resolvedLatest.message}
         <button onClick={onClearLatest ?? onClearError}>
-          <FaTimes size={12} />
+          <FaTimes size={12}/>
         </button>
       </div>
     );
@@ -50,7 +50,7 @@ export default function ManageAlerts({
     <div className="manage-alert success">
       {resolvedLatest.message}
       <button onClick={onClearLatest ?? onClearSuccess}>
-        <FaTimes size={12} />
+        <FaTimes size={12}/>
       </button>
     </div>
   );
