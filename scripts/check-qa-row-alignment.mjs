@@ -19,7 +19,7 @@ async function evaluateInPage(wsUrl, expression) {
 
   ws.onmessage = (event) => {
     const message = JSON.parse(event.data);
-    if (pending.has(message.id)) {
+    if ( pending.has(message.id) ) {
       pending.get(message.id)(message);
     }
   };
@@ -31,7 +31,7 @@ async function evaluateInPage(wsUrl, expression) {
         pending.delete(messageId);
         resolve(message);
       });
-      ws.send(JSON.stringify({id: messageId, method, params}));
+      ws.send(JSON.stringify({ id: messageId, method, params }));
     });
 
   await send("Page.enable");
@@ -48,7 +48,7 @@ async function evaluateInPage(wsUrl, expression) {
 async function measurePage(path) {
   const target = await getJson(
     `${devtoolsBase}/json/new?${encodeURIComponent(`${previewBase}${path}`)}`,
-    {method: "PUT"},
+    { method: "PUT" },
   );
 
   await new Promise((resolve) => setTimeout(resolve, 900));
@@ -69,18 +69,18 @@ async function measurePage(path) {
 }
 
 const measurements = [];
-for (const path of pages) {
+for ( const path of pages ) {
   measurements.push(await measurePage(path));
 }
 
 console.log(JSON.stringify(measurements, null, 2));
 
-if (measurements.length !== 2) {
+if ( measurements.length !== 2 ) {
   throw new Error("Expected exactly two QA page measurements.");
 }
 
 const [resourcesPage, statsPage] = measurements;
-if (resourcesPage.rowLeft !== statsPage.rowLeft) {
+if ( resourcesPage.rowLeft !== statsPage.rowLeft ) {
   throw new Error(
     `QA row alignment mismatch: resources=${resourcesPage.rowLeft}, stats=${statsPage.rowLeft}`,
   );

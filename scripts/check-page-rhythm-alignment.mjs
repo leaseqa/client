@@ -1,7 +1,7 @@
 const pages = [
-  {path: "/", selector: ".landing-hero-copy", label: "home"},
-  {path: "/ai-review", selector: ".review-header-section", label: "review"},
-  {path: "/qa", selector: ".qa-feed-stack, .qa-compose-page, .auth-container-narrow", label: "qa"},
+  { path: "/", selector: ".landing-hero-copy", label: "home" },
+  { path: "/ai-review", selector: ".review-header-section", label: "review" },
+  { path: "/qa", selector: ".qa-feed-stack, .qa-compose-page, .auth-container-narrow", label: "qa" },
   {
     path: "/qa/resources",
     selector: ".resources-main-card, .auth-container-narrow",
@@ -41,7 +41,7 @@ async function withPage(wsUrl, fn) {
 
   ws.onmessage = (event) => {
     const message = JSON.parse(event.data);
-    if (pending.has(message.id)) {
+    if ( pending.has(message.id) ) {
       pending.get(message.id)(message);
     }
   };
@@ -53,7 +53,7 @@ async function withPage(wsUrl, fn) {
         pending.delete(messageId);
         resolve(message);
       });
-      ws.send(JSON.stringify({id: messageId, method, params}));
+      ws.send(JSON.stringify({ id: messageId, method, params }));
     });
 
   await send("Page.enable");
@@ -80,7 +80,7 @@ async function setGuestSession() {
   const target = await openTarget(previewBase);
 
   await withPage(target.webSocketDebuggerUrl, async (send) => {
-    await send("Page.navigate", {url: `${previewBase}/`});
+    await send("Page.navigate", { url: `${previewBase}/` });
     await new Promise((resolve) => setTimeout(resolve, 700));
     await send("Runtime.evaluate", {
       expression: `localStorage.setItem("guest_session", "true")`,
@@ -110,7 +110,7 @@ async function measurePage(page) {
 await setGuestSession();
 
 const measurements = [];
-for (const page of pages) {
+for ( const page of pages ) {
   measurements.push(await measurePage(page));
 }
 
@@ -120,14 +120,14 @@ const anchorValues = measurements
   .map((item) => item.anchorLeft)
   .filter((value) => typeof value === "number");
 
-if (anchorValues.length !== pages.length) {
+if ( anchorValues.length !== pages.length ) {
   throw new Error("Failed to measure all primary page anchors.");
 }
 
 const minLeft = Math.min(...anchorValues);
 const maxLeft = Math.max(...anchorValues);
 
-if (maxLeft - minLeft > maxVariance) {
+if ( maxLeft - minLeft > maxVariance ) {
   throw new Error(
     `Primary page rhythm mismatch: min=${minLeft}, max=${maxLeft}, variance=${maxLeft - minLeft}`,
   );

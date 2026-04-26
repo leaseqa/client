@@ -19,7 +19,7 @@ async function evaluateInPage(wsUrl, expression) {
 
   ws.onmessage = (event) => {
     const message = JSON.parse(event.data);
-    if (pending.has(message.id)) {
+    if ( pending.has(message.id) ) {
       pending.get(message.id)(message);
     }
   };
@@ -31,7 +31,7 @@ async function evaluateInPage(wsUrl, expression) {
         pending.delete(messageId);
         resolve(message);
       });
-      ws.send(JSON.stringify({id: messageId, method, params}));
+      ws.send(JSON.stringify({ id: messageId, method, params }));
     });
 
   await send("Page.enable");
@@ -48,7 +48,7 @@ async function evaluateInPage(wsUrl, expression) {
 async function measurePage(path) {
   const target = await getJson(
     `${devtoolsBase}/json/new?${encodeURIComponent(`${previewBase}${path}`)}`,
-    {method: "PUT"},
+    { method: "PUT" },
   );
 
   await new Promise((resolve) => setTimeout(resolve, 900));
@@ -70,7 +70,7 @@ async function measurePage(path) {
 }
 
 const measurements = [];
-for (const path of pages) {
+for ( const path of pages ) {
   measurements.push(await measurePage(path));
 }
 
@@ -78,11 +78,11 @@ console.log(JSON.stringify(measurements, null, 2));
 
 const loginPage = measurements.find((item) => item.path === "/auth/login");
 
-if (!loginPage) {
+if ( !loginPage ) {
   throw new Error("Expected a login page measurement.");
 }
 
-if (loginPage.authLeft !== loginPage.shellLeft) {
+if ( loginPage.authLeft !== loginPage.shellLeft ) {
   throw new Error(
     `Auth layout mismatch: login auth container left=${loginPage.authLeft}, shell left=${loginPage.shellLeft}`,
   );
