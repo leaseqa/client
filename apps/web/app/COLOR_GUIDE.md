@@ -63,8 +63,8 @@ Subtle Border:    #f1f5f9  (Very light gray-blue)
 ```css
 /* Page background (60%) */
 background:
-
 var
+
 (
 --color-bg-primary
 
@@ -73,8 +73,8 @@ var
 
 /* Card background (30%) */
 background:
-
 var
+
 (
 --color-panel
 
@@ -83,8 +83,8 @@ var
 
 /* Hover state */
 background:
-
 var
+
 (
 --color-bg-secondary
 

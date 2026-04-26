@@ -74,7 +74,7 @@ export default function HeaderBar() {
           current.filter((notification) => notification._id !== item._id),
         );
       } catch {
-        // Preserve unread state if marking read fails.
+        //TODO: this part is empty...?
       }
       if ( item.href ) {
         navigate(item.href);

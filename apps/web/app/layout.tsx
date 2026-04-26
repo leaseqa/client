@@ -1,5 +1,4 @@
 import "@/app/globals.css";
-import "@/app/refresh.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
