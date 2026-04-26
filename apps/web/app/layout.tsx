@@ -2,7 +2,7 @@ import "@/app/globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
-import { DM_Sans, DM_Serif_Display } from "next/font/google";
+import { DM_Sans, Nunito_Sans } from "next/font/google";
 import { Providers } from "@/components/providers";
 import HeaderBar from "@/components/navigation/HeaderBar";
 
@@ -11,9 +11,9 @@ const dmSans = DM_Sans({
   variable: "--font-body",
 });
 
-const dmSerif = DM_Serif_Display({
+const nunitoSans = Nunito_Sans({
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["400", "600", "700", "800"],
   variable: "--font-display",
 });
 
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" suppressHydrationWarning>
     <body
       suppressHydrationWarning
-      className={`${dmSans.variable} ${dmSerif.variable}`}
+      className={`${dmSans.variable} ${nunitoSans.variable}`}
     >
     <Providers>
       <div className="app-shell d-flex min-vh-100 flex-column">

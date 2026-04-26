@@ -101,9 +101,9 @@ export default function LandingPage() {
         <div className="landing-hero-copy">
           <span className="landing-eyebrow">For Boston renters</span>
           <h1 className="landing-hero-title">
-            Read the lease.
+            Read the lease
             <br/>
-            Ask the <em>next</em> question.
+            Ask the <em>next</em> question
           </h1>
           <p className="landing-hero-sub">
             LeaseQA flags the clauses that matter, points you to Massachusetts

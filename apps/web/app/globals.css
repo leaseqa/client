@@ -3261,7 +3261,7 @@ select:focus-visible,
 .site-wordmark {
   display: inline-flex;
   align-items: baseline;
-  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
   font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: -0.035em;
@@ -3535,13 +3535,14 @@ select:focus-visible,
 .landing-hero-title {
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(2.2rem, 4vw, 3rem);
+  font-weight: 800;
   line-height: 1.14;
   letter-spacing: -0.025em;
   margin: 0 0 1.15rem;
 }
 
 .landing-hero-title em {
-  font-style: italic;
+  font-style: normal;
   color: var(--site-accent);
 }
 
@@ -3717,6 +3718,7 @@ select:focus-visible,
 .landing-section-label h2 {
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.5rem;
+  font-weight: 700;
   letter-spacing: -0.02em;
   margin: 0;
 }
@@ -3761,6 +3763,7 @@ select:focus-visible,
 .landing-how-title {
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.1rem;
+  font-weight: 700;
   margin: 0 0 0.35rem;
   letter-spacing: -0.01em;
 }
@@ -3808,6 +3811,7 @@ select:focus-visible,
 .landing-stats-title {
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.2rem;
+  font-weight: 700;
   color: #f5f0eb;
 }
 
@@ -3863,6 +3867,7 @@ select:focus-visible,
 .landing-stat-val {
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.9rem;
+  font-weight: 700;
   color: #f5f0eb;
   line-height: 1;
   margin-bottom: 0.3rem;
@@ -3928,6 +3933,7 @@ select:focus-visible,
   margin: 0;
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(2.1rem, 4vw, 3.3rem);
+  font-weight: 800;
   line-height: 1.05;
   letter-spacing: -0.03em;
   max-width: 16ch;
@@ -4174,7 +4180,7 @@ select:focus-visible,
 .qa-page-title {
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(1.6rem, 3vw, 2.2rem);
-  font-weight: 400;
+  font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.1;
   margin: 0.3rem 0 0.4rem;
@@ -4240,6 +4246,7 @@ select:focus-visible,
 .qa-empty-title {
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.2rem;
+  font-weight: 700;
   margin-bottom: 0.35rem;
 }
 
@@ -4616,7 +4623,7 @@ select:focus-visible,
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.5rem;
   letter-spacing: -0.02em;
-  font-weight: 400;
+  font-weight: 700;
 }
 
 .qa-overview-card .panel-copy {
@@ -4626,14 +4633,14 @@ select:focus-visible,
 
 .qa-compose-hero .panel-title {
   font-family: var(--font-display), Georgia, serif;
-  font-weight: 400;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 .review-flow-intro .display-title,
 .resources-hero-card .panel-title {
   font-family: var(--font-display), Georgia, serif;
-  font-weight: 400;
+  font-weight: 700;
 }
 
 .review-section-head {
@@ -4889,7 +4896,7 @@ select:focus-visible,
 
 .qa-side-title {
   font-family: var(--font-display), Georgia, serif;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 1.05rem;
   letter-spacing: -0.01em;
 }
@@ -6057,6 +6064,7 @@ select:focus-visible,
 .auth-title {
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(1.6rem, 3vw, 2.1rem);
+  font-weight: 700;
   letter-spacing: -0.02em;
   margin: 0;
 }
@@ -6154,6 +6162,7 @@ select:focus-visible,
 .info-hero-title {
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.8rem;
+  font-weight: 700;
   letter-spacing: -0.02em;
   margin-bottom: 0.5rem;
 }
@@ -6333,6 +6342,7 @@ select:focus-visible,
   margin: 0 0 1rem;
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(1.6rem, 2vw, 2rem);
+  font-weight: 700;
   letter-spacing: -0.025em;
   color: var(--site-ink);
 }
@@ -6437,6 +6447,7 @@ select:focus-visible,
   margin: 0.1rem 0 0;
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.3rem;
+  font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--site-ink);
 }
@@ -6694,6 +6705,7 @@ select:focus-visible,
   margin: 0 0 0.55rem;
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.5rem;
+  font-weight: 700;
   color: var(--site-ink);
 }
 
