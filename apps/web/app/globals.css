@@ -1236,19 +1236,9 @@ body {
 }
 
 /* Post Sidebar */
-.post-sidebar {
-  background: white;
-  border: 1px solid var(--qa-border);
-  border-radius: 12px;
-  overflow: hidden;
-}
 
 .post-sidebar-group {
   border-bottom: 1px solid var(--qa-border);
-}
-
-.post-sidebar-group:last-child {
-  border-bottom: none;
 }
 
 .post-sidebar-header {
@@ -5409,6 +5399,10 @@ select:focus-visible,
   flex-direction: column;
   gap: 0.5rem;
   margin-top: 0.75rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
 }
 
 .post-sidebar-group {
