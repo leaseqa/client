@@ -23,7 +23,7 @@ export default function ProfileHeader({
       <div className="px-3 py-2">
         <div className="fw-bold mb-1">You are not signed in</div>
         <div className="text-muted small">
-          Sign in to access your account and saved posts.
+          Sign in to access more
         </div>
       </div>
     );

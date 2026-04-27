@@ -770,8 +770,8 @@ body {
 }
 
 /* Profile Menu */
-.profile-menu {
-  min-width: 240px;
+.dropdown-menu.profile-menu {
+  min-width: 200px;
 }
 
 /* ============================================
@@ -4049,7 +4049,9 @@ select:focus-visible,
 
 .dropdown-menu .dropdown-item {
   border-radius: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.65rem 1rem;
+  margin: 0 0.35rem;
+  width: calc(100% - 0.7rem);
   font-size: 0.88rem;
   color: var(--site-ink);
   transition: background 0.15s;
