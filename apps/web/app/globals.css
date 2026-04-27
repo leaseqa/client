@@ -1479,9 +1479,9 @@ body {
 }
 
 .feed-section-urgency-badge.high {
-  background: #dc3545;
-  color: white;
-  border-color: #c82333;
+  background: var(--site-highlight-soft);
+  color: var(--site-highlight);
+  border-color: var(--site-highlight);
 }
 
 .feed-section-post-snippet {
@@ -1588,9 +1588,9 @@ body {
 }
 
 .feed-header-urgency-badge.high {
-  background: #dc3545;
-  color: white;
-  border-color: #c82333;
+  background: var(--site-highlight-soft);
+  color: var(--site-highlight);
+  border-color: var(--site-highlight);
 }
 
 .feed-header-post-snippet {
@@ -1949,8 +1949,8 @@ body {
 }
 
 .post-urgency-badge.high {
-  background: #dc3545;
-  color: white;
+  background: var(--site-highlight-soft);
+  color: var(--site-highlight);
 }
 
 .post-detail-folders {
