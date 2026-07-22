@@ -4,20 +4,20 @@
 
 The current source of truth for client-facing product behavior lives in:
 
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/README.md`
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/product-prd.md`
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/architecture.md`
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/api-design.md`
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/release-checklist.md`
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/README.md`
+- `/Users/Z1nk/Desktop/proj/leaseqa/client/README.md`
+- `/Users/Z1nk/Desktop/proj/leaseqa/client/docs/product-prd.md`
+- `/Users/Z1nk/Desktop/proj/leaseqa/client/docs/architecture.md`
+- `/Users/Z1nk/Desktop/proj/leaseqa/client/docs/api-design.md`
+- `/Users/Z1nk/Desktop/proj/leaseqa/client/docs/release-checklist.md`
+- `/Users/Z1nk/Desktop/proj/leaseqa/client/docs/README.md`
 
 ## Historical Docs
 
 These are references, not current product truth:
 
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/project-plan.md`
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/superpowers/specs/*`
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/superpowers/plans/*`
+- `/Users/Z1nk/Desktop/proj/leaseqa/client/docs/project-plan.md`
+- `/Users/Z1nk/Desktop/proj/leaseqa/client/docs/superpowers/specs/*`
+- `/Users/Z1nk/Desktop/proj/leaseqa/client/docs/superpowers/plans/*`
 
 ## Documentation Impact Rules
 

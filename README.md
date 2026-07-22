@@ -19,11 +19,11 @@ Production:
 
 ## Canonical Docs
 
-- Product PRD: [docs/product-prd.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/product-prd.md)
-- Architecture: [docs/architecture.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/architecture.md)
-- API design: [docs/api-design.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/api-design.md)
-- Release checklist: [docs/release-checklist.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/release-checklist.md)
-- Docs map: [docs/README.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/README.md)
+- Product PRD: [docs/product-prd.md](docs/product-prd.md)
+- Architecture: [docs/architecture.md](docs/architecture.md)
+- API design: [docs/api-design.md](docs/api-design.md)
+- Release checklist: [docs/release-checklist.md](docs/release-checklist.md)
+- Docs map: [docs/README.md](docs/README.md)
 
 ## How the AI review works
 

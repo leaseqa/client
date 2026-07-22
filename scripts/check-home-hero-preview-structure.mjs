@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 
 const filePath =
-  "/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client-frontend/apps/web/app/page.tsx";
+  "/Users/Z1nk/Desktop/proj/leaseqa/client/apps/web/app/page.tsx";
 const source = readFileSync(filePath, "utf8");
 
 const hasPreviewRows = source.includes("landing-preview-item");

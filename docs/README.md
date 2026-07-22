@@ -6,22 +6,22 @@ This directory contains the current, versioned product documentation for the liv
 
 Use these files as the source of truth for current behavior:
 
-- [product-prd.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/product-prd.md)
+- [product-prd.md](product-prd.md)
   - Current v2 product scope, roles, flows, constraints, and acceptance criteria
-- [architecture.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/architecture.md)
+- [architecture.md](architecture.md)
   - Current system architecture and deployment topology
-- [api-design.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/api-design.md)
+- [api-design.md](api-design.md)
   - Current app-level API contract summary
-- [release-checklist.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/release-checklist.md)
+- [release-checklist.md](release-checklist.md)
   - Pre-release and regression verification checklist
-- [README.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/README.md)
+- [README.md](../README.md)
   - Repo-level setup, deployment entry points, and high-level shipped features
 
 ## Historical Docs
 
 These documents remain useful, but they are not the current source of truth:
 
-- [project-plan.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/project-plan.md)
+- [project-plan.md](project-plan.md)
   - Original v1 delivery timeline and milestone plan
 - `docs/superpowers/specs/*`
   - Point-in-time design records for completed work
@@ -30,8 +30,8 @@ These documents remain useful, but they are not the current source of truth:
 
 ## Cross-Repo Docs
 
-- Server operational docs live in [leaseqa-server/README.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/README.md)
-- Server-specific implementation notes live in [leaseqa-server/AGENTS.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/AGENTS.md)
+- Server operational docs live in [server/README.md](https://github.com/leaseqa/server/blob/codex/upl-study-2x2-live/README.md)
+- Server-specific implementation notes live in [server/AGENTS.md](https://github.com/leaseqa/server/blob/codex/upl-study-2x2-live/AGENTS.md)
 
 ## Maintenance Rule
 

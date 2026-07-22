@@ -141,8 +141,8 @@ The client can call the backend directly through `NEXT_PUBLIC_HTTP_SERVER` and a
 
 For current behavior, use these docs together:
 
-- [product-prd.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/product-prd.md)
-- [api-design.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/api-design.md)
-- [README.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/README.md)
+- [product-prd.md](product-prd.md)
+- [api-design.md](api-design.md)
+- [README.md](../README.md)
 
 Historical plans and time-stamped design specs are not the source of truth for the live architecture.
