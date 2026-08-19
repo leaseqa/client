@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setGuestSession, setSession, signOut } from "@/app/store";
+import { unwrapData } from "@/app/lib/api/client";
 import * as client from "./client";
 
 export default function SessionLoader({ children }: { children: React.ReactNode }) {
@@ -14,7 +15,7 @@ export default function SessionLoader({ children }: { children: React.ReactNode 
       try {
         const user = await client.fetchSession();
         if ( user && typeof user === "object" ) {
-          dispatch(setSession((user as any).data || user));
+          dispatch(setSession(unwrapData(user)));
           localStorage.removeItem("guest_session");
         }
       } catch {

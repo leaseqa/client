@@ -33,7 +33,7 @@ export default function ManageSectionsPage() {
   const router = useRouter();
   const session = useSelector((state: RootState) => state.session);
   const isAdmin = session.user?.role === "admin";
-  const currentUserId = (session.user as any)?._id || session.user?.id || "";
+  const currentUserId = session.user?.id || "";
 
   // Independent datasets
   const [usersState, setUsersState] = useState<DatasetState<User>>({

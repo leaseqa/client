@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { format } from "date-fns";
 import { PostContentProps } from "../../types";
 import EditPostForm from "./EditPostForm";
+import { sanitizeServerHtml } from "@/app/lib/safeHtml";
 
 export default function PostContent({
                                       post,
@@ -109,7 +110,7 @@ export default function PostContent({
                         </span>
           </div>
           <h1 className="post-detail-title">{post.summary}</h1>
-          <div className="post-detail-content" dangerouslySetInnerHTML={{ __html: post.details }}/>
+          <div className="post-detail-content" dangerouslySetInnerHTML={{ __html: sanitizeServerHtml(post.details) }}/>
         </div>
       )}
 

@@ -23,7 +23,7 @@ export default function PostDetailSection({
                                             onPostUpdatedAction
                                           }: PostDetailSectionProps) {
   const session = useSelector((state: RootState) => state.session);
-  const currentUserId = session.user?.id || (session.user as any)?._id;
+  const currentUserId = session.user?.id ?? null;
   const currentRole = session.user?.role;
   const isGuest = session.status === "guest";
 
