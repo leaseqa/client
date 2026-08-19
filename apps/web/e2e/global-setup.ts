@@ -1,11 +1,12 @@
 import { execSync } from "node:child_process";
 import path from "node:path";
+import { resolveLeaseqaServerDir } from "./server-dir";
 
 const adminPassword =
   process.env.PLAYWRIGHT_ADMIN_PASSWORD || "leaseqa-e2e-admin";
 
 export default async function globalSetup() {
-  const serverDir = path.resolve(__dirname, "../../../../leaseqa-server");
+  const serverDir = resolveLeaseqaServerDir(path.join(__dirname, ".."));
 
   execSync("npm run seed:demo-users", {
     cwd: serverDir,

@@ -1,12 +1,10 @@
-import path from "node:path";
 import { defineConfig } from "@playwright/test";
+import { resolveLeaseqaServerDir } from "./e2e/server-dir";
 
 const frontendPort = process.env.PLAYWRIGHT_FRONTEND_PORT || "3100";
 const backendPort = process.env.PLAYWRIGHT_BACKEND_PORT || "4100";
 const clientDir = __dirname;
-const serverDir = path.resolve(
-  process.env.LEASEQA_SERVER_DIR || path.join(__dirname, "../../../leaseqa-server"),
-);
+const serverDir = resolveLeaseqaServerDir(clientDir);
 
 export default defineConfig({
   testDir: "./e2e",
