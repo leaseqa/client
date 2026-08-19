@@ -8,6 +8,7 @@ const serverDir = resolveLeaseqaServerDir(clientDir);
 
 export default defineConfig({
   testDir: "./e2e",
+  testMatch: "**/*.spec.ts",
   fullyParallel: false,
   retries: 0,
   workers: 1,
