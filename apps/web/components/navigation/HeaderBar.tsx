@@ -12,6 +12,7 @@ import ProfileHeader from "./HeaderBar/ProfileHeader";
 import ProfileMenuItems from "./HeaderBar/ProfileMenuItems";
 import type { NotificationMenuItem } from "./HeaderBar/NotificationsMenu";
 import NotificationsMenu from "./HeaderBar/NotificationsMenu";
+import { apiErrorMessage } from "@/app/lib/api/client";
 import * as client from "@/app/account/client";
 import { NAV_ITEMS } from "./config";
 
@@ -57,9 +58,9 @@ export default function HeaderBar() {
       setNotificationsError("");
       const items = await client.fetchNotifications();
       setNotifications(items);
-    } catch ( error: any ) {
+    } catch ( error: unknown ) {
       setNotificationsError(
-        error.response?.data?.error?.message || "Could not load notifications.",
+        apiErrorMessage(error, "Could not load notifications."),
       );
     } finally {
       setNotificationsLoading(false);

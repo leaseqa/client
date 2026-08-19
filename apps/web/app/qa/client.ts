@@ -1,47 +1,43 @@
-import axios from "axios";
-
-const axiosWithCredentials = axios.create({ withCredentials: true });
-const HOST = (process.env.NEXT_PUBLIC_HTTP_SERVER || "").replace(/\/$/, "");
-export const API_BASE = HOST ? `${HOST}/api` : "/api";
+import {
+  apiDelete,
+  apiGet,
+  apiPatch,
+  apiPost,
+  apiPut,
+} from "@/app/lib/api/client";
 
 export async function fetchFolders() {
-  const response = await axiosWithCredentials.get(`${API_BASE}/folders`);
-  return response.data;
+  return apiGet("/folders");
 }
 
 export async function createFolder(payload: {
   name: string;
   displayName: string;
   description?: string;
-  color?: string
+  color?: string;
 }) {
-  const response = await axiosWithCredentials.post(`${API_BASE}/folders`, payload);
-  return response.data;
+  return apiPost("/folders", payload);
 }
 
 export async function updateFolder(_id: string, payload: {
   name?: string;
   displayName?: string;
   description?: string;
-  color?: string
+  color?: string;
 }) {
-  const response = await axiosWithCredentials.put(`${API_BASE}/folders/${_id}`, payload);
-  return response.data;
+  return apiPut(`/folders/${_id}`, payload);
 }
 
 export async function deleteFolder(_id: string) {
-  const response = await axiosWithCredentials.delete(`${API_BASE}/folders/${_id}`);
-  return response.data;
+  return apiDelete(`/folders/${_id}`);
 }
 
 export async function fetchPosts(params: { folder?: string; search?: string }) {
-  const response = await axiosWithCredentials.get(`${API_BASE}/posts`, { params });
-  return response.data;
+  return apiGet("/posts", { params });
 }
 
 export async function fetchPostById(postId: string) {
-  const response = await axiosWithCredentials.get(`${API_BASE}/posts/${postId}`);
-  return response.data;
+  return apiGet(`/posts/${postId}`);
 }
 
 export async function createPost(payload: {
@@ -53,90 +49,73 @@ export async function createPost(payload: {
   urgency?: string;
   isAnonymous?: boolean;
 }) {
-  const response = await axiosWithCredentials.post(`${API_BASE}/posts`, payload);
-  return response.data;
+  return apiPost("/posts", payload);
 }
 
 export async function updatePost(postId: string, payload: any) {
-  const response = await axiosWithCredentials.put(`${API_BASE}/posts/${postId}`, payload);
-  return response.data;
+  return apiPut(`/posts/${postId}`, payload);
 }
 
 export async function deletePost(postId: string) {
-  const response = await axiosWithCredentials.delete(`${API_BASE}/posts/${postId}`);
-  return response.data;
+  return apiDelete(`/posts/${postId}`);
 }
 
 export async function uploadPostAttachments(postId: string, files: File[]) {
   const formData = new FormData();
   files.forEach((file) => formData.append("files", file));
-  const response = await axiosWithCredentials.post(`${API_BASE}/posts/${postId}/attachments`, formData, {
+  return apiPost(`/posts/${postId}/attachments`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
-  return response.data;
 }
 
 export async function createAnswer(payload: { postId: string; content: string; answerType: string }) {
-  const response = await axiosWithCredentials.post(`${API_BASE}/answers`, payload);
-  return response.data;
+  return apiPost("/answers", payload);
 }
 
 export async function updateAnswer(answerId: string, payload: any) {
-  const response = await axiosWithCredentials.put(`${API_BASE}/answers/${answerId}`, payload);
-  return response.data;
+  return apiPut(`/answers/${answerId}`, payload);
 }
 
 export async function deleteAnswer(answerId: string) {
-  const response = await axiosWithCredentials.delete(`${API_BASE}/answers/${answerId}`);
-  return response.data;
+  return apiDelete(`/answers/${answerId}`);
 }
 
 export async function createDiscussion(payload: { postId: string; parentId?: string | null; content: string }) {
-  const response = await axiosWithCredentials.post(`${API_BASE}/discussions`, payload);
-  return response.data;
+  return apiPost("/discussions", payload);
 }
 
 export async function updateDiscussion(discussionId: string, payload: any) {
-  const response = await axiosWithCredentials.patch(`${API_BASE}/discussions/${discussionId}`, payload);
-  return response.data;
+  return apiPatch(`/discussions/${discussionId}`, payload);
 }
 
 export async function deleteDiscussion(discussionId: string) {
-  const response = await axiosWithCredentials.delete(`${API_BASE}/discussions/${discussionId}`);
-  return response.data;
+  return apiDelete(`/discussions/${discussionId}`);
 }
 
 export async function togglePinPost(postId: string, isPinned: boolean) {
-  const response = await axiosWithCredentials.patch(`${API_BASE}/posts/${postId}/pin`, { isPinned });
-  return response.data;
+  return apiPatch(`/posts/${postId}/pin`, { isPinned });
 }
 
 export async function fetchStats() {
-  const response = await axiosWithCredentials.get(`${API_BASE}/stats/overview`);
-  return response.data;
+  return apiGet("/stats/overview");
 }
 
 export async function fetchAllUsers() {
-  const response = await axiosWithCredentials.get(`${API_BASE}/users`);
-  return response.data;
+  return apiGet("/users");
 }
 
 export async function updateUserRole(userId: string, role: string) {
-  const response = await axiosWithCredentials.patch(`${API_BASE}/users/${userId}/role`, { role });
-  return response.data;
+  return apiPatch(`/users/${userId}/role`, { role });
 }
 
 export async function verifyLawyer(userId: string) {
-  const response = await axiosWithCredentials.patch(`${API_BASE}/users/${userId}/verify-lawyer`);
-  return response.data;
+  return apiPatch(`/users/${userId}/verify-lawyer`);
 }
 
 export async function banUser(userId: string, banned: boolean) {
-  const response = await axiosWithCredentials.patch(`${API_BASE}/users/${userId}/ban`, { banned });
-  return response.data;
+  return apiPatch(`/users/${userId}/ban`, { banned });
 }
 
 export async function deleteUser(userId: string) {
-  const response = await axiosWithCredentials.delete(`${API_BASE}/users/${userId}`);
-  return response.data;
+  return apiDelete(`/users/${userId}`);
 }

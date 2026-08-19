@@ -1,42 +1,36 @@
-import axios from "axios";
-import { CreateSessionResponse, RagSession, SendMessageResponse, } from "./types";
-
-const axiosWithCredentials = axios.create({ withCredentials: true });
-const HOST = (process.env.NEXT_PUBLIC_HTTP_SERVER || "").replace(/\/$/, "");
-export const API_BASE = HOST ? `${HOST}/api` : "/api";
+import { apiGet, apiPost, unwrapData } from "@/app/lib/api/client";
+import { CreateSessionResponse, RagSession, SendMessageResponse } from "./types";
 
 export async function fetchSessions(): Promise<RagSession[]> {
-  const response = await axiosWithCredentials.get(`${API_BASE}/rag/sessions`);
-  return response.data.data || [];
+  const response = await apiGet<{ data?: RagSession[] }>("/rag/sessions");
+  return unwrapData(response) || [];
 }
 
 export async function fetchSessionById(sessionId: string): Promise<RagSession> {
-  const response = await axiosWithCredentials.get(
-    `${API_BASE}/rag/sessions/${sessionId}`,
-  );
-  return response.data.data;
+  const response = await apiGet<{ data?: RagSession }>(`/rag/sessions/${sessionId}`);
+  return unwrapData(response);
 }
 
 export async function createSession(
   formData: FormData,
 ): Promise<CreateSessionResponse> {
-  const response = await axiosWithCredentials.post(
-    `${API_BASE}/rag/sessions`,
+  const response = await apiPost<{ data?: CreateSessionResponse }>(
+    "/rag/sessions",
     formData,
     {
       headers: { "Content-Type": "multipart/form-data" },
     },
   );
-  return response.data.data;
+  return unwrapData(response);
 }
 
 export async function sendMessage(
   sessionId: string,
   message: string,
 ): Promise<SendMessageResponse> {
-  const response = await axiosWithCredentials.post(
-    `${API_BASE}/rag/sessions/${sessionId}/messages`,
+  const response = await apiPost<{ data?: SendMessageResponse }>(
+    `/rag/sessions/${sessionId}/messages`,
     { message },
   );
-  return response.data.data;
+  return unwrapData(response);
 }

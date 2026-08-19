@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setSession } from "@/app/store";
 import { Alert, Form, Modal } from "react-bootstrap";
+import { apiErrorMessage, oauthUrl } from "@/app/lib/api/client";
 import * as client from "../client";
 import PageLoadingState from "@/components/ui/PageLoadingState";
 
@@ -49,12 +50,8 @@ export default function RegisterPage() {
       });
       dispatch(setSession(user.data || user));
       setShowSuccess(true);
-    } catch ( err: any ) {
-      const message =
-        err.response?.data?.error?.message ||
-        err.message ||
-        "Registration failed";
-      setError(message);
+    } catch ( err: unknown ) {
+      setError(apiErrorMessage(err, "Registration failed"));
     } finally {
       setLoading(false);
     }
@@ -132,7 +129,7 @@ export default function RegisterPage() {
             <div className="auth-divider">or</div>
 
             <a
-              href={`${process.env.NEXT_PUBLIC_HTTP_SERVER || "http://localhost:4000"}/api/auth/google`}
+              href={oauthUrl("google")}
               className="btn-warm-outline w-100 d-block text-center text-decoration-none"
             >
               <FcGoogle size={20} className="me-2"/>Sign up with Google

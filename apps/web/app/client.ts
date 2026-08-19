@@ -1,15 +1,8 @@
-import axios from "axios";
-
-const axiosWithCredentials = axios.create({ withCredentials: true });
-const HOST = (process.env.NEXT_PUBLIC_HTTP_SERVER || "").replace(/\/$/, "");
-export const API_BASE = HOST ? `${HOST}/api` : "/api";
+import { apiGet } from "@/app/lib/api/client";
 
 export async function fetchStats() {
   try {
-    const response = await axiosWithCredentials.get(
-      `${API_BASE}/stats/overview`,
-    );
-    return response.data;
+    return await apiGet("/stats/overview");
   } catch ( error ) {
     console.error("Failed to fetch stats:", error);
     return {
@@ -26,8 +19,7 @@ export async function fetchStats() {
 
 export async function fetchPosts() {
   try {
-    const response = await axiosWithCredentials.get(`${API_BASE}/posts`);
-    return response.data;
+    return await apiGet("/posts");
   } catch ( error ) {
     console.error("Failed to fetch posts:", error);
     return { data: [] };

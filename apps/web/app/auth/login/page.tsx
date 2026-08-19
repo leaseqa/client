@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setGuestSession, setSession } from "@/app/store";
 import { Alert, Form } from "react-bootstrap";
+import { apiErrorMessage, oauthUrl } from "@/app/lib/api/client";
 import * as client from "../client";
 import PageLoadingState from "@/components/ui/PageLoadingState";
 
@@ -37,12 +38,8 @@ export default function LoginPage() {
       localStorage.removeItem("guest_session");
       dispatch(setSession(user.data || user));
       router.push(safeNextHref || "/account");
-    } catch ( err: any ) {
-      const message =
-        err.response?.data?.error?.message ||
-        err.message ||
-        "Invalid email or password";
-      setError(message);
+    } catch ( err: unknown ) {
+      setError(apiErrorMessage(err, "Invalid email or password"));
     } finally {
       setLoading(false);
     }
@@ -103,7 +100,7 @@ export default function LoginPage() {
             <div className="auth-divider">or</div>
 
             <a
-              href={`${process.env.NEXT_PUBLIC_HTTP_SERVER || "http://localhost:4000"}/api/auth/google`}
+              href={oauthUrl("google")}
               className="btn-warm-outline w-100 mb-3 d-block text-center text-decoration-none"
             >
               <FcGoogle size={20} className="me-2"/>Continue with Google

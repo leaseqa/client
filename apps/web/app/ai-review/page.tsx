@@ -10,6 +10,7 @@ import ToastNotification, { ToastData, } from "@/components/ui/ToastNotification
 import AceternityFileUpload from "@/components/ui/AceternityFileUpload";
 import AceternityStatefulButton from "@/components/ui/AceternityStatefulButton";
 import PageLoadingState from "@/components/ui/PageLoadingState";
+import { apiErrorMessage } from "@/app/lib/api/client";
 import * as client from "./client";
 import { RagSession } from "./types";
 import { useSelector } from "react-redux";
@@ -101,9 +102,9 @@ export default function AIReviewPage() {
         }
         return data.find((item) => item._id === current._id) || data[0] || null;
       });
-    } catch ( error: any ) {
+    } catch ( error: unknown ) {
       showToast(
-        error.response?.data?.error?.message || "Failed to load chats.",
+        apiErrorMessage(error, "Failed to load chats."),
         "error",
       );
     } finally {
@@ -139,9 +140,9 @@ export default function AIReviewPage() {
         const next = current.filter((item) => item._id !== data._id);
         return [data, ...next];
       });
-    } catch ( error: any ) {
+    } catch ( error: unknown ) {
       showToast(
-        error.response?.data?.error?.message || "Failed to refresh this chat.",
+        apiErrorMessage(error, "Failed to refresh this chat."),
         "error",
       );
     }
@@ -283,12 +284,12 @@ export default function AIReviewPage() {
         ...current.filter((item) => item._id !== result.session._id),
       ]);
       triggerLatestAssistantReveal(result.session);
-    } catch ( error: any ) {
+    } catch ( error: unknown ) {
       setPendingUserQuestion(null);
       setPendingAssistantLabel(null);
       setQuestion(trimmedQuestion);
       showToast(
-        error.response?.data?.error?.message || "Failed to send message.",
+        apiErrorMessage(error, "Failed to send message."),
         "error",
       );
     } finally {
@@ -362,11 +363,11 @@ export default function AIReviewPage() {
           "success",
         );
       }
-    } catch ( error: any ) {
+    } catch ( error: unknown ) {
       setPendingDraftSource(null);
       setPendingAssistantLabel(null);
       showToast(
-        error.response?.data?.error?.message || "Failed to load source.",
+        apiErrorMessage(error, "Failed to load source."),
         "error",
       );
     } finally {

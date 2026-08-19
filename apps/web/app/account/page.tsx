@@ -7,6 +7,7 @@ import { RootState, setSession, signOut } from "@/app/store";
 import { Col, Form, Row, Stack } from "react-bootstrap";
 import { FaEnvelope, FaIdBadge, FaRobot, FaShieldAlt, FaSignInAlt, FaUserPlus, } from "react-icons/fa";
 import { Home, Scale, Shield } from "lucide-react";
+import { apiErrorMessage } from "@/app/lib/api/client";
 import * as client from "./client";
 import ActivityTimeline from "./components/ActivityTimeline";
 
@@ -49,9 +50,9 @@ export default function AccountPage() {
     try {
       const items = await client.fetchActivity();
       setActivityItems(items);
-    } catch ( err: any ) {
+    } catch ( err: unknown ) {
       setActivityError(
-        err.response?.data?.error?.message || "Failed to load activity.",
+        apiErrorMessage(err, "Failed to load activity."),
       );
     } finally {
       setActivityLoading(false);

@@ -1,8 +1,4 @@
-import axios from "axios";
-
-const axiosWithCredentials = axios.create({ withCredentials: true });
-const HOST = (process.env.NEXT_PUBLIC_HTTP_SERVER || "").replace(/\/$/, "");
-export const API_BASE = HOST ? `${HOST}/api` : "/api";
+import { apiGet, apiPatch, apiPost, unwrapData } from "@/app/lib/api/client";
 
 export type ActivityItem = {
   _id: string;
@@ -17,30 +13,28 @@ export type ActivityItem = {
 };
 
 export async function logout() {
-  const response = await axiosWithCredentials.post(`${API_BASE}/auth/logout`);
-  return response.data;
+  return apiPost("/auth/logout");
 }
 
 export async function updateCurrentUser(payload: { username?: string; email?: string }) {
-  const response = await axiosWithCredentials.patch(`${API_BASE}/users/me`, payload);
-  return response.data;
+  return apiPatch("/users/me", payload);
 }
 
 export async function fetchActivity(limit = 20): Promise<ActivityItem[]> {
-  const response = await axiosWithCredentials.get(`${API_BASE}/activity`, {
+  const response = await apiGet<{ data?: ActivityItem[] }>("/activity", {
     params: { limit },
   });
-  return response.data.data || [];
+  return unwrapData(response) || [];
 }
 
 export async function fetchNotifications(limit = 5): Promise<ActivityItem[]> {
-  const response = await axiosWithCredentials.get(`${API_BASE}/activity/notifications`, {
+  const response = await apiGet<{ data?: ActivityItem[] }>("/activity/notifications", {
     params: { limit },
   });
-  return response.data.data || [];
+  return unwrapData(response) || [];
 }
 
 export async function markNotificationsRead(ids: string[]) {
-  const response = await axiosWithCredentials.post(`${API_BASE}/activity/notifications/read`, { ids });
-  return response.data.data;
+  const response = await apiPost<{ data?: unknown }>("/activity/notifications/read", { ids });
+  return unwrapData(response);
 }
