@@ -26,18 +26,56 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6.3.0
         with:
-          node-version: 20
+          node-version: 24.19.0
           cache: npm
           cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Typecheck
+        run: npm run typecheck
+
       - name: Run lint
-        run: npm run lint --workspace @leaseqa/web
+        run: npm run lint
 
       - name: Run unit tests
-        run: npm run test --workspace @leaseqa/web
+        run: npm test
 
       - name: Run production build
-        run: npm run build --workspace @leaseqa/web
+        run: npm run build
+
+      - name: Enforce production dependency security gate
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Report development dependency advisories
+        run: npm audit --include=dev --audit-level=high
+        continue-on-error: true
+
+  node-26-compat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_PUBLIC_HTTP_SERVER: http://127.0.0.1:4100
+    steps:
+      - name: Check out client
+        uses: actions/checkout@v6.0.2
+
+      - name: Set up Node.js 26
+        uses: actions/setup-node@v6.3.0
+        with:
+          node-version: 26.x
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Run production build
+        run: npm run build

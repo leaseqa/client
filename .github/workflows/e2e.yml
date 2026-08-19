@@ -1,0 +1,79 @@
+name: Paired E2E
+
+on:
+  workflow_dispatch:
+    inputs:
+      server_repository:
+        description: Server repository in owner/name form
+        required: true
+        type: string
+      server_ref:
+        description: Server git SHA or ref to test against
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.workflow }}-${{ github.ref }}-${{ inputs.server_repository }}-${{ inputs.server_ref }}
+  cancel-in-progress: true
+
+jobs:
+  paired-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval \"db.adminCommand('ping').ok\""
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      NEXT_PUBLIC_HTTP_SERVER: http://127.0.0.1:4100
+      DATABASE_CONNECTION_STRING: mongodb://127.0.0.1:27017/leaseqa_ci
+      SESSION_SECRET: leaseqa-ci-secret
+      GOOGLE_CLIENT_ID: ci-placeholder
+      GOOGLE_CLIENT_SECRET: ci-placeholder
+      PLAYWRIGHT_ADMIN_PASSWORD: leaseqa-e2e-admin
+      CI_SKIP_RAG: "true"
+      CI_DISABLE_RATE_LIMIT: "true"
+      LEASEQA_SERVER_DIR: ${{ github.workspace }}/leaseqa-server
+    steps:
+      - name: Check out client
+        uses: actions/checkout@v6.0.2
+
+      - name: Check out paired server revision
+        uses: actions/checkout@v6.0.2
+        with:
+          repository: ${{ inputs.server_repository }}
+          ref: ${{ inputs.server_ref }}
+          path: leaseqa-server
+          token: ${{ secrets.SERVER_CHECKOUT_TOKEN || github.token }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.3.0
+        with:
+          node-version: 24.19.0
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            leaseqa-server/package-lock.json
+
+      - name: Install client dependencies
+        run: npm ci
+
+      - name: Install server dependencies
+        working-directory: leaseqa-server
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        working-directory: apps/web
+        run: npx playwright install --with-deps chromium
+
+      - name: Run client end-to-end tests against the paired server
+        run: npm run e2e -- --retries=1

@@ -2,24 +2,32 @@
   "name": "leaseqa-monorepo",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "npm@10.9.2",
+  "packageManager": "npm@11.17.0",
   "scripts": {
     "dev": "npm run dev --workspace @leaseqa/web",
     "build": "npm run build --workspace @leaseqa/web",
     "lint": "npm run lint --workspace @leaseqa/web",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "typecheck": "npm exec --workspace @leaseqa/web -- next typegen && tsc -b --pretty false",
+    "test": "node --test scripts/runtime-contract.test.mjs && npm test --workspace @leaseqa/web",
+    "e2e": "npm run e2e --workspace @leaseqa/web"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   },
   "devDependencies": {
-    "prettier": "^3.3.3"
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "react-redux": "^9.2.0"
+  },
+  "overrides": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0"
   }
 }

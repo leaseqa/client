@@ -10,6 +10,9 @@ yarn.lock
 # build
 .next
 out
+dist
+packages/*/dist
+*.tsbuildinfo
 apps/web/playwright-report
 apps/web/test-results
 
