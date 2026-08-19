@@ -1,4 +1,4 @@
-import { apiGet, apiPost, unwrapData } from "@/app/lib/api/client";
+import { apiDelete, apiGet, apiPost, unwrapData } from "@/app/lib/api/client";
 import { CreateSessionResponse, RagSession, SendMessageResponse } from "./types";
 
 export async function fetchSessions(): Promise<RagSession[]> {
@@ -6,8 +6,13 @@ export async function fetchSessions(): Promise<RagSession[]> {
   return unwrapData(response) || [];
 }
 
-export async function fetchSessionById(sessionId: string): Promise<RagSession> {
-  const response = await apiGet<{ data?: RagSession }>(`/rag/sessions/${sessionId}`);
+export async function fetchSessionById(
+  sessionId: string,
+  signal?: AbortSignal,
+): Promise<RagSession> {
+  const response = await apiGet<{ data?: RagSession }>(`/rag/sessions/${sessionId}`, {
+    signal,
+  });
   return unwrapData(response);
 }
 
@@ -32,5 +37,10 @@ export async function sendMessage(
     `/rag/sessions/${sessionId}/messages`,
     { message },
   );
+  return unwrapData(response);
+}
+
+export async function deleteSession(sessionId: string): Promise<unknown> {
+  const response = await apiDelete(`/rag/sessions/${sessionId}`);
   return unwrapData(response);
 }

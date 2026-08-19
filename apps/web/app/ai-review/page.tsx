@@ -1,55 +1,27 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Badge, Form, Spinner } from "react-bootstrap";
-import { Clock3, FileText, MessageSquareQuote, Shield } from "lucide-react";
+import { useSelector } from "react-redux";
 
-import ToastNotification, { ToastData, } from "@/components/ui/ToastNotification";
-import AceternityFileUpload from "@/components/ui/AceternityFileUpload";
-import AceternityStatefulButton from "@/components/ui/AceternityStatefulButton";
+import ToastNotification, { ToastData } from "@/components/ui/ToastNotification";
 import PageLoadingState from "@/components/ui/PageLoadingState";
 import { apiErrorMessage } from "@/app/lib/api/client";
-import * as client from "./client";
-import { RagSession } from "./types";
-import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
+import { RagSession } from "./types";
 import {
-  AUTO_ANALYZE_QUESTION,
-  CHAT_UPLOAD_ACCEPT,
-  CHAT_UPLOAD_MAX_MB,
-  FILE_SUGGESTED_PROMPTS,
   getDisplayedSource,
-  getEmptyStateMessage,
-  getInlineCitationItems,
   getNextRevealLength,
   getResultsPanelState,
   getSessionInputPlan,
   getVisibleMessages,
-  shouldShowLegacyCitationList,
-  TEXT_RETRY_PROMPT_LABEL,
 } from "./view-model";
-
-const formatStatusLabel = (status: RagSession["status"]) => {
-  if ( status === "ready" ) {
-    return "Ready";
-  }
-  if ( status === "failed" ) {
-    return "Failed";
-  }
-  return "Indexing";
-};
-
-const formatStatusVariant = (status: RagSession["status"]) => {
-  if ( status === "ready" ) {
-    return "success";
-  }
-  if ( status === "failed" ) {
-    return "danger";
-  }
-  return "warning";
-};
+import { useRagConversation } from "./hooks/useRagConversation";
+import { useRagSession } from "./hooks/useRagSession";
+import { useRagSessions } from "./hooks/useRagSessions";
+import SessionList from "./components/SessionList";
+import SourceUploader from "./components/SourceUploader";
+import Conversation from "./components/Conversation";
 
 export default function AIReviewPage() {
   const router = useRouter();
@@ -60,20 +32,15 @@ export default function AIReviewPage() {
   const isGuest = session.status === "guest";
   const hasAccess = isAuthenticated || isGuest;
 
-  const [sessions, setSessions] = useState<RagSession[]>([]);
-  const [activeSession, setActiveSession] = useState<RagSession | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [sourceText, setSourceText] = useState("");
   const [question, setQuestion] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadResetKey, setUploadResetKey] = useState(0);
-  const [loadingSessions, setLoadingSessions] = useState(false);
-  const [creatingSession, setCreatingSession] = useState(false);
-  const [sendingMessage, setSendingMessage] = useState(false);
   const [pendingDraftSource, setPendingDraftSource] = useState<{
     sourceName: string;
     sourcePreview: string;
   } | null>(null);
-  const [pendingUserQuestion, setPendingUserQuestion] = useState<string | null>(null);
   const [pendingAssistantLabel, setPendingAssistantLabel] = useState<string | null>(null);
   const [revealingMessage, setRevealingMessage] = useState<{
     key: string;
@@ -91,26 +58,22 @@ export default function AIReviewPage() {
     setToast({ show: true, message, type });
   }, []);
 
-  const loadSessions = useCallback(async () => {
-    try {
-      setLoadingSessions(true);
-      const data = await client.fetchSessions();
-      setSessions(data);
-      setActiveSession((current) => {
-        if ( !current ) {
-          return data[0] || null;
-        }
-        return data.find((item) => item._id === current._id) || data[0] || null;
-      });
-    } catch ( error: unknown ) {
-      showToast(
-        apiErrorMessage(error, "Failed to load chats."),
-        "error",
-      );
-    } finally {
-      setLoadingSessions(false);
-    }
-  }, [showToast]);
+  const {
+    sessions,
+    isLoading: loadingSessions,
+    error: sessionsError,
+    createSession,
+    isCreating: creatingSession,
+  } = useRagSessions(hasAccess);
+
+  const resolvedId = activeId || sessions[0]?._id || null;
+  const { session: detailedSession } = useRagSession(resolvedId);
+  const { sendAsync, isSending: sendingMessage } = useRagConversation(resolvedId);
+
+  const activeSession =
+    detailedSession ||
+    sessions.find((item) => item._id === resolvedId) ||
+    null;
 
   const stopReveal = useCallback(() => {
     if ( revealTimerRef.current ) {
@@ -132,51 +95,14 @@ export default function AIReviewPage() {
     });
   }, [stopReveal]);
 
-  const refreshActiveSession = useCallback(async (sessionId: string) => {
-    try {
-      const data = await client.fetchSessionById(sessionId);
-      setActiveSession(data);
-      setSessions((current) => {
-        const next = current.filter((item) => item._id !== data._id);
-        return [data, ...next];
-      });
-    } catch ( error: unknown ) {
-      showToast(
-        apiErrorMessage(error, "Failed to refresh this chat."),
-        "error",
-      );
-    }
-  }, [showToast]);
-
   useEffect(() => {
     if ( session.status === "unauthenticated" ) {
       router.replace("/auth/login?next=%2Fai-review");
-      return;
     }
-    if ( hasAccess ) {
-      void loadSessions();
-    }
-  }, [session.status, router, hasAccess, loadSessions]);
-
-  useEffect(() => {
-    if ( !activeSession || activeSession.status !== "indexing" ) {
-      return;
-    }
-
-    const timer = window.setTimeout(() => {
-      void refreshActiveSession(activeSession._id);
-    }, 2000);
-
-    return () => window.clearTimeout(timer);
-  }, [activeSession, refreshActiveSession]);
+  }, [session.status, router]);
 
   useEffect(() => {
     if ( !revealingMessage ) {
-      return;
-    }
-
-    if ( revealingMessage.visibleLength >= revealingMessage.fullText.length ) {
-      stopReveal();
       return;
     }
 
@@ -240,8 +166,8 @@ export default function AIReviewPage() {
     [activeSession, pendingDraftSource],
   );
 
-  const triggerLatestAssistantReveal = useCallback((session: RagSession) => {
-    const visibleMessages = getVisibleMessages(session);
+  const triggerLatestAssistantReveal = useCallback((nextSession: RagSession) => {
+    const visibleMessages = getVisibleMessages(nextSession);
     const latestAssistantIndex = [...visibleMessages]
       .reverse()
       .findIndex((message) => message.role === "assistant");
@@ -270,32 +196,21 @@ export default function AIReviewPage() {
 
     stopReveal();
     setQuestion("");
-    setPendingUserQuestion(trimmedQuestion);
     setPendingAssistantLabel("Researching the best supported answer...");
 
     try {
-      setSendingMessage(true);
-      const result = await client.sendMessage(activeSession._id, trimmedQuestion);
-      setPendingUserQuestion(null);
+      const result = await sendAsync(trimmedQuestion);
       setPendingAssistantLabel(null);
-      setActiveSession(result.session);
-      setSessions((current) => [
-        result.session,
-        ...current.filter((item) => item._id !== result.session._id),
-      ]);
       triggerLatestAssistantReveal(result.session);
     } catch ( error: unknown ) {
-      setPendingUserQuestion(null);
       setPendingAssistantLabel(null);
       setQuestion(trimmedQuestion);
       showToast(
         apiErrorMessage(error, "Failed to send message."),
         "error",
       );
-    } finally {
-      setSendingMessage(false);
     }
-  }, [activeSession, showToast, stopReveal, triggerLatestAssistantReveal]);
+  }, [activeSession, sendAsync, showToast, stopReveal, triggerLatestAssistantReveal]);
 
   const handleCreateSession = async (
     event: React.FormEvent<HTMLFormElement>,
@@ -330,16 +245,11 @@ export default function AIReviewPage() {
     }
 
     try {
-      setCreatingSession(true);
       stopReveal();
-      const created = await client.createSession(formData);
+      const created = await createSession(formData);
       setPendingDraftSource(null);
       setPendingAssistantLabel(null);
-      setActiveSession(created);
-      setSessions((current) => [
-        created,
-        ...current.filter((item) => item._id !== created._id),
-      ]);
+      setActiveId(created._id);
       setSourceText("");
       setSelectedFile(null);
       setUploadResetKey((current) => current + 1);
@@ -370,8 +280,6 @@ export default function AIReviewPage() {
         apiErrorMessage(error, "Failed to load source."),
         "error",
       );
-    } finally {
-      setCreatingSession(false);
     }
   };
 
@@ -407,325 +315,44 @@ export default function AIReviewPage() {
         </p>
       </section>
 
-      <section className="review-input-section">
-        <Form onSubmit={handleCreateSession} className="review-upload-stack">
-          <AceternityFileUpload
-            key={uploadResetKey}
-            name="file"
-            accept={CHAT_UPLOAD_ACCEPT}
-            maxSizeMb={CHAT_UPLOAD_MAX_MB}
-            onFilesChangeAction={(files) => setSelectedFile(files[0] || null)}
-          />
+      <SourceUploader
+        sourceText={sourceText}
+        selectedFile={selectedFile}
+        uploadResetKey={uploadResetKey}
+        creatingSession={creatingSession}
+        pendingDraftSource={Boolean(pendingDraftSource)}
+        isGuest={isGuest}
+        onSourceTextChange={setSourceText}
+        onFilesChange={(files) => setSelectedFile(files[0] || null)}
+        onSubmit={handleCreateSession}
+      />
 
-          <div className="review-divider">or paste text</div>
+      <SessionList
+        sessions={sessions}
+        activeSessionId={resolvedId}
+        loading={loadingSessions}
+        isGuest={isGuest}
+        error={sessionsError ? apiErrorMessage(sessionsError, "Failed to load chats.") : null}
+        onSelect={(item) => setActiveId(item._id)}
+      />
 
-          <Form.Group>
-            <Form.Control
-              as="textarea"
-              name="sourceText"
-              value={sourceText}
-              onChange={(event) => setSourceText(event.target.value)}
-              rows={6}
-              placeholder="Paste the lease clause, notice, or housing text you want to ask about."
-              className="review-textarea"
-            />
-          </Form.Group>
-
-          <div className="review-form-footer">
-            <div className="review-note">
-              <Shield size={14}/>
-              <span>
-                {isGuest
-                  ? "Guest chats stay in this browser session."
-                  : "Not legal advice."}
-              </span>
-            </div>
-            <AceternityStatefulButton
-              type="submit"
-              status={creatingSession ? "loading" : "idle"}
-              className="btn-unified btn-unified-primary btn-unified-md"
-            >
-              {creatingSession
-                ? pendingDraftSource
-                  ? "Analyzing clause"
-                  : "Loading source"
-                : selectedFile
-                  ? "Start chat"
-                  : sourceText.trim()
-                    ? "Analyze clause"
-                    : "Start chat"}
-            </AceternityStatefulButton>
-          </div>
-        </Form>
-      </section>
-
-      <section className="review-history-section">
-        <div className="review-history-header">
-          <div className="qa-sidebar-label">
-            <Clock3 size={12}/>
-            <span>History</span>
-          </div>
-          {isGuest ? (
-            <span className="review-history-hint">Temporary for this guest session</span>
-          ) : null}
-        </div>
-
-        {loadingSessions ? (
-          <div className="review-history-inline">
-            <Spinner size="sm"/>
-            <span>Loading...</span>
-          </div>
-        ) : sessions.length > 0 ? (
-          <div className="review-history-chips">
-            {sessions.map((item) => {
-              const isActive = activeSession?._id === item._id;
-              return (
-                <button
-                  key={item._id}
-                  type="button"
-                  onClick={() => setActiveSession(item)}
-                  className={`review-history-chip ${isActive ? "is-active" : ""}`}
-                >
-                  <span>{item.sourceName}</span>
-                  <span className="review-history-chip-date">
-                    {new Date(item.updatedAt).toLocaleDateString()}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="review-history-inline">
-            No chats yet. Start one above.
-          </div>
-        )}
-      </section>
-
-      <section className="review-results-section">
-        <div className="review-results-header">
-          <div>
-            <h2 className="qa-page-title" style={{ fontSize: "1.4rem" }}>
-              {showSession ? resultsPanelState.title : "Chat"}
-            </h2>
-            <p className="qa-page-sub">
-              {showSession
-                ? resultsPanelState.subtitle
-                : "Create a source above, then ask questions here."}
-            </p>
-          </div>
-          {showSession ? (
-            <Badge bg={formatStatusVariant(displayStatus)}>
-              {formatStatusLabel(displayStatus)}
-            </Badge>
-          ) : null}
-        </div>
-
-        {showSession ? (
-          <>
-            <div className="review-recs-panel">
-              <div className="qa-sidebar-label">
-                <FileText size={12}/>
-                <span>Current source</span>
-              </div>
-              <p className="review-summary-text">{displaySourcePreview}</p>
-              {activeSession?.error ? (
-                <p className="text-danger mb-0 small">{activeSession.error}</p>
-              ) : null}
-            </div>
-
-            <div className="review-next-step">
-              <div className="qa-sidebar-label">
-                <MessageSquareQuote size={12}/>
-                <span>{resultsPanelState.conversationLabel}</span>
-              </div>
-              <div className="review-chat-log">
-                {activeMessages.length > 0 || pendingDraftSource || pendingUserQuestion || pendingAssistantLabel ? (
-                  <>
-                    {activeMessages.map((message, index) => {
-                      const messageKey = `${message.createdAt}-${index}`;
-                      const isRevealing = revealingMessage?.key === messageKey;
-                      const messageBody = isRevealing
-                        ? revealingMessage.fullText.slice(0, revealingMessage.visibleLength)
-                        : message.content;
-
-                      return (
-                        <article
-                          key={messageKey}
-                          className={`review-chat-message review-chat-message-${message.role}`}
-                        >
-                          <div className="review-chat-role">{message.role}</div>
-                          {isRevealing || !message.summary || !message.bullets?.length ? (
-                            <>
-                              <div
-                                className={`review-chat-body ${isRevealing ? "is-revealing" : ""}`}
-                              >
-                                {messageBody}
-                              </div>
-                              {shouldShowLegacyCitationList(message) ? (
-                                <div className="review-chat-inline-citations review-chat-inline-citations-block">
-                                  {getInlineCitationItems({
-                                    citations: message.citations,
-                                    citationIndices: message.citations.map((_, citationIndex) => citationIndex),
-                                  }).map((citation, citationIndex) =>
-                                    citation.sourceUrl ? (
-                                      <a
-                                        key={`${messageKey}-legacy-${citationIndex}`}
-                                        href={citation.sourceUrl}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="review-chat-inline-citation"
-                                      >
-                                        {citation.label}
-                                      </a>
-                                    ) : (
-                                      <span
-                                        key={`${messageKey}-legacy-${citationIndex}`}
-                                        className="review-chat-inline-citation is-static"
-                                      >
-                                        {citation.label}
-                                      </span>
-                                    ),
-                                  )}
-                                </div>
-                              ) : null}
-                            </>
-                          ) : (
-                            <div className="review-chat-structured">
-                              <p className="review-chat-summary">{message.summary}</p>
-                              <ul className="review-chat-bullet-list">
-                                {message.bullets.map((bullet, bulletIndex) => (
-                                  <li
-                                    key={`${messageKey}-bullet-${bulletIndex}`}
-                                    className="review-chat-bullet-item"
-                                  >
-                                    <span>{bullet.text}</span>
-                                    {bullet.citationIndices.length > 0 ? (
-                                      <span className="review-chat-inline-citations">
-                                        {getInlineCitationItems({
-                                          citations: message.citations,
-                                          citationIndices: bullet.citationIndices,
-                                        }).map((citation, citationIndex) =>
-                                          citation.sourceUrl ? (
-                                            <a
-                                              key={`${messageKey}-${bulletIndex}-${citationIndex}`}
-                                              href={citation.sourceUrl}
-                                              target="_blank"
-                                              rel="noreferrer"
-                                              className="review-chat-inline-citation"
-                                            >
-                                              {citation.label}
-                                            </a>
-                                          ) : (
-                                            <span
-                                              key={`${messageKey}-${bulletIndex}-${citationIndex}`}
-                                              className="review-chat-inline-citation is-static"
-                                            >
-                                              {citation.label}
-                                            </span>
-                                          ),
-                                        )}
-                                      </span>
-                                    ) : null}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                        </article>
-                      );
-                    })}
-                    {pendingUserQuestion ? (
-                      <article className="review-chat-message review-chat-message-user">
-                        <div className="review-chat-role">user</div>
-                        <div className="review-chat-body">{pendingUserQuestion}</div>
-                      </article>
-                    ) : null}
-                    {pendingAssistantLabel ? (
-                      <article className="review-chat-message review-chat-message-assistant">
-                        <div className="review-chat-role">assistant</div>
-                        <div className="review-chat-body review-chat-body-pending">
-                          {pendingAssistantLabel}
-                        </div>
-                      </article>
-                    ) : null}
-                  </>
-                ) : (
-                  <>
-                    {activeSession?.status === "ready" ? (
-                      <div className="review-prompt-grid">
-                        {(activeSession.sourceKind === "upload"
-                            ? FILE_SUGGESTED_PROMPTS
-                            : [TEXT_RETRY_PROMPT_LABEL]
-                        ).map((prompt) => (
-                          <button
-                            key={prompt}
-                            type="button"
-                            className="review-prompt-chip"
-                            onClick={() =>
-                              void submitQuestion(
-                                activeSession.sourceKind === "upload"
-                                  ? prompt
-                                  : AUTO_ANALYZE_QUESTION,
-                              )
-                            }
-                          >
-                            {prompt}
-                          </button>
-                        ))}
-                      </div>
-                    ) : null}
-                    <div className="review-history-inline">
-                      {getEmptyStateMessage({ activeSession })}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {activeSession && !pendingDraftSource ? (
-              <Form onSubmit={handleSendMessage} className="review-upload-stack">
-                <Form.Group>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    value={question}
-                    onChange={(event) => setQuestion(event.target.value)}
-                    placeholder="Ask a question about this document or your housing issue."
-                    className="review-textarea"
-                  />
-                </Form.Group>
-
-                <div className="review-form-footer">
-                  <div className="review-note">
-                    <Shield size={14}/>
-                    <span>
-                      {activeSession.status === "ready"
-                        ? "LeaseQA provides legal information, not legal advice."
-                        : "Wait for indexing to finish before asking a question."}
-                    </span>
-                  </div>
-                  <AceternityStatefulButton
-                    type="submit"
-                    status={sendingMessage ? "loading" : "idle"}
-                    className="btn-unified btn-unified-primary btn-unified-md"
-                    disabled={!question.trim() || activeSession.status !== "ready"}
-                  >
-                    {sendingMessage ? "Sending" : "Send question"}
-                  </AceternityStatefulButton>
-                </div>
-              </Form>
-            ) : (
-              <div className="review-history-inline">
-                Finishing the first answer. You can ask follow-up questions in a moment.
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="review-history-inline">
-            Start a chat above or <Link href="/qa">browse community Q&amp;A</Link>.
-          </div>
-        )}
-      </section>
+      <Conversation
+        showSession={showSession}
+        resultsPanelState={resultsPanelState}
+        displayStatus={displayStatus}
+        displaySourcePreview={displaySourcePreview}
+        activeSession={activeSession}
+        activeMessages={activeMessages}
+        pendingDraftSource={Boolean(pendingDraftSource)}
+        pendingUserQuestion={null}
+        pendingAssistantLabel={pendingAssistantLabel}
+        revealingMessage={revealingMessage}
+        question={question}
+        sendingMessage={sendingMessage}
+        onQuestionChange={setQuestion}
+        onSubmitQuestion={handleSendMessage}
+        onPrompt={(prompt) => void submitQuestion(prompt)}
+      />
     </div>
   );
 }

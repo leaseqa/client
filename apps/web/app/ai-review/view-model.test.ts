@@ -9,9 +9,13 @@ import {
   getEmptyStateMessage,
   getInlineCitationItems,
   getNextRevealLength,
+  getPendingConversationItems,
   getResultsPanelState,
   getSessionInputPlan,
   getVisibleMessages,
+  hasMissingCitations,
+  isAbstentionMessage,
+  isRetryableApiError,
   shouldShowLegacyCitationList,
 } from "./view-model";
 
@@ -369,5 +373,80 @@ describe("getNextRevealLength", () => {
 
     expect(getNextRevealLength(0, reply)).toBeGreaterThan(0);
     expect(getNextRevealLength(reply.length - 2, reply)).toBe(reply.length);
+  });
+});
+
+describe("conversation fixtures", () => {
+  const abstentionMessage = {
+    role: "assistant" as const,
+    content: "I could not find enough support to answer that reliably from this source and the handbook.",
+    summary: "I could not find enough support to answer that reliably from this source and the handbook.",
+    bullets: [
+      {
+        text: "Ask a narrower question or quote the specific clause you want reviewed.",
+        citationIndices: [],
+      },
+    ],
+    citations: [],
+    createdAt: "2026-08-19T00:00:02.000Z",
+  };
+
+  test("detects an abstention with no citations", () => {
+    expect(isAbstentionMessage(abstentionMessage)).toBe(true);
+  });
+
+  test("flags bullets that omit citation support", () => {
+    expect(hasMissingCitations(abstentionMessage)).toBe(true);
+    expect(
+      hasMissingCitations({
+        role: "assistant",
+        content: "The 30-day deadline matches the handbook.",
+        summary: "The 30-day deadline matches the handbook.",
+        bullets: [{ text: "The deadline is 30 days.", citationIndices: [0] }],
+        citations: [
+          {
+            sourceName: "ch03_security_deposits.pdf",
+            sourceGroup: "chapters",
+            sourceType: "chapter",
+            chapterRef: "3",
+            filePath: null,
+            sourceUrl: "https://example.com/ch03",
+            snippet: "Security deposit handbook snippet",
+          },
+        ],
+        createdAt: "2026-08-19T00:00:02.000Z",
+      }),
+    ).toBe(false);
+  });
+
+  test("surfaces pending user and assistant items", () => {
+    expect(
+      getPendingConversationItems({
+        pendingUserQuestion: "Is the late fee legal?",
+        pendingAssistantLabel: "Researching the best supported answer...",
+      }),
+    ).toEqual([
+      { role: "user", content: "Is the late fee legal?" },
+      { role: "assistant", content: "Researching the best supported answer..." },
+    ]);
+  });
+
+  test("treats 503 and *_RETRYABLE codes as retryable", () => {
+    expect(
+      isRetryableApiError({
+        name: "ApiError",
+        status: 503,
+        code: "RAG_SESSION_DELETE_RETRYABLE",
+        message: "Session deletion did not complete. Retry the request.",
+      }),
+    ).toBe(true);
+    expect(
+      isRetryableApiError({
+        name: "ApiError",
+        status: 403,
+        code: "FORBIDDEN",
+        message: "Denied",
+      }),
+    ).toBe(false);
   });
 });

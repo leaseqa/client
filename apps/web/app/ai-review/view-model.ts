@@ -239,3 +239,78 @@ export function getNextRevealLength(currentLength: number, fullText: string) {
     currentLength + getRevealChunkSize(fullText.length),
   );
 }
+
+export const ABSTENTION_SUMMARY =
+  "I could not find enough support to answer that reliably from this source and the handbook.";
+
+export function isAbstentionMessage(message: ChatMessage) {
+  if ( message.role !== "assistant" ) {
+    return false;
+  }
+  if ( message.summary === ABSTENTION_SUMMARY ) {
+    return true;
+  }
+  return Boolean(message.summary) && message.citations.length === 0;
+}
+
+export function hasMissingCitations(message: ChatMessage) {
+  if ( message.role !== "assistant" ) {
+    return false;
+  }
+  if ( message.bullets?.length ) {
+    return message.bullets.some((bullet) => bullet.citationIndices.length === 0);
+  }
+  return message.citations.length === 0;
+}
+
+export function getPendingConversationItems({
+  pendingUserQuestion,
+  pendingAssistantLabel,
+}: {
+  pendingUserQuestion: string | null;
+  pendingAssistantLabel: string | null;
+}) {
+  const items: Array<{ role: "user" | "assistant"; content: string }> = [];
+  if ( pendingUserQuestion ) {
+    items.push({ role: "user", content: pendingUserQuestion });
+  }
+  if ( pendingAssistantLabel ) {
+    items.push({ role: "assistant", content: pendingAssistantLabel });
+  }
+  return items;
+}
+
+export function isRetryableApiError(error: unknown) {
+  if ( !error || typeof error !== "object" ) {
+    return false;
+  }
+  const status = "status" in error ? error.status : undefined;
+  const code = "code" in error ? error.code : undefined;
+  if ( status === 503 ) {
+    return true;
+  }
+  if ( code === "TIMEOUT" || code === "NETWORK" || code === "ABORTED" ) {
+    return true;
+  }
+  return typeof code === "string" && code.endsWith("_RETRYABLE");
+}
+
+export function formatStatusLabel(status: RagSession["status"]) {
+  if ( status === "ready" ) {
+    return "Ready";
+  }
+  if ( status === "failed" ) {
+    return "Failed";
+  }
+  return "Indexing";
+}
+
+export function formatStatusVariant(status: RagSession["status"]) {
+  if ( status === "ready" ) {
+    return "success";
+  }
+  if ( status === "failed" ) {
+    return "danger";
+  }
+  return "warning";
+}
