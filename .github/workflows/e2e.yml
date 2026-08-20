@@ -53,6 +53,7 @@ jobs:
           repository: ${{ inputs.server_repository }}
           ref: ${{ inputs.server_ref }}
           path: leaseqa-server
+          ssh-key: ${{ secrets.SERVER_CHECKOUT_SSH_KEY }}
           token: ${{ secrets.SERVER_CHECKOUT_TOKEN || github.token }}
 
       - name: Set up Node.js
