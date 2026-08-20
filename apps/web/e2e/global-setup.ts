@@ -1,5 +1,6 @@
 import { execSync } from "node:child_process";
 import path from "node:path";
+import { withPlaywrightDefaults } from "./playwright-env";
 import { resolveLeaseqaServerDir } from "./server-dir";
 
 const adminPassword =
@@ -12,7 +13,7 @@ export default async function globalSetup() {
     cwd: serverDir,
     stdio: "inherit",
     env: {
-      ...process.env,
+      ...withPlaywrightDefaults(process.env),
       DEMO_PASSWORD: adminPassword,
       SERVER_ENV: "development",
       ALLOW_DEMO_ACCOUNTS: "true",

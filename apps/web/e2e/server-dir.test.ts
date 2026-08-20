@@ -12,8 +12,16 @@ describe("resolveLeaseqaServerDir", () => {
   });
 
   it("falls back to the sibling leaseqa-server directory", () => {
-    expect(resolveLeaseqaServerDir("/tmp/client/apps/web", {})).toBe(
-      path.resolve("/tmp/leaseqa-server"),
-    );
+    expect(
+      resolveLeaseqaServerDir("/tmp/client/apps/web", {}, () => false),
+    ).toBe(path.resolve("/tmp/leaseqa-server"));
+  });
+
+  it("prefers an existing server-engineering worktree over the CI checkout name", () => {
+    expect(
+      resolveLeaseqaServerDir("/tmp/client/apps/web", {}, (filePath) =>
+        filePath.endsWith(`${path.sep}server-engineering`),
+      ),
+    ).toBe(path.resolve("/tmp/server-engineering"));
   });
 });

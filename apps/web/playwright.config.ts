@@ -1,4 +1,5 @@
 import { defineConfig } from "@playwright/test";
+import { withPlaywrightDefaults } from "./e2e/playwright-env";
 import { resolveLeaseqaServerDir } from "./e2e/server-dir";
 
 const frontendPort = process.env.PLAYWRIGHT_FRONTEND_PORT || "3100";
@@ -23,7 +24,7 @@ export default defineConfig({
       command: "npm start",
       cwd: serverDir,
       env: {
-        ...process.env,
+        ...withPlaywrightDefaults(process.env),
         PORT: backendPort,
         CLIENT_URL: `http://127.0.0.1:${frontendPort}`,
         SERVER_ENV: "development",
