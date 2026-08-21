@@ -52,7 +52,7 @@ export default function HomeJourney({ stats = [] }: HomeJourneyProps) {
           </p>
           <div className={styles.actions}>
             <Link href="/ai-review" className={styles.primaryAction}>
-              Review lease language <span aria-hidden="true">→</span>
+              Review My Lease <span aria-hidden="true">→</span>
             </Link>
             <Link href="/qa" className={styles.secondaryAction}>
               Browse renter questions
