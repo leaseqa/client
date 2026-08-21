@@ -12,7 +12,12 @@ describe("withPlaywrightDefaults", () => {
       PATH: "/usr/bin",
       CI_DISABLE_RATE_LIMIT: "true",
       DATABASE_CONNECTION_STRING: LOCAL_E2E_DATABASE,
+      NODE_ENV: process.env.NODE_ENV,
     });
+  });
+
+  it("keeps NODE_ENV so child_process env matches ProcessEnv", () => {
+    expect(withPlaywrightDefaults(process.env).NODE_ENV).toBe(process.env.NODE_ENV);
   });
 
   it("keeps CI-provided Mongo and rate-limit flags", () => {

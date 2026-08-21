@@ -13,6 +13,7 @@ export default async function globalSetup() {
     cwd: serverDir,
     stdio: "inherit",
     env: {
+      ...process.env,
       ...withPlaywrightDefaults(process.env),
       DEMO_PASSWORD: adminPassword,
       SERVER_ENV: "development",
