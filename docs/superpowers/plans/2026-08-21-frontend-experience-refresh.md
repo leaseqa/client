@@ -255,25 +255,25 @@ git commit -m "feat: turn AI review into a focused workspace"
 - Produces: labelled community search, guest permission action, 44px mobile targets, and reduced-motion overrides.
 - Consumes: existing router/query parameters and `RemoteDataState`.
 
-- [ ] **Step 1: Generate current-versus-target mobile comparison images**
+- [x] **Step 1: Generate current-versus-target mobile comparison images**
 
 Show QA at 390x844 with improved segmented navigation, labelled search, and distinct guest/error/empty actions.
 
-- [ ] **Step 2: Show the comparison and stop for explicit user approval**
+- [x] **Step 2: Show the comparison and stop for explicit user approval**
 
-- [ ] **Step 3: Write failing toolbar and guest-state tests**
+- [x] **Step 3: Write failing toolbar and guest-state tests**
 
 Assert search is labelled `Search community questions`, resolved state has `aria-pressed`, and guest empty state links to login with the current route as `next`.
 
-- [ ] **Step 4: Implement semantic controls and approved layout**
+- [x] **Step 4: Implement semantic controls and approved layout**
 
 Use visible or visually-hidden labels. Set touch targets through shared mobile control rules rather than one-off padding.
 
-- [ ] **Step 5: Add reduced-motion coverage**
+- [x] **Step 5: Add reduced-motion coverage**
 
 Add one global media query that disables nonessential animation and shortens transitions when `prefers-reduced-motion: reduce` is active.
 
-- [ ] **Step 6: Run responsive E2E, verification, and commit**
+- [x] **Step 6: Run responsive E2E, verification, and commit**
 
 Run: `npm exec vitest run -- apps/web/app/qa apps/web/components/navigation && npm run e2e --workspace @leaseqa/web -- --grep "community|mobile"`
 

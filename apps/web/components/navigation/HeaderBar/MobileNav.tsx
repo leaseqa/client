@@ -43,6 +43,7 @@ export default function MobileNav({ pathname }: MobileNavProps) {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? "page" : undefined}
                 className={`nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-2 ${
                   isActive ? "bg-light text-primary fw-semibold" : "text-secondary"
                 }`}
@@ -65,6 +66,7 @@ export default function MobileNav({ pathname }: MobileNavProps) {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? "page" : undefined}
                 className={`nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-2 ${
                   isActive ? "bg-light text-primary fw-semibold" : "text-secondary"
                 }`}

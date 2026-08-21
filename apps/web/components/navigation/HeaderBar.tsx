@@ -136,6 +136,8 @@ export default function HeaderBar() {
               onSelect={handleSelectNotification}
             />
 
+            <span className="site-auth-divider" aria-hidden="true"/>
+
             <Dropdown align="end" show={showMenu} onToggle={setShowMenu}>
               <Dropdown.Toggle
                 as={AvatarToggle}
