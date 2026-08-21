@@ -22,6 +22,7 @@ import { useRagSessions } from "./hooks/useRagSessions";
 import SessionList from "./components/SessionList";
 import SourceUploader from "./components/SourceUploader";
 import Conversation from "./components/Conversation";
+import styles from "./ai-review.module.css";
 
 export default function AIReviewPage() {
   const router = useRouter();
@@ -301,58 +302,71 @@ export default function AIReviewPage() {
   }
 
   return (
-    <div className="review-flow">
+    <div className={styles.reviewPage}>
       <ToastNotification
         toast={toast}
         onClose={() => setToast({ ...toast, show: false })}
       />
 
-      <section className="review-header-section">
-        <h1 className="qa-page-title">Upload a lease or paste one clause.</h1>
-        <p className="qa-page-sub">
-          Ask questions against your document and compare it with the
-          tenant-rights handbook.
+      <section className={styles.pageHeader} aria-labelledby="review-page-title">
+        <div>
+          <div className={styles.eyebrow}>Lease Review Workspace</div>
+          <h1 id="review-page-title">Review My Lease</h1>
+        </div>
+        <p>
+          Add a lease or clause, then compare its language with cited
+          Massachusetts tenant guidance.
         </p>
       </section>
 
-      <SourceUploader
-        sourceText={sourceText}
-        selectedFile={selectedFile}
-        uploadResetKey={uploadResetKey}
-        creatingSession={creatingSession}
-        pendingDraftSource={Boolean(pendingDraftSource)}
-        isGuest={isGuest}
-        onSourceTextChange={setSourceText}
-        onFilesChange={(files) => setSelectedFile(files[0] || null)}
-        onSubmit={handleCreateSession}
-      />
+      <div className={styles.workspace}>
+        <aside className={styles.sourceRail} aria-label="Sources and review history">
+          <SourceUploader
+            sourceText={sourceText}
+            selectedFile={selectedFile}
+            uploadResetKey={uploadResetKey}
+            creatingSession={creatingSession}
+            pendingDraftSource={Boolean(pendingDraftSource)}
+            hasActiveSession={showSession}
+            isGuest={isGuest}
+            onSourceTextChange={setSourceText}
+            onFilesChange={(files) => setSelectedFile(files[0] || null)}
+            onSubmit={handleCreateSession}
+          />
 
-      <SessionList
-        sessions={sessions}
-        activeSessionId={resolvedId}
-        loading={loadingSessions}
-        isGuest={isGuest}
-        error={sessionsError ? apiErrorMessage(sessionsError, "Failed to load chats.") : null}
-        onSelect={(item) => setActiveId(item._id)}
-      />
+          <SessionList
+            sessions={sessions}
+            activeSessionId={resolvedId}
+            loading={loadingSessions}
+            isGuest={isGuest}
+            error={sessionsError ? apiErrorMessage(sessionsError, "Failed to load reviews.") : null}
+            onSelect={(item) => setActiveId(item._id)}
+          />
+        </aside>
 
-      <Conversation
-        showSession={showSession}
-        resultsPanelState={resultsPanelState}
-        displayStatus={displayStatus}
-        displaySourcePreview={displaySourcePreview}
-        activeSession={activeSession}
-        activeMessages={activeMessages}
-        pendingDraftSource={Boolean(pendingDraftSource)}
-        pendingUserQuestion={null}
-        pendingAssistantLabel={pendingAssistantLabel}
-        revealingMessage={revealingMessage}
-        question={question}
-        sendingMessage={sendingMessage}
-        onQuestionChange={setQuestion}
-        onSubmitQuestion={handleSendMessage}
-        onPrompt={(prompt) => void submitQuestion(prompt)}
-      />
+        <Conversation
+          showSession={showSession}
+          resultsPanelState={resultsPanelState}
+          displayStatus={displayStatus}
+          displaySourcePreview={displaySourcePreview}
+          activeSession={activeSession}
+          activeMessages={activeMessages}
+          pendingDraftSource={Boolean(pendingDraftSource)}
+          pendingUserQuestion={null}
+          pendingAssistantLabel={pendingAssistantLabel}
+          revealingMessage={revealingMessage}
+          question={question}
+          sendingMessage={sendingMessage}
+          onQuestionChange={setQuestion}
+          onSubmitQuestion={handleSendMessage}
+          onPrompt={(prompt) => void submitQuestion(prompt)}
+        />
+      </div>
+
+      <div className={styles.boundaryNote}>
+        <strong>Legal information, not legal advice.</strong>
+        <span>Cited sources stay visible throughout the review.</span>
+      </div>
     </div>
   );
 }

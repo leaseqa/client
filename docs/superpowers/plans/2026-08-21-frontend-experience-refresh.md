@@ -203,15 +203,15 @@ git commit -m "feat: refocus the renter homepage journey"
 - Produces: `SourceModeTabs({ mode, onModeChange })` where mode is `"upload" | "paste"`; desktop workspace grid and mobile linear flow.
 - Consumes: existing `createSession`, session list, active session, and conversation callbacks without server changes.
 
-- [ ] **Step 1: Generate current-versus-target desktop and mobile comparison images**
+- [x] **Step 1: Generate current-versus-target desktop and mobile comparison images**
 
 Target desktop uses a source/history rail and primary conversation workspace. Target mobile keeps the source input first and collapses it to a compact summary after session creation.
 
-- [ ] **Step 2: Show the comparison and stop for explicit user approval**
+- [x] **Step 2: Show the comparison and stop for explicit user approval**
 
 Do not edit AI review rendered components or styles until approval is received.
 
-- [ ] **Step 3: Write failing mode and accessibility tests**
+- [x] **Step 3: Write failing mode and accessibility tests**
 
 ```tsx
 expect(screen.getByRole("tab", { name: "Upload file" })).toHaveAttribute("aria-selected", "true");
@@ -220,19 +220,19 @@ expect(onModeChange).toHaveBeenCalledWith("paste");
 expect(screen.getByLabelText("Lease clause or housing text")).toBeVisible();
 ```
 
-- [ ] **Step 4: Implement tabs and preserve mutually exclusive input validation**
+- [x] **Step 4: Implement tabs and preserve mutually exclusive input validation**
 
 Only the active input mode remains interactive. Switching modes clears the inactive selection after confirmation is unnecessary because no server mutation has occurred.
 
-- [ ] **Step 5: Implement the approved workspace composition**
+- [x] **Step 5: Implement the approved workspace composition**
 
 Keep all existing hooks and request shapes. Move only presentation and ephemeral input mode state.
 
-- [ ] **Step 6: Capture after images and run focused tests**
+- [x] **Step 6: Capture after images and run focused tests**
 
 Run: `npm exec vitest run -- apps/web/app/ai-review`
 
-- [ ] **Step 7: Run verification and commit**
+- [x] **Step 7: Run verification and commit**
 
 Run: `npm run typecheck && npm run lint && npm test && npm run build`
 

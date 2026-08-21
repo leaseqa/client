@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { FileText, Upload } from "lucide-react";
@@ -20,6 +21,10 @@ function toInputAcceptMap(accept?: string) {
   return accept.split(",").reduce<Record<string, string[]>>((result, type) => {
     const trimmed = type.trim();
     if ( !trimmed ) {
+      return result;
+    }
+    if ( trimmed === ".docx" ) {
+      result["application/vnd.openxmlformats-officedocument.wordprocessingml.document"] = [trimmed];
       return result;
     }
     result[trimmed] = [];
@@ -103,7 +108,7 @@ export default function AceternityFileUpload({
                 : pdfOnly
                   ? "Upload a lease PDF"
                   : pdfAndDocxOnly
-                    ? "Upload a lease PDF or Word file"
+                    ? "Choose a lease file"
                     : "Upload a lease file"}
             </div>
             <div className="acet-file-upload-note">

@@ -2,6 +2,7 @@ import { Spinner } from "react-bootstrap";
 import { Clock3 } from "lucide-react";
 
 import { RagSession } from "../types";
+import styles from "../ai-review.module.css";
 
 type SessionListProps = {
   sessions: RagSession[];
@@ -20,49 +21,70 @@ export default function SessionList({
   error,
   onSelect,
 }: SessionListProps) {
+  const renderSessions = () => {
+    if ( loading ) {
+      return (
+        <div className={styles.historyState}>
+          <Spinner size="sm"/>
+          <span>Loading Reviews...</span>
+        </div>
+      );
+    }
+    if ( error ) {
+      return <div className={styles.historyState}>{error}</div>;
+    }
+    if ( sessions.length === 0 ) {
+      return (
+        <div className={styles.historyState}>
+          <span>No saved reviews yet.</span>
+          <span>Your first source will appear here.</span>
+        </div>
+      );
+    }
+    return (
+      <div className={styles.historyList}>
+        {sessions.map((item) => {
+          const isActive = activeSessionId === item._id;
+          return (
+            <button
+              key={item._id}
+              type="button"
+              onClick={() => onSelect(item)}
+              className={styles.historyItem}
+              aria-current={isActive ? "true" : undefined}
+            >
+              <span>{item.sourceName}</span>
+              <span>{new Date(item.updatedAt).toLocaleDateString()}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
-    <section className="review-history-section">
-      <div className="review-history-header">
-        <div className="qa-sidebar-label">
-          <Clock3 size={12}/>
-          <span>History</span>
+    <>
+      <section className={styles.desktopHistory} aria-labelledby="review-history-title">
+        <div className={styles.historyHeader}>
+          <div id="review-history-title" className={styles.sectionLabel}>
+            <Clock3 size={12}/>
+            <span>Review History</span>
+          </div>
+          <span aria-hidden="true">+</span>
         </div>
         {isGuest ? (
-          <span className="review-history-hint">Temporary for this guest session</span>
+          <span className={styles.historyHint}>Temporary for this guest session</span>
         ) : null}
-      </div>
+        {renderSessions()}
+      </section>
 
-      {loading ? (
-        <div className="review-history-inline">
-          <Spinner size="sm"/>
-          <span>Loading...</span>
-        </div>
-      ) : error ? (
-        <div className="review-history-inline">{error}</div>
-      ) : sessions.length > 0 ? (
-        <div className="review-history-chips">
-          {sessions.map((item) => {
-            const isActive = activeSessionId === item._id;
-            return (
-              <button
-                key={item._id}
-                type="button"
-                onClick={() => onSelect(item)}
-                className={`review-history-chip ${isActive ? "is-active" : ""}`}
-              >
-                <span>{item.sourceName}</span>
-                <span className="review-history-chip-date">
-                  {new Date(item.updatedAt).toLocaleDateString()}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="review-history-inline">
-          No chats yet. Start one above.
-        </div>
-      )}
-    </section>
+      <details className={styles.mobileHistory}>
+        <summary>
+          <span>Review History</span>
+          <span>{sessions.length} saved</span>
+        </summary>
+        <div className={styles.mobileHistoryBody}>{renderSessions()}</div>
+      </details>
+    </>
   );
 }
