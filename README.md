@@ -52,7 +52,7 @@ source.
 
 Requirements:
 
-- Node `26.x`
+- Node `20.x`
 - `npm`
 
 Install and run:
