@@ -6,7 +6,7 @@ Improve the renter-facing experience without replacing the current product archi
 
 ## Product direction
 
-LeaseQA should feel like a calm renter tool, not a generic SaaS dashboard. The interface should make the next action obvious, show legal-information boundaries without dominating the task, and distinguish unavailable data from genuinely empty content.
+LeaseQA should feel like a calm renter tool, not a generic SaaS dashboard. The interface should make navigation choices obvious, show legal-information boundaries without dominating the task, and distinguish unavailable data from genuinely empty content.
 
 ## Delivery model
 
@@ -31,11 +31,12 @@ Every stage that changes rendered layout or styling has a visual approval gate. 
 ## Stage 2: Homepage composition
 
 - Preserve the current wordmark, warm neutral palette, olive accent, and two primary destinations.
-- Use the approved headline `Understand your lease. Know what to do next.`
-- Use the approved supporting copy `LeaseQA explains the clauses that matter, connects them to Massachusetts tenant guidance, and helps you find a clear next step.`
-- Label the primary and secondary actions `Review my lease` and `Browse renter questions`.
+- Use the approved headline `Understand your lease. Know what to check.`
+- Use the approved supporting copy `LeaseQA explains lease language, surfaces relevant Massachusetts tenant guidance, and helps you identify sources and questions for further review.`
+- Label the primary and secondary actions `Review lease language` and `Browse renter questions`.
 - The hero must remain visually balanced when community data is unavailable.
-- Replace the generic three-column process grid with a concrete renter journey: clause, explanation, clear next step.
+- Replace the generic three-column process grid with an informational journey: exact clause, cited guidance, and questions to verify.
+- Do not label generated content as a suggested action or tell a renter what to do, say, or write. Present general information, sources, questions, and unranked available options.
 - Keep one visually dominant CTA. The community action remains available but secondary.
 - Hide community metrics until valid data exists; never present four zero values as a healthy live state.
 

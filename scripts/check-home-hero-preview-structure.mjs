@@ -1,27 +1,44 @@
 import { readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const filePath =
-  "/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client-frontend/apps/web/app/page.tsx";
-const source = readFileSync(filePath, "utf8");
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const pageSource = readFileSync(
+  path.join(root, "apps/web/app/page.tsx"),
+  "utf8",
+);
+const journeySource = readFileSync(
+  path.join(root, "apps/web/app/home/HomeJourney.tsx"),
+  "utf8",
+);
 
-const hasPreviewRows = source.includes("landing-preview-item");
-const hasPreviewStatus = source.includes("landing-preview-status");
-const stillHasRankMarkup = source.includes("landing-hot-num");
-const stillHasViewsMarkup = source.includes("landing-hot-views");
+const usesHomeJourney = pageSource.includes('from "./home/HomeJourney"');
+const hasStablePreview = journeySource.includes(
+  'aria-label="Example lease guidance comparison"',
+);
+const hasVerificationQuestion = journeySource.includes("Question to verify");
+const stillUsesHotPosts = pageSource.includes("fetchPosts");
 
 console.log(
   JSON.stringify(
     {
-      hasPreviewRows,
-      hasPreviewStatus,
-      stillHasRankMarkup,
-      stillHasViewsMarkup,
+      usesHomeJourney,
+      hasStablePreview,
+      hasVerificationQuestion,
+      stillUsesHotPosts,
     },
     null,
     2,
   ),
 );
 
-if ( !hasPreviewRows || !hasPreviewStatus || stillHasRankMarkup || stillHasViewsMarkup ) {
-  throw new Error("Homepage hero still uses the old hot-post list structure.");
+if (
+  !usesHomeJourney ||
+  !hasStablePreview ||
+  !hasVerificationQuestion ||
+  stillUsesHotPosts
+) {
+  throw new Error(
+    "Homepage hero does not use the stable guidance preview structure.",
+  );
 }

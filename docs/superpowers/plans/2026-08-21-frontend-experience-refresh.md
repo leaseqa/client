@@ -140,48 +140,49 @@ git commit -m "fix: distinguish loading empty and error states"
 - Create: `apps/web/app/home/HomeJourney.test.tsx`
 - Create: `apps/web/app/home/home.module.css`
 - Modify: `apps/web/app/page.tsx:49-215`
-- Modify: `apps/web/app/globals.css:3487-4029`
+- Modify: `scripts/check-home-hero-preview-structure.mjs`
 - Test: `apps/web/app/home/HomeJourney.test.tsx`
 
 **Interfaces:**
 - Produces: `HomeJourney` rendering the fixed three-step domain narrative and route-scoped homepage classes.
-- Consumes: optional valid `stats` and optional `hotPosts`; neither controls whether the hero has a visual anchor.
+- Consumes: optional valid `stats`; remote data never controls whether the hero has a visual anchor.
 
-- [ ] **Step 1: Generate current-versus-target desktop and mobile comparison images**
+- [x] **Step 1: Generate current-versus-target desktop and mobile comparison images**
 
-Capture current `/` at 1280x720 and 390x844. Generate a target with the approved headline and CTA copy, a stable lease-clause preview, one dominant CTA, a secondary text action, a clause-to-explanation-to-clear-next-step narrative, and conditional statistics.
+Capture current `/` at 1280x720 and 390x844. Generate a target with the approved headline and CTA copy, a stable lease-clause preview, one dominant CTA, a secondary text action, a clause-to-cited-guidance-to-verification-question narrative, and conditional statistics.
 
-- [ ] **Step 2: Show the comparison and stop for explicit user approval**
+- [x] **Step 2: Show the comparison and stop for explicit user approval**
 
 Do not edit `page.tsx`, homepage CSS, or HomeJourney until approval is received.
 
-- [ ] **Step 3: Write failing structure tests for the approved composition**
+- [x] **Step 3: Write failing structure tests for the approved composition**
 
 ```tsx
 expect(screen.getByRole("heading", { name: /Understand your lease/i })).toBeVisible();
-expect(screen.getByText("Security deposit clause")).toBeVisible();
-expect(screen.getByText("What Massachusetts guidance says")).toBeVisible();
+expect(screen.getByText("Section 4. Security Deposit")).toBeVisible();
+expect(screen.getByText("What the cited guidance says")).toBeVisible();
+expect(screen.getByText("Question to verify")).toBeVisible();
 expect(screen.queryByText("Live")).not.toBeInTheDocument();
 ```
 
-- [ ] **Step 4: Implement the approved homepage structure and route-scoped styles**
+- [x] **Step 4: Implement the approved homepage structure and route-scoped styles**
 
-Keep the approved headline and current palette. Render the target visual anchor even with no posts. Render metrics only after a successful response with at least one nonzero value.
+Keep the approved UPL-safe headline and current palette. Render the target visual anchor even with no posts. Do not render suggested actions or case-specific directives. Render metrics only after a successful response with at least one nonzero value.
 
-- [ ] **Step 5: Verify responsive structure and accessibility**
+- [x] **Step 5: Verify responsive structure and accessibility**
 
 Run: `node scripts/check-home-hero-preview-structure.mjs && npm exec vitest run -- apps/web/app/home`
 
-- [ ] **Step 6: Capture after images and compare against the approved target**
+- [x] **Step 6: Capture after images and compare against the approved target**
 
 Capture `/` at 1280x720 and 390x844. Reject the change if hierarchy, wrapping, or touch targets regress.
 
-- [ ] **Step 7: Run verification and commit**
+- [x] **Step 7: Run verification and commit**
 
 Run: `npm run typecheck && npm run lint && npm test && npm run build`
 
 ```bash
-git add apps/web/app/page.tsx apps/web/app/home apps/web/app/globals.css
+git add apps/web/app/page.tsx apps/web/app/home scripts/check-home-hero-preview-structure.mjs
 git commit -m "feat: refocus the renter homepage journey"
 ```
 
