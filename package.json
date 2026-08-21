@@ -17,7 +17,7 @@
     "packages/*"
   ],
   "engines": {
-    "node": "24.x"
+    "node": "26.x"
   },
   "devDependencies": {
     "prettier": "^3.3.3",
