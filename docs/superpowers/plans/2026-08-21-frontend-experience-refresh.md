@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Preserve existing routes and backend JSON contracts.
-- Preserve the warm neutral palette, olive accent, wordmark, and core homepage headline.
+- Preserve the warm neutral palette, olive accent, and wordmark. Use the approved homepage headline and CTA copy recorded in the spec.
 - Do not add another UI framework.
 - Before every rendered layout or styling change, show 1280x720 and 390x844 current-versus-target comparisons and wait for explicit user approval.
 - Distinguish loading, empty, error, and permission states.
@@ -34,7 +34,7 @@
 - Consumes: `fetchSession(): Promise<unknown>`, Redux actions `setSession`, `setGuestSession`, and `signOut`.
 - Produces: `SessionLoader({ children }): ReactNode` that renders children immediately and restores session state in the background.
 
-- [ ] **Step 1: Write a failing pending-session test**
+- [x] **Step 1: Write a failing pending-session test**
 
 ```tsx
 it("renders the public shell while session restoration is pending", () => {
@@ -44,13 +44,13 @@ it("renders the public shell while session restoration is pending", () => {
 });
 ```
 
-- [ ] **Step 2: Run the focused test and verify it fails**
+- [x] **Step 2: Run the focused test and verify it fails**
 
 Run: `npm exec vitest run -- apps/web/app/auth/SessionLoader.test.tsx`
 
 Expected: FAIL because `SessionLoader` currently returns `null` until `fetchSession` settles.
 
-- [ ] **Step 3: Remove the render gate while preserving the restoration effect**
+- [x] **Step 3: Remove the render gate while preserving the restoration effect**
 
 ```tsx
 export default function SessionLoader({ children }: { children: React.ReactNode }) {
@@ -64,19 +64,19 @@ export default function SessionLoader({ children }: { children: React.ReactNode 
 
 Keep authenticated, guest, and unauthenticated dispatch behavior unchanged. Extract `restoreSession` only if needed to test the three settled outcomes without timers.
 
-- [ ] **Step 4: Add settled-state tests**
+- [x] **Step 4: Add settled-state tests**
 
 Cover authenticated response, stored guest fallback, and unauthenticated rejection. Assert the matching Redux state after each promise settles.
 
-- [ ] **Step 5: Run focused and existing auth tests**
+- [x] **Step 5: Run focused and existing auth tests**
 
 Run: `npm exec vitest run -- apps/web/app/auth apps/web/e2e/auth-session.spec.ts`
 
-- [ ] **Step 6: Run client verification**
+- [x] **Step 6: Run client verification**
 
 Run: `npm run typecheck && npm run lint && npm test`
 
-- [ ] **Step 7: Commit the functional shell fix**
+- [x] **Step 7: Commit the functional shell fix**
 
 ```bash
 git add apps/web/app/auth/SessionLoader.tsx apps/web/app/auth/SessionLoader.test.tsx apps/web/components/providers.tsx
@@ -149,7 +149,7 @@ git commit -m "fix: distinguish loading empty and error states"
 
 - [ ] **Step 1: Generate current-versus-target desktop and mobile comparison images**
 
-Capture current `/` at 1280x720 and 390x844. Generate a target with a stable lease-clause preview, one dominant CTA, a secondary text action, a clause-to-explanation-to-next-question narrative, and conditional statistics.
+Capture current `/` at 1280x720 and 390x844. Generate a target with the approved headline and CTA copy, a stable lease-clause preview, one dominant CTA, a secondary text action, a clause-to-explanation-to-clear-next-step narrative, and conditional statistics.
 
 - [ ] **Step 2: Show the comparison and stop for explicit user approval**
 
@@ -158,7 +158,7 @@ Do not edit `page.tsx`, homepage CSS, or HomeJourney until approval is received.
 - [ ] **Step 3: Write failing structure tests for the approved composition**
 
 ```tsx
-expect(screen.getByRole("heading", { name: /Read the lease/i })).toBeVisible();
+expect(screen.getByRole("heading", { name: /Understand your lease/i })).toBeVisible();
 expect(screen.getByText("Security deposit clause")).toBeVisible();
 expect(screen.getByText("What Massachusetts guidance says")).toBeVisible();
 expect(screen.queryByText("Live")).not.toBeInTheDocument();
@@ -166,7 +166,7 @@ expect(screen.queryByText("Live")).not.toBeInTheDocument();
 
 - [ ] **Step 4: Implement the approved homepage structure and route-scoped styles**
 
-Keep the current headline and palette. Render the target visual anchor even with no posts. Render metrics only after a successful response with at least one nonzero value.
+Keep the approved headline and current palette. Render the target visual anchor even with no posts. Render metrics only after a successful response with at least one nonzero value.
 
 - [ ] **Step 5: Verify responsive structure and accessibility**
 

@@ -30,9 +30,12 @@ Every stage that changes rendered layout or styling has a visual approval gate. 
 
 ## Stage 2: Homepage composition
 
-- Preserve the current wordmark, warm neutral palette, olive accent, primary headline, and two primary destinations.
+- Preserve the current wordmark, warm neutral palette, olive accent, and two primary destinations.
+- Use the approved headline `Understand your lease. Know what to do next.`
+- Use the approved supporting copy `LeaseQA explains the clauses that matter, connects them to Massachusetts tenant guidance, and helps you find a clear next step.`
+- Label the primary and secondary actions `Review my lease` and `Browse renter questions`.
 - The hero must remain visually balanced when community data is unavailable.
-- Replace the generic three-column process grid with a concrete renter journey: clause, explanation, next question.
+- Replace the generic three-column process grid with a concrete renter journey: clause, explanation, clear next step.
 - Keep one visually dominant CTA. The community action remains available but secondary.
 - Hide community metrics until valid data exists; never present four zero values as a healthy live state.
 
