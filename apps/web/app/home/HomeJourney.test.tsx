@@ -53,6 +53,29 @@ describe("HomeJourney", () => {
     expect(html).not.toContain("Cited sources stay visible");
   });
 
+  test("admits a failed stats read instead of hiding the section", () => {
+    const html = renderToStaticMarkup(<HomeJourney stats={[]} statsError/>);
+
+    expect(html).toContain("Community activity could not be loaded.");
+    expect(html).toContain("Community snapshot");
+  });
+
+  test("prefers real statistics over the error state once they arrive", () => {
+    const html = renderToStaticMarkup(
+      <HomeJourney stats={[{ label: "Open questions", value: 3 }]} statsError/>,
+    );
+
+    expect(html).not.toContain("Community activity could not be loaded.");
+    expect(html).toContain("Open questions");
+  });
+
+  test("stays silent when stats are simply empty and nothing failed", () => {
+    const html = renderToStaticMarkup(<HomeJourney stats={[]}/>);
+
+    expect(html).not.toContain("Community snapshot");
+    expect(html).not.toContain("could not be loaded");
+  });
+
   test("shows community statistics only when at least one value is nonzero", () => {
     const emptyHtml = renderToStaticMarkup(
       <HomeJourney

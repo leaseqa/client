@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
+import RemoteDataState from "@/components/ui/RemoteDataState";
 import styles from "./home.module.css";
 
 export type HomeStat = {
@@ -10,6 +11,8 @@ export type HomeStat = {
 
 type HomeJourneyProps = {
   stats?: HomeStat[];
+  statsError?: boolean;
+  onRetryStats?: () => void;
 };
 
 const JOURNEY_STEPS = [
@@ -32,7 +35,11 @@ const JOURNEY_STEPS = [
   },
 ];
 
-export default function HomeJourney({ stats = [] }: HomeJourneyProps) {
+export default function HomeJourney({
+                                      stats = [],
+                                      statsError = false,
+                                      onRetryStats,
+                                    }: HomeJourneyProps) {
   const visibleStats = stats.filter((stat) => stat.value > 0);
 
   return (
@@ -116,6 +123,21 @@ export default function HomeJourney({ stats = [] }: HomeJourneyProps) {
           </div>
         ))}
       </section>
+
+      {statsError && visibleStats.length === 0 ? (
+        <section className={styles.stats} aria-labelledby="community-snapshot">
+          <h2 id="community-snapshot">Community snapshot</h2>
+          <RemoteDataState
+            kind="error"
+            title="Community activity could not be loaded."
+            description="The rest of this page is unaffected."
+            action={
+              onRetryStats ? { label: "Try again", onClick: onRetryStats } : undefined
+            }
+            className={styles.statsState}
+          />
+        </section>
+      ) : null}
 
       {visibleStats.length > 0 && (
         <section className={styles.stats} aria-labelledby="community-snapshot">

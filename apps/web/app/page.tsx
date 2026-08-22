@@ -22,11 +22,25 @@ const statsFetcher = async (): Promise<HomeStat[]> => {
 };
 
 export default function LandingPage() {
-  const { data: stats = [] } = useSWR("stats/overview", statsFetcher, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    dedupingInterval: DAY_MS,
-  });
+  const { data: stats = [], error, mutate } = useSWR(
+    "stats/overview",
+    statsFetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: DAY_MS,
+    },
+  );
 
-  return <HomeJourney stats={stats} />;
+  // Without this the section simply vanishes on failure, which is
+  // indistinguishable from a community that has no activity yet.
+  return (
+    <HomeJourney
+      stats={stats}
+      statsError={Boolean(error)}
+      onRetryStats={() => {
+        void mutate();
+      }}
+    />
+  );
 }

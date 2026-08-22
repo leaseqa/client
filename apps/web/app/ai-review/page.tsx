@@ -63,6 +63,7 @@ export default function AIReviewPage() {
     sessions,
     isLoading: loadingSessions,
     error: sessionsError,
+    refetch: refetchSessions,
     createSession,
     isCreating: creatingSession,
   } = useRagSessions(hasAccess);
@@ -340,6 +341,9 @@ export default function AIReviewPage() {
             loading={loadingSessions}
             isGuest={isGuest}
             error={sessionsError ? apiErrorMessage(sessionsError, "Failed to load reviews.") : null}
+            onRetry={() => {
+              void refetchSessions();
+            }}
             onSelect={(item) => setActiveId(item._id)}
           />
         </aside>
