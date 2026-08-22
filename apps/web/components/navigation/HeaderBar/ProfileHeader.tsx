@@ -1,5 +1,4 @@
-import { Badge } from "react-bootstrap";
-import { FaEye, FaShieldAlt } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 
 import { RootState } from "@/app/store";
 
@@ -20,46 +19,28 @@ export default function ProfileHeader({
 
   if ( !hasUser ) {
     return (
-      <div className="px-3 py-2">
-        <div className="fw-bold mb-1">You are not signed in</div>
-        <div className="text-muted small">
-          Sign in to access more
+      <div className="profile-menu-identity">
+        <span
+          className="profile-menu-avatar profile-menu-avatar-anon"
+          aria-hidden="true"
+        >
+          <FaUser size={14}/>
+        </span>
+        <div className="profile-menu-copy">
+          <div className="profile-menu-name">Not signed in</div>
+          <div className="profile-menu-hint">Sign in to access more</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="px-3 py-2">
-      <div className="d-flex align-items-start gap-2">
-        <div
-          className={`icon-circle icon-circle-sm ${isGuest ? "icon-bg-muted" : "icon-bg-muted"} profile-avatar-sm`}
-        >
-          <span className="fw-semibold avatar-text-xs">{initials}</span>
-        </div>
-        <div>
-          <div className="fw-bold">{user?.name || "Account"}</div>
-          <div className="text-muted small mb-1">{user?.email}</div>
-          <div className="d-flex align-items-center gap-1">
-            <Badge
-              bg="light"
-              text="dark"
-              className="d-inline-flex align-items-center gap-1"
-            >
-              <FaShieldAlt size={12}/>
-              <span className="text-capitalize">{user?.role || "tenant"}</span>
-            </Badge>
-            {isGuest && (
-              <Badge
-                bg="secondary"
-                className="d-inline-flex align-items-center gap-1"
-              >
-                <FaEye size={10}/>
-                <span>Read-only</span>
-              </Badge>
-            )}
-          </div>
-        </div>
+    <div className="profile-menu-identity">
+      <span className="profile-menu-avatar" aria-hidden="true">
+        {initials}
+      </span>
+      <div className="profile-menu-copy">
+        <div className="profile-menu-name">{user?.name || "Account"}</div>
       </div>
     </div>
   );

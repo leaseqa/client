@@ -152,13 +152,14 @@ export default function HeaderBar() {
                   isAuthenticated={isAuthenticated}
                   isGuest={isGuest}
                 />
-                <Dropdown.Divider/>
-                <ProfileMenuItems
-                  isAuthenticated={isAuthenticated}
-                  isGuest={isGuest}
-                  navigate={navigate}
-                  onSignOut={handleSignOut}
-                />
+                <div className="profile-menu-list">
+                  <ProfileMenuItems
+                    isAuthenticated={isAuthenticated}
+                    isGuest={isGuest}
+                    navigate={navigate}
+                    onSignOut={handleSignOut}
+                  />
+                </div>
               </Dropdown.Menu>
             </Dropdown>
           </Stack>
