@@ -7321,3 +7321,116 @@ select:focus-visible,
     animation: none;
   }
 }
+
+/* ============================================================
+   REMOTE DATA STATE — shared loading / empty / error / permission
+
+   One presentation for the four outcomes of a remote read. Routes
+   previously collapsed "empty" and "failed" into the same rendering,
+   which tells the renter there is nothing there when the truth is that
+   the request did not come back.
+   ============================================================ */
+
+.remote-data-state {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1.25rem 0;
+}
+
+.remote-data-state-compact {
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.remote-data-state-copy {
+  min-width: 0;
+}
+
+.remote-data-state-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--site-ink);
+}
+
+.remote-data-state-compact .remote-data-state-title {
+  font-size: 0.8125rem;
+}
+
+.remote-data-state-description {
+  margin: 0.1875rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--site-muted);
+}
+
+.remote-data-state-compact .remote-data-state-description {
+  font-size: 0.75rem;
+}
+
+/* An error is the one state that earns colour. Empty stays neutral so it
+   does not read as a problem. */
+.remote-data-state-error .remote-data-state-title,
+.remote-data-state-permission .remote-data-state-title {
+  color: var(--site-highlight);
+}
+
+.remote-data-state-action {
+  margin-top: 0.5rem;
+  min-height: 2.25rem;
+  padding: 0.4375rem 0.75rem;
+  border: 1px solid var(--site-border-strong);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--site-ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.remote-data-state-action:hover,
+.remote-data-state-action:focus-visible {
+  background: var(--site-accent-soft);
+  border-color: rgba(92, 110, 78, 0.38);
+  color: var(--site-accent-strong);
+  outline: none;
+}
+
+.remote-data-state-action:focus-visible {
+  box-shadow: inset 0 0 0 2px rgba(92, 110, 78, 0.45);
+}
+
+.remote-data-state-spinner {
+  flex: 0 0 auto;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-top: 0.1875rem;
+  border: 2px solid var(--site-accent-soft);
+  border-top-color: var(--site-accent);
+  border-radius: 999px;
+  animation: remote-data-state-spin 0.7s linear infinite;
+}
+
+@keyframes remote-data-state-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 767px) {
+  .remote-data-state-action {
+    min-height: 2.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .remote-data-state-spinner {
+    animation: none;
+  }
+
+  .remote-data-state-action {
+    transition: none;
+  }
+}
