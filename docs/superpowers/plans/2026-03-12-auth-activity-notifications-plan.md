@@ -20,37 +20,37 @@ over that shared model. On the frontend, reuse the current v2 surfaces by wiring
 
 ### Server files
 
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Activity/schema.js`
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Activity/model.js`
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Activity/dao.js`
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Activity/service.js`
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Activity/routes.js`
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Activity/routes.test.js`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/index.js`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/RAG/service.js`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Posts/routes.js`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Answers/routes.js`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Discussions/routes.js`
-- Create or modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Auth/routes.test.js`
+- Create: `../../../../server/LeaseQA/Activity/schema.js`
+- Create: `../../../../server/LeaseQA/Activity/model.js`
+- Create: `../../../../server/LeaseQA/Activity/dao.js`
+- Create: `../../../../server/LeaseQA/Activity/service.js`
+- Create: `../../../../server/LeaseQA/Activity/routes.js`
+- Create: `../../../../server/LeaseQA/Activity/routes.test.js`
+- Modify: `../../../../server/index.js`
+- Modify: `../../../../server/LeaseQA/RAG/service.js`
+- Modify: `../../../../server/LeaseQA/Posts/routes.js`
+- Modify: `../../../../server/LeaseQA/Answers/routes.js`
+- Modify: `../../../../server/LeaseQA/Discussions/routes.js`
+- Create or modify: `../../../../server/LeaseQA/Auth/routes.test.js`
 
 ### Client files
 
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/account/components/ActivityTimeline.tsx`
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/account/page.test.tsx`
+- Create: `../../../apps/web/app/account/components/ActivityTimeline.tsx`
+- Create: `../../../apps/web/app/account/page.test.tsx`
 - Create:
-  `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/components/navigation/HeaderBar/NotificationsMenu.tsx`
+  `../../../apps/web/components/navigation/HeaderBar/NotificationsMenu.tsx`
 - Create:
-  `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/components/navigation/HeaderBar/NotificationsMenu.test.tsx`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/account/page.tsx`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/account/client.ts`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/auth/SessionLoader.tsx`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/auth/client.ts`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/store.ts`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/ai-review/page.tsx`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/components/navigation/HeaderBar.tsx`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/refresh.css`
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/e2e/auth-session.spec.ts`
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/e2e/activity-notifications.spec.ts`
+  `../../../apps/web/components/navigation/HeaderBar/NotificationsMenu.test.tsx`
+- Modify: `../../../apps/web/app/account/page.tsx`
+- Modify: `../../../apps/web/app/account/client.ts`
+- Modify: `../../../apps/web/app/auth/SessionLoader.tsx`
+- Modify: `../../../apps/web/app/auth/client.ts`
+- Modify: `../../../apps/web/app/store.ts`
+- Modify: `../../../apps/web/app/ai-review/page.tsx`
+- Modify: `../../../apps/web/components/navigation/HeaderBar.tsx`
+- Modify: `../../../apps/web/app/refresh.css`
+- Create: `../../../apps/web/e2e/auth-session.spec.ts`
+- Create: `../../../apps/web/e2e/activity-notifications.spec.ts`
 
 ---
 
@@ -60,8 +60,8 @@ over that shared model. On the frontend, reuse the current v2 surfaces by wiring
 
 **Files:**
 
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Activity/routes.test.js`
-- Reference: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/RAG/routes.test.js`
+- Create: `../../../../server/LeaseQA/Activity/routes.test.js`
+- Reference: `../../../../server/LeaseQA/RAG/routes.test.js`
 
 - [ ] **Step 1: Write the failing tests for activity listing and mark-read**
 
@@ -98,7 +98,7 @@ test("marks notification items read for the current user", async () => {
 
 - [ ] **Step 2: Run the new test file to verify RED**
 
-Run: `node --test /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Activity/routes.test.js`
+Run: `node --test ../../../../server/LeaseQA/Activity/routes.test.js`
 
 Expected: FAIL because the Activity module and routes do not exist yet.
 
@@ -117,27 +117,27 @@ Create minimal server files:
 
 - [ ] **Step 4: Wire the new router into the Express app**
 
-Modify `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/index.js` to mount `/api/activity`.
+Modify `../../../../server/index.js` to mount `/api/activity`.
 
 - [ ] **Step 5: Re-run the activity test file to verify GREEN**
 
-Run: `node --test /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Activity/routes.test.js`
+Run: `node --test ../../../../server/LeaseQA/Activity/routes.test.js`
 
 Expected: PASS.
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server add LeaseQA/Activity index.js
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server commit -m "feat: add activity feed api"
+git -C ../../../../server add LeaseQA/Activity index.js
+git -C ../../../../server commit -m "feat: add activity feed api"
 ```
 
 ### Task 2: Add failing auth/session coverage
 
 **Files:**
 
-- Create or modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Auth/routes.test.js`
-- Reference: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Auth/routes.js`
+- Create or modify: `../../../../server/LeaseQA/Auth/routes.test.js`
+- Reference: `../../../../server/LeaseQA/Auth/routes.js`
 
 - [ ] **Step 1: Write failing tests for register, login, session, and logout**
 
@@ -177,7 +177,7 @@ test("logout clears the session", async () => {
 
 - [ ] **Step 2: Run the auth route tests to verify RED**
 
-Run: `node --test /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Auth/routes.test.js`
+Run: `node --test ../../../../server/LeaseQA/Auth/routes.test.js`
 
 Expected: FAIL until the test harness and missing auth assertions are in place.
 
@@ -191,15 +191,15 @@ Likely changes:
 
 - [ ] **Step 4: Re-run the auth test file**
 
-Run: `node --test /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Auth/routes.test.js`
+Run: `node --test ../../../../server/LeaseQA/Auth/routes.test.js`
 
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server add LeaseQA/Auth/routes.js LeaseQA/Auth/routes.test.js
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server commit -m "test: cover auth session flows"
+git -C ../../../../server add LeaseQA/Auth/routes.js LeaseQA/Auth/routes.test.js
+git -C ../../../../server commit -m "test: cover auth session flows"
 ```
 
 ### Task 3: Add failing activity-emission tests on existing write paths
@@ -207,10 +207,10 @@ git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server commit -m "test: cover au
 **Files:**
 
 - Modify or create tests near:
-  - `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/RAG/sessionBootstrap.test.js`
-  - `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Posts/routes.test.js`
-  - `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Answers/routes.test.js`
-  - `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Discussions/routes.test.js`
+  - `../../../../server/LeaseQA/RAG/sessionBootstrap.test.js`
+  - `../../../../server/LeaseQA/Posts/routes.test.js`
+  - `../../../../server/LeaseQA/Answers/routes.test.js`
+  - `../../../../server/LeaseQA/Discussions/routes.test.js`
 
 - [ ] **Step 1: Write failing tests for emitted activity records**
 
@@ -226,9 +226,9 @@ Add cases that assert:
 
 Run:
 
-- `node --test /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/RAG/sessionBootstrap.test.js`
-- `node --test /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Answers/routes.test.js`
-- `node --test /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Discussions/routes.test.js`
+- `node --test ../../../../server/LeaseQA/RAG/sessionBootstrap.test.js`
+- `node --test ../../../../server/LeaseQA/Answers/routes.test.js`
+- `node --test ../../../../server/LeaseQA/Discussions/routes.test.js`
 
 Expected: FAIL on missing activity assertions and/or missing route side effects.
 
@@ -236,10 +236,10 @@ Expected: FAIL on missing activity assertions and/or missing route side effects.
 
 Modify:
 
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/RAG/service.js`
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Posts/routes.js`
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Answers/routes.js`
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Discussions/routes.js`
+- `../../../../server/LeaseQA/RAG/service.js`
+- `../../../../server/LeaseQA/Posts/routes.js`
+- `../../../../server/LeaseQA/Answers/routes.js`
+- `../../../../server/LeaseQA/Discussions/routes.js`
 
 Implementation rules:
 
@@ -254,8 +254,8 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```bash
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server add LeaseQA/RAG/service.js LeaseQA/Posts/routes.js LeaseQA/Answers/routes.js LeaseQA/Discussions/routes.js LeaseQA/Activity
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server commit -m "feat: emit user activity events"
+git -C ../../../../server add LeaseQA/RAG/service.js LeaseQA/Posts/routes.js LeaseQA/Answers/routes.js LeaseQA/Discussions/routes.js LeaseQA/Activity
+git -C ../../../../server commit -m "feat: emit user activity events"
 ```
 
 ---
@@ -266,8 +266,8 @@ git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server commit -m "feat: emit use
 
 **Files:**
 
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/account/page.test.tsx`
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/account/components/ActivityTimeline.tsx`
+- Create: `../../../apps/web/app/account/page.test.tsx`
+- Create: `../../../apps/web/app/account/components/ActivityTimeline.tsx`
 
 - [ ] **Step 1: Write failing tests for authenticated, guest, and error states**
 
@@ -292,20 +292,20 @@ it("shows an inline retry state when the activity request fails", async () => {
 - [ ] **Step 2: Run the account page test file to verify RED**
 
 Run:
-`pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web test -- apps/web/app/account/page.test.tsx`
+`pnpm --dir ../../.. --filter @leaseqa/web test -- apps/web/app/account/page.test.tsx`
 
 Expected: FAIL because the activity timeline and data wiring do not exist yet.
 
 - [ ] **Step 3: Add account activity API helpers and UI components**
 
-Modify `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/account/client.ts` to add:
+Modify `../../../apps/web/app/account/client.ts` to add:
 
 - `fetchActivity`
 - `fetchNotifications`
 - `markNotificationsRead`
 
-Implement `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/account/components/ActivityTimeline.tsx` and
-wire `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/account/page.tsx`.
+Implement `../../../apps/web/app/account/components/ActivityTimeline.tsx` and
+wire `../../../apps/web/app/account/page.tsx`.
 
 - [ ] **Step 4: Re-run the account test file**
 
@@ -314,8 +314,8 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```bash
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client add apps/web/app/account
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "feat: add account activity timeline"
+git -C ../../.. add apps/web/app/account
+git -C ../../.. commit -m "feat: add account activity timeline"
 ```
 
 ### Task 5: Add failing unit tests for the header notification bell
@@ -323,10 +323,10 @@ git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "feat: add acco
 **Files:**
 
 - Create:
-  `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/components/navigation/HeaderBar/NotificationsMenu.tsx`
+  `../../../apps/web/components/navigation/HeaderBar/NotificationsMenu.tsx`
 - Create:
-  `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/components/navigation/HeaderBar/NotificationsMenu.test.tsx`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/components/navigation/HeaderBar.tsx`
+  `../../../apps/web/components/navigation/HeaderBar/NotificationsMenu.test.tsx`
+- Modify: `../../../apps/web/components/navigation/HeaderBar.tsx`
 
 - [ ] **Step 1: Write failing tests for unread state, empty state, and mark-read navigation**
 
@@ -345,7 +345,7 @@ it("renders the empty state when there are no unread notifications", () => {
 - [ ] **Step 2: Run the notification unit test to verify RED**
 
 Run:
-`pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web test -- apps/web/components/navigation/HeaderBar/NotificationsMenu.test.tsx`
+`pnpm --dir ../../.. --filter @leaseqa/web test -- apps/web/components/navigation/HeaderBar/NotificationsMenu.test.tsx`
 
 Expected: FAIL because the extracted component does not exist yet.
 
@@ -364,17 +364,17 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```bash
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client add apps/web/components/navigation/HeaderBar apps/web/components/navigation/HeaderBar.tsx apps/web/app/refresh.css
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "feat: wire notifications menu"
+git -C ../../.. add apps/web/components/navigation/HeaderBar apps/web/components/navigation/HeaderBar.tsx apps/web/app/refresh.css
+git -C ../../.. commit -m "feat: wire notifications menu"
 ```
 
 ### Task 6: Add failing tests for real AI review history
 
 **Files:**
 
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/store.ts`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/ai-review/page.tsx`
-- Modify or create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/ai-review/page.test.tsx`
+- Modify: `../../../apps/web/app/store.ts`
+- Modify: `../../../apps/web/app/ai-review/page.tsx`
+- Modify or create: `../../../apps/web/app/ai-review/page.test.tsx`
 
 - [ ] **Step 1: Write failing tests that prove placeholder AI history is gone**
 
@@ -387,7 +387,7 @@ Add assertions that:
 - [ ] **Step 2: Run the targeted AI review test file to verify RED**
 
 Run:
-`pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web test -- apps/web/app/ai-review/page.test.tsx`
+`pnpm --dir ../../.. --filter @leaseqa/web test -- apps/web/app/ai-review/page.test.tsx`
 
 Expected: FAIL because store-seeded history still exists.
 
@@ -406,8 +406,8 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```bash
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client add apps/web/app/store.ts apps/web/app/ai-review/page.tsx apps/web/app/ai-review/page.test.tsx
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "feat: persist ai review history"
+git -C ../../.. add apps/web/app/store.ts apps/web/app/ai-review/page.tsx apps/web/app/ai-review/page.test.tsx
+git -C ../../.. commit -m "feat: persist ai review history"
 ```
 
 ---
@@ -418,8 +418,8 @@ git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "feat: persist 
 
 **Files:**
 
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/e2e/auth-session.spec.ts`
-- Reference: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/e2e/admin-smoke.spec.ts`
+- Create: `../../../apps/web/e2e/auth-session.spec.ts`
+- Reference: `../../../apps/web/e2e/admin-smoke.spec.ts`
 
 - [ ] **Step 1: Write failing e2e tests for register, refresh restore, and logout**
 
@@ -431,7 +431,7 @@ Test cases:
 
 - [ ] **Step 2: Run the auth e2e spec to verify RED**
 
-Run: `pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web e2e --grep "auth session"`
+Run: `pnpm --dir ../../.. --filter @leaseqa/web e2e --grep "auth session"`
 
 Expected: FAIL until the flow, fixtures, and UI hooks are complete.
 
@@ -439,10 +439,10 @@ Expected: FAIL until the flow, fixtures, and UI hooks are complete.
 
 Potential files:
 
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/auth/login/page.tsx`
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/auth/register/page.tsx`
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/app/auth/SessionLoader.tsx`
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Auth/routes.js`
+- `../../../apps/web/app/auth/login/page.tsx`
+- `../../../apps/web/app/auth/register/page.tsx`
+- `../../../apps/web/app/auth/SessionLoader.tsx`
+- `../../../../server/LeaseQA/Auth/routes.js`
 
 - [ ] **Step 4: Re-run the auth e2e spec**
 
@@ -451,15 +451,15 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```bash
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client add apps/web/e2e/auth-session.spec.ts apps/web/app/auth
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "test: cover auth session flow"
+git -C ../../.. add apps/web/e2e/auth-session.spec.ts apps/web/app/auth
+git -C ../../.. commit -m "test: cover auth session flow"
 ```
 
 ### Task 8: Add failing activity + notification e2e coverage
 
 **Files:**
 
-- Create: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/apps/web/e2e/activity-notifications.spec.ts`
+- Create: `../../../apps/web/e2e/activity-notifications.spec.ts`
 
 - [ ] **Step 1: Write failing e2e tests for activity and notifications**
 
@@ -473,7 +473,7 @@ Test cases:
 - [ ] **Step 2: Run the activity e2e spec to verify RED**
 
 Run:
-`pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web e2e --grep "activity notifications"`
+`pnpm --dir ../../.. --filter @leaseqa/web e2e --grep "activity notifications"`
 
 Expected: FAIL until the backend events and frontend UI are wired correctly.
 
@@ -488,8 +488,8 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```bash
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client add apps/web/e2e/activity-notifications.spec.ts apps/web/components/navigation apps/web/app/account apps/web/app/ai-review
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "test: cover activity and notifications"
+git -C ../../.. add apps/web/e2e/activity-notifications.spec.ts apps/web/components/navigation apps/web/app/account apps/web/app/ai-review
+git -C ../../.. commit -m "test: cover activity and notifications"
 ```
 
 ### Task 9: Full verification and cleanup
@@ -502,9 +502,9 @@ git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "test: cover ac
 
 Run:
 
-- `node --test /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Activity/routes.test.js`
-- `node --test /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/LeaseQA/Auth/routes.test.js`
-- `pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server test:rag`
+- `node --test ../../../../server/LeaseQA/Activity/routes.test.js`
+- `node --test ../../../../server/LeaseQA/Auth/routes.test.js`
+- `pnpm --dir ../../../../server test:rag`
 
 Expected: PASS.
 
@@ -512,13 +512,13 @@ Expected: PASS.
 
 Run:
 
-- `pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web test`
+- `pnpm --dir ../../.. --filter @leaseqa/web test`
 -
 
-`pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web e2e --grep "admin smoke|discussion threads|auth session|activity notifications"`
+`pnpm --dir ../../.. --filter @leaseqa/web e2e --grep "admin smoke|discussion threads|auth session|activity notifications"`
 
-- `pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web lint`
-- `pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web build`
+- `pnpm --dir ../../.. --filter @leaseqa/web lint`
+- `pnpm --dir ../../.. --filter @leaseqa/web build`
 
 Expected: PASS.
 
@@ -530,8 +530,8 @@ auth/activity fixtures.
 - [ ] **Step 4: Push both repos**
 
 ```bash
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client push origin main
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server push origin main
+git -C ../../.. push origin main
+git -C ../../../../server push origin main
 ```
 
 - [ ] **Step 5: Verify production deployment endpoints**

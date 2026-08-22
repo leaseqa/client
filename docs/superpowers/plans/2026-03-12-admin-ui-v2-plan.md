@@ -151,7 +151,7 @@ describe("getSectionEditorState", () => {
 Run:
 
 ```bash
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web exec vitest run apps/web/app/qa/manage/view-model.test.ts
+pnpm --dir ../../.. --filter @leaseqa/web exec vitest run apps/web/app/qa/manage/view-model.test.ts
 ```
 
 Expected: FAIL because `view-model.ts` does not exist yet.
@@ -212,7 +212,7 @@ export function getDatasetState(input: DatasetStateInput) {
 Run:
 
 ```bash
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web exec vitest run apps/web/app/qa/manage/view-model.test.ts
+pnpm --dir ../../.. --filter @leaseqa/web exec vitest run apps/web/app/qa/manage/view-model.test.ts
 ```
 
 Expected: PASS.
@@ -220,10 +220,10 @@ Expected: PASS.
 - [ ] **Step 5: Commit the helper baseline**
 
 ```bash
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client add \
+git -C ../../.. add \
   apps/web/app/qa/manage/view-model.ts \
   apps/web/app/qa/manage/view-model.test.ts
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "test: cover admin manage view model"
+git -C ../../.. commit -m "test: cover admin manage view model"
 ```
 
 ### Task 2: Build the new admin shell components and widen the existing component contracts
@@ -369,7 +369,7 @@ describe("region shells and section form", () => {
 Run:
 
 ```bash
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web exec vitest run apps/web/app/qa/manage/components/render.test.tsx
+pnpm --dir ../../.. --filter @leaseqa/web exec vitest run apps/web/app/qa/manage/components/render.test.tsx
 ```
 
 Expected: FAIL because the new components do not exist yet.
@@ -424,7 +424,7 @@ Implementation notes for this step:
 Run:
 
 ```bash
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web exec vitest run apps/web/app/qa/manage/components/render.test.tsx
+pnpm --dir ../../.. --filter @leaseqa/web exec vitest run apps/web/app/qa/manage/components/render.test.tsx
 ```
 
 Expected: PASS.
@@ -432,7 +432,7 @@ Expected: PASS.
 - [ ] **Step 5: Commit the new shell components**
 
 ```bash
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client add \
+git -C ../../.. add \
   apps/web/app/qa/manage/components/ManageSidebar.tsx \
   apps/web/app/qa/manage/components/ManageStats.tsx \
   apps/web/app/qa/manage/components/ManageUsersSection.tsx \
@@ -444,7 +444,7 @@ git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client add \
   apps/web/app/qa/manage/components/UsersTable.tsx \
   apps/web/app/qa/manage/components/SectionsTable.tsx \
   apps/web/app/qa/manage/components/index.ts
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "feat: add admin v2 shell components"
+git -C ../../.. commit -m "feat: add admin v2 shell components"
 ```
 
 ### Task 3: Refactor `page.tsx` orchestration and wire the `admin-v2-*` visual system
@@ -497,7 +497,7 @@ describe("getPageRegions", () => {
 Run:
 
 ```bash
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web exec vitest run apps/web/app/qa/manage/view-model.test.ts
+pnpm --dir ../../.. --filter @leaseqa/web exec vitest run apps/web/app/qa/manage/view-model.test.ts
 ```
 
 Expected: FAIL until `getPageRegions` exists and the old page state rules are updated.
@@ -547,10 +547,10 @@ Implementation notes for this step:
 Run:
 
 ```bash
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web exec vitest run apps/web/app/qa/manage/view-model.test.ts apps/web/app/qa/manage/components/render.test.tsx
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web test
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client lint
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client build
+pnpm --dir ../../.. --filter @leaseqa/web exec vitest run apps/web/app/qa/manage/view-model.test.ts apps/web/app/qa/manage/components/render.test.tsx
+pnpm --dir ../../.. --filter @leaseqa/web test
+pnpm --dir ../../.. lint
+pnpm --dir ../../.. build
 ```
 
 Expected: all commands PASS.
@@ -560,7 +560,7 @@ Expected: all commands PASS.
 Run:
 
 ```bash
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web dev
+pnpm --dir ../../.. --filter @leaseqa/web dev
 ```
 
 Manual checklist:
@@ -586,13 +586,13 @@ Manual checklist:
 - [ ] **Step 6: Commit chunk 1**
 
 ```bash
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client add \
+git -C ../../.. add \
   apps/web/app/qa/manage/page.tsx \
   apps/web/app/qa/manage/view-model.ts \
   apps/web/app/qa/manage/view-model.test.ts \
   apps/web/app/refresh.css \
   apps/web/app/globals.css
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "feat: redesign admin manage workspace"
+git -C ../../.. commit -m "feat: redesign admin manage workspace"
 ```
 
 ## Chunk 2: Moderation Surface Alignment
@@ -720,7 +720,7 @@ describe("moderation render smoke", () => {
 Run:
 
 ```bash
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web exec vitest run apps/web/app/qa/components/post-detail-render.test.tsx
+pnpm --dir ../../.. --filter @leaseqa/web exec vitest run apps/web/app/qa/components/post-detail-render.test.tsx
 ```
 
 Expected: FAIL until the new test file and stubs are in place.
@@ -740,7 +740,7 @@ vi.mock("next/dynamic", () => ({
 Run:
 
 ```bash
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web exec vitest run apps/web/app/qa/components/post-detail-render.test.tsx
+pnpm --dir ../../.. --filter @leaseqa/web exec vitest run apps/web/app/qa/components/post-detail-render.test.tsx
 ```
 
 Expected: PASS.
@@ -748,9 +748,9 @@ Expected: PASS.
 - [ ] **Step 5: Commit the moderation smoke tests**
 
 ```bash
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client add \
+git -C ../../.. add \
   apps/web/app/qa/components/post-detail-render.test.tsx
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "test: cover moderation render surfaces"
+git -C ../../.. commit -m "test: cover moderation render surfaces"
 ```
 
 ### Task 5: Restyle `PostDetailSection` and its visible children to match the v2 admin system
@@ -819,10 +819,10 @@ Implementation notes for this step:
 Run:
 
 ```bash
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web exec vitest run apps/web/app/qa/components/post-detail-render.test.tsx
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web test
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client lint
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client build
+pnpm --dir ../../.. --filter @leaseqa/web exec vitest run apps/web/app/qa/components/post-detail-render.test.tsx
+pnpm --dir ../../.. --filter @leaseqa/web test
+pnpm --dir ../../.. lint
+pnpm --dir ../../.. build
 ```
 
 Expected: all commands PASS.
@@ -832,7 +832,7 @@ Expected: all commands PASS.
 Run:
 
 ```bash
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web dev
+pnpm --dir ../../.. --filter @leaseqa/web dev
 ```
 
 Manual checklist:
@@ -846,7 +846,7 @@ Manual checklist:
 - [ ] **Step 6: Commit chunk 2**
 
 ```bash
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client add \
+git -C ../../.. add \
   apps/web/app/qa/components/PostDetailSection.tsx \
   apps/web/app/qa/[id]/components/PostContent.tsx \
   apps/web/app/qa/[id]/components/AnswersSection.tsx \
@@ -854,7 +854,7 @@ git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client add \
   apps/web/app/qa/[id]/components/EditPostForm.tsx \
   apps/web/app/globals.css \
   apps/web/app/refresh.css
-git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "feat: align moderation ui with admin v2"
+git -C ../../.. commit -m "feat: align moderation ui with admin v2"
 ```
 
 ## Final Verification
@@ -862,7 +862,7 @@ git -C /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client commit -m "feat: align mo
 - [ ] **Step 1: Run the full frontend test suite**
 
 ```bash
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client --filter @leaseqa/web test
+pnpm --dir ../../.. --filter @leaseqa/web test
 ```
 
 Expected: PASS.
@@ -870,8 +870,8 @@ Expected: PASS.
 - [ ] **Step 2: Run lint and production build**
 
 ```bash
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client lint
-pnpm --dir /Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client build
+pnpm --dir ../../.. lint
+pnpm --dir ../../.. build
 ```
 
 Expected: PASS.
