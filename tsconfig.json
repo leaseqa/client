@@ -7,9 +7,6 @@
     },
     {
       "path": "./packages/config"
-    },
-    {
-      "path": "./packages/ui"
     }
   ]
 }
