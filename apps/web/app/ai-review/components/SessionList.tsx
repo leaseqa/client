@@ -1,7 +1,7 @@
-import { Spinner } from "react-bootstrap";
 import { Clock3 } from "lucide-react";
 
 import { RagSession } from "../types";
+import RemoteDataState from "@/components/ui/RemoteDataState";
 import styles from "../ai-review.module.css";
 
 type SessionListProps = {
@@ -11,6 +11,7 @@ type SessionListProps = {
   isGuest: boolean;
   error?: string | null;
   onSelect: (session: RagSession) => void;
+  onRetry?: () => void;
 };
 
 export default function SessionList({
@@ -20,25 +21,40 @@ export default function SessionList({
   isGuest,
   error,
   onSelect,
+  onRetry,
 }: SessionListProps) {
   const renderSessions = () => {
     if ( loading ) {
       return (
-        <div className={styles.historyState}>
-          <Spinner size="sm"/>
-          <span>Loading Reviews...</span>
-        </div>
+        <RemoteDataState
+          kind="loading"
+          title="Loading reviews"
+          compact
+          className={styles.historyState}
+        />
       );
     }
     if ( error ) {
-      return <div className={styles.historyState}>{error}</div>;
+      return (
+        <RemoteDataState
+          kind="error"
+          title={error}
+          description="Nothing was lost. Opening the list again will retry."
+          action={onRetry ? { label: "Try again", onClick: onRetry } : undefined}
+          compact
+          className={styles.historyState}
+        />
+      );
     }
     if ( sessions.length === 0 ) {
       return (
-        <div className={styles.historyState}>
-          <span>No saved reviews yet.</span>
-          <span>Your first source will appear here.</span>
-        </div>
+        <RemoteDataState
+          kind="empty"
+          title="No saved reviews yet"
+          description="Your first source will appear here."
+          compact
+          className={styles.historyState}
+        />
       );
     }
     return (

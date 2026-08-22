@@ -292,6 +292,30 @@
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.2rem;
 }
+/* RemoteDataState defaults to warm ink on paper. This panel is inverted, so
+   the muted description would sit at roughly 1.5:1 against it. */
+.statsState {
+  padding: 0.25rem 0 0;
+}
+.statsState :global(.remote-data-state-title) {
+  color: #e9a582;
+}
+.statsState :global(.remote-data-state-description) {
+  color: rgba(255, 252, 248, 0.74);
+}
+.statsState :global(.remote-data-state-action) {
+  border-color: rgba(255, 252, 248, 0.32);
+  color: var(--site-panel);
+}
+.statsState :global(.remote-data-state-action:hover),
+.statsState :global(.remote-data-state-action:focus-visible) {
+  border-color: rgba(255, 252, 248, 0.55);
+  background: rgba(255, 252, 248, 0.12);
+  color: #fff;
+}
+.statsState :global(.remote-data-state-action:focus-visible) {
+  box-shadow: inset 0 0 0 2px rgba(255, 252, 248, 0.5);
+}
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
