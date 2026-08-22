@@ -14,16 +14,17 @@ This document separates committed implementation from unapproved design work. Do
 
 ## Current repository state
 
-- The working tree was clean before this document was added.
-- The branch has no configured upstream and has not been confirmed as pushed.
-- The branch is 9 commits ahead of local `main`.
-- The branch changes 31 files relative to `main`: 2,814 insertions and 565 deletions before this document.
-- Current verification passed on 2026-08-22:
+- Working tree clean as of 2026-08-22.
+- The branch has no configured upstream and has not been pushed.
+- Verification on 2026-08-22 after this session's work:
   - `npm run typecheck`
   - `npm run lint`
-  - `npm test`: 16 test files, 82 tests passed
+  - `npm test`: 20 test files, 138 tests passed
   - `npm run build`
-- Playwright E2E was not rerun during this handoff pass.
+  - `CI_SKIP_RAG=true npm run e2e`: 21 passed, 1 skipped
+- The single skip is the RAG activity test, which needs Milvus. Playwright's
+  browsers and the paired server's dependencies both had to be installed first;
+  neither was present.
 
 ## Completed and committed
 
@@ -38,6 +39,16 @@ This document separates committed implementation from unapproved design work. Do
 | `276c436` | Aligned desktop navigation states with the refreshed visual system. |
 | `3c6169c` | Reworked AI review into a focused source/history/conversation workspace. |
 | `6f7061d` | Improved Community Questions states, mobile access, navigation semantics, and header triggers. |
+| `b7b7cdb` | Refreshed both header menus and fixed the 829px and 427px overflow bugs. |
+| `fae893f` | Reshaped the homepage journey as a path and removed the duplicate disclaimer band. |
+| `a8c43d5` | Dropped the tsconfig `baseUrl` that `next typegen` strips on every run. |
+| `c76e1ad` | One canonical token block, plus a computed-style regression guard. |
+| `ae4bb22` | Removed the unused `@leaseqa/ui` package. |
+| `4b695c2` | Rewrote the colour and button guides from the shipped values. |
+| `f234ecf` | Repaired two stale selectors in the notification spec. |
+| `2bbb220` | Added public-route smoke coverage. |
+| `65668d2` | Repaired 153 stale doc links and recorded the real release commands. |
+| `0375bad` | Added the shared `RemoteDataState` (not yet adopted). |
 
 ### Implemented visual evidence
 
@@ -51,71 +62,37 @@ This document separates committed implementation from unapproved design work. Do
   - `/Users/Z1nk/.codex/visualizations/2026/08/21/01a022f4-a6ee-7b41-97c1-1f76d202f0a5/community-implemented/implemented-desktop.png`
   - `/Users/Z1nk/.codex/visualizations/2026/08/21/01a022f4-a6ee-7b41-97c1-1f76d202f0a5/community-implemented/implemented-mobile.png`
 
-## Current open item: header dropdown menus
+## Header dropdown menus — done
 
-The two 42px header triggers are already implemented as separate framed controls with a short vertical divider between them. Their opened menus are still the older React Bootstrap presentation and have not been refreshed.
+Both menus were refreshed and committed as `b7b7cdb`. Two sizing bugs turned up
+that this document had not recorded, and both were only visible under real
+content:
 
-### Relevant production files
+- The notifications menu set an inline `minWidth: 280` with no maximum. Because
+  Bootstrap's `.dropdown-item` does not wrap, a long title grew the panel to
+  **829px**, which on a 390px viewport ran off the *left* edge and clipped the
+  content out of reach.
+- The profile menu's width was driven by the untruncated email, reaching
+  **427px** on desktop. On mobile only `max-width: calc(100vw - 2rem)` stopped
+  it, leaving an edge-to-edge panel with the address cut off.
 
-- `apps/web/components/navigation/HeaderBar.tsx`
-- `apps/web/components/navigation/HeaderBar/AvatarToggle.tsx`
-- `apps/web/components/navigation/HeaderBar/ProfileHeader.tsx`
-- `apps/web/components/navigation/HeaderBar/ProfileMenuItems.tsx`
-- `apps/web/components/navigation/HeaderBar/NotificationsMenu.tsx`
-- `apps/web/components/navigation/HeaderBar/NotificationsMenu.test.tsx`
-- `apps/web/app/globals.css`
-- `apps/web/e2e/activity-notifications.spec.ts`
+Both panels now hold a fixed width — 264px and 312px — at every viewport, with
+clamped titles and a truncating name. The identity block is avatar plus name;
+the email and both badges are gone at the user's direction.
 
-### Existing behavior that must survive
+Anchoring detail worth keeping: `Dropdown` sits inside `Navbar`, so React
+Bootstrap disables Popper (`data-bs-popper="static"`) and positions the menu with
+plain CSS offsets measured from the 42px trigger. The menus are therefore
+anchored to `.site-auth` instead, which gives them one shared right edge and
+keeps the wider notifications panel on screen down to a 320px viewport.
 
-- Notifications load when the menu opens.
-- Unread items retain title, optional summary, date, destination, and read-on-select behavior.
-- Notification states remain distinguishable: loading, error, empty, and populated.
-- Guest profile actions remain `View Profile`, `Sign In`, and `Create Account` unless a separately approved copy change is made.
-- Authenticated profile actions remain account navigation and sign-out.
-- Menu actions must close the profile dropdown before navigating.
+Verified: 264/312 at both sizes matching the approved target, Enter opens,
+ArrowDown roves, Escape closes and returns focus to the trigger, rows are 44px
+on touch, and both notification E2E tests pass.
 
-### Design exploration status
-
-Design-only files live outside the repository:
-
-`/Users/Z1nk/.gstack/projects/leaseqa-client/designs/header-menus-20260821/`
-
-Important iterations:
-
-- `target-profile-panel-v2.png`: rejected as too busy. It showed avatar, name, email, and `Tenant · Read-only access`.
-- `target-profile-panel-v3.png`: reduced the identity block to avatar plus `Guest`. The user approved the information density but said the visual result still did not look good.
-- `target-notifications-panel-v2.png`: compact notification proposal; not explicitly approved for implementation.
-- `finalized.html`: preview artifact only. It currently reflects the v3 information reduction, not an approved final design.
-
-No dropdown mockup is approved. Do not copy `finalized.html` into the project yet.
-
-### Latest user feedback
-
-The profile identity region had too many simultaneous signals. Removing email, role, and permission copy solved the density problem, but the remaining composition still looked visually weak. The next iteration should improve proportion, alignment, typography, separators, and relationship to the trigger controls without adding information back.
-
-## Immediate TODO
-
-1. Inspect both current production dropdowns at desktop and mobile sizes.
-2. Produce a new compact visual direction for both profile and notifications menus.
-3. Show current-versus-target images at 1280x720 and 390x844.
-4. Wait for explicit user approval before changing rendered source or CSS.
-5. After approval, add or update focused component tests first.
-6. Implement the approved menu design without changing data flow or routes.
-7. Capture real post-implementation screenshots at both sizes and compare them with the approved target.
-8. Run focused navigation tests, the notification Playwright coverage where the backend fixture is available, then the full verification suite.
-9. Commit the dropdown work as one isolated stage.
-
-### Suggested design direction, not an approved design
-
-- Keep the menu compact and visually anchored to its 42px trigger.
-- Use one quiet surface, a restrained border, and minimal shadow.
-- Keep guest identity to avatar plus `Guest`; do not restore email, role badges, or permission badges.
-- Improve composition through spacing and typography, not extra labels or icons.
-- Avoid a stack of floating mini-cards inside the dropdown.
-- Keep menu rows at least 44px tall on touch layouts.
-- Let notification content carry the hierarchy. The empty state should remain neutral and informational.
-- Verify that a 284px-wide menu is actually the best proportion; density was accepted, but the v3 width and geometry were not approved.
+Also found: `components/**` was outside vitest's `include`, so the existing
+`NotificationsMenu.test.tsx` had never run — and could not have passed, since
+`Dropdown.Menu` renders children only when open. It runs now.
 
 ## Remaining plan work beyond the menus
 
@@ -201,20 +178,35 @@ The notification E2E suite depends on the paired backend/test environment. If it
 
 ## Known documentation drift
 
-- Root `package.json` requires Node `24.x`, while the root README still says Node `20.x`.
-- `docs/README.md` contains absolute links using an older `leaseqa-client` directory path.
+Both fixed on 2026-08-22. The README now says Node `24.x`, and the 153 absolute
+links under the old `leaseqa-client` and `leaseqa-server` directory names are now
+relative to the file that contains them.
 
-These are outside the current menu-design scope, but the next documentation cleanup should correct them.
+Six links still point at files that do not exist — `AGENTS.md`,
+`apps/web/app/refresh.css`, and two `page.test.tsx` files. They were already
+broken and were left as found rather than guessed at.
 
 ## Handoff acceptance checklist
 
-- [ ] New profile and notification menu targets shown at desktop and mobile sizes.
-- [ ] User explicitly approved both targets.
-- [ ] No email/role/permission clutter restored to the guest identity block.
-- [ ] Existing notification loading/error/empty/populated behavior preserved.
-- [ ] Existing guest and authenticated actions preserved.
-- [ ] Keyboard, focus, 44px targets, viewport bounds, and reduced motion verified.
-- [ ] Actual implementation screenshots match the approved targets.
-- [ ] Typecheck, lint, 82+ unit tests, and build pass.
-- [ ] Relevant notification E2E passes or is clearly recorded as not run.
-- [ ] Work is committed on `codex/leaseqa-frontend-refresh` or a clearly named successor branch.
+- [x] New profile and notification menu targets shown at desktop and mobile sizes.
+- [x] User explicitly approved both targets.
+- [x] No email/role/permission clutter restored to the guest identity block.
+- [x] Existing notification loading/error/empty/populated behavior preserved.
+- [x] Existing guest and authenticated actions preserved.
+- [x] Keyboard, focus, 44px targets, viewport bounds, and reduced motion verified.
+- [x] Actual implementation screenshots match the approved targets.
+- [x] Typecheck, lint, 138 unit tests, and build pass.
+- [x] Relevant notification E2E passes.
+- [x] Work is committed on `codex/leaseqa-frontend-refresh`.
+
+## Open decisions
+
+- **Pushing.** The branch still has no upstream and has not been pushed. No PR
+  has been opened.
+- **`RemoteDataState` adoption.** Committed on
+  `codex/remote-data-state-adoption` and waiting on approval of the before/after
+  images. Unmerged.
+- **`design-review` in regression mode** (Task 6 step 7) and the `review` pass
+  (Task 7 step 4) have not been run.
+- **Roughly 158 duplicated selectors** remain in `globals.css`. Each needs a
+  judgement call about which declaration should win, so they were left in place.

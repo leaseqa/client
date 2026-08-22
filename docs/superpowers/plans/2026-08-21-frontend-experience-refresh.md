@@ -97,7 +97,7 @@ git commit -m "fix: keep the public shell visible during session restore"
 - Produces: `RemoteDataState` with props `{ kind: "loading" | "empty" | "error" | "permission"; title: string; description?: string; action?: { label: string; onClick: () => void } }`.
 - Consumes: existing query/load errors and refetch callbacks.
 
-- [ ] **Step 1: Write component tests for all four variants**
+- [x] **Step 1: Write component tests for all four variants**
 
 ```tsx
 it.each(["loading", "empty", "error", "permission"] as const)("renders %s state", (kind) => {
@@ -108,11 +108,11 @@ it.each(["loading", "empty", "error", "permission"] as const)("renders %s state"
 
 Add an action test that clicks Retry exactly once and an accessibility test that error uses `role="alert"` while loading uses `aria-live="polite"`.
 
-- [ ] **Step 2: Run the focused test and verify the component is missing**
+- [x] **Step 2: Run the focused test and verify the component is missing**
 
 Run: `npm exec vitest run -- apps/web/components/ui/RemoteDataState.test.tsx`
 
-- [ ] **Step 3: Implement the minimal shared state component without route styling changes**
+- [x] **Step 3: Implement the minimal shared state component without route styling changes**
 
 Use semantic markup and existing typography/button classes only. Do not change layout in this step.
 
@@ -299,7 +299,7 @@ git commit -m "fix: improve community states and mobile access"
 - Produces: one canonical token set and shared Button/Surface contracts exported by `@leaseqa/ui`.
 - Consumes: approved rendered appearances from Tasks 3-5; no route may visually change during extraction.
 
-- [ ] **Step 1: Inventory duplicate selectors and overridden tokens**
+- [x] **Step 1: Inventory duplicate selectors and overridden tokens**
 
 Record the duplicate `:root`, `body`, `.qa-toolbar`, `.qa-nav-tabs`, button, and card rules with their winning declarations.
 
@@ -307,19 +307,19 @@ Record the duplicate `:root`, `body`, `.qa-toolbar`, `.qa-nav-tabs`, button, and
 
 Extend the existing Node structural scripts to assert one token import, no `transition: all`, and no legacy purple variable usage in active route styles.
 
-- [ ] **Step 3: Extract tokens, base, and shell rules without visual changes**
+- [x] **Step 3: Extract tokens, base, and shell rules without visual changes**
 
 Move winning declarations verbatim first. Do not rename tokens and change values in the same step.
 
-- [ ] **Step 4: Adopt or remove the unused package primitives**
+- [x] **Step 4: Adopt or remove the unused package primitives**
 
 Use `@leaseqa/ui` for Button and Surface in the refreshed routes. If a primitive has no consumer after migration, remove it rather than preserving a second system.
 
-- [ ] **Step 5: Update guides to the warm production system**
+- [x] **Step 5: Update guides to the warm production system**
 
 Document the actual olive, terracotta, warm neutral, typography, radius, touch-target, and motion rules.
 
-- [ ] **Step 6: Run full visual and engineering verification**
+- [x] **Step 6: Run full visual and engineering verification**
 
 Run: `npm run typecheck && npm run lint && npm test && npm run build && npm run e2e`
 
@@ -343,15 +343,15 @@ git commit -m "refactor: consolidate the frontend design system"
 - Produces: deployment smoke coverage for public routes and a documented visual approval checklist.
 - Consumes: all route and state contracts from Tasks 1-6.
 
-- [ ] **Step 1: Add public-route smoke tests**
+- [x] **Step 1: Add public-route smoke tests**
 
 Test `/`, `/auth/login`, and guest `/ai-review` with authenticated, 401, delayed, and failed session responses. Assert a visible landmark or heading and no blank body.
 
-- [ ] **Step 2: Run Playwright against the paired backend or explicit mocks**
+- [x] **Step 2: Run Playwright against the paired backend or explicit mocks**
 
 Run: `npm run e2e --workspace @leaseqa/web -- --grep "public routes|auth session"`
 
-- [ ] **Step 3: Run the complete release verification**
+- [x] **Step 3: Run the complete release verification**
 
 Run: `npm run typecheck && npm run lint && npm test && npm run build && npm run e2e`
 
@@ -365,3 +365,40 @@ Record exact commands, visual approval sizes, and any backend-dependent tests th
 git add apps/web/e2e docs/release-checklist.md
 git commit -m "test: lock frontend refresh release behavior"
 ```
+
+---
+
+## Status as of 2026-08-22
+
+**Task 2 — partially done.** `RemoteDataState` and its 16 tests are committed on
+`codex/leaseqa-frontend-refresh`; it is not yet wired into any route, so nothing
+changed on screen. Route adoption is committed on
+`codex/remote-data-state-adoption` and waits on approval of the before/after
+images. That branch also fixes the underlying problem: `fetchStats` swallowed
+its own failure and returned fabricated zeros, so no error ever reached the UI.
+
+Scope correction: `qa/page.tsx` is **not** being converted. It already renders an
+honest error with a retry plus a separate empty state, so the plan's file list is
+out of date on that point.
+
+**Task 6 — mostly done.** One canonical `:root` block, ten unreferenced tokens
+and four dead rule blocks removed, `@leaseqa/ui` deleted, both guides rewritten
+from the shipped values. Verified inert by computed-style diff across 3,234
+elements and 27 page/viewport pairs.
+
+Not done: step 2 was satisfied with `scripts/check-visual-regression.mjs` rather
+than assertions inside the existing structural scripts, and the tokens were
+consolidated in place instead of being split into `tokens.css` / `base.css` /
+`shell.css`. Roughly 158 duplicated selectors remain — each needs a judgement
+call about which declaration wins, so they were left rather than stripped blind.
+Step 7 (`design-review` in regression mode) has not been run.
+
+**Task 7 — mostly done.** `public-routes.spec.ts` adds 12 smoke tests across the
+public routes and four session responses. The full suite runs at **21 passed,
+1 skipped**; the skip is the RAG test, which needs Milvus and is gated behind
+`CI_SKIP_RAG`. Two stale selectors in the notification spec were repaired — the
+suite had never run locally because Playwright's browsers were missing and the
+paired server had an uninstalled dependency.
+
+Not done: step 4's `review` pass. The release checklist itself is updated with
+the real commands and boundaries.
