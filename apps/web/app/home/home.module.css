@@ -220,32 +220,45 @@
 }
 .journey {
   display: grid;
-  grid-template-columns: 11.2rem repeat(3, 1fr);
-  min-height: 7.8rem;
-  border-top: 1px solid var(--site-border-strong);
-  border-bottom: 1px solid var(--site-border-strong);
-}
-.journeyIntro,
-.step {
-  padding: 1.45rem 1.6rem;
-  border-right: 1px solid var(--site-border-strong);
+  grid-template-columns: repeat(3, 1fr);
 }
 .journeyIntro {
-  padding-left: 0;
+  grid-column: 1 / -1;
+  padding: 0 0 1.15rem;
 }
-.step:last-child {
-  border-right: 0;
+/* Each step carries the segment of the path track to its right, starting clear
+   of its own marker, so the markers read as stops along one continuous line. */
+.step {
+  position: relative;
+  padding: 2.1rem 1.6rem 0.2rem 0;
 }
-.journeyIntro > span,
+.step:before {
+  position: absolute;
+  top: 1.3rem;
+  right: 0;
+  left: 1.9rem;
+  height: 1px;
+  background: var(--site-border-strong);
+  content: "";
+}
+.step:last-child:before {
+  right: 1.6rem;
+}
 .step > span {
-  color: var(--site-accent);
-  font-size: 0.61rem;
+  position: absolute;
+  top: 0.55rem;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: var(--site-accent-soft);
+  color: var(--site-accent-strong);
+  font-size: 0.6rem;
   font-weight: 700;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-}
-.step > span {
-  color: var(--site-text-tertiary);
+  letter-spacing: 0.06em;
 }
 .journey h2,
 .journey h3 {
@@ -266,32 +279,6 @@
   color: var(--site-muted);
   font-size: 0.72rem;
   line-height: 1.45;
-}
-.boundaryNote {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.35rem 0 0;
-  color: var(--site-muted);
-  font-size: 0.69rem;
-}
-.boundaryNote strong {
-  color: var(--site-ink);
-}
-.boundaryNote > div {
-  display: flex;
-  gap: 1.25rem;
-}
-.boundaryNote span:before {
-  display: inline-block;
-  width: 0.38rem;
-  height: 0.38rem;
-  margin-right: 0.45rem;
-  border-radius: 50%;
-  background: var(--site-accent);
-  content: "";
-  vertical-align: 0.05rem;
 }
 .stats {
   margin-top: 2rem;
@@ -333,15 +320,8 @@
     gap: 2.5rem;
     padding: 2.5rem 0 2.8rem;
   }
-  .journey {
-    grid-template-columns: 9rem repeat(3, 1fr);
-  }
-  .journeyIntro,
   .step {
-    padding: 1.25rem 1rem;
-  }
-  .journeyIntro {
-    padding-left: 0;
+    padding: 2.1rem 1rem 0.2rem 0;
   }
 }
 @media (max-width: 600px) {
@@ -397,29 +377,28 @@
   .journey {
     display: block;
     margin-top: 2.8rem;
-    border-bottom: 0;
-  }
-  .journeyIntro,
-  .step {
-    border-right: 0;
-    border-bottom: 1px solid var(--site-border-strong);
   }
   .journeyIntro {
-    padding: 1.25rem 0;
+    padding: 0 0 1.1rem;
   }
   .step {
-    position: relative;
-    padding: 1.2rem 0 1.2rem 2.65rem;
+    padding: 0 0 1.35rem 2.5rem;
+  }
+  /* the same track, rotated: a rail joining each marker to the next */
+  .step:before {
+    top: 1.6rem;
+    right: auto;
+    bottom: 0;
+    /* centred on the 1.5rem marker */
+    left: calc(0.75rem - 0.5px);
+    width: 1px;
+    height: auto;
+  }
+  .step:last-child:before {
+    display: none;
   }
   .step > span {
-    position: absolute;
-    left: 0;
-  }
-  .boundaryNote {
-    align-items: flex-start;
-  }
-  .boundaryNote > div {
-    display: none;
+    top: 0.1rem;
   }
   .statsGrid {
     grid-template-columns: repeat(2, 1fr);

@@ -14,18 +14,18 @@ type HomeJourneyProps = {
 
 const JOURNEY_STEPS = [
   {
-    label: "01 · Source",
+    label: "01",
     title: "Bring the exact wording",
     description: "Upload a lease or paste the clause you are unsure about.",
   },
   {
-    label: "02 · Context",
+    label: "02",
     title: "See the relevant guidance",
     description:
       "Read a plain-language explanation with cited tenant guidance.",
   },
   {
-    label: "03 · Questions",
+    label: "03",
     title: "Identify what to verify",
     description:
       "Review relevant questions, cited sources, and available options.",
@@ -106,7 +106,6 @@ export default function HomeJourney({ stats = [] }: HomeJourneyProps) {
 
       <section className={styles.journey} aria-labelledby="journey-title">
         <div className={styles.journeyIntro}>
-          <span>Your path</span>
           <h2 id="journey-title">From clause to context</h2>
         </div>
         {JOURNEY_STEPS.map((step) => (
@@ -117,14 +116,6 @@ export default function HomeJourney({ stats = [] }: HomeJourneyProps) {
           </div>
         ))}
       </section>
-
-      <div className={styles.boundaryNote}>
-        <strong>Built for renters who want a clearer starting point.</strong>
-        <div>
-          <span>Legal information, not legal advice</span>
-          <span>Cited sources stay visible</span>
-        </div>
-      </div>
 
       {visibleStats.length > 0 && (
         <section className={styles.stats} aria-labelledby="community-snapshot">

@@ -26,6 +26,33 @@ describe("HomeJourney", () => {
     expect(html).not.toMatch(/you should/i);
   });
 
+  test("labels the journey steps with numbers alone", () => {
+    const html = renderToStaticMarkup(<HomeJourney stats={[]} />);
+
+    expect(html).toContain(">01<");
+    expect(html).toContain(">02<");
+    expect(html).toContain(">03<");
+    expect(html).not.toContain("01 · Source");
+    expect(html).not.toContain("02 · Context");
+    expect(html).not.toContain("03 · Questions");
+  });
+
+  test("leads the journey with its heading and no decorative eyebrow", () => {
+    const html = renderToStaticMarkup(<HomeJourney stats={[]} />);
+
+    expect(html).toContain('id="journey-title"');
+    expect(html).toContain("From clause to context");
+    expect(html).not.toContain("Your path");
+  });
+
+  test("leaves the legal boundary to the single footer disclaimer", () => {
+    const html = renderToStaticMarkup(<HomeJourney stats={[]} />);
+
+    expect(html).not.toContain("Built for renters who want a clearer starting point.");
+    expect(html).not.toMatch(/not legal advice/i);
+    expect(html).not.toContain("Cited sources stay visible");
+  });
+
   test("shows community statistics only when at least one value is nonzero", () => {
     const emptyHtml = renderToStaticMarkup(
       <HomeJourney
