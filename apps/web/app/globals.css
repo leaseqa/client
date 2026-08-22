@@ -42,7 +42,6 @@
 
   /* 10% - Accent Color (Highlights & CTAs) - Warm Palette */
   --color-accent-primary: #5c6e4e; /* Olive for CTAs */
-  --color-accent-secondary: #c4704b; /* Terracotta for secondary actions */
   --color-accent-success: #5c6e4e; /* Success states (olive) */
   --color-accent-warning: #c4704b; /* Warning states (terracotta) */
   --color-accent-error: #b5473a; /* Error states (warm red) */
@@ -63,7 +62,6 @@
   --ink: var(--color-text-primary);
   --ink-light: var(--color-text-secondary);
   --ink-muted: var(--color-text-muted);
-  --panel: var(--color-panel);
   --panel-muted: var(--color-panel-muted);
   --panel-dark: var(--color-bg-tertiary);
   --border: var(--color-border-primary);
@@ -90,10 +88,7 @@
   --gradient-green: var(--gradient-success);
   --gradient-red: var(--gradient-error);
   --gradient-blue: var(--gradient-info);
-  --gradient-pink: linear-gradient(135deg, #c4704b 0%, #a35a3a 100%);
-  --gradient-teal: linear-gradient(135deg, #5c6e4e 0%, #7a8e6a 100%);
   --gradient-dark: linear-gradient(135deg, #2c2825 0%, #3d3835 100%);
-  --gradient-danger: var(--gradient-error);
   --gradient-sidenav: linear-gradient(180deg, #2c2825 0%, #3d3835 100%);
 
   /* Glass Effect */
@@ -108,23 +103,42 @@
   --qa-border: var(--color-border-primary);
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 15px 35px rgba(0, 0, 0, 0.15);
 
   /* Border Radius */
-  --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
-  --radius-xl: 1.25rem;
   --radius-2xl: 1.5rem;
-  --radius-3xl: 2rem;
   --radius-full: 9999px;
 
   /* Transitions */
   --transition-fast: 0.2s ease;
-  --transition-normal: 0.3s ease;
+
+  /* ============================================
+     WARM EDITORIAL SYSTEM (--site-*)
+     The production surface. These were declared in a second :root block
+     further down the file; the two sets never overlapped, so they are
+     merged here to give the file one canonical token block.
+     ============================================ */
+  --shell-max-width: 1140px;
+  --site-bg: #f5f0eb;
+  --site-panel: #fffcf8;
+  --site-panel-strong: #f9f5f0;
+  --site-panel-soft: #f5f0eb;
+  --site-ink: #2c2825;
+  --site-muted: #6b6460;
+  --site-border: rgba(44, 40, 37, 0.1);
+  --site-border-strong: rgba(44, 40, 37, 0.18);
+  --site-accent: #5c6e4e;
+  --site-accent-strong: #3d4a33;
+  --site-accent-soft: #e8ede4;
+  --site-highlight: #c4704b;
+  --site-highlight-soft: #faf0eb;
+  --site-shadow: 0 8px 24px rgba(44, 40, 37, 0.06);
+  --site-radius: 0.75rem;
+  --site-text-tertiary: #9a928c;
 }
 
 /* ============================================
@@ -767,11 +781,6 @@ body {
   background: #5c6e4e;
   color: #fff;
   font-weight: 600;
-}
-
-/* Profile Menu */
-.dropdown-menu.profile-menu {
-  min-width: 200px;
 }
 
 /* ============================================
@@ -3114,29 +3123,6 @@ body {
    ============================================================ */
 
 /* ============================================================
-   1. CSS VARIABLES
-   ============================================================ */
-:root {
-  --shell-max-width: 1140px;
-  --site-bg: #f5f0eb;
-  --site-panel: #fffcf8;
-  --site-panel-strong: #f9f5f0;
-  --site-panel-soft: #f5f0eb;
-  --site-ink: #2c2825;
-  --site-muted: #6b6460;
-  --site-border: rgba(44, 40, 37, 0.1);
-  --site-border-strong: rgba(44, 40, 37, 0.18);
-  --site-accent: #5c6e4e;
-  --site-accent-strong: #3d4a33;
-  --site-accent-soft: #e8ede4;
-  --site-highlight: #c4704b;
-  --site-highlight-soft: #faf0eb;
-  --site-shadow: 0 8px 24px rgba(44, 40, 37, 0.06);
-  --site-radius: 0.75rem;
-  --site-text-tertiary: #9a928c;
-}
-
-/* ============================================================
    2. BASE RESET & BODY
    ============================================================ */
 html {
@@ -4074,18 +4060,6 @@ select:focus-visible,
   margin: 0.25rem 0;
 }
 
-.profile-menu {
-  min-width: 260px;
-  max-width: calc(100vw - 2rem);
-  padding: 0.5rem;
-}
-
-.profile-menu .dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 /* Notification bell & avatar — warm theme */
 .site-auth .icon-circle {
   transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
@@ -4098,25 +4072,8 @@ select:focus-visible,
   border-color: rgba(92, 110, 78, 0.12);
 }
 
-.site-auth .site-auth-chip {
-  width: 2.35rem;
-  height: 2.35rem;
-  border-radius: 0.8rem;
-  background: linear-gradient(180deg, rgba(255, 252, 248, 0.98) 0%, rgba(245, 240, 235, 0.92) 100%);
-  border: 1px solid rgba(44, 40, 37, 0.1);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
-}
-
 .site-auth .dropdown-toggle::after {
   display: none;
-}
-
-.site-auth-trigger:hover .site-auth-chip,
-.site-auth-trigger:focus-visible .site-auth-chip,
-.site-auth-trigger[aria-expanded="true"] .site-auth-chip {
-  background: linear-gradient(180deg, rgba(232, 237, 228, 0.95) 0%, rgba(245, 240, 235, 0.98) 100%);
-  border-color: rgba(92, 110, 78, 0.24);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86), 0 0 0 3px rgba(92, 110, 78, 0.08);
 }
 
 .site-auth-chip-bell svg,
