@@ -125,18 +125,18 @@ export default function HomeJourney({
       </section>
 
       {statsError && visibleStats.length === 0 ? (
-        <section className={styles.stats} aria-labelledby="community-snapshot">
-          <h2 id="community-snapshot">Community snapshot</h2>
-          <RemoteDataState
-            kind="error"
-            title="Community activity could not be loaded."
-            description="The rest of this page is unaffected."
-            action={
-              onRetryStats ? { label: "Try again", onClick: onRetryStats } : undefined
-            }
-            className={styles.statsState}
-          />
-        </section>
+        // Deliberately not the dark stats panel. That surface exists to make the
+        // numbers feel substantial; borrowing it for a failure gives a large
+        // black block whose only content is an apology.
+        <RemoteDataState
+          kind="error"
+          title="Community activity could not be loaded."
+          action={
+            onRetryStats ? { label: "Try again", onClick: onRetryStats } : undefined
+          }
+          compact
+          className={styles.statsError}
+        />
       ) : null}
 
       {visibleStats.length > 0 && (

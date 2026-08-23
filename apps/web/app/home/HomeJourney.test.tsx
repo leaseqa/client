@@ -53,11 +53,18 @@ describe("HomeJourney", () => {
     expect(html).not.toContain("Cited sources stay visible");
   });
 
-  test("admits a failed stats read instead of hiding the section", () => {
+  test("admits a failed stats read instead of hiding it", () => {
     const html = renderToStaticMarkup(<HomeJourney stats={[]} statsError/>);
 
     expect(html).toContain("Community activity could not be loaded.");
-    expect(html).toContain("Community snapshot");
+  });
+
+  test("keeps the failure off the dark stats panel", () => {
+    const html = renderToStaticMarkup(<HomeJourney stats={[]} statsError/>);
+
+    // The inverted panel exists to make the numbers feel substantial. Reusing it
+    // for a failure renders a large black block containing only an apology.
+    expect(html).not.toContain("Community snapshot");
   });
 
   test("prefers real statistics over the error state once they arrive", () => {

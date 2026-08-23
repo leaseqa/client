@@ -27,6 +27,11 @@ export default function HeaderBar() {
   const isGuest = session.status === "guest";
 
   const [showMenu, setShowMenu] = useState(false);
+  // The drawer has to be controlled from here. Left uncontrolled, navigating
+  // from inside it never reset Navbar's expanded state, so the offcanvas stayed
+  // open over the new page — and because it is aria-modal, its backdrop then
+  // swallowed clicks on the toggle that would have closed it.
+  const [navOpen, setNavOpen] = useState(false);
   const [notifications, setNotifications] = useState<client.ActivityItem[]>([]);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
   const [notificationsError, setNotificationsError] = useState("");
@@ -86,11 +91,13 @@ export default function HeaderBar() {
 
   return (
     <header className="site-header">
-      <Navbar expand={false}>
+      <Navbar expand={false} expanded={navOpen} onToggle={setNavOpen}>
         <Container fluid className="px-3">
           <div className="d-flex align-items-center gap-2">
             <Navbar.Toggle
               aria-controls="mobile-navbar-nav"
+              aria-expanded={navOpen}
+              aria-label={navOpen ? "Close navigation" : "Open navigation"}
               className="d-lg-none border-0 p-0 me-2"
             />
             <NavbarBrand
@@ -107,7 +114,12 @@ export default function HeaderBar() {
             </NavbarBrand>
           </div>
 
-          <MobileNav pathname={pathname}/>
+          <MobileNav
+            pathname={pathname}
+            isAuthenticated={isAuthenticated}
+            isGuest={isGuest}
+            onNavigate={() => setNavOpen(false)}
+          />
 
           <Nav className="site-nav">
             {NAV_ITEMS.map((item) => {
