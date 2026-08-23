@@ -1,5 +1,9 @@
-import "@/app/globals.css";
+// Bootstrap first, then the project stylesheet. Bootstrap 5 utilities carry
+// `!important`, so with the previous order (globals first) they won every tie
+// and cool Bootstrap greys leaked into the warm palette — `.text-secondary`
+// resolved to #6c757d despite globals.css overriding it to `--site-muted`.
 import "bootstrap/dist/css/bootstrap.min.css";
+import "@/app/globals.css";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 import { DM_Sans, Nunito_Sans } from "next/font/google";
