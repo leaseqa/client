@@ -34,6 +34,12 @@ const ROUTES = [
   "/",
   "/ai-review",
   "/qa",
+  // The composer, a post detail view and the admin workspace carry a large
+  // share of the stylesheet (.compose-form-*, .post-*, .qa-manage-*). Without
+  // them a consolidation pass can report "inert" while having changed them.
+  "/qa?compose=1",
+  "/qa?post=post-1",
+  "/qa/manage",
   "/qa/resources",
   "/qa/stats",
   "/account",
@@ -245,7 +251,7 @@ async function capture(outPath) {
       }, PROPS);
 
       const landed = new URL(page.url()).pathname;
-      const redirected = landed !== route;
+      const redirected = landed !== route.split("?")[0];
       result.pages[`${vp.name}${route}`] = fingerprint;
       const count = Object.keys(fingerprint).length;
       console.log(
