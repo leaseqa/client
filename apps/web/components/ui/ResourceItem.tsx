@@ -25,7 +25,8 @@ export default function ResourceItem({ icon: Icon, title, summary, link }: Resou
         </div>
       </div>
       <div className="resource-item-action">
-        <Link href={link} target="_blank" className="resource-link">
+        <Link href={link} target="_blank"
+      rel="noopener noreferrer" className="resource-link">
           <span>Open</span>
           <FaExternalLinkAlt size={12}/>
         </Link>

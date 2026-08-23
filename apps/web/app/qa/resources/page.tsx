@@ -107,6 +107,7 @@ export default function ResourcesPage() {
                   <Link
                     href={item.link}
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="resources-inline-link resources-inline-link-quiet"
                   >
                     <span>Open</span>

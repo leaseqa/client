@@ -150,9 +150,6 @@
 
 body {
   margin: 0;
-  ;
-  ;
-  ;
 }
 
 /* ============================================
@@ -234,7 +231,6 @@ body {
 /* Hero Card */
 .card.card-hero {
   background: var(--gradient-dark);
-  ;
   border-radius: var(--radius-2xl);
   overflow: hidden;
 }
@@ -284,15 +280,7 @@ body {
 
 /* Base Button Styles */
 .btn-unified {
-  ;
-  ;
-  ;
-  ;
-  ;
-  ;
-  ;
   border: 1px solid transparent;
-  ;
   cursor: pointer;
   transition: all var(--transition-fast);
   text-decoration: none;
@@ -308,12 +296,10 @@ body {
 /* Button Sizes */
 
 .btn-unified-md {
-  ;
   font-size: 0.875rem;
 }
 
 .btn-unified-lg {
-  ;
   font-size: 0.9375rem;
 }
 
@@ -1085,20 +1071,11 @@ body {
 
 /* Scenario Filter */
 .scenario-filter {
-  ;
-  ;
-  ;
   margin-bottom: 1rem;
 }
 
 .scenario-chip {
-  ;
-  ;
-  ;
-  ;
   color: var(--text-muted);
-  ;
-  ;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -1114,14 +1091,10 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  ;
-  ;
   border: none;
   background: transparent;
   color: var(--text-muted);
   text-decoration: none;
-  ;
-  ;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -1133,31 +1106,15 @@ body {
 
 /* QA Toolbar */
 .qa-toolbar {
-  ;
-  ;
-  ;
   margin-bottom: 1rem;
 }
 
 .qa-toolbar-search {
-  ;
-  ;
-  ;
-  ;
-  ;
-  ;
-  ;
-  ;
-  ;
   color: var(--text-muted);
 }
 
 .qa-toolbar-search input {
-  ;
-  ;
-  ;
   font-size: 0.875rem;
-  ;
 }
 
 .qa-toolbar-search input::placeholder {
@@ -1165,12 +1122,6 @@ body {
 }
 
 .qa-toolbar-btn {
-  ;
-  ;
-  ;
-  ;
-  ;
-  ;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -1215,17 +1166,7 @@ body {
 }
 
 .post-sidebar-header {
-  ;
-  ;
   gap: 0.5rem;
-  ;
-  ;
-  ;
-  ;
-  ;
-  ;
-  ;
-  ;
   text-align: left;
 }
 
@@ -1234,12 +1175,9 @@ body {
 }
 
 .post-sidebar-count {
-  ;
   padding: 0.1rem 0.5rem;
   background: white;
   border-radius: 10px;
-  ;
-  ;
 }
 
 .post-sidebar-items {
@@ -1247,9 +1185,7 @@ body {
 }
 
 .post-sidebar-item {
-  ;
   border-radius: 8px;
-  ;
   transition: all 0.15s ease;
   margin-bottom: 0.25rem;
 }
@@ -1264,7 +1200,6 @@ body {
 }
 
 .post-sidebar-item.active {
-  ;
   border-left: 3px solid #5c6e4e;
 }
 
@@ -1273,25 +1208,15 @@ body {
 }
 
 .post-sidebar-item-title {
-  ;
-  ;
   color: var(--text-dark);
   margin-bottom: 0.35rem;
 }
 
 .post-sidebar-item-badges {
-  ;
-  ;
-  ;
   margin-bottom: 0.5rem;
 }
 
 .post-sidebar-badge {
-  ;
-  ;
-  ;
-  ;
-  ;
   color: var(--text-muted);
   border: 1px solid var(--qa-border);
   text-transform: capitalize;
@@ -1349,33 +1274,23 @@ body {
 
 /* Feed Section (shared by Announcements & Hot Posts) */
 .feed-section {
-  ;
-  ;
-  ;
   padding: 1rem;
   margin-bottom: 1rem;
 }
 
 .feed-section-title {
-  ;
-  ;
-  ;
-  ;
   font-size: 0.9rem;
   margin-bottom: 0.75rem;
   color: var(--text-dark);
 }
 
 .feed-section-posts {
-  ;
   gap: 0.5rem;
 }
 
 .feed-section-post {
-  ;
   border-radius: 8px;
   background: var(--light-gray);
-  ;
   transition: all 0.15s ease;
 }
 
@@ -1384,29 +1299,19 @@ body {
 }
 
 .feed-section-post-top {
-  ;
-  ;
-  ;
-  ;
   margin-bottom: 0.35rem;
 }
 
 .feed-section-post-title {
-  ;
   font-size: 0.875rem;
   color: var(--text-dark);
 }
 
 .feed-section-post-tags {
-  ;
-  ;
   flex-shrink: 0;
-  ;
 }
 
 .feed-section-folder-badge {
-  ;
-  ;
   font-size: 0.7rem;
   font-weight: 500;
   padding: 0.25rem 0.6rem;
@@ -1424,26 +1329,22 @@ body {
 }
 
 .feed-section-urgency-badge.low {
-  ;
   color: #5f6368;
   border-color: #e0e0e0;
 }
 
 .feed-section-urgency-badge.medium {
-  ;
   color: #b06000;
   border-color: #f5d87a;
 }
 
 .feed-section-urgency-badge.high {
-  ;
   color: var(--site-highlight);
   border-color: var(--site-highlight);
 }
 
 .feed-section-post-snippet {
   font-size: 0.8rem;
-  ;
   line-height: 1.4;
 }
 
@@ -1564,14 +1465,11 @@ body {
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 1.25rem;
-  ;
   background: var(--light-gray);
 }
 
 .compose-form-title {
-  ;
   font-weight: 600;
-  ;
   color: var(--text-dark);
 }
 
@@ -1594,9 +1492,6 @@ body {
   justify-content: center;
   width: 32px;
   height: 32px;
-  ;
-  ;
-  ;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -1615,24 +1510,16 @@ body {
 }
 
 .compose-form-row {
-  ;
   align-items: center;
-  ;
 }
 
 .compose-form-label {
-  ;
-  ;
-  ;
   font-size: 0.85rem;
-  ;
   color: var(--text-dark);
 }
 
 .compose-form-count {
   font-weight: 400;
-  ;
-  ;
 }
 
 .compose-form-radio {
@@ -1684,21 +1571,11 @@ body {
 }
 
 .compose-form-tags {
-  ;
-  ;
-  ;
   margin-top: 0.25rem;
 }
 
 .compose-form-tag {
-  ;
-  ;
-  ;
-  ;
-  ;
   border: 1px solid var(--qa-border);
-  ;
-  ;
   color: var(--text-dark);
 }
 
@@ -1706,9 +1583,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  ;
-  ;
-  ;
   cursor: pointer;
   padding: 0;
 }
@@ -1726,21 +1600,16 @@ body {
 .compose-form-editor .ql-toolbar {
   border: none;
   border-bottom: 1px solid var(--qa-border);
-  ;
 }
 
 .compose-form-editor .ql-container {
   border: none;
-  ;
   font-size: 0.9rem;
 }
 
 .compose-form-file {
-  ;
   border: 1px dashed var(--qa-border);
-  ;
   font-size: 0.85rem;
-  ;
 }
 
 .compose-form-file-count {
@@ -1753,7 +1622,6 @@ body {
   background: #fef2f2;
   border: 1px solid #fecaca;
   border-radius: 8px;
-  ;
   font-size: 0.85rem;
 }
 
@@ -1762,13 +1630,10 @@ body {
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 1rem 1.25rem;
-  ;
   background: var(--light-gray);
 }
 
 .compose-form-btn {
-  ;
-  ;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -1776,9 +1641,7 @@ body {
 }
 
 .compose-form-btn.primary {
-  ;
   border: none;
-  ;
 }
 
 .compose-form-btn.primary:hover {
@@ -1794,7 +1657,6 @@ body {
 }
 
 .compose-form-btn.secondary {
-  ;
   border: 1px solid var(--qa-border);
   color: var(--text-dark);
 }
@@ -1809,13 +1671,10 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  ;
-  ;
 }
 
 .post-detail-author-section {
   display: flex;
-  ;
   gap: 0.75rem;
 }
 
@@ -1833,16 +1692,12 @@ body {
 
 .post-detail-author-name {
   font-weight: 600;
-  ;
-  ;
 }
 
 .post-detail-meta-row {
   display: flex;
   align-items: center;
-  ;
   font-size: 0.8rem;
-  ;
 }
 
 .post-detail-meta-dot {
@@ -1852,7 +1707,6 @@ body {
 .post-detail-header-right {
   display: flex;
   align-items: center;
-  ;
   flex-shrink: 0;
 }
 
@@ -1864,8 +1718,6 @@ body {
 }
 
 .post-urgency-badge {
-  ;
-  ;
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -1898,12 +1750,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  ;
-  ;
-  ;
-  ;
-  ;
-  ;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -1915,9 +1761,6 @@ body {
 }
 
 .post-detail-title {
-  ;
-  ;
-  ;
   margin-bottom: 1rem;
 }
 
@@ -1956,11 +1799,8 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0.75rem;
-  ;
-  ;
   border-radius: 8px;
   font-size: 0.85rem;
-  ;
   text-decoration: none;
   transition: all 0.15s ease;
 }
@@ -1973,32 +1813,20 @@ body {
 /* Post Section */
 .post-section-header {
   display: flex;
-  ;
   justify-content: space-between;
   margin-bottom: 1rem;
   flex-wrap: wrap;
-  ;
 }
 
 .post-status-options label {
-  ;
-  ;
   gap: 0.35rem;
-  ;
-  ;
   border-radius: 20px;
-  ;
-  ;
-  ;
 }
 
 /* Pin Button & Badge */
 .post-action-btn.pin {
   color: var(--text-muted);
-  ;
   border: 1px solid var(--qa-border);
-  ;
-  ;
   transition: all 0.15s ease;
 }
 
@@ -2006,12 +1834,8 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  ;
-  ;
   font-size: 0.75rem;
   font-weight: 500;
-  ;
-  ;
 }
 
 /* Post Detail Footer */
@@ -2020,16 +1844,12 @@ body {
 .post-edit-form {
   display: flex;
   flex-direction: column;
-  ;
   margin-top: 1rem;
 }
 
 .post-edit-title {
-  ;
   border: 1px solid var(--qa-border);
   border-radius: 8px;
-  ;
-  ;
 }
 
 .post-edit-title:focus {
@@ -2051,7 +1871,6 @@ body {
 
 .post-edit-options {
   display: flex;
-  ;
 }
 
 .post-edit-radio {
@@ -2084,7 +1903,6 @@ body {
 .post-edit-tags {
   display: flex;
   flex-wrap: wrap;
-  ;
 }
 
 .post-edit-tag {
@@ -2092,11 +1910,8 @@ body {
   align-items: center;
   gap: 0.35rem;
   padding: 0.25rem 0.6rem;
-  ;
-  ;
   border-radius: 20px;
   font-size: 0.8rem;
-  ;
 }
 
 .post-edit-tag button {
@@ -2119,35 +1934,23 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  ;
-  ;
   font-size: 0.875rem;
-  ;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .post-btn.primary {
-  ;
   border: none;
   color: white;
 }
 
 .post-btn.secondary {
-  ;
   border: 1px solid var(--qa-border);
-  ;
 }
 
 /* Post Editor Box */
 
 .post-error {
-  ;
-  ;
-  ;
-  ;
-  ;
-  ;
   font-size: 0.85rem;
 }
 
@@ -2293,8 +2096,6 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  ;
-  ;
   border: none;
   background: transparent;
   color: var(--text-muted);
@@ -2804,7 +2605,6 @@ body {
   align-items: center;
   gap: 0.75rem;
   font-size: 0.85rem;
-  ;
 }
 
 .post-status-options {
@@ -2819,13 +2619,11 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0.5rem 1rem;
-  ;
   border: 1px solid var(--qa-border);
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
-  ;
 }
 
 .post-status-options label input {
@@ -3094,7 +2892,6 @@ select:focus-visible,
 .site-auth {
   display: inline-flex;
   align-items: center;
-  ;
   margin-left: auto;
   width: auto;
   flex: 0 0 auto;
@@ -3934,7 +3731,6 @@ select:focus-visible,
 .qa-controls-row {
   display: flex;
   flex-direction: column;
-  ;
 }
 
 .qa-sidebar-flat {
@@ -3953,9 +3749,7 @@ select:focus-visible,
 
 .qa-empty-title {
   font-family: var(--font-display), Georgia, serif;
-  ;
   font-weight: 700;
-  ;
 }
 
 .qa-empty-desc {
@@ -5054,14 +4848,9 @@ select:focus-visible,
 
 .scenario-filter {
   display: flex;
-  ;
-  ;
 }
 
 .scenario-chip {
-  ;
-  ;
-  ;
   border: 1px solid var(--site-border);
   background: #fff;
 }
@@ -5073,21 +4862,16 @@ select:focus-visible,
 }
 
 .qa-toolbar {
-  ;
-  ;
   flex-wrap: wrap;
 }
 
 .qa-toolbar-search {
   flex: 1;
-  ;
   display: flex;
   align-items: center;
   gap: 0.65rem;
   border: 1px solid var(--site-border);
   background: #fff;
-  ;
-  ;
 }
 
 .qa-toolbar-search input {
@@ -6742,6 +6526,15 @@ select:focus-visible,
     margin-bottom: 1rem;
   }
 
+  /* `.qa-nav-tabs.has-admin-tab` pins `width: 28rem` (448px) and, being two
+     classes, outranks the single-class override above — so an admin on a
+     390px screen got 74px of horizontal overflow on every /qa route. Four
+     tabs also do not fit one row at this width, so they wrap to two. */
+  .qa-nav-tabs.has-admin-tab {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .qa-header-section {
     padding-top: 0.55rem;
   }
@@ -7218,5 +7011,111 @@ select:focus-visible,
 
   .remote-data-state-action {
     transition: none;
+  }
+}
+
+/* ============================================================
+   TOUCH TARGETS — 44px minimum below 768px
+
+   Audited by measuring every interactive element at 390px across the
+   twelve routes. These are the controls that came in under 44px. Inline
+   links inside a sentence are deliberately not here: WCAG 2.5.8 exempts
+   them, and padding them out would break the line box.
+
+   Desktop keeps its tighter sizing; this only applies to touch widths.
+   ============================================================ */
+@media (max-width: 767px) {
+  /* Icon-only buttons — the worst offenders at 28-36px */
+  .manage-icon-btn,
+  .compose-form-close,
+  .post-action-btn {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  /* Controls whose hit area is the label, not the 13px input inside it */
+  .compose-form-radio,
+  .compose-form-checkbox {
+    min-height: 2.75rem;
+    padding-block: 0.375rem;
+  }
+
+  /* Form fields sitting just under the line */
+  .compose-form-input,
+  .compose-form-select,
+  .post-edit-title {
+    min-height: 2.75rem;
+  }
+
+  .qa-toolbar-search input {
+    min-height: 2.75rem;
+  }
+
+  /* Buttons at 39-42px */
+  .manage-btn,
+  .post-btn,
+  .btn-warm-primary,
+  .btn-warm-outline,
+  .btn-unified-sm,
+  .qa-toolbar-btn {
+    min-height: 2.75rem;
+  }
+
+  /* Text-styled controls that are real actions, not prose links */
+  .post-detail-context-link,
+  .admin-v2-link-btn,
+  .resources-inline-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+
+  .post-discussion-reply-btn {
+    min-height: 2.75rem;
+  }
+
+  /* The header cluster was built at 42px; the rule says 44 on touch. */
+  .site-auth .site-auth-chip {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  /* Quill's own toolbar ships at 28x24. Its `.ql-snow.ql-toolbar button` rule
+     has the same specificity as a two-class descendant selector and loads
+     after globals.css, so the extra class is needed to outrank it. */
+  .compose-form-editor .ql-toolbar.ql-snow button,
+  .post-editor-box .ql-toolbar.ql-snow button {
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0.5rem;
+  }
+
+  /* Quill sizes its icons off the button box, so a 44px button balloons the
+     glyph. Pin the icon and let the padding carry the hit area. */
+  .compose-form-editor .ql-toolbar.ql-snow button svg,
+  .post-editor-box .ql-toolbar.ql-snow button svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .compose-form-editor .ql-toolbar.ql-snow .ql-picker-label,
+  .post-editor-box .ql-toolbar.ql-snow .ql-picker-label {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Admin sidebar nav links carry no class of their own. */
+  .admin-v2-nav a {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+
+  /* The wordmark is the route home; it was 31px tall. */
+  .site-brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
   }
 }
