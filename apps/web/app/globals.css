@@ -2590,7 +2590,7 @@ body {
   }
 
   .manage-form-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .manage-table-cell.desc {
@@ -3540,7 +3540,7 @@ select:focus-visible,
 
   /* Landing responsive */
   .landing-hero-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     padding: 2.5rem 0 1.5rem;
   }
 
@@ -3553,7 +3553,7 @@ select:focus-visible,
   }
 
   .landing-how-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
   }
 
@@ -4062,7 +4062,7 @@ select:focus-visible,
 
 @media (max-width: 767px) {
   .review-next-steps {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .review-chat-message {
@@ -4386,7 +4386,7 @@ select:focus-visible,
 
 @media (max-width: 991px) {
   .admin-v2-shell {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .admin-v2-sidebar {
@@ -4394,7 +4394,7 @@ select:focus-visible,
   }
 
   .admin-v2-stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -6208,7 +6208,7 @@ select:focus-visible,
   .review-summary-panel,
   .resources-topic-row,
   .compose-form-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .review-summary-panel,
@@ -6220,7 +6220,7 @@ select:focus-visible,
 
   .resources-list-item,
   .resources-template-item {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.5rem;
   }
 
@@ -6543,7 +6543,7 @@ select:focus-visible,
   }
 
   .qa-toolbar {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .qa-status-filter {
