@@ -138,7 +138,7 @@
   --site-highlight-soft: #faf0eb;
   --site-shadow: 0 8px 24px rgba(44, 40, 37, 0.06);
   --site-radius: 0.75rem;
-  --site-text-tertiary: #9a928c;
+  --site-text-tertiary: #706861; /* 5.34:1 on --site-panel, 4.83:1 on --site-bg */
 }
 
 /* ============================================
@@ -282,7 +282,7 @@ body {
 .btn-unified {
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -750,7 +750,7 @@ body {
   gap: 0.5rem;
   padding: 0.25rem 0.75rem;
   border-radius: var(--radius-full);
-  transition: all var(--transition-fast);
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
   cursor: pointer;
   color: var(--ink-muted);
   font-weight: 400;
@@ -1077,7 +1077,7 @@ body {
 .scenario-chip {
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .scenario-chip:hover {
@@ -1096,7 +1096,7 @@ body {
   color: var(--text-muted);
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .qa-nav-tab:hover {
@@ -1125,7 +1125,7 @@ body {
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .qa-toolbar-btn.primary {
@@ -1186,7 +1186,7 @@ body {
 
 .post-sidebar-item {
   border-radius: 8px;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
   margin-bottom: 0.25rem;
 }
 
@@ -1291,7 +1291,7 @@ body {
 .feed-section-post {
   border-radius: 8px;
   background: var(--light-gray);
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .feed-section-post:hover {
@@ -1328,19 +1328,22 @@ body {
   border: 1px solid transparent;
 }
 
+/* Contrast measured on --site-panel. The previous values were a cool grey
+   (#5f6368) that did not belong in the warm palette, and two colours that
+   failed AA at this 10.4px size: medium at 3.99:1 and high at 3.56:1. */
 .feed-section-urgency-badge.low {
-  color: #5f6368;
-  border-color: #e0e0e0;
+  color: var(--site-muted);
+  border-color: var(--site-border-strong);
 }
 
 .feed-section-urgency-badge.medium {
-  color: #b06000;
-  border-color: #f5d87a;
+  color: #94520a;
+  border-color: rgba(148, 82, 10, 0.32);
 }
 
 .feed-section-urgency-badge.high {
-  color: var(--site-highlight);
-  border-color: var(--site-highlight);
+  color: #a85735;
+  border-color: rgba(168, 87, 53, 0.42);
 }
 
 .feed-section-post-snippet {
@@ -1386,7 +1389,7 @@ body {
   border-radius: 8px;
   background: var(--light-gray);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .feed-header-post:hover {
@@ -1494,7 +1497,7 @@ body {
   height: 32px;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .compose-form-close:hover {
@@ -1637,7 +1640,7 @@ body {
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .compose-form-btn.primary {
@@ -1751,7 +1754,7 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .post-action-btn.danger:hover {
@@ -1802,7 +1805,7 @@ body {
   border-radius: 8px;
   font-size: 0.85rem;
   text-decoration: none;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .post-attachment-item span:last-child {
@@ -1827,7 +1830,7 @@ body {
 .post-action-btn.pin {
   color: var(--text-muted);
   border: 1px solid var(--qa-border);
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .post-pinned-badge {
@@ -1936,7 +1939,7 @@ body {
   gap: 0.4rem;
   font-size: 0.875rem;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .post-btn.primary {
@@ -2009,7 +2012,7 @@ body {
   border-radius: 6px;
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .post-answer-actions button:hover {
@@ -2075,7 +2078,7 @@ body {
   border-radius: 4px;
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .post-discussion-actions button:hover {
@@ -2159,7 +2162,7 @@ body {
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .manage-btn.primary {
@@ -2432,7 +2435,7 @@ body {
   border-radius: 6px;
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .manage-icon-btn:hover {
@@ -2623,7 +2626,7 @@ body {
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .post-status-options label input {
@@ -2648,7 +2651,7 @@ body {
 }
 
 .post-status-options label.active:last-child {
-  background: #22c55e;
+  background: var(--site-accent);
 }
 
 .post-status-badge {
@@ -3107,7 +3110,7 @@ select:focus-visible,
   padding: 0.75rem 1.6rem;
   border-radius: 8px;
   text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: background 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   box-shadow: 0 2px 8px rgba(92, 110, 78, 0.2);
 }
 
@@ -3136,7 +3139,7 @@ select:focus-visible,
   border: 1.5px solid var(--site-border-strong);
   color: var(--site-ink);
   text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: background 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .landing-hero-cta-outline:hover {
@@ -5488,7 +5491,7 @@ select:focus-visible,
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
   text-decoration: none;
 }
 
@@ -5510,7 +5513,7 @@ select:focus-visible,
   border-radius: 8px;
   border: 1px solid var(--site-border-strong);
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
   text-decoration: none;
 }
 
@@ -5533,7 +5536,7 @@ select:focus-visible,
   border-radius: 8px;
   border: 1px solid rgba(180, 74, 45, 0.25);
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
   text-decoration: none;
 }
 
