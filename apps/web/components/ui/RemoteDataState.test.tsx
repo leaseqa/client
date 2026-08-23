@@ -16,7 +16,7 @@ function panel(): HTMLElement {
   return el;
 }
 
-const KINDS: RemoteDataStateKind[] = ["loading", "empty", "error", "permission"];
+const KINDS: RemoteDataStateKind[] = ["loading", "empty", "error"];
 
 describe("RemoteDataState variants", () => {
   test.each(KINDS)("renders the %s variant with its own marker", (kind) => {
@@ -76,11 +76,6 @@ describe("RemoteDataState accessibility", () => {
     render(<RemoteDataState kind="error" title="Could not load reviews"/>);
     expect(panel().getAttribute("role")).toBe("alert");
     expect(panel().getAttribute("aria-busy")).toBeNull();
-  });
-
-  test("treats a permission block as an alert too", () => {
-    render(<RemoteDataState kind="permission" title="Sign in to see this"/>);
-    expect(panel().getAttribute("role")).toBe("alert");
   });
 
   test("leaves an empty result silent rather than announcing it", () => {

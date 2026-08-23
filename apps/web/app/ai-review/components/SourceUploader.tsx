@@ -36,8 +36,8 @@ export default function SourceUploader({
   const [mode, setMode] = useState<SourceMode>(
     sourceText.trim() ? "paste" : "upload",
   );
-  const [expandedResetKey, setExpandedResetKey] = useState<number | null>(null);
-  const expanded = !hasActiveSession || expandedResetKey === uploadResetKey;
+  const [userToggledOpenKey, setUserToggledOpenKey] = useState<number | null>(null);
+  const expanded = !hasActiveSession || userToggledOpenKey === uploadResetKey;
 
   const handleModeChange = (nextMode: SourceMode) => {
     if ( nextMode === mode ) {
@@ -64,7 +64,7 @@ export default function SourceUploader({
         aria-label="Change Source"
         aria-expanded={expanded}
         onClick={() =>
-          setExpandedResetKey(expanded ? null : uploadResetKey)
+          setUserToggledOpenKey(expanded ? null : uploadResetKey)
         }
       >
         <span>Source Added</span>

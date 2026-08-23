@@ -82,3 +82,35 @@ Every stage that changes rendered layout or styling has a visual approval gate. 
 - No multi-file AI review.
 - No wholesale replacement of Bootstrap or React Bootstrap in one change.
 - No decorative animation program unrelated to task feedback.
+
+## As-built amendments
+
+Recorded after delivery (2026-08-22–24). The text above is the pre-delivery
+intent; this section is the authoritative record of what actually shipped, so
+a later review against this file compares against reality.
+
+- **Stage 2 CTA labels.** Shipped as a single dominant CTA, `Review My Lease`
+  (approved by the user; the spec's `Review lease language` label was
+  superseded). `Browse renter questions` did not ship as a secondary action.
+- **Stage 2 community metrics.** Deleted outright at the user's direction
+  (2026-08-22), not hidden-until-valid. The community snapshot and the "never
+  present four zero values as a healthy live state" requirement are therefore
+  moot. The homepage now carries the numbered journey band (exact clause →
+  cited guidance → questions to verify) as specified.
+- **Stage 4 community states.** `RemoteDataState` (loading/empty/error only —
+  the `permission` variant was removed on 2026-08-24, since the homepage
+  community snapshot was its only prospective consumer) is the shared
+  component; it is adopted in the AI-review session list. `qa/page.tsx` still
+  renders its community error/empty states inline — a known, deliberate gap
+  recorded in the plan's status section.
+- **Stage 5 stylesheet split.** NOT done. The monolithic stylesheet was
+  consolidated in place (one canonical `:root` token block, duplicate
+  declarations removed) but was not split into tokens/base/shell/route-scoped
+  modules, and the spacing/radius/type scale is not yet unified (65 font-size
+  values, 37 border-radius values remain). Tracked separately; not a merge
+  blocker. The unused `@leaseqa/ui` package was removed, which satisfies the
+  alternative branch of the primitives requirement.
+- **Mobile drawer.** Gained an account entry and close-on-navigation, beyond
+  the spec's verification-only mention (user-approved).
+- **Motion.** `prefers-reduced-motion` is respected via several media queries;
+  the goal is met.

@@ -1,12 +1,12 @@
-// One honest presentation for the four things a remote read can be.
+// One honest presentation for the three things a remote read can be.
 //
 // `PageLoadingState` already covers the loading case for full-page routes.
-// This covers all four, including the two that routes currently tend to
+// This covers all three, including the two that routes currently tend to
 // collapse into each other: an empty result and a failed request. Rendering an
 // empty state after an error tells the renter there is nothing there, which is
 // a different and wrong claim.
 
-export type RemoteDataStateKind = "loading" | "empty" | "error" | "permission";
+export type RemoteDataStateKind = "loading" | "empty" | "error";
 
 export type RemoteDataStateProps = {
   kind: RemoteDataStateKind;
@@ -22,7 +22,6 @@ const ROLE_BY_KIND: Record<RemoteDataStateKind, string | undefined> = {
   loading: "status",
   empty: undefined,
   error: "alert",
-  permission: "alert",
 };
 
 export default function RemoteDataState({
