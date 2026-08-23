@@ -269,8 +269,8 @@ Encode rules such as:
 
 **Files:**
 
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/AGENTS.md`
-- Modify: `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-server/README.md`
+- Modify: `../../../../server/AGENTS.md`
+- Modify: `../../../../server/README.md`
 
 - [ ] **Step 1: Add doc ownership guidance to `AGENTS.md`**
 
@@ -299,7 +299,7 @@ Add or update:
 
 State that the tracked canonical PRD now lives in:
 
-- `/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/product-prd.md`
+- `../../product-prd.md`
 
 - [ ] **Step 2: Keep a short local pointer or synchronized summary**
 

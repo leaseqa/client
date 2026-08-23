@@ -16,6 +16,21 @@ export type { ApiEnvelope, ApiEnv, ApiErrorBody } from "./types";
 
 const DEFAULT_TIMEOUT_MS = 20_000;
 
+// Next inlines `process.env.NEXT_PUBLIC_*` into the client bundle only where it
+// appears as a literal member expression. Passing `process.env` around as an
+// object left a runtime property lookup that resolves to nothing in the browser,
+// so the browser silently fell back to a same-origin path while the server used
+// the configured origin. On the login page that produced two different OAuth
+// hrefs, and React does not patch attribute mismatches — the server's URL stayed
+// in the DOM. Reading it here, as a literal, keeps both sides in agreement.
+//
+// Note this is a build-time value on the client and a runtime value on the
+// server. Building without it and running with it set will reintroduce the
+// divergence.
+const PUBLIC_ENV: ApiEnv = {
+  NEXT_PUBLIC_HTTP_SERVER: process.env.NEXT_PUBLIC_HTTP_SERVER,
+};
+
 function readPublicOrigin(env: ApiEnv): string {
   return String(env.NEXT_PUBLIC_HTTP_SERVER || "").replace(/\/$/, "");
 }
@@ -26,7 +41,7 @@ function normalizeApiPath(path: string): string {
 
 export function apiUrl(
   path: string,
-  env: ApiEnv = process.env as ApiEnv,
+  env: ApiEnv = PUBLIC_ENV,
 ): string {
   const origin = readPublicOrigin(env);
   const prefix = origin ? `${origin}/api` : "/api";
@@ -35,7 +50,7 @@ export function apiUrl(
 
 export function oauthUrl(
   provider: string,
-  env: ApiEnv = process.env as ApiEnv,
+  env: ApiEnv = PUBLIC_ENV,
 ): string {
   return apiUrl(`/auth/${provider}`, env);
 }

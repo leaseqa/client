@@ -37,14 +37,18 @@ export default function ScenarioFilter() {
     <div className="scenario-filter">
       <button
         className={`scenario-chip ${activeScenario === "all" ? "active" : ""}`}
+        type="button"
+        aria-pressed={activeScenario === "all"}
         onClick={() => handleSelect("all")}
       >
-        All topics
+        All Topics
       </button>
       {folders.map((folder) => (
         <button
           key={folder.name}
           className={`scenario-chip ${activeScenario === folder.name ? "active" : ""}`}
+          type="button"
+          aria-pressed={activeScenario === folder.name}
           onClick={() => handleSelect(folder.name)}
         >
           {folder.displayName}

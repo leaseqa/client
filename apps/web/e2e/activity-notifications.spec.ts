@@ -86,6 +86,9 @@ test.describe("activity notifications", () => {
     await loginAsUser(page, TENANT_EMAIL, "/ai-review");
     await expect(page).toHaveURL(/\/ai-review$/);
 
+    // The source picker opens on Upload, so the textarea only exists once
+    // Paste Text is selected.
+    await page.getByRole("tab", { name: "Paste Text" }).click();
     await page.locator('textarea[name="sourceText"]').fill(SAMPLE_CLAUSE);
     const createSessionResponse = page.waitForResponse(
       (response) =>
@@ -93,7 +96,7 @@ test.describe("activity notifications", () => {
         response.request().method() === "POST" &&
         response.ok(),
     );
-    await page.getByRole("button", { name: "Analyze clause" }).click();
+    await page.getByRole("button", { name: "Start Review" }).click();
     await createSessionResponse;
 
     await page.goto("/account");

@@ -73,7 +73,7 @@ export default function RegisterPage() {
           {error && <Alert variant="danger">{error}</Alert>}
 
           <Form onSubmit={handleRegister}>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="register-username">
               <Form.Label>Username</Form.Label>
               <Form.Control
                 type="text"
@@ -84,7 +84,7 @@ export default function RegisterPage() {
               />
             </Form.Group>
 
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="register-email">
               <Form.Label>Email address</Form.Label>
               <Form.Control
                 type="email"
@@ -95,7 +95,7 @@ export default function RegisterPage() {
               />
             </Form.Group>
 
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="register-password">
               <Form.Label>Password</Form.Label>
               <Form.Control
                 type="password"
@@ -107,7 +107,7 @@ export default function RegisterPage() {
               />
             </Form.Group>
 
-            <Form.Group className="mb-4">
+            <Form.Group className="mb-4" controlId="register-confirm-password">
               <Form.Label>Confirm Password</Form.Label>
               <Form.Control
                 type="password"

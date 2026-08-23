@@ -134,12 +134,18 @@ export default function ManageSectionsPage() {
 
   // Auth gating + initial load
   useEffect(() => {
+    // `session.status` starts as "loading", so an admin deep-linking here used
+    // to be bounced to /qa before their session had even been restored. Wait
+    // for the session to settle before deciding.
+    if ( session.status === "loading" ) {
+      return;
+    }
     if ( !isAdmin ) {
       router.push("/qa");
       return;
     }
     void Promise.all([reloadUsers(), reloadSections()]);
-  }, [isAdmin, router, reloadUsers, reloadSections]);
+  }, [isAdmin, session.status, router, reloadUsers, reloadSections]);
 
   // Derived metrics
   const displayMetrics = useMemo(() => getDisplayMetrics({

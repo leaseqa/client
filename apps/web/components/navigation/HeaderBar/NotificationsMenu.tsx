@@ -18,13 +18,21 @@ type NotificationsMenuProps = {
   onSelect: (item: NotificationMenuItem) => Promise<void> | void;
 };
 
-const formatTime = (value: string) => {
-  try {
-    return new Date(value).toLocaleDateString();
-  } catch {
+export function formatNotificationDate(
+  value: string,
+  now: Date = new Date(),
+): string {
+  const parsed = new Date(value);
+  if ( Number.isNaN(parsed.getTime()) ) {
     return value;
   }
-};
+  const sameYear = parsed.getFullYear() === now.getFullYear();
+  return parsed.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    ...(sameYear ? {} : { year: "numeric" }),
+  });
+}
 
 export default function NotificationsMenu({
                                             items,
@@ -50,34 +58,61 @@ export default function NotificationsMenu({
           <FaBell className="text-secondary" size={16}/>
         </div>
       </Dropdown.Toggle>
-      <Dropdown.Menu style={{ minWidth: 280 }}>
-        <div className="px-3 py-2 fw-semibold">Notifications</div>
-        <Dropdown.Divider/>
+      <Dropdown.Menu className="notifications-menu">
+        <div className="notifications-menu-head">
+          <span className="notifications-menu-label">Notifications</span>
+          {hasUnread ? (
+            <span className="notifications-menu-count">{items.length} new</span>
+          ) : null}
+        </div>
         {loading ? (
-          <div className="px-3 py-2 text-secondary small">Loading...</div>
+          <div className="notifications-menu-state" aria-live="polite">
+            <span className="notifications-menu-spinner" aria-hidden="true"/>
+            Loading notifications…
+          </div>
         ) : error ? (
-          <div className="px-3 py-2 text-danger small">{error}</div>
+          <div className="notifications-menu-state notifications-menu-state-error">
+            <div className="notifications-menu-state-title">{error}</div>
+            <div className="notifications-menu-state-hint">
+              Check your connection and open this menu again.
+            </div>
+          </div>
         ) : items.length === 0 ? (
-          <div className="px-3 py-2 text-secondary small">
-            No new notifications
+          <div className="notifications-menu-state">
+            <div className="notifications-menu-state-title">
+              No new notifications
+            </div>
+            <div className="notifications-menu-state-hint">
+              New activity will appear here.
+            </div>
           </div>
         ) : (
-          items.map((item) => (
-            <Dropdown.Item
-              key={item._id}
-              onClick={() => {
-                void onSelect(item);
-              }}
-            >
-              <div className="fw-semibold small">{item.title}</div>
-              {item.summary ? (
-                <div className="text-secondary small">{item.summary}</div>
-              ) : null}
-              <div className="text-secondary" style={{ fontSize: "0.75rem" }}>
-                {formatTime(item.createdAt)}
-              </div>
-            </Dropdown.Item>
-          ))
+          <div className="notifications-menu-list">
+            {items.map((item) => (
+              <Dropdown.Item
+                as="button"
+                type="button"
+                key={item._id}
+                className="notifications-menu-item"
+                onClick={() => {
+                  void onSelect(item);
+                }}
+              >
+                <span className="notifications-menu-dot" aria-hidden="true"/>
+                <span className="notifications-menu-body">
+                  <span className="notifications-menu-title">{item.title}</span>
+                  {item.summary ? (
+                    <span className="notifications-menu-summary">
+                      {item.summary}
+                    </span>
+                  ) : null}
+                  <span className="notifications-menu-date">
+                    {formatNotificationDate(item.createdAt)}
+                  </span>
+                </span>
+              </Dropdown.Item>
+            ))}
+          </div>
         )}
       </Dropdown.Menu>
     </Dropdown>

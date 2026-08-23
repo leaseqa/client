@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { Col, Row } from "react-bootstrap";
@@ -41,6 +42,7 @@ function QAPageInner() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [posting, setPosting] = useState(false);
   const [postError, setPostError] = useState("");
   const [composeState, setComposeState] = useState<ComposeState>(
@@ -116,12 +118,14 @@ function QAPageInner() {
   const loadData = async () => {
     try {
       setLoading(true);
+      setLoadError("");
       const foldersResponse = await client.fetchFolders();
       setFolders(foldersResponse.data || []);
       const postsResponse = await client.fetchPosts({});
       setPosts(postsResponse.data || []);
     } catch ( error ) {
       console.error("Failed to load data:", error);
+      setLoadError("We could not load the community questions.");
     } finally {
       setLoading(false);
     }
@@ -161,15 +165,15 @@ function QAPageInner() {
     }, {});
   }, [folders]);
 
-  const activeScenarioLabel =
-    scenario === "all"
-      ? "All topics"
-      : folderDisplayMap[scenario] || getTopicLabel(scenario);
   const selectedComposeLabels = composeState.folders.map(
     (folder) => folderDisplayMap[folder] || getTopicLabel(folder),
   );
   const isAiReviewDraft = draftSourceParam === "ai-review";
   const showFeed = !composeParam && !postIdParam;
+  const currentQaHref = searchParams.toString()
+    ? `/qa?${searchParams.toString()}`
+    : "/qa";
+  const signInHref = `/auth/login?next=${encodeURIComponent(currentQaHref)}`;
 
   const handleSelectPost = (id: string) => {
     router.push(`/qa?post=${id}`);
@@ -318,22 +322,7 @@ function QAPageInner() {
   return (
     <div className="qa-page">
       <section className="qa-header-section">
-        <div className="qa-header-top">
-          <div>
-            <h1 className="qa-page-title">
-              {scenario === "all" ? "Community questions" : activeScenarioLabel}
-            </h1>
-            <p className="qa-page-sub">
-              {scenario === "all"
-                ? "Browse by topic, or open a new question."
-                : `Filtered to ${activeScenarioLabel}.`}
-            </p>
-          </div>
-          <div className="qa-header-meta">
-            <span className="qa-header-count">{filteredPosts.length} open</span>
-            <span className="qa-header-count">{folders.length} topics</span>
-          </div>
-        </div>
+        <h1 className="qa-page-title">Community Questions</h1>
 
         <div className="qa-controls-row">
           <ScenarioFilter/>
@@ -369,7 +358,19 @@ function QAPageInner() {
         </Col>
 
         <Col lg={9}>
-          {showFeed && (
+          {loadError ? (
+            <div className="qa-empty-flat qa-error-state" role="alert">
+              <h2 className="qa-empty-title">Questions Could Not Load</h2>
+              <p className="qa-empty-desc">{loadError}</p>
+              <button
+                type="button"
+                className="qa-empty-action"
+                onClick={() => void loadData()}
+              >
+                Try Again
+              </button>
+            </div>
+          ) : showFeed && (
             <div className="qa-feed-stack">
               {filteredPosts.length > 0 ? (
                 <>
@@ -382,10 +383,18 @@ function QAPageInner() {
                 </>
               ) : (
                 <div className="qa-empty-flat">
-                  <div className="qa-empty-title">Nothing here yet</div>
+                  <div className="qa-empty-mark" aria-hidden="true"/>
+                  <div className="qa-empty-title">No Open Questions Here</div>
                   <p className="qa-empty-desc">
-                    Try another topic, or start the first question.
+                    {session.status === "guest"
+                      ? "Try another topic, or sign in to ask the community."
+                      : "Try another topic, or ask the community."}
                   </p>
+                  {session.status === "guest" && (
+                    <Link className="qa-empty-action" href={signInHref}>
+                      Sign In to Ask
+                    </Link>
+                  )}
                 </div>
               )}
             </div>

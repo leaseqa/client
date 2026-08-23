@@ -75,7 +75,7 @@ export default function ResourcesPage() {
             </div>
             <Link
               href={`/qa?scenario=${topic}`}
-              className="btn-unified btn-unified-secondary btn-unified-sm"
+              className="btn-unified btn-unified-secondary btn-unified-md"
             >
               Open this section
             </Link>
@@ -107,6 +107,7 @@ export default function ResourcesPage() {
                   <Link
                     href={item.link}
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="resources-inline-link resources-inline-link-quiet"
                   >
                     <span>Open</span>

@@ -7,11 +7,11 @@ readiness.
 
 For current documentation, use:
 
-- [docs/README.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/README.md)
-- [docs/product-prd.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/product-prd.md)
-- [docs/architecture.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/architecture.md)
-- [docs/api-design.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/api-design.md)
-- [docs/release-checklist.md](/Users/Z1nk/Desktop/proj/leaseqa/leaseqa-client/docs/release-checklist.md)
+- [docs/README.md](README.md)
+- [docs/product-prd.md](product-prd.md)
+- [docs/architecture.md](architecture.md)
+- [docs/api-design.md](api-design.md)
+- [docs/release-checklist.md](release-checklist.md)
 
 If the team needs a new roadmap, create a new planning document instead of reviving this archived file as if it were
 current.

@@ -1,172 +1,171 @@
-# Color System Guide - Minimal & Fresh Design
+# Colour and Surface Guide
 
-## Overview
+The shipped identity is **warm editorial**: paper-toned neutrals, an olive
+accent, terracotta held back for attention. Not a blue-grey SaaS palette, and
+nothing in the product should read as one.
 
-This color system follows the **60-30-10 rule** for a minimal and fresh design aesthetic.
+Every value here was read out of `app/globals.css`. If you change a token,
+change it here too — the last time these drifted apart, this file was still
+describing an indigo system the product had not used for months.
 
-## Color Palette
+Several of these rules are enforced by `scripts/design-system-invariants.test.mjs`,
+which runs as part of `npm test`. Where that is the case it is called out below.
 
-### 60% - Dominant Color (Backgrounds)
+## Tokens
 
-```
-Primary Background:   #f8fafc  (Soft blue-gray)
-Secondary Background: #f1f5f9  (Slightly darker)
-Tertiary Background:  #e2e8f0  (Hover states)
-```
+`globals.css` has exactly **one** `:root` block. Adding a second is a test
+failure, not a style opinion — two blocks is how the file ended up with tokens
+that silently shadowed each other.
 
-**Usage**: Page backgrounds, large empty spaces, subtle sections
+It holds two namespaces. Both are live.
 
-### 30% - Secondary Color (Content Areas)
+### `--site-*` — the production surface
 
-```
-Card Background:        #ffffff  (Pure white)
-Panel Background:   #f9fafb  (Very light gray)
-Panel Hover:        #f1f5f9  (Light gray)
-```
+Reach for these. Everything refreshed since 2026-08 uses them.
 
-**Usage**: Cards, content containers, panels, modals
+| Token | Value | Use |
+| --- | --- | --- |
+| `--site-bg` | `#f5f0eb` | Page background |
+| `--site-panel` | `#fffcf8` | Cards, menus, raised surfaces |
+| `--site-panel-strong` | `#f9f5f0` | Tinted zones inside a panel; disabled controls |
+| `--site-panel-soft` | `#f5f0eb` | Recessed areas |
+| `--site-ink` | `#2c2825` | Headings and body text |
+| `--site-muted` | `#6b6460` | Secondary text |
+| `--site-text-tertiary` | `#706861` | Timestamps, meta, hints |
+| `--site-border` | `rgba(44,40,37,.1)` | Interior hairlines |
+| `--site-border-strong` | `rgba(44,40,37,.18)` | Panel and control edges |
+| `--site-accent` | `#5c6e4e` | Olive. Primary actions, active nav |
+| `--site-accent-strong` | `#3d4a33` | Olive hover/pressed; text on olive wash |
+| `--site-accent-soft` | `#e8ede4` | Olive wash for hover and avatars |
+| `--site-highlight` | `#c4704b` | Terracotta. Unread, sign-out |
+| `--site-highlight-soft` | `#faf0eb` | Terracotta wash |
+| `--site-shadow` | `0 8px 24px rgba(44,40,37,.06)` | Resting card shadow |
+| `--site-radius` | `0.75rem` | Default corner |
+| `--shell-max-width` | `1140px` | Content column |
 
-### 10% - Accent Color (Highlights & CTAs)
+`--site-text-tertiary` is `#706861`, not the lighter grey it started as. At the
+original value, timestamps and meta text sat at 2.9:1 on `--site-panel` — below
+AA for body copy. Do not lighten it back.
 
-```
-Primary Accent:     #6366f1  (Soft indigo) - Main CTAs
-Secondary Accent:   #8b5cf6  (Soft purple) - Secondary actions
-Success:             #10b981  (Fresh green)
-Warning:             #f59e0b  (Warm amber)
-Error:               #ef4444  (Soft red)
-Info:                #3b82f6  (Blue)
-```
+### `--color-*` and the legacy aliases
 
-**Usage**: Buttons, links, icons, highlights, badges
+An older generation, still referenced by styles that have not been revisited. Do
+not use in new work, and do not delete without checking references — several are
+load-bearing.
 
-## Text Colors
+The alias names lie: `--accent-purple` and `--accent-blue` both resolve to
+olive. The product has no purple and no blue. The aliases stay defined for
+back-compat, but **using** one is a test failure. Reach for `--site-accent`.
 
-```
-Primary Text:   #1e293b  (Dark slate) - Headings, main text
-Secondary Text: #64748b  (Medium slate) - Body text
-Muted Text:     #94a3b8  (Light slate) - Hints, labels
-Inverse Text:   #ffffff  (White) - On dark backgrounds
-```
-
-## Border Colors
-
-```
-Primary Border:   #e2e8f0  (Light gray-blue)
-Secondary Border: #cbd5e1  (Medium gray-blue)
-Subtle Border:    #f1f5f9  (Very light gray-blue)
-```
-
-## CSS Variables Usage
-
-### Backgrounds
-
-```css
-/* Page background (60%) */
-background:
-var
-
-(
---color-bg-primary
-
-)
-;
-
-/* Card background (30%) */
-background:
-var
-
-(
---color-panel
-
-)
-;
-
-/* Hover state */
-background:
-var
-
-(
---color-bg-secondary
-
-)
-;
-```
-
-### Text
+## Applying colour
 
 ```css
-/* Primary text */
-color: var(--color-text-primary);
+/* page */
+background: var(--site-bg);
 
-/* Secondary text */
-color: var(--color-text-secondary);
+/* raised surface */
+background: var(--site-panel);
+border: 1px solid var(--site-border-strong);
+border-radius: var(--site-radius);
+box-shadow: var(--site-shadow);
 
-/* Muted text */
-color: var(--color-text-muted);
+/* primary action */
+background: var(--site-accent);
+color: #fff;
+
+/* hover on a menu row */
+background: var(--site-accent-soft);
+color: var(--site-accent-strong);
+
+/* attention, not danger */
+color: var(--site-highlight);
+background: var(--site-highlight-soft);
 ```
 
-### Accents (10%)
+### Olive versus terracotta
 
-```css
-/* Primary button/CTA */
-background: var(--color-accent-primary);
-color: var(--color-text-inverse);
+Olive is the default accent: primary buttons, active navigation, focus rings,
+hover washes. Terracotta marks what the renter should notice — an unread
+notification, sign-out. Treating terracotta as a second brand colour flattens
+that signal.
 
-/* Success state */
-color: var(--color-accent-success);
+Destructive actions use `--color-accent-error` (`#b5473a`, a warm red), not
+terracotta and not Bootstrap's `#dc3545`. Never leave `text-danger` on a
+control; it clashes with every neutral in the file.
 
-/* Error state */
-color: var(--color-accent-error);
+### Inverted surfaces
+
+A few surfaces run dark on `--site-ink`. Warm-on-paper defaults do not survive
+there: `--site-muted` on `--site-ink` measures 2.52:1. Anything placed on a dark
+panel needs its own colours — light text at ~74% opacity and a lightened accent
+both clear AA comfortably.
+
+## Bootstrap load order
+
+`app/layout.tsx` imports Bootstrap **before** `globals.css`:
+
+```ts
+import "bootstrap/dist/css/bootstrap.min.css";
+import "@/app/globals.css";
 ```
 
-### Borders
+The order matters and is not incidental. Bootstrap and the overrides collide at
+equal specificity on selectors like `.text-secondary`, so whichever loads last
+wins. With the old order, `.text-secondary` resolved to Bootstrap's `#6c757d`
+everywhere despite an override sitting right there in `globals.css`. Do not
+reorder these two lines.
 
-```css
-border: 1px solid var(--color-border-primary);
+## Typography
+
+Two families, loaded in `app/layout.tsx` via `next/font/google`:
+
+- `--font-body` — **DM Sans**. All UI text.
+- `--font-display` — **Nunito Sans**, falling back to `Iowan Old Style, Georgia,
+  serif`. Headings and editorial titles.
+
+Prominent navigation and action labels use Title Case (`Review My Lease`,
+`Go to Account`). Small section labels are uppercase with wide tracking
+(`0.09em`–`0.14em`) at `0.61rem`–`0.69rem`, in `--site-muted`.
+
+## Radius
+
+`--site-radius` (`0.75rem`) is the default. Header controls use `0.625rem`, menu
+rows `0.5rem`, pills `999px`. Nothing is fully square.
+
+## Touch targets, focus, motion
+
+- Interactive controls are at least **44×44 CSS pixels** below 768px. Desktop
+  may go tighter. Inline links inside a sentence are exempt (WCAG 2.5.8);
+  padding them out breaks the line box.
+- Where the visible control is small, the **hit area** is what must reach 44px —
+  a 16px checkbox inside a 44px label is fine.
+- Focus stays visible. The convention is an inset ring:
+  `inset 0 0 0 2px rgba(92,110,78,.45)`.
+- Transitions name their properties. `transition: all` is a test failure.
+- `globals.css` carries a global `prefers-reduced-motion: reduce` block that
+  collapses every transition and animation. New animation must survive it.
+
+## Grid tracks
+
+Use `minmax(0, 1fr)`, never a bare `1fr`, for any track holding text or form
+controls. A bare `1fr` means `minmax(auto, 1fr)`, and an `auto` minimum refuses
+to shrink below the item's min-content width — which is exactly how the compose
+form came to be 351px wide inside a 301px container, hidden behind an
+`overflow: hidden`. Bare `grid-template-columns: 1fr` is a test failure.
+
+## Adding a colour
+
+Don't, if an existing token is close. The palette is deliberately small: two
+accents, four neutrals, three text weights. If you genuinely need a new value,
+add it to the `--site-*` group in the single `:root` block, document it in the
+table above, and prove the change is inert everywhere else:
+
+```bash
+node scripts/check-visual-regression.mjs --out before.json
+# make the change
+node scripts/check-visual-regression.mjs --out after.json
+node scripts/check-visual-regression.mjs --compare before.json after.json
 ```
 
-## Gradients
-
-All gradients are soft and subtle:
-
-```css
-/* Primary gradient (indigo to purple) */
-background: var(--gradient-primary);
-
-/* Success gradient */
-background: var(--gradient-success);
-
-/* Info gradient */
-background: var(--gradient-info);
-```
-
-## Color Application Examples
-
-### Buttons
-
-- **Primary Button**: `var(--color-accent-primary)` background, white text
-- **Secondary Button**: White background, `var(--color-border-primary)` border
-- **Text Button**: Transparent, `var(--color-accent-primary)` text
-
-### Cards
-
-- **Card Background**: `var(--color-panel)` (white)
-- **Card Border**: `var(--color-border-primary)`
-- **Card Hover**: `var(--color-panel-hover)`
-
-### Icons
-
-- **Primary Icon**: `var(--color-accent-primary)`
-- **Secondary Icon**: `var(--color-text-secondary)`
-- **Success Icon**: `var(--color-accent-success)`
-
-## Migration Notes
-
-All legacy color variables are mapped to the new system for backward compatibility:
-
-- `--ink` → `--color-text-primary`
-- `--panel` → `--color-panel`
-- `--accent-purple` → `--color-accent-secondary`
-- `--primary` → `--color-accent-primary`
-
-You can gradually migrate to the new variable names.
+It fingerprints computed styles for every element across twelve routes at three
+viewports and names the element and property that moved.

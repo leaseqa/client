@@ -1,5 +1,9 @@
-import "@/app/globals.css";
+// Bootstrap first, then the project stylesheet. Bootstrap 5 utilities carry
+// `!important`, so with the previous order (globals first) they won every tie
+// and cool Bootstrap greys leaked into the warm palette — `.text-secondary`
+// resolved to #6c757d despite globals.css overriding it to `--site-muted`.
 import "bootstrap/dist/css/bootstrap.min.css";
+import "@/app/globals.css";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 import { DM_Sans, Nunito_Sans } from "next/font/google";
@@ -25,7 +29,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    // Bootstrap sets `scroll-behavior: smooth` on :root behind a
+    // prefers-reduced-motion guard. Next needs to be told that is deliberate,
+    // otherwise it warns and its router scroll restoration animates between
+    // routes instead of jumping. With the attribute, in-page anchors stay
+    // smooth and route changes are instant.
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
     <body
       suppressHydrationWarning
       className={`${dmSans.variable} ${nunitoSans.variable}`}

@@ -69,6 +69,8 @@ export default function PostContent({
           {isAdmin && !isEditing && (
             <button
               className={`post-action-btn pin ${post.isPinned ? "active" : ""}`}
+              aria-label={post.isPinned ? "Unpin this question" : "Pin this question"}
+              aria-pressed={post.isPinned}
               onClick={onTogglePin}
               title={post.isPinned ? "Unpin post" : "Pin post"}
             >
@@ -77,10 +79,18 @@ export default function PostContent({
           )}
           {canEdit && !isEditing && (
             <div className="post-detail-actions">
-              <button className="post-action-btn" onClick={onEdit}>
+              <button
+                className="post-action-btn"
+                aria-label="Edit this question"
+                onClick={onEdit}
+              >
                 <FaEdit size={14}/>
               </button>
-              <button className="post-action-btn danger" onClick={onDelete}>
+              <button
+                className="post-action-btn danger"
+                aria-label="Delete this question"
+                onClick={onDelete}
+              >
                 <FaTrash size={14}/>
               </button>
             </div>
@@ -109,7 +119,7 @@ export default function PostContent({
                             {postTypeLabel.charAt(0).toUpperCase() + postTypeLabel.slice(1)}
                         </span>
           </div>
-          <h1 className="post-detail-title">{post.summary}</h1>
+          <h2 className="post-detail-title">{post.summary}</h2>
           <div className="post-detail-content" dangerouslySetInnerHTML={{ __html: sanitizeServerHtml(post.details) }}/>
         </div>
       )}

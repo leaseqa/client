@@ -25,7 +25,6 @@ const nextConfig = {
     ],
   },
   reactStrictMode: true,
-  transpilePackages: ["@leaseqa/ui"],
   outputFileTracingRoot,
   async rewrites() {
     return [

@@ -58,9 +58,9 @@ export default function ComposeForm({
     <div className={`compose-form ${isAiReviewDraft ? "compose-form-draft" : ""}`}>
       <div className="compose-form-header">
         <div>
-          <h3 className="compose-form-title">
+          <h2 className="compose-form-title">
             {isAiReviewDraft ? "Edit your draft" : "Write your question"}
-          </h3>
+          </h2>
           <p className="compose-form-subtitle">
             {isAiReviewDraft
               ? "Check the wording, then post it to the right section."
@@ -70,6 +70,7 @@ export default function ComposeForm({
         <button
           type="button"
           className="compose-form-close"
+          aria-label="Close the composer"
           onClick={onCancelAction}
           disabled={posting}
         >
@@ -143,11 +144,12 @@ export default function ComposeForm({
           </div>
 
           <div className="compose-form-group">
-            <label className="compose-form-label">
+            <label className="compose-form-label" htmlFor="compose-attachments">
               <FaPaperclip size={12}/>
               <span>Attachments</span>
             </label>
             <input
+              id="compose-attachments"
               type="file"
               className="compose-form-file"
               multiple

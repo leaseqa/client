@@ -2,13 +2,12 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import { FaBook, FaChartBar, FaCog, FaComments } from "react-icons/fa";
 import { RootState } from "@/app/store";
 
 const TABS = [
-  { key: "qa", label: "Q&A", icon: FaComments, path: "/qa" },
-  { key: "resources", label: "Resources", icon: FaBook, path: "/qa/resources" },
-  { key: "stats", label: "Stats", icon: FaChartBar, path: "/qa/stats" },
+  { key: "qa", label: "Q&A", path: "/qa" },
+  { key: "resources", label: "Resources", path: "/qa/resources" },
+  { key: "stats", label: "Stats", path: "/qa/stats" },
 ];
 
 export default function NavTabs() {
@@ -18,7 +17,7 @@ export default function NavTabs() {
   const isAdmin = session.user?.role === "admin";
 
   const allTabs = isAdmin
-    ? [...TABS, { key: "manage", label: "Manage", icon: FaCog, path: "/qa/manage" }]
+    ? [...TABS, { key: "manage", label: "Manage", path: "/qa/manage" }]
     : TABS;
 
   const getActiveTab = () => {
@@ -31,21 +30,24 @@ export default function NavTabs() {
   const activeTab = getActiveTab();
 
   return (
-    <div className="qa-nav-tabs">
+    <nav
+      className={`qa-nav-tabs ${isAdmin ? "has-admin-tab" : ""}`}
+      aria-label="Community sections"
+    >
       {allTabs.map((tab) => {
-        const Icon = tab.icon;
         const isActive = activeTab === tab.key;
         return (
           <button
             key={tab.key}
+            type="button"
             className={`qa-nav-tab ${isActive ? "active" : ""}`}
+            aria-current={isActive ? "page" : undefined}
             onClick={() => router.push(tab.path)}
           >
-            <Icon size={14}/>
             <span>{tab.label}</span>
           </button>
         );
       })}
-    </div>
+    </nav>
   );
 }

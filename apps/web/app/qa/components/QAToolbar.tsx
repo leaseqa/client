@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import { FaCheck, FaPlus, FaSearch } from "react-icons/fa";
+import { FaPlus, FaSearch } from "react-icons/fa";
 import { RootState } from "@/app/store";
 
 type QAToolbarProps = {
@@ -37,26 +37,44 @@ export default function QAToolbar({
 
   return (
     <div className="qa-toolbar">
-      <div className="qa-toolbar-search">
-        <FaSearch size={14} className="qa-toolbar-search-icon"/>
-        <input
-          type="text"
-          placeholder="Search questions..."
-          value={search}
-          onChange={(e) => handleChange(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
+      <div className="qa-toolbar-search-group">
+        <label className="qa-toolbar-search-label" htmlFor="qa-community-search">
+          Search community questions
+        </label>
+        <div className="qa-toolbar-search">
+          <FaSearch size={14} className="qa-toolbar-search-icon"/>
+          <input
+            id="qa-community-search"
+            type="text"
+            placeholder="Search by lease issue or topic"
+            value={search}
+            onChange={(e) => handleChange(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+        </div>
       </div>
-      <button
-        className={`qa-toolbar-btn ${showResolved ? "active" : "secondary"}`}
-        onClick={onToggleResolvedAction}
-      >
-        <FaCheck size={12}/>
-        <span>Resolved</span>
-      </button>
+      <div className="qa-status-filter" aria-label="Question status">
+        <button
+          className={`qa-toolbar-btn ${showResolved ? "secondary" : "active"}`}
+          type="button"
+          aria-pressed={!showResolved}
+          onClick={() => showResolved && onToggleResolvedAction()}
+        >
+          <span>Open</span>
+        </button>
+        <button
+          className={`qa-toolbar-btn ${showResolved ? "active" : "secondary"}`}
+          type="button"
+          aria-pressed={showResolved}
+          onClick={() => !showResolved && onToggleResolvedAction()}
+        >
+          <span>Resolved</span>
+        </button>
+      </div>
       {!isGuest && (
         <button
           className="qa-toolbar-btn primary"
+          type="button"
           onClick={() => router.push("/qa?compose=1")}
         >
           <FaPlus size={12}/>

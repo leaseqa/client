@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Badge, Form } from "react-bootstrap";
 import { FileText, MessageSquareQuote, Shield } from "lucide-react";
 
@@ -14,6 +13,7 @@ import {
   TEXT_RETRY_PROMPT_LABEL,
 } from "../view-model";
 import AnswerSections from "./AnswerSections";
+import styles from "../ai-review.module.css";
 
 type RevealingMessage = {
   key: string;
@@ -57,39 +57,34 @@ export default function Conversation({
   onPrompt,
 }: ConversationProps) {
   return (
-    <section className="review-results-section">
-      <div className="review-results-header">
-        <div>
-          <h2 className="qa-page-title" style={{ fontSize: "1.4rem" }}>
-            {showSession ? resultsPanelState.title : "Chat"}
-          </h2>
-          <p className="qa-page-sub">
-            {showSession
-              ? resultsPanelState.subtitle
-              : "Create a source above, then ask questions here."}
-          </p>
-        </div>
+    <section className={styles.conversation} aria-labelledby="review-conversation-title">
+      <div className={styles.conversationHeader}>
+        <h2 id="review-conversation-title">Review</h2>
         {showSession ? (
           <Badge bg={formatStatusVariant(displayStatus)}>
             {formatStatusLabel(displayStatus)}
           </Badge>
-        ) : null}
+        ) : (
+          <span>No source added</span>
+        )}
       </div>
 
       {showSession ? (
-        <>
-          <div className="review-recs-panel">
+        <div className={styles.activeConversation}>
+          <div className={styles.currentSource}>
             <div className="qa-sidebar-label">
               <FileText size={12}/>
               <span>Current source</span>
             </div>
+            <h3>{resultsPanelState.title}</h3>
+            <p className={styles.sourceStatus}>{resultsPanelState.subtitle}</p>
             <p className="review-summary-text">{displaySourcePreview}</p>
             {activeSession?.error ? (
               <p className="text-danger mb-0 small">{activeSession.error}</p>
             ) : null}
           </div>
 
-          <div className="review-next-step">
+          <div className={styles.chatArea}>
             <div className="qa-sidebar-label">
               <MessageSquareQuote size={12}/>
               <span>{resultsPanelState.conversationLabel}</span>
@@ -168,34 +163,36 @@ export default function Conversation({
           </div>
 
           {activeSession && !pendingDraftSource ? (
-            <Form onSubmit={onSubmitQuestion} className="review-upload-stack">
+            <Form onSubmit={onSubmitQuestion} className={styles.composer}>
               <Form.Group>
+                <Form.Label className="visually-hidden" htmlFor="review-question">
+                  Question about this lease
+                </Form.Label>
                 <Form.Control
+                  id="review-question"
                   as="textarea"
-                  rows={3}
+                  rows={2}
                   value={question}
                   onChange={(event) => onQuestionChange(event.target.value)}
-                  placeholder="Ask a question about this document or your housing issue."
+                  placeholder="Ask a question about this lease or clause."
                   className="review-textarea"
                 />
               </Form.Group>
 
-              <div className="review-form-footer">
-                <div className="review-note">
+              <div className={styles.composerFooter}>
+                <span>
                   <Shield size={14}/>
-                  <span>
-                    {activeSession.status === "ready"
-                      ? "LeaseQA provides legal information, not legal advice."
-                      : "Wait for indexing to finish before asking a question."}
-                  </span>
-                </div>
+                  {activeSession.status === "ready"
+                    ? "Answers include cited tenant guidance."
+                    : "Wait for indexing to finish."}
+                </span>
                 <AceternityStatefulButton
                   type="submit"
                   status={sendingMessage ? "loading" : "idle"}
                   className="btn-unified btn-unified-primary btn-unified-md"
                   disabled={!question.trim() || activeSession.status !== "ready"}
                 >
-                  {sendingMessage ? "Sending" : "Send question"}
+                  {sendingMessage ? "Sending" : "Ask"}
                 </AceternityStatefulButton>
               </div>
             </Form>
@@ -204,10 +201,20 @@ export default function Conversation({
               Finishing the first answer. You can ask follow-up questions in a moment.
             </div>
           )}
-        </>
+        </div>
       ) : (
-        <div className="review-history-inline">
-          Start a chat above or <Link href="/qa">browse community Q&amp;A</Link>.
+        <div className={styles.emptyConversation}>
+          <div className={styles.emptyAccent}/>
+          <h2>Clause context starts here.</h2>
+          <p>
+            Once a source is added, this space keeps the lease wording,
+            cited guidance, and follow-up questions together.
+          </p>
+          <ol>
+            <li><span>01</span><strong>Exact lease language</strong></li>
+            <li><span>02</span><strong>Cited tenant guidance</strong></li>
+            <li><span>03</span><strong>Questions to verify</strong></li>
+          </ol>
         </div>
       )}
     </section>

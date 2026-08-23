@@ -1,198 +1,106 @@
-# Unified Button System Guide
+# Button Guide
 
-## Overview
+Buttons use the `.btn-unified` family in `app/globals.css`. Colours come from
+the warm system in `COLOR_GUIDE.md`.
 
-The button system follows a consistent design pattern with standardized variants and sizes, aligned with the 60-30-10
-color rule.
+## The important caveat
 
-## Button Variants
+`globals.css` declares `.btn-unified` twice. The **second** generation wins, and
+it deliberately collapses variants:
 
-### Primary (Main CTA)
+| Class | What actually renders |
+| --- | --- |
+| `btn-unified-primary` | Olive fill, white text |
+| `btn-unified-success` | **Identical to primary** |
+| `btn-unified-info` | **Identical to primary** |
+| `btn-unified-secondary` | Transparent, strong border, ink text |
+| `btn-unified-outline` | **Identical to secondary** |
+| `btn-unified-ghost` | **Identical to secondary** |
+| `btn-unified-danger` | Warm red fill (`--color-accent-error`) |
 
-- **Usage**: Primary actions, main CTAs
-- **Color**: Uses 10% accent color (`--color-accent-primary`)
-- **Example**: "Start AI Review", "Submit", "Save"
+Three appearances, not seven. Picking `success` over `primary` changes nothing
+on screen — it only misleads the next reader. Use `primary`, `secondary`, or
+`danger` and let the label carry the meaning.
 
-```html
-<a href="/action" class="btn-unified btn-unified-primary btn-unified-md">
-    Primary Action
-</a>
-```
+If you need a genuinely distinct fourth appearance, add it to the winning
+generation rather than reviving one of the collapsed aliases.
 
-### Secondary
+## Structure
 
-- **Usage**: Secondary actions, alternative options
-- **Color**: White background with border
-- **Example**: "Cancel", "Back", alternative navigation
-
-```html
-<a href="/action" class="btn-unified btn-unified-secondary btn-unified-md">
-    Secondary Action
-</a>
-```
-
-### Outline
-
-- **Usage**: Outlined style, less prominent actions
-- **Color**: Transparent with colored border
-- **Example**: "Learn More", "View Details"
+Base class, one variant, one size:
 
 ```html
-<a href="/action" class="btn-unified btn-unified-outline btn-unified-md">
-    Outline Action
-</a>
-```
-
-### Ghost
-
-- **Usage**: Minimal style, subtle actions
-- **Color**: Transparent, text only
-- **Example**: "Skip", "Dismiss"
-
-```html
-<a href="/action" class="btn-unified btn-unified-ghost btn-unified-md">
-    Ghost Action
-</a>
-```
-
-### Danger
-
-- **Usage**: Destructive actions
-- **Color**: Error color (`--color-accent-error`)
-- **Example**: "Delete", "Remove", "Cancel Subscription"
-
-```html
-<a href="/action" class="btn-unified btn-unified-danger btn-unified-md">
-    Delete
-</a>
-```
-
-### Success
-
-- **Usage**: Success/confirmation actions
-- **Color**: Success color (`--color-accent-success`)
-- **Example**: "Confirm", "Approve"
-
-```html
-<a href="/action" class="btn-unified btn-unified-success btn-unified-md">
-    Confirm
-</a>
-```
-
-## Button Sizes
-
-### Small (`btn-unified-sm`)
-
-- **Padding**: `0.375rem 0.875rem`
-- **Font Size**: `0.8125rem`
-- **Usage**: Compact spaces, inline actions
-
-### Medium (`btn-unified-md`) - Default
-
-- **Padding**: `0.5rem 1.25rem`
-- **Font Size**: `0.875rem`
-- **Usage**: Standard buttons, most common size
-
-### Large (`btn-unified-lg`)
-
-- **Padding**: `0.75rem 1.75rem`
-- **Font Size**: `0.9375rem`
-- **Usage**: Hero sections, prominent CTAs
-
-## Usage Examples
-
-### Hero Section CTA
-
-```html
-<a href="/ai-review" class="btn-unified btn-unified-primary btn-unified-lg">
-    Start AI Review
-</a>
-```
-
-### Card Action Button
-
-```html
-<a href="/qa" class="btn-unified btn-unified-primary btn-unified-md">
-    Open Q&A →
-</a>
-```
-
-### Secondary Navigation
-
-```html
-<a href="/explore" class="btn-unified btn-unified-outline btn-unified-lg">
-    Explore Q&A
-</a>
-```
-
-### Form Actions
-
-```html
-<div class="d-flex gap-2">
-    <button type="submit" class="btn-unified btn-unified-primary btn-unified-md">
-        Submit
-    </button>
-    <button type="button" class="btn-unified btn-unified-secondary btn-unified-md">
-        Cancel
-    </button>
-</div>
-```
-
-### Destructive Action
-
-```html
-<button type="button" class="btn-unified btn-unified-danger btn-unified-sm">
-    Delete Post
+<button type="button" class="btn-unified btn-unified-primary btn-unified-md">
+  Review My Lease
 </button>
 ```
 
-## Button States
+## Sizes
 
-### Hover
+| Class | Min height | Padding |
+| --- | --- | --- |
+| `btn-unified-md` | `2.75rem` | `0.7rem 1.05rem` |
+| `btn-unified-lg` | `3.1rem` | `0.85rem 1.3rem` |
 
-- Primary/Secondary/Danger/Success: Slight lift (`translateY(-1px)`) with shadow
-- Outline/Ghost: Background color change
+The base `.btn-unified` sets `min-height: 3rem`, so a size class is what brings
+it *down* — omitting one gives a taller button than you probably intended.
 
-### Active
+There is no `sm`. It used to exist at `2.35rem` (38px), under the 44px touch
+minimum, with a mobile media query lifting it to `2.75rem` — which made it
+identical to `md` on exactly the viewports where the difference would have
+mattered. One call site used it. A size tier meaning "38px on desktop, 44px on
+mobile" next to one meaning "44px always" is not a distinction anyone can apply,
+so it is gone rather than patched. If a genuinely denser desktop control is
+needed later, add it back deliberately with a touch story that holds up.
 
-- Slight press effect (`translateY(0)`)
+## Variants in practice
 
-### Disabled
+- **Primary** — one per view. The main thing the renter came to do.
+- **Secondary** — everything alongside it: Cancel, Back, alternative routes.
+- **Danger** — destructive and irreversible only. Not for Cancel.
 
-- `opacity: 0.6`
-- `cursor: not-allowed`
-- No hover effects
+Sign-out is not destructive. It uses the terracotta treatment
+(`--site-highlight`), not `danger`. See the header profile menu.
 
-## Design Principles
+## States
 
-1. **Consistency**: All buttons use the same base class (`btn-unified`)
-2. **Hierarchy**: Primary buttons are most prominent (10% accent color)
-3. **Accessibility**: High contrast, clear states, keyboard navigable
-4. **Minimal**: Clean design aligned with the minimal & fresh aesthetic
-5. **Responsive**: Works well on all screen sizes
+**Hover.** Primary deepens to `--site-accent-strong`. No lift, no scale —
+`transform: none` is set on purpose.
 
-## Migration from Old System
+**Disabled.** An explicit muted surface, not reduced opacity:
 
-### Old (React Bootstrap)
-
-```jsx
-<Button href="/action" variant="danger" className="btn-pill-lg">
-    Action
-</Button>
+```css
+background: var(--site-panel-strong);
+border-color: var(--site-border-strong);
+color: var(--site-muted);
 ```
 
-### New (Unified System)
+Fading a filled button leaves white text on a washed accent — the AI review
+submit measured **2.03:1** that way, which is unreadable rather than merely
+quiet. Disabled controls are formally exempt from WCAG contrast, but the point
+of a disabled label is that you can still read what the button would do. The
+muted surface lands at 5.3:1. Do not replace it with `opacity`.
 
-```html
-<a href="/action" class="btn-unified btn-unified-primary btn-unified-lg">
-    Action
-</a>
-```
+**Focus.** Must stay visible. Do not set `outline: none` without an inset ring
+replacement.
 
-## Color Mapping
+**Reduced motion.** The global `prefers-reduced-motion: reduce` block flattens
+transitions, so any hover effect has to read as a static state change too.
 
-- `variant="primary"` → `btn-unified-primary`
-- `variant="secondary"` → `btn-unified-secondary`
-- `variant="outline"` → `btn-unified-outline`
-- `variant="danger"` → `btn-unified-danger`
-- `variant="success"` → `btn-unified-success`
+## Labels
+
+Title Case for prominent navigation and actions: `Review My Lease`,
+`Create Account`, `Go to Account`, `Sign Out`. Match the surrounding surface
+rather than inventing a new casing.
+
+Avoid directive phrasing that tells a renter what to do about their lease. The
+product surfaces information, sources, and questions to verify — labels should
+too.
+
+## Do not
+
+- Use raw Bootstrap `btn btn-primary`; it brings its own blue.
+- Leave `text-danger` on a control.
+- Add `transition: all` — it is a test failure, not a preference.
+- Introduce a new button class without checking whether one of the three real
+  appearances already covers it.
