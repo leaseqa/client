@@ -288,7 +288,13 @@ body {
 }
 
 .btn-unified:disabled {
-  opacity: 0.6;
+  /* Fading a filled button leaves white text on a washed accent — measured at
+     2.03:1 on the AI review submit. Disabled controls are exempt from WCAG
+     contrast, but that is unreadable rather than merely quiet, so the disabled
+     state is an explicit muted surface (5.3:1) instead of reduced opacity. */
+  background: var(--site-panel-strong);
+  border-color: var(--site-border-strong);
+  color: var(--site-muted);
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -1316,7 +1322,7 @@ body {
   font-weight: 500;
   padding: 0.25rem 0.6rem;
   border-radius: 12px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--site-border-strong);
 }
 
 .feed-section-urgency-badge {
@@ -1424,7 +1430,7 @@ body {
   font-weight: 500;
   padding: 0.25rem 0.6rem;
   border-radius: 12px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--site-border-strong);
 }
 
 .feed-header-urgency-badge {
@@ -1439,7 +1445,7 @@ body {
 .feed-header-urgency-badge.low {
   background: #f1f3f4;
   color: #5f6368;
-  border-color: #e0e0e0;
+  border-color: var(--site-border-strong);
 }
 
 .feed-header-urgency-badge.medium {

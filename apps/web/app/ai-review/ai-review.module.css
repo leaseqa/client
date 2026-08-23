@@ -114,9 +114,11 @@
 }
 
 .startReviewButton:disabled {
-  border-color: #b2b9aa !important;
-  background: #b2b9aa !important;
-  color: #fff !important;
+  /* Was #b2b9aa with white text — a washed accent at 2.03:1, unreadable rather
+     than quiet. A muted surface with muted ink reads as disabled at 5.3:1. */
+  border-color: var(--site-border-strong) !important;
+  background: var(--site-panel-strong) !important;
+  color: var(--site-muted) !important;
   cursor: not-allowed;
 }
 
