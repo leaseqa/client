@@ -29,7 +29,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    // Bootstrap sets `scroll-behavior: smooth` on :root behind a
+    // prefers-reduced-motion guard. Next needs to be told that is deliberate,
+    // otherwise it warns and its router scroll restoration animates between
+    // routes instead of jumping. With the attribute, in-page anchors stay
+    // smooth and route changes are instant.
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
     <body
       suppressHydrationWarning
       className={`${dmSans.variable} ${nunitoSans.variable}`}
