@@ -58,9 +58,9 @@ export default function ComposeForm({
     <div className={`compose-form ${isAiReviewDraft ? "compose-form-draft" : ""}`}>
       <div className="compose-form-header">
         <div>
-          <h3 className="compose-form-title">
+          <h2 className="compose-form-title">
             {isAiReviewDraft ? "Edit your draft" : "Write your question"}
-          </h3>
+          </h2>
           <p className="compose-form-subtitle">
             {isAiReviewDraft
               ? "Check the wording, then post it to the right section."

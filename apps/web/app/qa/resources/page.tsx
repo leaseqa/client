@@ -75,7 +75,7 @@ export default function ResourcesPage() {
             </div>
             <Link
               href={`/qa?scenario=${topic}`}
-              className="btn-unified btn-unified-secondary btn-unified-sm"
+              className="btn-unified btn-unified-secondary btn-unified-md"
             >
               Open this section
             </Link>

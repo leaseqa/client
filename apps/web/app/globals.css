@@ -2979,12 +2979,6 @@ select:focus-visible,
   vertical-align: middle;
 }
 
-.btn-unified-sm {
-  min-height: 2.35rem;
-  padding: 0.5rem 0.8rem;
-  font-size: 0.82rem;
-}
-
 .btn-unified-md {
   min-height: 2.75rem;
   padding: 0.7rem 1.05rem;
@@ -7065,7 +7059,6 @@ select:focus-visible,
   .post-btn,
   .btn-warm-primary,
   .btn-warm-outline,
-  .btn-unified-sm,
   .qa-toolbar-btn {
     min-height: 2.75rem;
   }

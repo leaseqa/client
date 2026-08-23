@@ -39,16 +39,19 @@ Base class, one variant, one size:
 
 | Class | Min height | Padding |
 | --- | --- | --- |
-| `btn-unified-sm` | `2.35rem` | `0.5rem 0.8rem` |
 | `btn-unified-md` | `2.75rem` | `0.7rem 1.05rem` |
 | `btn-unified-lg` | `3.1rem` | `0.85rem 1.3rem` |
 
 The base `.btn-unified` sets `min-height: 3rem`, so a size class is what brings
 it *down* — omitting one gives a taller button than you probably intended.
 
-`btn-unified-sm` is `2.35rem` (38px), under the 44px touch minimum. A mobile
-media query raises it to `2.75rem` below 768px, so it is safe on touch, but the
-declared size is still the desktop one. Keep it for dense desktop toolbars.
+There is no `sm`. It used to exist at `2.35rem` (38px), under the 44px touch
+minimum, with a mobile media query lifting it to `2.75rem` — which made it
+identical to `md` on exactly the viewports where the difference would have
+mattered. One call site used it. A size tier meaning "38px on desktop, 44px on
+mobile" next to one meaning "44px always" is not a distinction anyone can apply,
+so it is gone rather than patched. If a genuinely denser desktop control is
+needed later, add it back deliberately with a touch story that holds up.
 
 ## Variants in practice
 
