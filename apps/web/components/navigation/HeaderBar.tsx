@@ -79,8 +79,13 @@ export default function HeaderBar() {
         setNotifications((current) =>
           current.filter((notification) => notification._id !== item._id),
         );
-      } catch {
-        //TODO: this part is empty...?
+      } catch ( error: unknown ) {
+        // Marking as read is best effort — the renter still gets navigated to
+        // the item. Surfacing it in the menu would be noise, but swallowing it
+        // without a trace made a failing endpoint invisible.
+        console.warn(
+          apiErrorMessage(error, "Could not mark the notification as read."),
+        );
       }
       if ( item.href ) {
         navigate(item.href);

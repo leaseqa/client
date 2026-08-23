@@ -38,10 +38,10 @@ export default function MobileNav({
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
 
+  // Bootstrap's `text-primary` / `bg-light` utilities put a blue active row in a
+  // warm olive product. Styling comes from `.site-mobile-nav-link` instead.
   const linkClass = (href: string) =>
-    `nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-2 ${
-      isActive(href) ? "bg-light text-primary fw-semibold" : "text-secondary"
-    }`;
+    `site-mobile-nav-link${isActive(href) ? " is-active" : ""}`;
 
   const accountItem = isAuthenticated
     ? { label: "Account", href: "/account", icon: FaUser }

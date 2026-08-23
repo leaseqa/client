@@ -1,19 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-import RemoteDataState from "@/components/ui/RemoteDataState";
 import styles from "./home.module.css";
-
-export type HomeStat = {
-  label: string;
-  value: number;
-};
-
-type HomeJourneyProps = {
-  stats?: HomeStat[];
-  statsError?: boolean;
-  onRetryStats?: () => void;
-};
 
 const JOURNEY_STEPS = [
   {
@@ -35,12 +23,7 @@ const JOURNEY_STEPS = [
   },
 ];
 
-export default function HomeJourney({
-                                      stats = [],
-                                      statsError = false,
-                                      onRetryStats,
-                                    }: HomeJourneyProps) {
-  const visibleStats = stats.filter((stat) => stat.value > 0);
+export default function HomeJourney() {
 
   return (
     <div className={styles.page}>
@@ -124,34 +107,6 @@ export default function HomeJourney({
         ))}
       </section>
 
-      {statsError && visibleStats.length === 0 ? (
-        // Deliberately not the dark stats panel. That surface exists to make the
-        // numbers feel substantial; borrowing it for a failure gives a large
-        // black block whose only content is an apology.
-        <RemoteDataState
-          kind="error"
-          title="Community activity could not be loaded."
-          action={
-            onRetryStats ? { label: "Try again", onClick: onRetryStats } : undefined
-          }
-          compact
-          className={styles.statsError}
-        />
-      ) : null}
-
-      {visibleStats.length > 0 && (
-        <section className={styles.stats} aria-labelledby="community-snapshot">
-          <h2 id="community-snapshot">Community snapshot</h2>
-          <div className={styles.statsGrid}>
-            {visibleStats.map((stat) => (
-              <div key={stat.label} className={styles.stat}>
-                <strong>{stat.value}</strong>
-                <span>{stat.label}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
     </div>
   );
 }

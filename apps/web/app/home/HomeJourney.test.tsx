@@ -6,7 +6,7 @@ import HomeJourney from "./HomeJourney";
 
 describe("HomeJourney", () => {
   test("keeps the lease guidance preview visible without community data", () => {
-    const html = renderToStaticMarkup(<HomeJourney stats={[]} />);
+    const html = renderToStaticMarkup(<HomeJourney />);
 
     expect(html).toContain("Understand your lease");
     expect(html).toContain("Know what to check");
@@ -16,7 +16,7 @@ describe("HomeJourney", () => {
   });
 
   test("uses informational framing instead of directing a renter's action", () => {
-    const html = renderToStaticMarkup(<HomeJourney stats={[]} />);
+    const html = renderToStaticMarkup(<HomeJourney />);
 
     expect(html).toContain("What the cited guidance says");
     expect(html).toContain("Does the deposit amount in this clause match");
@@ -27,7 +27,7 @@ describe("HomeJourney", () => {
   });
 
   test("labels the journey steps with numbers alone", () => {
-    const html = renderToStaticMarkup(<HomeJourney stats={[]} />);
+    const html = renderToStaticMarkup(<HomeJourney />);
 
     expect(html).toContain(">01<");
     expect(html).toContain(">02<");
@@ -38,7 +38,7 @@ describe("HomeJourney", () => {
   });
 
   test("leads the journey with its heading and no decorative eyebrow", () => {
-    const html = renderToStaticMarkup(<HomeJourney stats={[]} />);
+    const html = renderToStaticMarkup(<HomeJourney />);
 
     expect(html).toContain('id="journey-title"');
     expect(html).toContain("From clause to context");
@@ -46,63 +46,17 @@ describe("HomeJourney", () => {
   });
 
   test("leaves the legal boundary to the single footer disclaimer", () => {
-    const html = renderToStaticMarkup(<HomeJourney stats={[]} />);
+    const html = renderToStaticMarkup(<HomeJourney />);
 
     expect(html).not.toContain("Built for renters who want a clearer starting point.");
     expect(html).not.toMatch(/not legal advice/i);
     expect(html).not.toContain("Cited sources stay visible");
   });
 
-  test("admits a failed stats read instead of hiding it", () => {
-    const html = renderToStaticMarkup(<HomeJourney stats={[]} statsError/>);
-
-    expect(html).toContain("Community activity could not be loaded.");
-  });
-
-  test("keeps the failure off the dark stats panel", () => {
-    const html = renderToStaticMarkup(<HomeJourney stats={[]} statsError/>);
-
-    // The inverted panel exists to make the numbers feel substantial. Reusing it
-    // for a failure renders a large black block containing only an apology.
-    expect(html).not.toContain("Community snapshot");
-  });
-
-  test("prefers real statistics over the error state once they arrive", () => {
-    const html = renderToStaticMarkup(
-      <HomeJourney stats={[{ label: "Open questions", value: 3 }]} statsError/>,
-    );
-
-    expect(html).not.toContain("Community activity could not be loaded.");
-    expect(html).toContain("Open questions");
-  });
-
-  test("stays silent when stats are simply empty and nothing failed", () => {
-    const html = renderToStaticMarkup(<HomeJourney stats={[]}/>);
+  test("no longer carries a community snapshot", () => {
+    const html = renderToStaticMarkup(<HomeJourney />);
 
     expect(html).not.toContain("Community snapshot");
-    expect(html).not.toContain("could not be loaded");
-  });
-
-  test("shows community statistics only when at least one value is nonzero", () => {
-    const emptyHtml = renderToStaticMarkup(
-      <HomeJourney
-        stats={[
-          { label: "Open questions", value: 0 },
-          { label: "Attorney replies", value: 0 },
-        ]}
-      />,
-    );
-    const populatedHtml = renderToStaticMarkup(
-      <HomeJourney
-        stats={[
-          { label: "Open questions", value: 3 },
-          { label: "Attorney replies", value: 1 },
-        ]}
-      />,
-    );
-
-    expect(emptyHtml).not.toContain("Community snapshot");
-    expect(populatedHtml).toContain("Community snapshot");
-    expect(populatedHtml).toContain("Open questions");
+    expect(html).not.toMatch(/community activity/i);
   });
 });

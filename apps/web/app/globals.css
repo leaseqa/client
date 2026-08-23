@@ -6679,9 +6679,61 @@ select:focus-visible,
 }
 
 .site-mobile-nav .nav-link,
+.site-mobile-nav .site-mobile-nav-link,
 .site-header .navbar-toggler {
   min-height: 2.75rem;
   min-width: 2.75rem;
+}
+
+/* Drawer rows, in the warm system rather than Bootstrap's blue. */
+.site-mobile-nav .site-mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  color: var(--site-muted);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.site-mobile-nav .site-mobile-nav-link svg {
+  flex: 0 0 auto;
+  color: var(--site-text-tertiary);
+}
+
+.site-mobile-nav .site-mobile-nav-link:hover,
+.site-mobile-nav .site-mobile-nav-link:focus-visible {
+  background: var(--site-accent-soft);
+  color: var(--site-accent-strong);
+  outline: none;
+}
+
+.site-mobile-nav .site-mobile-nav-link:hover svg,
+.site-mobile-nav .site-mobile-nav-link:focus-visible svg {
+  color: var(--site-accent);
+}
+
+.site-mobile-nav .site-mobile-nav-link:focus-visible {
+  box-shadow: inset 0 0 0 2px rgba(92, 110, 78, 0.45);
+}
+
+.site-mobile-nav .site-mobile-nav-link.is-active {
+  background: var(--site-accent-soft);
+  color: var(--site-accent-strong);
+  font-weight: 600;
+}
+
+.site-mobile-nav .site-mobile-nav-link.is-active svg {
+  color: var(--site-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-mobile-nav .site-mobile-nav-link {
+    transition: none;
+  }
 }
 
 @media (max-width: 767px) {

@@ -280,45 +280,6 @@
   font-size: 0.72rem;
   line-height: 1.45;
 }
-.stats {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  border-radius: 0.75rem;
-  background: var(--site-ink);
-  color: var(--site-panel);
-}
-.stats h2 {
-  margin: 0 0 1rem;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.2rem;
-}
-/* Sits on the page surface, not on the dark stats panel, so it needs no colour
-   overrides — only the spacing the section it replaces would have had. */
-.statsError {
-  margin-top: 1.75rem;
-}
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-}
-.stat {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  padding: 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
-}
-.stat strong {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.55rem;
-}
-.stat span {
-  color: rgba(255, 252, 248, 0.65);
-  font-size: 0.68rem;
-}
 @media (max-width: 991px) {
   .hero {
     grid-template-columns: 1fr;
@@ -404,9 +365,6 @@
   }
   .step > span {
     top: 0.1rem;
-  }
-  .statsGrid {
-    grid-template-columns: repeat(2, 1fr);
   }
 }
 @media (prefers-reduced-motion: reduce) {
