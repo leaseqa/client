@@ -9,7 +9,7 @@
     "lint": "npm run lint --workspace @leaseqa/web",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "typecheck": "npm exec --workspace @leaseqa/web -- next typegen && tsc -b --pretty false",
-    "test": "node --test scripts/runtime-contract.test.mjs && npm test --workspace @leaseqa/web",
+    "test": "node --test scripts/runtime-contract.test.mjs scripts/design-system-invariants.test.mjs && npm test --workspace @leaseqa/web",
     "e2e": "npm run e2e --workspace @leaseqa/web"
   },
   "workspaces": [

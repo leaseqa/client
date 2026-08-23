@@ -14,17 +14,17 @@ This document separates committed implementation from unapproved design work. Do
 
 ## Current repository state
 
-- Working tree clean as of 2026-08-22.
-- The branch has no configured upstream and has not been pushed.
-- Verification on 2026-08-22 after this session's work:
+- Working tree clean.
+- The branch has no configured upstream and has not been pushed. No PR exists.
+- Final verification:
   - `npm run typecheck`
   - `npm run lint`
-  - `npm test`: 20 test files, 138 tests passed
+  - `npm test`: 21 test files, 152 tests, plus 7 structural checks
   - `npm run build`
   - `CI_SKIP_RAG=true npm run e2e`: 21 passed, 1 skipped
-- The single skip is the RAG activity test, which needs Milvus. Playwright's
-  browsers and the paired server's dependencies both had to be installed first;
-  neither was present.
+- The single skip is the RAG activity test, which needs Milvus on 19530.
+- Audited clean at 390px across 12 routes: no horizontal overflow, no hydration
+  warnings, and only WCAG-exempt sub-44px touch targets.
 
 ## Completed and committed
 
@@ -201,12 +201,25 @@ broken and were left as found rather than guessed at.
 
 ## Open decisions
 
-- **Pushing.** The branch still has no upstream and has not been pushed. No PR
-  has been opened.
-- **`RemoteDataState` adoption.** Committed on
-  `codex/remote-data-state-adoption` and waiting on approval of the before/after
-  images. Unmerged.
-- **`design-review` in regression mode** (Task 6 step 7) and the `review` pass
-  (Task 7 step 4) have not been run.
-- **Roughly 158 duplicated selectors** remain in `globals.css`. Each needs a
-  judgement call about which declaration should win, so they were left in place.
+- **Pushing.** The branch is unpushed and no PR has been opened.
+- **`design-review` in regression mode** (plan Task 6 step 7) never ran — the
+  skill is not registered here. The visual pass was done by hand against its
+  checklist: contrast, radii, type scale and border colours across eleven routes
+  at two widths.
+- **Design-system drift.** 18 border-radius values and 46 font sizes are in use.
+  Unifying them is a taste call, so nothing was changed.
+- **Six broken documentation links** remain (`AGENTS.md`,
+  `apps/web/app/refresh.css`, two `page.test.tsx`). Already broken before this
+  work; left as found.
+
+## What guards this work
+
+- `scripts/check-visual-regression.mjs` — computed-style fingerprint across 12
+  routes at 3 widths. Proves a CSS change is inert; used for every consolidation
+  pass here. Not a screenshot diff, so no antialiasing noise.
+- `scripts/design-system-invariants.test.mjs` — runs in `npm test`. Locks one
+  `:root` block, no `transition: all`, no legacy purple usage, no bare `1fr`
+  grid track, no leftover empty declarations.
+- `apps/web/e2e/public-routes.spec.ts` — public routes against authenticated,
+  401, delayed and failed session responses, so a blank-page regression cannot
+  reach production silently.

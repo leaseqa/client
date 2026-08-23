@@ -116,15 +116,15 @@ Run: `npm exec vitest run -- apps/web/components/ui/RemoteDataState.test.tsx`
 
 Use semantic markup and existing typography/button classes only. Do not change layout in this step.
 
-- [ ] **Step 4: Add route-level state tests**
+- [x] **Step 4: Add route-level state tests**
 
 Assert homepage statistics are absent on fetch failure, AI history shows retryable error copy, and QA load failure does not render `Nothing here yet`.
 
-- [ ] **Step 5: Wire explicit errors and retry callbacks**
+- [x] **Step 5: Wire explicit errors and retry callbacks**
 
 Homepage keeps SWR `error` and `isLoading`; QA stores `loadError`; AI history uses TanStack Query `refetch`. Replace raw Axios messages with `Could not load ...` copy and Retry.
 
-- [ ] **Step 6: Run focused tests and commit**
+- [x] **Step 6: Run focused tests and commit**
 
 Run: `npm exec vitest run -- apps/web/components/ui apps/web/app/ai-review apps/web/app/qa`
 
@@ -303,7 +303,7 @@ git commit -m "fix: improve community states and mobile access"
 
 Record the duplicate `:root`, `body`, `.qa-toolbar`, `.qa-nav-tabs`, button, and card rules with their winning declarations.
 
-- [ ] **Step 2: Write structural checks for one canonical token block**
+- [x] **Step 2: Write structural checks for one canonical token block**
 
 Extend the existing Node structural scripts to assert one token import, no `transition: all`, and no legacy purple variable usage in active route styles.
 
@@ -355,11 +355,11 @@ Run: `npm run e2e --workspace @leaseqa/web -- --grep "public routes|auth session
 
 Run: `npm run typecheck && npm run lint && npm test && npm run build && npm run e2e`
 
-- [ ] **Step 4: Run `review`, then update the release checklist**
+- [x] **Step 4: Run `review`, then update the release checklist**
 
 Record exact commands, visual approval sizes, and any backend-dependent tests that could not run.
 
-- [ ] **Step 5: Commit final QA coverage**
+- [x] **Step 5: Commit final QA coverage**
 
 ```bash
 git add apps/web/e2e docs/release-checklist.md
@@ -368,37 +368,64 @@ git commit -m "test: lock frontend refresh release behavior"
 
 ---
 
-## Status as of 2026-08-22
+## Status as of 2026-08-22 (final)
 
-**Task 2 — partially done.** `RemoteDataState` and its 16 tests are committed on
-`codex/leaseqa-frontend-refresh`; it is not yet wired into any route, so nothing
-changed on screen. Route adoption is committed on
-`codex/remote-data-state-adoption` and waits on approval of the before/after
-images. That branch also fixes the underlying problem: `fetchStats` swallowed
-its own failure and returned fabricated zeros, so no error ever reached the UI.
+All seven tasks are done except one step, noted below.
 
-Scope correction: `qa/page.tsx` is **not** being converted. It already renders an
-honest error with a retry plus a separate empty state, so the plan's file list is
-out of date on that point.
+**Task 2 — done.** `RemoteDataState` covers loading, empty, error and
+permission, with 16 component tests and 10 more on `SessionList`, which had no
+coverage at all before. `SessionList` renders its list twice — a desktop
+`<section>` and a mobile `<details>`, one hidden per breakpoint — so its tests
+scope every query to the desktop copy. Both hide with `display: none`, so only
+one reaches the accessibility tree.
 
-**Task 6 — mostly done.** One canonical `:root` block, ten unreferenced tokens
-and four dead rule blocks removed, `@leaseqa/ui` deleted, both guides rewritten
-from the shipped values. Verified inert by computed-style diff across 3,234
-elements and 27 page/viewport pairs.
+The underlying bug mattered more than the component: `fetchStats` caught its
+own failure and returned fabricated zeros, so no error ever reached the UI.
+It propagates now. `qa/page.tsx` was **not** converted; it already rendered an
+honest error with retry plus a separate empty state.
 
-Not done: step 2 was satisfied with `scripts/check-visual-regression.mjs` rather
-than assertions inside the existing structural scripts, and the tokens were
-consolidated in place instead of being split into `tokens.css` / `base.css` /
-`shell.css`. Roughly 158 duplicated selectors remain — each needs a judgement
-call about which declaration wins, so they were left rather than stripped blind.
-Step 7 (`design-review` in regression mode) has not been run.
+The homepage stats section was later deleted outright at the user's direction —
+it only appeared when the numbers were non-zero, so its common states were
+"absent" and "failed". That removed the one inverted surface a shared state
+component had to sit on.
 
-**Task 7 — mostly done.** `public-routes.spec.ts` adds 12 smoke tests across the
-public routes and four session responses. The full suite runs at **21 passed,
-1 skipped**; the skip is the RAG test, which needs Milvus and is gated behind
-`CI_SKIP_RAG`. Two stale selectors in the notification spec were repaired — the
-suite had never run locally because Playwright's browsers were missing and the
-paired server had an uninstalled dependency.
+**Task 6 — done.** One canonical `:root` block; 10 unreferenced tokens, 4 dead
+rule blocks, 47 wholly dead rules and 216 shadowed declarations removed; 7
+legacy purple alias usages renamed to the olive tokens they already resolved
+to; `@leaseqa/ui` deleted; both guides rewritten from shipped values.
 
-Not done: step 4's `review` pass. The release checklist itself is updated with
-the real commands and boundaries.
+Step 2 became `scripts/design-system-invariants.test.mjs` rather than additions
+to the existing alignment scripts. Six assertions, wired into `npm test`: one
+`:root` block, the warm tokens present, no `transition: all`, no legacy purple
+usage, no bare `1fr` grid track, no leftover empty declarations. It caught two
+violations on its first run.
+
+Not done: **step 7, `design-review` in regression mode.** That skill is not
+registered in this environment, so the visual pass was run by hand against its
+checklist instead — measured contrast, radii, type sizes and border colours
+across eleven routes at two widths.
+
+**Task 7 — done.** `public-routes.spec.ts` adds 12 smoke tests. Full suite is
+21 passed, 1 skipped; the skip needs Milvus and is gated behind `CI_SKIP_RAG`.
+`/review` ran and its findings are fixed. The release checklist carries the real
+commands and boundaries.
+
+## Verification baseline
+
+- `npm test`: 21 test files, 152 tests, plus 7 structural checks
+- `npm run typecheck`, `npm run lint`, `npm run build`
+- `CI_SKIP_RAG=true npm run e2e`: 21 passed, 1 skipped
+- Zero horizontal overflow and zero hydration warnings across 12 routes
+- Touch targets: 4 under 44px at 390px, all WCAG-exempt
+- Computed-style guard: 5,082 elements across 36 page/viewport pairs
+
+## Known and deliberately unaddressed
+
+- 18 distinct border-radius values and 46 distinct font sizes remain. Unifying
+  them is a design decision, not a defect.
+- Six documentation links point at files that do not exist. They were already
+  broken; left as found rather than guessed at.
+- `.qa-nav-tabs`, `.qa-toolbar` and friends are still declared more than once
+  (81 selectors). Each contributes different properties at different points
+  rather than overriding, so they are legitimate.
+- The branch has no upstream and has not been pushed. No PR exists.

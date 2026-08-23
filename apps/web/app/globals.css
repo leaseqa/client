@@ -213,7 +213,7 @@ body {
 
 /* Accent Cards */
 .card.card-accent-purple {
-  border-top: 4px solid var(--accent-purple);
+  border-top: 4px solid var(--site-accent);
 }
 
 .card.card-accent-green {
@@ -494,7 +494,7 @@ body {
 }
 
 .drop-zone:hover {
-  border-color: var(--accent-purple);
+  border-color: var(--site-accent);
 }
 
 /* Rich Text Editor */
@@ -566,7 +566,7 @@ body {
 
 /* Icon Circle Backgrounds */
 .icon-bg-purple {
-  background: var(--gradient-purple);
+  background: var(--gradient-primary);
   color: white;
 }
 
@@ -984,7 +984,7 @@ body {
 }
 
 .bg-gradient-purple {
-  background: var(--gradient-purple);
+  background: var(--gradient-primary);
 }
 
 .bg-gradient-green {
@@ -1035,7 +1035,7 @@ body {
 .avatar-circle {
   width: 80px;
   height: 80px;
-  background: var(--gradient-purple);
+  background: var(--gradient-primary);
   font-size: 1.5rem;
   border: 3px solid var(--glass-border);
 }
@@ -1048,7 +1048,7 @@ body {
 }
 
 .team-avatar-0 {
-  background: var(--gradient-purple);
+  background: var(--gradient-primary);
 }
 
 .team-avatar-1 {
@@ -2653,7 +2653,7 @@ body {
 }
 
 .post-status-options label.active:first-child {
-  background: var(--gradient-purple);
+  background: var(--gradient-primary);
 }
 
 .post-status-options label.active:last-child {
