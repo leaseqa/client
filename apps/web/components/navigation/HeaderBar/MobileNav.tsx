@@ -35,8 +35,17 @@ export default function MobileNav({
                                     isGuest = false,
                                     onNavigate,
                                   }: MobileNavProps) {
+  // Prefix match drives the *visual* state, so a /qa sub-page still highlights
+  // "Ask" as the section you are in.
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
+
+  // aria-current="page" must identify exactly one element. Prefix matching gave
+  // both "Ask" and "Resources" the attribute on /qa/resources, so a screen
+  // reader announced two current pages in one nav landmark. Only the exact
+  // match makes the claim.
+  const ariaCurrent = (href: string) =>
+    pathname === href ? ("page" as const) : undefined;
 
   // Bootstrap's `text-primary` / `bg-light` utilities put a blue active row in a
   // warm olive product. Styling comes from `.site-mobile-nav-link` instead.
@@ -69,7 +78,7 @@ export default function MobileNav({
               <Link
                 key={item.href}
                 href={item.href}
-                aria-current={isActive(item.href) ? "page" : undefined}
+                aria-current={ariaCurrent(item.href)}
                 className={linkClass(item.href)}
                 onClick={onNavigate}
               >
@@ -85,7 +94,7 @@ export default function MobileNav({
             <Link
               key={item.href}
               href={item.href}
-              aria-current={isActive(item.href) ? "page" : undefined}
+              aria-current={ariaCurrent(item.href)}
               className={linkClass(item.href)}
               onClick={onNavigate}
             >
@@ -95,7 +104,7 @@ export default function MobileNav({
           ))}
           <Link
             href={accountItem.href}
-            aria-current={isActive(accountItem.href) ? "page" : undefined}
+            aria-current={ariaCurrent(accountItem.href)}
             className={linkClass(accountItem.href)}
             onClick={onNavigate}
           >

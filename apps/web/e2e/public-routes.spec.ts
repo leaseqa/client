@@ -129,3 +129,80 @@ test.describe("public routes", () => {
     expect(occurrences).toHaveLength(1);
   });
 });
+
+test.describe("accessible names", () => {
+  test("the sign-in fields are programmatically labelled", async ({ page }) => {
+    await stubSession(page, "unauthorized");
+    await page.goto("/auth/login");
+    // Reached by label, not by name= — this is what a screen reader follows.
+    await expect(page.getByLabel("Email address")).toBeVisible();
+    await expect(page.getByLabel("Password")).toBeVisible();
+  });
+
+  test("the registration fields are programmatically labelled", async ({ page }) => {
+    await stubSession(page, "unauthorized");
+    await page.goto("/auth/register");
+    await expect(page.getByLabel("Username")).toBeVisible();
+    await expect(page.getByLabel("Email address")).toBeVisible();
+    await expect(page.getByLabel("Password", { exact: true })).toBeVisible();
+  });
+
+  test("no interactive control on a public route is left unnamed", async ({ page }) => {
+    await stubSession(page, "unauthorized");
+    for (const route of ["/", "/auth/login", "/auth/register", "/info"]) {
+      await page.goto(route);
+      await page.waitForLoadState("networkidle").catch(() => {});
+      const unnamed = await page.evaluate(() => {
+        const out: string[] = [];
+        document
+          .querySelectorAll("button,a,input:not([type=hidden]),select,textarea")
+          .forEach((el) => {
+            if (el.closest("nextjs-portal")) return;
+            const box = el.getBoundingClientRect();
+            if (box.width === 0 || box.height === 0) return;
+            const labels = (el as HTMLInputElement).labels;
+            const name = (
+              el.getAttribute("aria-label") ||
+              el.getAttribute("title") ||
+              (labels && labels.length
+                ? Array.from(labels).map((l) => l.textContent).join(" ")
+                : "") ||
+              el.textContent ||
+              el.getAttribute("placeholder") ||
+              ""
+            ).trim();
+            if (!name) {
+              out.push(`${el.tagName.toLowerCase()}.${el.getAttribute("class") || ""}`);
+            }
+          });
+        return out;
+      });
+      expect(unnamed, `unnamed controls on ${route}`).toEqual([]);
+    }
+  });
+
+  test("exactly one element claims to be the current page in the drawer", async ({
+    page,
+  }) => {
+    await stubSession(page, "unauthorized");
+    await page.setViewportSize({ width: 390, height: 844 });
+    // /qa/resources is the case that broke: "Ask" matched by prefix and
+    // "Resources" matched exactly, so both carried aria-current="page".
+    await page.goto("/qa/resources");
+    await page.waitForLoadState("networkidle").catch(() => {});
+    await page.locator(".navbar-toggler").first().click();
+    const drawerCurrent = page.locator(
+      '.offcanvas [aria-current="page"], .offcanvas-body [aria-current="page"]',
+    );
+    await expect(drawerCurrent).toHaveCount(1);
+  });
+
+  test("a route renders exactly one top-level heading", async ({ page }) => {
+    await stubSession(page, "unauthorized");
+    for (const route of ["/", "/auth/login", "/info"]) {
+      await page.goto(route);
+      await page.waitForLoadState("networkidle").catch(() => {});
+      await expect(page.locator("h1"), `h1 count on ${route}`).toHaveCount(1);
+    }
+  });
+});

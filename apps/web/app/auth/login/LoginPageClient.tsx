@@ -71,7 +71,7 @@ export default function LoginPageClient({
           {error && <Alert variant="danger">{error}</Alert>}
 
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="login-email">
               <Form.Label>Email address</Form.Label>
               <Form.Control
                 type="email"
@@ -82,7 +82,7 @@ export default function LoginPageClient({
               />
             </Form.Group>
 
-            <Form.Group className="mb-4">
+            <Form.Group className="mb-4" controlId="login-password">
               <Form.Label>Password</Form.Label>
               <Form.Control
                 type="password"

@@ -70,6 +70,7 @@ export default function ComposeForm({
         <button
           type="button"
           className="compose-form-close"
+          aria-label="Close the composer"
           onClick={onCancelAction}
           disabled={posting}
         >
@@ -143,11 +144,12 @@ export default function ComposeForm({
           </div>
 
           <div className="compose-form-group">
-            <label className="compose-form-label">
+            <label className="compose-form-label" htmlFor="compose-attachments">
               <FaPaperclip size={12}/>
               <span>Attachments</span>
             </label>
             <input
+              id="compose-attachments"
               type="file"
               className="compose-form-file"
               multiple

@@ -1,7 +1,7 @@
 # Button Guide
 
 Buttons use the `.btn-unified` family in `app/globals.css`. Colours come from
-the warm system documented in `COLOR_GUIDE.md`.
+the warm system in `COLOR_GUIDE.md`.
 
 ## The important caveat
 
@@ -18,16 +18,16 @@ it deliberately collapses variants:
 | `btn-unified-ghost` | **Identical to secondary** |
 | `btn-unified-danger` | Warm red fill (`--color-accent-error`) |
 
-So there are three appearances, not seven. Picking `success` over `primary`
-changes nothing visually — it only misleads the next reader. Use `primary`,
-`secondary`, or `danger` and let the label carry the meaning.
+Three appearances, not seven. Picking `success` over `primary` changes nothing
+on screen — it only misleads the next reader. Use `primary`, `secondary`, or
+`danger` and let the label carry the meaning.
 
 If you need a genuinely distinct fourth appearance, add it to the winning
 generation rather than reviving one of the collapsed aliases.
 
 ## Structure
 
-Every button takes the base class, one variant, and one size:
+Base class, one variant, one size:
 
 ```html
 <button type="button" class="btn-unified btn-unified-primary btn-unified-md">
@@ -44,11 +44,11 @@ Every button takes the base class, one variant, and one size:
 | `btn-unified-lg` | `3.1rem` | `0.85rem 1.3rem` |
 
 The base `.btn-unified` sets `min-height: 3rem`, so a size class is what brings
-it down — omitting one gives you a taller button than you probably intended.
+it *down* — omitting one gives a taller button than you probably intended.
 
-**`btn-unified-sm` is below the 44px touch minimum.** Don't use it as a primary
-touch target on mobile; keep it for dense desktop toolbars, or pair it with
-extra padding on small viewports.
+`btn-unified-sm` is `2.35rem` (38px), under the 44px touch minimum. A mobile
+media query raises it to `2.75rem` below 768px, so it is safe on touch, but the
+declared size is still the desktop one. Keep it for dense desktop toolbars.
 
 ## Variants in practice
 
@@ -56,8 +56,33 @@ extra padding on small viewports.
 - **Secondary** — everything alongside it: Cancel, Back, alternative routes.
 - **Danger** — destructive and irreversible only. Not for Cancel.
 
-Sign-out is not destructive. It uses the warm terracotta treatment
+Sign-out is not destructive. It uses the terracotta treatment
 (`--site-highlight`), not `danger`. See the header profile menu.
+
+## States
+
+**Hover.** Primary deepens to `--site-accent-strong`. No lift, no scale —
+`transform: none` is set on purpose.
+
+**Disabled.** An explicit muted surface, not reduced opacity:
+
+```css
+background: var(--site-panel-strong);
+border-color: var(--site-border-strong);
+color: var(--site-muted);
+```
+
+Fading a filled button leaves white text on a washed accent — the AI review
+submit measured **2.03:1** that way, which is unreadable rather than merely
+quiet. Disabled controls are formally exempt from WCAG contrast, but the point
+of a disabled label is that you can still read what the button would do. The
+muted surface lands at 5.3:1. Do not replace it with `opacity`.
+
+**Focus.** Must stay visible. Do not set `outline: none` without an inset ring
+replacement.
+
+**Reduced motion.** The global `prefers-reduced-motion: reduce` block flattens
+transitions, so any hover effect has to read as a static state change too.
 
 ## Labels
 
@@ -69,21 +94,10 @@ Avoid directive phrasing that tells a renter what to do about their lease. The
 product surfaces information, sources, and questions to verify — labels should
 too.
 
-## States
-
-- `:disabled` gets `cursor: not-allowed` and reduced opacity from the base rule.
-  Keep the element focusable-adjacent; do not remove the label.
-- Hover on primary deepens to `--site-accent-strong`. There is no lift or scale
-  transform — `transform: none` is set on purpose.
-- Focus must remain visible. Do not set `outline: none` without an inset ring
-  replacement.
-- The global `prefers-reduced-motion: reduce` block flattens transitions, so any
-  hover effect has to read as a static state change too.
-
 ## Do not
 
-- Use raw Bootstrap `btn btn-primary` — it brings its own blue.
-- Leave `text-danger` on a control; it clashes with the warm neutrals.
-- Add `transition: all`.
+- Use raw Bootstrap `btn btn-primary`; it brings its own blue.
+- Leave `text-danger` on a control.
+- Add `transition: all` — it is a test failure, not a preference.
 - Introduce a new button class without checking whether one of the three real
   appearances already covers it.
