@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Github, Scale, Wrench } from "lucide-react";
+import { FileText, FlaskConical, Github, Scale, Wrench } from "lucide-react";
 
 const team = [
   {
@@ -12,8 +12,8 @@ const team = [
   },
   {
     name: "Dan Jackson",
-    role: "Legal support",
-    focus: "Policy review, attorney replies",
+    role: "Advisor",
+    focus: "Legal-side product guidance",
     icon: Scale,
     accent: "terra" as const,
   },
@@ -23,6 +23,14 @@ const team = [
     focus: "Next.js + Express + Mongo",
     icon: Wrench,
     accent: "muted" as const,
+  },
+  {
+    // Two names on one card so the section lands on a single row of four.
+    name: "Zhihao Qian & Tianze Li",
+    role: "Research",
+    focus: "UPL pilot study",
+    icon: FlaskConical,
+    accent: "olive" as const,
   },
 ];
 
@@ -45,7 +53,7 @@ export default function InfoPage() {
       </div>
       <div className="row g-4 mb-4">
         {team.map((member) => (
-          <div className="col-md-6 col-lg-4" key={member.name}>
+          <div className="col-md-6 col-lg-3" key={member.name}>
             <div className="info-team-card">
               <div
                 className={`info-team-icon info-team-icon--${member.accent}`}
