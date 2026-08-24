@@ -7,10 +7,6 @@
 }
 
 .pageHeader {
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr);
-  align-items: end;
-  gap: 2rem;
   padding: 0.45rem 0 1.35rem;
 }
 
@@ -21,14 +17,6 @@
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1;
-}
-
-.pageHeader p {
-  width: min(100%, 45ch);
-  margin: 0 0 0.1rem auto;
-  color: var(--site-muted);
-  font-size: 0.875rem;
-  line-height: 1.55;
 }
 
 .sectionLabel {
@@ -348,17 +336,11 @@
   }
 
   .pageHeader {
-    display: block;
     padding: 0 0 1.1rem;
   }
 
   .pageHeader h1 {
     font-size: 2rem;
-  }
-
-  .pageHeader p {
-    margin: 0.65rem 0 0;
-    font-size: 0.8125rem;
   }
 
   .workspace {

@@ -10,7 +10,7 @@ test.describe("ai review upload", () => {
     await expect(page).toHaveURL(/\/ai-review$/);
 
     const chooserPromise = page.waitForEvent("filechooser", { timeout: 5_000 });
-    await page.getByText("Choose file", { exact: true }).click();
+    await page.locator(".acet-file-upload-surface").click();
     await chooserPromise;
   });
 });

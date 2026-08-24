@@ -117,9 +117,6 @@ export default function AceternityFileUpload({
                 : `${pdfOnly ? "PDF" : pdfAndDocxOnly ? "PDF or Word" : "PDF, Word, or text"}, up to ${maxSizeMb}MB`}
             </div>
           </div>
-          <span className="acet-file-upload-action">
-                        {activeFile ? "Change file" : "Choose file"}
-                    </span>
         </div>
 
         <AnimatePresence initial={false}>

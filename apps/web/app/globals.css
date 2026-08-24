@@ -4411,22 +4411,6 @@ select:focus-visible,
   letter-spacing: -0.01em;
 }
 
-.acet-file-upload-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--site-accent);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  white-space: nowrap;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
 .acet-file-upload-note {
   color: var(--site-muted);
   font-size: 0.8125rem;
@@ -6242,10 +6226,6 @@ select:focus-visible,
 
   .acet-file-upload-copy {
     flex-wrap: wrap;
-  }
-
-  .acet-file-upload-action {
-    margin-left: 0;
   }
 
   .post-detail-context-bar,

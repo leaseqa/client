@@ -310,10 +310,7 @@ export default function AIReviewPage() {
       />
 
       <section className={styles.pageHeader} aria-labelledby="review-page-title">
-        <div>
-          <h1 id="review-page-title">Review My Lease</h1>
-        </div>
-        <p>Compare your lease with cited Massachusetts tenant guidance.</p>
+        <h1 id="review-page-title">Review My Lease</h1>
       </section>
 
       <div className={styles.workspace}>
