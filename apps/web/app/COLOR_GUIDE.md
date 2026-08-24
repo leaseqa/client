@@ -145,12 +145,38 @@ existed side by side, which is not a hierarchy anyone chose. Collapsing them
 moved no value by more than 0.68px, because the band was dense enough that every
 size already had a neighbour.
 
-Sizes **16px and above are not on a scale yet** — the heading layer still holds
-18 distinct values. Fixing that means deciding which headings are the same
-level, which is a design call rather than a rounding one, so it is deliberately
-left open.
+## Type scale — heading layer
 
-A test asserts the body band holds only these six.
+16px and above sits on five steps.
+
+| rem | px | Use |
+| --- | --- | --- |
+| `1rem` | 16 | Lead copy, inline titles |
+| `1.125rem` | 18 | Small section headings |
+| `1.25rem` | 20 | Section headings |
+| `1.5rem` | 24 | Page and card titles |
+| `2rem` | 32 | Hero |
+
+These were assigned **by role, not by nearest number**. The band is sparse, so
+rounding produces real jumps and lands on the wrong answer: an automatic pass
+put `.compose-form-title` and `.journey h2` — both card-level headings — into
+different steps purely because one was 21.6px and the other 20.8px.
+
+**Four values sit outside the scale on purpose.** They use `font-size` to size a
+glyph or a figure, not to place text in a hierarchy:
+
+- `.account-avatar`, `.avatar-circle`, `.team-avatar`, `.emoji-icon-lg`,
+  `.sidenav-icon` — avatar and icon glyphs
+- `.site-wordmark` — the brand mark
+- `.primaryAction span` — the CTA arrow
+- `.admin-v2-card-value`, `.stat-box-value`, `.landing-stat-val`,
+  `.review-summary-count span` — display figures
+
+Sizing an icon with `font-size` works but hides it from the type scale. Moving
+those to explicit `width`/`height` would let the exclusion list go away; until
+then the invariant skips them by name.
+
+Two tests assert both bands hold only their steps.
 
 ## Radius
 

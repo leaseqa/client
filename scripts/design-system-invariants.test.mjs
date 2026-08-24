@@ -140,3 +140,43 @@ test("the body type layer holds only its six steps", async () => {
     `off-scale body sizes: ${offenders.join(", ")}. Use one of ${[...BODY].join(", ")}.`,
   );
 });
+
+test("the heading layer holds only its five steps", async () => {
+  // 16px and up. The exclusions are not headings: they use font-size to size a
+  // glyph or a display figure, so a type scale does not apply to them.
+  const HEADING = new Set(["1rem", "1.125rem", "1.25rem", "1.5rem", "2rem"]);
+  const NOT_TYPE = [
+    "account-avatar", "avatar-circle", "team-avatar", "emoji-icon-lg",
+    "sidenav-icon", "site-wordmark", "primaryAction",
+    "admin-v2-card-value", "stat-box-value", "landing-stat-val",
+    "review-summary-count",
+  ];
+  const offenders = [];
+  for (const file of await collectCss()) {
+    const css = stripComments(await readFile(file, "utf8"));
+    // Crude rule split is enough: we only need the selector text preceding each
+    // font-size, and these stylesheets do not nest style rules.
+    for (const block of css.split("}")) {
+      const brace = block.lastIndexOf("{");
+      if (brace === -1) continue;
+      const selector = block.slice(0, brace).split(/[{;]/).pop().trim();
+      const match = /font-size\s*:\s*([^;}]+)/.exec(block.slice(brace));
+      if (!match) continue;
+      const value = match[1].trim();
+      if (value.includes("!important") || /^(var|calc|clamp)\(/.test(value)) continue;
+      const rem = /^([\d.]+)rem$/.exec(value);
+      const px = /^([\d.]+)px$/.exec(value);
+      const size = rem ? Number(rem[1]) * 16 : px ? Number(px[1]) : null;
+      if (size === null || size < 16) continue;
+      if (NOT_TYPE.some((n) => selector.includes(n))) continue;
+      if (!HEADING.has(value)) {
+        offenders.push(`${path.relative(CLIENT_DIR, file)}: ${selector} ${value}`);
+      }
+    }
+  }
+  assert.deepEqual(
+    offenders,
+    [],
+    `off-scale heading sizes: ${offenders.join(", ")}. Use one of ${[...HEADING].join(", ")}.`,
+  );
+});

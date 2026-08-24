@@ -149,7 +149,7 @@
 .clauseText {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.16rem;
+  font-size: 1.125rem;
   font-weight: 700;
   line-height: 1.36;
 }
@@ -267,7 +267,7 @@
   font-weight: 700;
 }
 .journey h2 {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   line-height: 1.1;
 }
 .journey h3 {
@@ -338,7 +338,7 @@
     text-align: center;
   }
   .clauseText {
-    font-size: 1.05rem;
+    font-size: 1rem;
   }
   .journey {
     display: block;
