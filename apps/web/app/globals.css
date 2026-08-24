@@ -178,7 +178,7 @@ body {
 .card-nested {
   border: 0;
   background: var(--panel-muted);
-  border-radius: var(--radius-md);
+  border-radius: var(--site-radius);
   margin-bottom: 0.5rem;
 }
 
@@ -254,7 +254,7 @@ body {
 
 /* Risk Cards */
 .card.risk-card {
-  border-radius: var(--radius-md);
+  border-radius: var(--site-radius);
   padding: 1rem;
   height: 100%;
 }
@@ -456,7 +456,7 @@ body {
    6. FORMS & INPUTS
    ============================================ */
 .input-rounded {
-  border-radius: var(--radius-md);
+  border-radius: var(--site-radius);
 }
 
 .input-pill {
@@ -486,7 +486,7 @@ body {
 .drop-zone {
   background: var(--panel-muted);
   border: 2px dashed var(--border-light);
-  border-radius: var(--radius-md);
+  border-radius: var(--site-radius);
   padding: 2rem;
   text-align: center;
   cursor: pointer;
@@ -625,7 +625,7 @@ body {
   background: var(--panel-dark);
   border-radius: var(--radius-full);
   padding: 6px 14px;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--ink-light);
   display: inline-block;
@@ -663,7 +663,7 @@ body {
   font-size: 0.65rem;
   font-weight: 600;
   padding: 0.15rem 0.5rem;
-  border-radius: 10px;
+  border-radius: 0.625rem;
   text-transform: uppercase;
 }
 
@@ -777,7 +777,7 @@ body {
 .resource-item,
 .template-item {
   background: var(--panel-muted);
-  border-radius: var(--radius-md);
+  border-radius: var(--site-radius);
   padding: 1rem;
 }
 
@@ -831,7 +831,7 @@ body {
 /* Stat Box */
 .stat-box {
   background: rgba(92, 110, 78, 0.08);
-  border-radius: var(--radius-md);
+  border-radius: var(--site-radius);
   padding: 1rem;
   height: 100%;
 }
@@ -1183,7 +1183,7 @@ body {
 .post-sidebar-count {
   padding: 0.1rem 0.5rem;
   background: white;
-  border-radius: 10px;
+  border-radius: 0.625rem;
 }
 
 .post-sidebar-items {
@@ -1191,7 +1191,7 @@ body {
 }
 
 .post-sidebar-item {
-  border-radius: 8px;
+  border-radius: 0.5rem;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
   margin-bottom: 0.25rem;
 }
@@ -1295,7 +1295,7 @@ body {
 }
 
 .feed-section-post {
-  border-radius: 8px;
+  border-radius: 0.5rem;
   background: var(--light-gray);
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
@@ -1321,7 +1321,7 @@ body {
   font-size: 0.7rem;
   font-weight: 500;
   padding: 0.25rem 0.6rem;
-  border-radius: 12px;
+  border-radius: var(--site-radius);
   border: 1px solid var(--site-border-strong);
 }
 
@@ -1330,7 +1330,7 @@ body {
   font-weight: 600;
   padding: 0.25rem 0.6rem;
   text-transform: uppercase;
-  border-radius: 12px;
+  border-radius: var(--site-radius);
   border: 1px solid transparent;
 }
 
@@ -1370,7 +1370,7 @@ body {
 .feed-header {
   background: white;
   border: 1px solid var(--qa-border);
-  border-radius: 12px;
+  border-radius: var(--site-radius);
   padding: 1rem;
   margin-bottom: 1rem;
 }
@@ -1392,7 +1392,7 @@ body {
 
 .feed-header-post {
   padding: 0.75rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   background: var(--light-gray);
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
@@ -1429,7 +1429,7 @@ body {
   font-size: 0.7rem;
   font-weight: 500;
   padding: 0.25rem 0.6rem;
-  border-radius: 12px;
+  border-radius: var(--site-radius);
   border: 1px solid var(--site-border-strong);
 }
 
@@ -1438,7 +1438,7 @@ body {
   font-weight: 600;
   padding: 0.25rem 0.6rem;
   text-transform: uppercase;
-  border-radius: 12px;
+  border-radius: var(--site-radius);
   border: 1px solid transparent;
 }
 
@@ -1563,7 +1563,7 @@ body {
 .compose-form-select {
   padding: 0.6rem 0.75rem;
   border: 1px solid var(--qa-border);
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-size: 0.875rem;
   background: white;
   transition: border-color 0.15s ease;
@@ -1602,7 +1602,7 @@ body {
 
 .compose-form-editor {
   border: 1px solid var(--qa-border);
-  border-radius: 8px;
+  border-radius: 0.5rem;
   overflow: hidden;
 }
 
@@ -1630,7 +1630,7 @@ body {
   padding: 0.75rem;
   background: #fef2f2;
   border: 1px solid #fecaca;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-size: 0.85rem;
 }
 
@@ -1808,7 +1808,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0.75rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-size: 0.85rem;
   text-decoration: none;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
@@ -1858,7 +1858,7 @@ body {
 
 .post-edit-title {
   border: 1px solid var(--qa-border);
-  border-radius: 8px;
+  border-radius: 0.5rem;
 }
 
 .post-edit-title:focus {
@@ -1898,7 +1898,7 @@ body {
 .post-edit-select {
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--qa-border);
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-size: 0.875rem;
   background: white;
   min-width: 150px;
@@ -1974,7 +1974,7 @@ body {
 .post-answer-item {
   padding: 1rem;
   background: var(--light-gray);
-  border-radius: 8px;
+  border-radius: 0.5rem;
 }
 
 .post-answer-header {
@@ -2046,7 +2046,7 @@ body {
 .post-discussion-item {
   padding: 0.75rem;
   background: var(--light-gray);
-  border-radius: 8px;
+  border-radius: 0.5rem;
 }
 
 .post-discussion-header {
@@ -2164,7 +2164,7 @@ body {
   align-items: center;
   gap: 0.4rem;
   padding: 0.5rem 1rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -2202,7 +2202,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-size: 0.875rem;
 }
 
@@ -2234,7 +2234,7 @@ body {
 .manage-card {
   background: white;
   border: 1px solid var(--qa-border);
-  border-radius: 12px;
+  border-radius: var(--site-radius);
   overflow: hidden;
 }
 
@@ -2259,7 +2259,7 @@ body {
   color: var(--text-muted);
   background: white;
   padding: 0.25rem 0.6rem;
-  border-radius: 12px;
+  border-radius: var(--site-radius);
   border: 1px solid var(--qa-border);
 }
 
@@ -2302,7 +2302,7 @@ body {
 .manage-form-group textarea {
   padding: 0.6rem 0.75rem;
   border: 1px solid var(--qa-border);
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-size: 0.875rem;
   transition: border-color 0.15s ease;
 }
@@ -2540,7 +2540,7 @@ body {
   font-size: 0.65rem;
   font-weight: 600;
   padding: 0.15rem 0.5rem;
-  border-radius: 10px;
+  border-radius: 0.625rem;
   text-transform: uppercase;
 }
 
@@ -2619,7 +2619,7 @@ body {
 .post-status-options {
   display: flex;
   gap: 0;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   overflow: hidden;
 }
 
@@ -2662,7 +2662,7 @@ body {
 
 .post-status-badge {
   padding: 0.35rem 0.75rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-size: 0.8rem;
   font-weight: 500;
 }
@@ -3108,7 +3108,7 @@ select:focus-visible,
   font-weight: 600;
   font-size: 0.9rem;
   padding: 0.75rem 1.6rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   text-decoration: none;
   transition: background 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   box-shadow: 0 2px 8px rgba(92, 110, 78, 0.2);
@@ -3135,7 +3135,7 @@ select:focus-visible,
   font-weight: 600;
   font-size: 0.9rem;
   padding: 0.75rem 1.6rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   border: 1.5px solid var(--site-border-strong);
   color: var(--site-ink);
   text-decoration: none;
@@ -3288,7 +3288,7 @@ select:focus-visible,
 .landing-how-icon {
   width: 38px;
   height: 38px;
-  border-radius: 10px;
+  border-radius: 0.625rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3319,7 +3319,7 @@ select:focus-visible,
 
 .landing-stats {
   background: #2c2825;
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   padding: 1.75rem 2rem;
   position: relative;
   overflow: hidden;
@@ -3391,7 +3391,7 @@ select:focus-visible,
 .landing-stat {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 10px;
+  border-radius: 0.625rem;
   padding: 1rem;
   text-align: center;
   transition: background 0.25s;
@@ -3927,7 +3927,7 @@ select:focus-visible,
   gap: 0.55rem;
   width: min(42rem, 100%);
   padding: 0.95rem 1rem;
-  border-radius: 1rem;
+  border-radius: var(--radius-lg);
   border: 1px solid rgba(44, 40, 37, 0.08);
   box-shadow: 0 18px 30px rgba(44, 40, 37, 0.05);
 }
@@ -4209,7 +4209,7 @@ select:focus-visible,
   position: relative;
   width: 100%;
   border: 1px dashed var(--site-border-strong);
-  border-radius: 0.75rem;
+  border-radius: var(--site-radius);
   padding: 1.25rem 1rem;
   background: transparent;
   text-align: left;
@@ -5445,7 +5445,7 @@ select:focus-visible,
   align-items: center;
   gap: 0.75rem;
   padding: 0.85rem 1rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   background: var(--site-panel-strong);
 }
 
@@ -5462,7 +5462,7 @@ select:focus-visible,
 .account-activity-empty {
   min-height: 11rem;
   border: 1px dashed rgba(92, 110, 78, 0.16);
-  border-radius: 1rem;
+  border-radius: var(--radius-lg);
   background: linear-gradient(180deg, rgba(255, 252, 248, 0.92) 0%, rgba(248, 243, 238, 0.98) 100%);
   display: flex;
   align-items: center;
@@ -5488,7 +5488,7 @@ select:focus-visible,
   font-weight: 600;
   font-size: 0.875rem;
   padding: 0.65rem 1.4rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   border: none;
   cursor: pointer;
   transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
@@ -5510,7 +5510,7 @@ select:focus-visible,
   font-weight: 600;
   font-size: 0.875rem;
   padding: 0.65rem 1.4rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   border: 1px solid var(--site-border-strong);
   cursor: pointer;
   transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
@@ -5533,7 +5533,7 @@ select:focus-visible,
   font-weight: 600;
   font-size: 0.875rem;
   padding: 0.65rem 1.4rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   border: 1px solid rgba(180, 74, 45, 0.25);
   cursor: pointer;
   transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
@@ -5616,7 +5616,7 @@ select:focus-visible,
 }
 
 .auth-card .form-control {
-  border-radius: 8px;
+  border-radius: 0.5rem;
   border-color: var(--site-border-strong);
   padding: 0.65rem 0.85rem;
 }
@@ -5679,7 +5679,7 @@ select:focus-visible,
 .info-team-icon {
   width: 40px;
   height: 40px;
-  border-radius: 10px;
+  border-radius: 0.625rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5857,7 +5857,7 @@ select:focus-visible,
 .post-action-btn {
   width: 36px;
   height: 36px;
-  border-radius: 0.75rem;
+  border-radius: var(--site-radius);
   border: 1px solid var(--site-border);
   background: var(--site-panel-strong);
   color: var(--site-muted);
@@ -5870,7 +5870,7 @@ select:focus-visible,
 }
 
 .post-action-btn.pin {
-  border-radius: 0.75rem;
+  border-radius: var(--site-radius);
   padding: 0.4rem 0.5rem;
   background: var(--site-panel-strong);
 }
@@ -5982,7 +5982,7 @@ select:focus-visible,
 .post-btn {
   min-height: 2.5rem;
   padding: 0.55rem 0.95rem;
-  border-radius: 0.75rem;
+  border-radius: var(--site-radius);
   border: 1px solid transparent;
   font-weight: 600;
 }
@@ -6014,7 +6014,7 @@ select:focus-visible,
 .post-editor-box {
   margin-top: 1rem;
   border: 1px solid var(--site-border);
-  border-radius: 1rem;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--site-panel-strong);
 }
@@ -6075,7 +6075,7 @@ select:focus-visible,
   padding: 1rem;
   background: var(--site-panel-strong);
   border: 1px solid var(--site-border);
-  border-radius: 1rem;
+  border-radius: var(--radius-lg);
 }
 
 .post-answer-header,
@@ -6586,7 +6586,7 @@ select:focus-visible,
   padding: 0;
   overflow: hidden;
   border: 1px solid var(--site-border-strong);
-  border-radius: 0.75rem;
+  border-radius: var(--site-radius);
   background: var(--site-panel);
   box-shadow:
     0 16px 40px -12px rgba(44, 40, 37, 0.18),
