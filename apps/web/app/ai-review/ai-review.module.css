@@ -27,14 +27,14 @@
   width: min(100%, 45ch);
   margin: 0 0 0.1rem auto;
   color: var(--site-muted);
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   line-height: 1.55;
 }
 
 .eyebrow,
 .sectionLabel {
   color: var(--site-accent-strong);
-  font-size: 0.68rem;
+  font-size: 0.6875rem;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -81,7 +81,7 @@
   border-bottom: 2px solid transparent;
   background: transparent;
   color: var(--site-muted);
-  font-size: 0.82rem;
+  font-size: 0.8125rem;
   font-weight: 800;
 }
 
@@ -129,7 +129,7 @@
   padding-top: 0.75rem;
   border-top: 1px solid var(--site-border);
   color: var(--site-muted);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   line-height: 1.4;
 }
 
@@ -156,7 +156,7 @@
   display: block;
   margin: -0.45rem 0 1rem;
   color: var(--site-text-tertiary);
-  font-size: 0.68rem;
+  font-size: 0.6875rem;
 }
 
 .historyState {
@@ -164,7 +164,7 @@
   flex-direction: column;
   gap: 0.15rem;
   color: var(--site-muted);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   line-height: 1.45;
 }
 
@@ -186,7 +186,7 @@
 
 .historyItem span:first-child {
   overflow: hidden;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -194,7 +194,7 @@
 
 .historyItem span:last-child {
   color: var(--site-text-tertiary);
-  font-size: 0.68rem;
+  font-size: 0.6875rem;
 }
 
 .historyItem:hover,
@@ -232,7 +232,7 @@
 
 .conversationHeader > span {
   color: var(--site-text-tertiary);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
 }
 
@@ -266,7 +266,7 @@
   max-width: 45ch;
   margin: 0.65rem 0 1.15rem;
   color: var(--site-muted);
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   line-height: 1.55;
 }
 
@@ -283,12 +283,12 @@
   grid-template-columns: 1.9rem 1fr;
   align-items: baseline;
   color: var(--site-accent-strong);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
 }
 
 .emptyConversation li span {
   color: var(--site-text-tertiary);
-  font-size: 0.66rem;
+  font-size: 0.6875rem;
   font-weight: 800;
 }
 
@@ -314,7 +314,7 @@
 .sourceStatus {
   margin: 0 0 0.7rem;
   color: var(--site-muted);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
 }
 
 .chatArea {
@@ -361,7 +361,7 @@
   gap: 1rem;
   padding-top: 0.65rem;
   color: var(--site-muted);
-  font-size: 0.68rem;
+  font-size: 0.6875rem;
 }
 
 .boundaryNote strong {
@@ -384,7 +384,7 @@
 
   .pageHeader p {
     margin: 0.65rem 0 0;
-    font-size: 0.82rem;
+    font-size: 0.8125rem;
   }
 
   .workspace {
@@ -523,7 +523,7 @@
 
   .boundaryNote {
     display: block;
-    font-size: 0.64rem;
+    font-size: 0.625rem;
     line-height: 1.5;
   }
 

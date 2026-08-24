@@ -127,6 +127,31 @@ Prominent navigation and action labels use Title Case (`Review My Lease`,
 `Go to Account`). Small section labels are uppercase with wide tracking
 (`0.09em`–`0.14em`) at `0.61rem`–`0.69rem`, in `--site-muted`.
 
+## Type scale — body layer
+
+Everything below 16px sits on six steps. Nothing between them.
+
+| rem | px | Use |
+| --- | --- | --- |
+| `0.625rem` | 10 | Micro labels, tracked uppercase eyebrows |
+| `0.6875rem` | 11 | Meta, timestamps, counts |
+| `0.75rem` | 12 | Captions, secondary detail |
+| `0.8125rem` | 13 | Secondary body |
+| `0.875rem` | 14 | Body |
+| `0.9375rem` | 15 | Emphasised body, menu rows |
+
+This band held **34 distinct values** before: 13.12, 13.28, 13.44 and 13.6px all
+existed side by side, which is not a hierarchy anyone chose. Collapsing them
+moved no value by more than 0.68px, because the band was dense enough that every
+size already had a neighbour.
+
+Sizes **16px and above are not on a scale yet** — the heading layer still holds
+18 distinct values. Fixing that means deciding which headings are the same
+level, which is a design call rather than a rounding one, so it is deliberately
+left open.
+
+A test asserts the body band holds only these six.
+
 ## Radius
 
 `--site-radius` (`0.75rem`) is the default. Header controls use `0.625rem`, menu

@@ -114,3 +114,29 @@ test("the stylesheet carries no leftover empty declarations", async () => {
   const bare = (css.match(/\n[ \t]*;[ \t]*(?=\n)/g) || []).length;
   assert.equal(bare, 0, `${bare} empty declarations left behind — a removal dropped the text but kept its semicolon`);
 });
+
+test("the body type layer holds only its six steps", async () => {
+  // Anything under 16px belongs to the body scale. The heading layer above it
+  // is deliberately not constrained yet — see COLOR_GUIDE.md.
+  const BODY = new Set(["0.625rem", "0.6875rem", "0.75rem", "0.8125rem", "0.875rem", "0.9375rem"]);
+  const offenders = [];
+  for (const file of await collectCss()) {
+    const css = stripComments(await readFile(file, "utf8"));
+    for (const match of css.matchAll(/font-size\s*:\s*([^;}]+)/g)) {
+      const value = match[1].trim();
+      if (value.includes("!important") || /^(var|calc|clamp)\(/.test(value)) continue;
+      const rem = /^([\d.]+)rem$/.exec(value);
+      const px = /^([\d.]+)px$/.exec(value);
+      const size = rem ? Number(rem[1]) * 16 : px ? Number(px[1]) : null;
+      if (size === null || size >= 16) continue;
+      if (!BODY.has(value)) {
+        offenders.push(`${path.relative(CLIENT_DIR, file)}: ${value} (${size}px)`);
+      }
+    }
+  }
+  assert.deepEqual(
+    offenders,
+    [],
+    `off-scale body sizes: ${offenders.join(", ")}. Use one of ${[...BODY].join(", ")}.`,
+  );
+});
