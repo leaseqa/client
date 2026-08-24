@@ -368,7 +368,6 @@ export default function AIReviewPage() {
       </div>
 
       <div className={styles.boundaryNote}>
-        <strong>Legal information, not legal advice.</strong>
         <span>Cited sources stay visible throughout the review.</span>
       </div>
     </div>

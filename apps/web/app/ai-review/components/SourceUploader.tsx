@@ -130,14 +130,12 @@ export default function SourceUploader({
               : "Start Review"}
           </AceternityStatefulButton>
 
-          <div className={styles.sourceNote}>
-            <Shield size={13}/>
-            <span>
-              {isGuest
-                ? "Guest reviews stay in this browser session."
-                : "Legal information, not legal advice."}
-            </span>
-          </div>
+          {isGuest && (
+            <div className={styles.sourceNote}>
+              <Shield size={13}/>
+              <span>Guest reviews stay in this browser session.</span>
+            </div>
+          )}
         </Form>
       </div>
     </section>

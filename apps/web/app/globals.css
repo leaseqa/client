@@ -6341,6 +6341,10 @@ select:focus-visible,
   overflow-x: auto;
   padding-bottom: 0.375rem;
   scrollbar-width: none;
+  /* Hiding the scrollbar removes the only cue that this row overflows, so
+     fade the trailing edge instead of hard-clipping the last chip. */
+  mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
 }
 
 .scenario-filter::-webkit-scrollbar {

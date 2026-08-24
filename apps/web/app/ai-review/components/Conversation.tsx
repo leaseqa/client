@@ -206,10 +206,6 @@ export default function Conversation({
         <div className={styles.emptyConversation}>
           <div className={styles.emptyAccent}/>
           <h2>Clause context starts here.</h2>
-          <p>
-            Once a source is added, this space keeps the lease wording,
-            cited guidance, and follow-up questions together.
-          </p>
           <ol>
             <li><span>01</span><strong>Exact lease language</strong></li>
             <li><span>02</span><strong>Cited tenant guidance</strong></li>

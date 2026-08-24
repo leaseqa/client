@@ -1,19 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
 
 import { Stat } from "../types";
 import * as client from "../client";
+import { isApiError } from "@/app/lib/api/client";
 
 import PageLoadingState from "@/components/ui/PageLoadingState";
 import StatBox from "@/components/ui/StatBox";
 import ProgressItem from "@/components/ui/ProgressItem";
 
+type AccessState = "ok" | "signed-out" | "forbidden" | "error";
+
 export default function StatsPage() {
   const [stats, setStats] = useState<Stat[]>([]);
   const [breakdown, setBreakdown] = useState<Stat[]>([]);
   const [loading, setLoading] = useState(true);
+  const [access, setAccess] = useState<AccessState>("ok");
 
   useEffect(() => {
     loadStats();
@@ -33,8 +38,16 @@ export default function StatsPage() {
         ]);
         setBreakdown(response.data.breakdown || []);
       }
+      setAccess("ok");
     } catch ( error ) {
       console.error("Failed to load stats:", error);
+      if ( isApiError(error) && error.status === 401 ) {
+        setAccess("signed-out");
+      } else if ( isApiError(error) && error.status === 403 ) {
+        setAccess("forbidden");
+      } else {
+        setAccess("error");
+      }
     } finally {
       setLoading(false);
     }
@@ -42,6 +55,34 @@ export default function StatsPage() {
 
   if ( loading ) {
     return <PageLoadingState message="Loading stats..."/>;
+  }
+
+  if ( access !== "ok" ) {
+    const copy = {
+      "signed-out": "Sign in to view community stats.",
+      forbidden: "Stats are only visible to administrators.",
+      error: "Couldn't load stats. Please try again.",
+    }[access];
+
+    return (
+      <div className="qa-page qa-stats-page">
+        <section className="page-header-section">
+          <h1 className="qa-page-title">Community stats</h1>
+        </section>
+        <div className="qa-empty-flat qa-error-state" role="alert">
+          <h2 className="qa-empty-title">Stats Unavailable</h2>
+          <p className="qa-empty-desc">{copy}</p>
+          {access === "signed-out" && (
+            <Link
+              className="qa-empty-action"
+              href={`/auth/login?next=${encodeURIComponent("/qa/stats")}`}
+            >
+              Sign In
+            </Link>
+          )}
+        </div>
+      </div>
+    );
   }
 
   const maxBreakdown = Math.max(...breakdown.map((b) => b.value), 1);

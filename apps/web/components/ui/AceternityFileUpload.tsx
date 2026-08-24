@@ -69,7 +69,7 @@ export default function AceternityFileUpload({
     syncFiles(nextFiles.slice(0, 1));
   };
 
-  const { getRootProps, isDragActive, open } = useDropzone({
+  const { getRootProps, isDragActive } = useDropzone({
     accept: acceptMap,
     maxFiles: 1,
     maxSize: maxSizeMb * 1024 * 1024,
@@ -95,7 +95,7 @@ export default function AceternityFileUpload({
         whileHover={{ y: -1 }}
         whileTap={{ scale: 0.995 }}
         className={`acet-file-upload-surface ${isDragActive ? "is-active" : ""}`}
-        onClick={open}
+        onClick={() => inputRef.current?.click()}
       >
         <div className="acet-file-upload-copy">
           <div className="acet-file-upload-icon">
