@@ -114,7 +114,7 @@ export default function AceternityFileUpload({
             <div className="acet-file-upload-note">
               {isDragActive
                 ? "Drop the file here"
-                : `Drag a file here or click to browse. Max ${maxSizeMb}MB.`}
+                : `${pdfOnly ? "PDF" : pdfAndDocxOnly ? "PDF or Word" : "PDF, Word, or text"}, up to ${maxSizeMb}MB`}
             </div>
           </div>
           <span className="acet-file-upload-action">
@@ -144,23 +144,7 @@ export default function AceternityFileUpload({
                 {activeFile.type || (pdfAndDocxOnly ? "PDF/DOCX" : "PDF")}
               </div>
             </motion.div>
-          ) : (
-            <motion.div
-              key="empty"
-              initial={{ opacity: 0.65 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              className="acet-file-upload-empty"
-            >
-              <div className="acet-file-upload-empty-line">
-                {pdfOnly
-                  ? "PDF only."
-                  : pdfAndDocxOnly
-                    ? "PDF or Word (.docx) only."
-                    : "PDF, DOCX, TXT, or Markdown."} One file at a time.
-              </div>
-            </motion.div>
-          )}
+          ) : null}
         </AnimatePresence>
       </motion.button>
     </div>

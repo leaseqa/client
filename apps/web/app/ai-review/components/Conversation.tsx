@@ -1,5 +1,5 @@
 import { Badge, Form } from "react-bootstrap";
-import { FileText, MessageSquareQuote, Shield } from "lucide-react";
+import { MessageSquareQuote, Shield } from "lucide-react";
 
 import AceternityStatefulButton from "@/components/ui/AceternityStatefulButton";
 import { ChatMessage, RagSession } from "../types";
@@ -72,10 +72,6 @@ export default function Conversation({
       {showSession ? (
         <div className={styles.activeConversation}>
           <div className={styles.currentSource}>
-            <div className="qa-sidebar-label">
-              <FileText size={12}/>
-              <span>Current source</span>
-            </div>
             <h3>{resultsPanelState.title}</h3>
             <p className={styles.sourceStatus}>{resultsPanelState.subtitle}</p>
             <p className="review-summary-text">{displaySourcePreview}</p>

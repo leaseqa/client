@@ -311,13 +311,9 @@ export default function AIReviewPage() {
 
       <section className={styles.pageHeader} aria-labelledby="review-page-title">
         <div>
-          <div className={styles.eyebrow}>Lease Review Workspace</div>
           <h1 id="review-page-title">Review My Lease</h1>
         </div>
-        <p>
-          Add a lease or clause, then compare its language with cited
-          Massachusetts tenant guidance.
-        </p>
+        <p>Compare your lease with cited Massachusetts tenant guidance.</p>
       </section>
 
       <div className={styles.workspace}>
@@ -365,10 +361,6 @@ export default function AIReviewPage() {
           onSubmitQuestion={handleSendMessage}
           onPrompt={(prompt) => void submitQuestion(prompt)}
         />
-      </div>
-
-      <div className={styles.boundaryNote}>
-        <span>Cited sources stay visible throughout the review.</span>
       </div>
     </div>
   );

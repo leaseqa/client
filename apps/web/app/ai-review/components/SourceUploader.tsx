@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
-import { Shield } from "lucide-react";
 
 import AceternityFileUpload from "@/components/ui/AceternityFileUpload";
 import AceternityStatefulButton from "@/components/ui/AceternityStatefulButton";
@@ -130,12 +129,6 @@ export default function SourceUploader({
               : "Start Review"}
           </AceternityStatefulButton>
 
-          {isGuest && (
-            <div className={styles.sourceNote}>
-              <Shield size={13}/>
-              <span>Guest reviews stay in this browser session.</span>
-            </div>
-          )}
         </Form>
       </div>
     </section>

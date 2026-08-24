@@ -6336,19 +6336,10 @@ select:focus-visible,
 }
 
 .scenario-filter {
-  flex-wrap: nowrap;
+  /* Wraps rather than scrolling: with the scrollbar hidden there was no cue
+     that the row overflowed, so trailing topics were unreachable. */
+  flex-wrap: wrap;
   gap: 0.5rem;
-  overflow-x: auto;
-  padding-bottom: 0.375rem;
-  scrollbar-width: none;
-  /* Hiding the scrollbar removes the only cue that this row overflows, so
-     fade the trailing edge instead of hard-clipping the last chip. */
-  mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
-}
-
-.scenario-filter::-webkit-scrollbar {
-  display: none;
 }
 
 .scenario-chip {

@@ -31,7 +31,6 @@
   line-height: 1.55;
 }
 
-.eyebrow,
 .sectionLabel {
   color: var(--site-accent-strong);
   font-size: 0.6875rem;
@@ -120,17 +119,6 @@
   background: var(--site-panel-strong) !important;
   color: var(--site-muted) !important;
   cursor: not-allowed;
-}
-
-.sourceNote {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--site-border);
-  color: var(--site-muted);
-  font-size: 0.75rem;
-  line-height: 1.4;
 }
 
 .desktopHistory {
@@ -354,20 +342,6 @@
   font-size: 0.75rem;
 }
 
-.boundaryNote {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-top: 0.65rem;
-  color: var(--site-muted);
-  font-size: 0.6875rem;
-}
-
-.boundaryNote strong {
-  color: var(--site-accent-strong);
-}
-
 @media (max-width: 767px) {
   .reviewPage {
     padding-top: 0;
@@ -521,16 +495,6 @@
     max-width: 16rem;
   }
 
-  .boundaryNote {
-    display: block;
-    font-size: 0.625rem;
-    line-height: 1.5;
-  }
-
-  .boundaryNote span {
-    display: block;
-    margin-top: 0.2rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
