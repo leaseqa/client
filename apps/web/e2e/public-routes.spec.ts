@@ -170,7 +170,7 @@ test.describe("public routes", () => {
       await page.goto("/auth/login");
       await expect(page.locator('input[name="email"]')).toBeVisible();
       await expect(page.locator('input[name="password"]')).toBeVisible();
-      await expect(page.getByRole("button", { name: "Sign In" })).toBeVisible();
+      await expect(page.getByRole("button", { name: "Sign in" })).toBeVisible();
       await expectShellRendered(page);
     });
   }
@@ -181,7 +181,7 @@ test.describe("public routes", () => {
     await stubSession(page, "unauthorized");
     await page.goto("/ai-review");
     await expect(page).toHaveURL(/\/auth\/login/);
-    await expect(page.getByRole("button", { name: "Sign In" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sign in" })).toBeVisible();
     await expectShellRendered(page);
   });
 
@@ -190,8 +190,8 @@ test.describe("public routes", () => {
   }) => {
     await stubSession(page, "authenticated");
     await page.goto("/ai-review");
-    await expect(page.getByRole("tab", { name: "Upload File" })).toBeVisible();
-    await expect(page.getByRole("tab", { name: "Paste Text" })).toBeVisible();
+    await expect(page.getByRole("tab", { name: "Upload file" })).toBeVisible();
+    await expect(page.getByRole("tab", { name: "Paste text" })).toBeVisible();
     await expectShellRendered(page);
   });
 

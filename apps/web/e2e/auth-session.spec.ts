@@ -8,7 +8,7 @@ async function login(page: Page, email: string, password: string, nextPath = "/a
   await page.goto(`/auth/login?next=${encodeURIComponent(nextPath)}`);
   await page.locator('input[name="email"]').fill(email);
   await page.locator('input[name="password"]').fill(password);
-  await page.getByRole("button", { name: "Sign In" }).click();
+  await page.getByRole("button", { name: "Sign in" }).click();
 }
 
 test.describe("auth session", () => {
@@ -25,7 +25,7 @@ test.describe("auth session", () => {
     await page.locator('input[name="email"]').fill(email);
     await page.locator('input[name="password"]').fill(password);
     await page.locator('input[name="confirmPassword"]').fill(password);
-    await page.getByRole("button", { name: "Sign Up" }).click();
+    await page.getByRole("button", { name: "Sign up" }).click();
 
     await expect(page.getByText("Account Created!")).toBeVisible();
     await page.getByRole("button", { name: "Go to Account" }).click();

@@ -1,6 +1,7 @@
 import React from "react";
-import { FaEdit, FaTrash } from "react-icons/fa";
 import { Folder, FolderDraft } from "../../types";
+import { SquarePen, Trash2 } from "lucide-react";
+import RemoteDataState from "@/components/ui/RemoteDataState";
 
 type SectionsTableProps = {
   folders: Folder[];
@@ -27,18 +28,21 @@ export default function SectionsTable({
   return (
     <div className="manage-card">
       <div className="manage-card-header">
-        <h2>Existing Sections</h2>
+        <h2>Existing sections</h2>
         <span className="manage-count">{folders.length} sections</span>
       </div>
       <div className="manage-card-body no-padding scrollable">
         {!folders.length ? (
-          <div className="manage-empty-state">
-            No sections found. Create one to get started.
-          </div>
+          <RemoteDataState
+            kind="empty"
+            title="No sections yet"
+            description="Create one to start grouping questions."
+            compact
+          />
         ) : (
           <div className="manage-table">
             <div className="manage-table-header">
-              <div className="manage-table-cell name">Display Name</div>
+              <div className="manage-table-cell name">Display name</div>
               <div className="manage-table-cell slug">Slug</div>
               <div className="manage-table-cell desc">Description</div>
               <div className="manage-table-cell actions">Actions</div>
@@ -60,7 +64,7 @@ export default function SectionsTable({
                   <div className="manage-table-cell actions">
                     <button className="manage-icon-btn edit" onClick={() => onEdit(folder._id)} title="Edit"
                             disabled={rowPending}>
-                      <FaEdit size={12}/>
+                      <SquarePen size={12}/>
                     </button>
                     <button
                       className="manage-icon-btn delete"
@@ -68,7 +72,7 @@ export default function SectionsTable({
                       disabled={locked || rowPending}
                       title={locked ? "Default section cannot be deleted" : "Delete"}
                     >
-                      <FaTrash size={12}/>
+                      <Trash2 size={12}/>
                     </button>
                   </div>
                 </div>

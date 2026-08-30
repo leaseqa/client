@@ -24,7 +24,9 @@ test.describe("qa stats", () => {
                                                                         }) => {
     await stubStatsError(page, 401);
     await page.goto("/qa/stats");
-    await expect(page.locator(".qa-error-state")).toContainText(/sign in/i);
+    // Not an error: being signed out is a permission state, and asserting the
+    // kind catches a regression that only the copy would otherwise hide.
+    await expect(page.locator("[data-state='permission']")).toContainText(/sign in/i);
   });
 
   test("a signed-in non-admin sees an admin-only message instead of a blank page", async ({
@@ -32,6 +34,6 @@ test.describe("qa stats", () => {
                                                                                            }) => {
     await stubStatsError(page, 403);
     await page.goto("/qa/stats");
-    await expect(page.locator(".qa-error-state")).toContainText(/administrators/i);
+    await expect(page.locator("[data-state='permission']")).toContainText(/admin/i);
   });
 });

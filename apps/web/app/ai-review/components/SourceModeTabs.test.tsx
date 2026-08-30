@@ -35,16 +35,16 @@ describe("SourceModeTabs", () => {
     const { onFilesChange } = renderUploader();
 
     expect(
-      screen.getByRole("tab", { name: "Upload File" }).getAttribute("aria-selected"),
+      screen.getByRole("tab", { name: "Upload file" }).getAttribute("aria-selected"),
     ).toBe("true");
     expect(
       screen.queryByLabelText("Lease clause or housing text"),
     ).toBeNull();
 
-    fireEvent.click(screen.getByRole("tab", { name: "Paste Text" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Paste text" }));
 
     expect(
-      screen.getByRole("tab", { name: "Paste Text" }).getAttribute("aria-selected"),
+      screen.getByRole("tab", { name: "Paste text" }).getAttribute("aria-selected"),
     ).toBe("true");
     expect(screen.getByLabelText("Lease clause or housing text")).not.toBeNull();
     expect(onFilesChange).toHaveBeenCalledWith([]);
@@ -54,10 +54,10 @@ describe("SourceModeTabs", () => {
     const { onSourceTextChange } = renderUploader("A lease clause draft");
 
     expect(
-      screen.getByRole("tab", { name: "Paste Text" }).getAttribute("aria-selected"),
+      screen.getByRole("tab", { name: "Paste text" }).getAttribute("aria-selected"),
     ).toBe("true");
 
-    fireEvent.click(screen.getByRole("tab", { name: "Upload File" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Upload file" }));
 
     expect(onSourceTextChange).toHaveBeenCalledWith("");
     expect(
@@ -68,7 +68,7 @@ describe("SourceModeTabs", () => {
   test("collapses a completed source on mobile until the renter chooses to change it", () => {
     renderUploader("", true);
 
-    const summary = screen.getByRole("button", { name: "Change Source" });
+    const summary = screen.getByRole("button", { name: "Change source" });
     const sourceRegion = screen.getByRole("region", { name: "Lease source" });
     expect(summary.getAttribute("aria-expanded")).toBe("false");
     expect(sourceRegion.getAttribute("data-expanded")).toBe("false");
@@ -77,7 +77,7 @@ describe("SourceModeTabs", () => {
 
     expect(summary.getAttribute("aria-expanded")).toBe("true");
     expect(sourceRegion.getAttribute("data-expanded")).toBe("true");
-    expect(screen.getByRole("tab", { name: "Upload File" })).not.toBeNull();
+    expect(screen.getByRole("tab", { name: "Upload file" })).not.toBeNull();
   });
 
   test("configures Word uploads without emitting an invalid MIME warning", () => {
@@ -93,7 +93,7 @@ describe("SourceModeTabs", () => {
     renderUploader();
 
     expect(
-      (screen.getByRole("button", { name: "Start Review" }) as HTMLButtonElement)
+      (screen.getByRole("button", { name: "Start review" }) as HTMLButtonElement)
         .disabled,
     ).toBe(true);
   });

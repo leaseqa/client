@@ -116,3 +116,22 @@ describe("RemoteDataState action", () => {
     expect(button.getAttribute("type")).toBe("button");
   });
 });
+
+describe("permission", () => {
+  test("describes the condition without raising an alert", () => {
+    render(
+      <RemoteDataState
+        kind="permission"
+        title="Admins only"
+        description="Stats are limited to administrator accounts."
+      />,
+    );
+
+    // An alert role would interrupt; a missing role would go unannounced.
+    expect(screen.queryByRole("alert")).toBeNull();
+    const region = screen.getByText("Admins only").closest("section");
+    expect(region?.getAttribute("data-state")).toBe("permission");
+    expect(region?.getAttribute("aria-live")).toBe("polite");
+  });
+});
+

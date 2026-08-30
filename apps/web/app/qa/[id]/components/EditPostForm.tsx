@@ -1,7 +1,7 @@
 import React from "react";
-import { FaTimes } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { Folder } from "../../types";
+import { X } from "lucide-react";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -98,7 +98,7 @@ export default function EditPostForm({
               <span key={folderName} className="post-edit-tag">
                                 {folder?.displayName || folderName}
                 <button type="button" onClick={() => handleFolderRemove(folderName)}>
-                                    <FaTimes size={10}/>
+                                    <X size={10}/>
                                 </button>
                             </span>
             );

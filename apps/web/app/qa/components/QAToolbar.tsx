@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import { FaPlus, FaSearch } from "react-icons/fa";
 import { RootState } from "@/app/store";
+import { Plus, Search } from "lucide-react";
 
 type QAToolbarProps = {
   initialSearch?: string;
@@ -42,7 +42,7 @@ export default function QAToolbar({
           Search community questions
         </label>
         <div className="qa-toolbar-search">
-          <FaSearch size={14} className="qa-toolbar-search-icon"/>
+          <Search size={14} className="qa-toolbar-search-icon"/>
           <input
             id="qa-community-search"
             type="text"
@@ -77,7 +77,7 @@ export default function QAToolbar({
           type="button"
           onClick={() => router.push("/qa?compose=1")}
         >
-          <FaPlus size={12}/>
+          <Plus size={12}/>
           <span>Ask</span>
         </button>
       )}

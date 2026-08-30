@@ -35,13 +35,13 @@ export default function ManageSidebar({
       <div className="admin-v2-cards">
         {stats.pendingLawyerCount !== null && (
           <div className="admin-v2-card">
-            <div className="admin-v2-card-title">Pending Verification</div>
+            <div className="admin-v2-card-title">Pending verification</div>
             <div className="admin-v2-card-value">{stats.pendingLawyerCount}</div>
           </div>
         )}
         {stats.bannedUserCount !== null && (
           <div className="admin-v2-card">
-            <div className="admin-v2-card-title">Banned Users</div>
+            <div className="admin-v2-card-title">Banned users</div>
             <div className="admin-v2-card-value">{stats.bannedUserCount}</div>
           </div>
         )}

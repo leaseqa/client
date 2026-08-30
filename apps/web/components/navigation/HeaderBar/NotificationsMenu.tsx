@@ -1,6 +1,6 @@
 import React from "react";
 import { Dropdown } from "react-bootstrap";
-import { FaBell } from "react-icons/fa";
+import { Bell } from "lucide-react";
 
 export type NotificationMenuItem = {
   _id: string;
@@ -55,7 +55,7 @@ export default function NotificationsMenu({
             hasUnread ? "has-unread" : ""
           }`}
         >
-          <FaBell className="text-secondary" size={16}/>
+          <Bell className="text-secondary" size={16}/>
         </div>
       </Dropdown.Toggle>
       <Dropdown.Menu className="notifications-menu">

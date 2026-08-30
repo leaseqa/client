@@ -1,6 +1,7 @@
 import React from "react";
-import { FaBan, FaCheck, FaTrash, FaUserCheck } from "react-icons/fa";
 import { User } from "../../types";
+import { Ban, Check, Trash2, UserCheck } from "lucide-react";
+import RemoteDataState from "@/components/ui/RemoteDataState";
 
 type UsersTableProps = {
   users: User[];
@@ -33,7 +34,7 @@ export default function UsersTable({
       </div>
       <div className="manage-card-body no-padding scrollable">
         {!users.length ? (
-          <div className="manage-empty-state">No users found.</div>
+          <RemoteDataState kind="empty" title="No users found" compact/>
         ) : (
           <div className="manage-table">
             <div className="manage-table-header">
@@ -91,9 +92,9 @@ export default function UsersTable({
                         className="manage-icon-btn verify"
                         onClick={() => onVerifyLawyer(user._id)}
                         disabled={isPending}
-                        title="Verify Lawyer"
+                        title="Verify lawyer"
                       >
-                        <FaUserCheck size={12}/>
+                        <UserCheck size={12}/>
                       </button>
                     )}
                     {!isSelf && (
@@ -102,17 +103,17 @@ export default function UsersTable({
                           className={`manage-icon-btn ${user.banned ? "unban" : "ban"}`}
                           onClick={() => onToggleBan(user._id, !user.banned)}
                           disabled={isPending}
-                          title={user.banned ? "Unban User" : "Ban User"}
+                          title={user.banned ? "Unban user" : "Ban user"}
                         >
-                          {user.banned ? <FaCheck size={12}/> : <FaBan size={12}/>}
+                          {user.banned ? <Check size={12}/> : <Ban size={12}/>}
                         </button>
                         <button
                           className="manage-icon-btn delete"
                           onClick={() => onDelete(user._id)}
                           disabled={isPending}
-                          title="Delete User"
+                          title="Delete user"
                         >
-                          <FaTrash size={12}/>
+                          <Trash2 size={12}/>
                         </button>
                       </>
                     )}

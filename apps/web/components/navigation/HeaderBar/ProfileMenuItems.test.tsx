@@ -33,12 +33,12 @@ function labels() {
 describe("ProfileMenuItems — signed out", () => {
   test("offers sign in and account creation", () => {
     renderItems();
-    expect(labels()).toEqual(["Sign In", "Create Account"]);
+    expect(labels()).toEqual(["Sign in", "Create account"]);
   });
 
   test("routes to the login page", () => {
     const { navigate } = renderItems();
-    fireEvent.click(screen.getByText("Sign In"));
+    fireEvent.click(screen.getByText("Sign in"));
     expect(navigate).toHaveBeenCalledWith("/auth/login");
   });
 });
@@ -47,9 +47,9 @@ describe("ProfileMenuItems — guest", () => {
   test("keeps the approved guest actions in order", () => {
     renderItems({ isGuest: true });
     expect(labels()).toEqual([
-      "View Profile",
-      "Sign In for Full Access",
-      "Create Account",
+      "View profile",
+      "Sign in for full access",
+      "Create account",
     ]);
   });
 
@@ -60,7 +60,7 @@ describe("ProfileMenuItems — guest", () => {
 
   test("routes to the account page", () => {
     const { navigate } = renderItems({ isGuest: true });
-    fireEvent.click(screen.getByText("View Profile"));
+    fireEvent.click(screen.getByText("View profile"));
     expect(navigate).toHaveBeenCalledWith("/account");
   });
 });

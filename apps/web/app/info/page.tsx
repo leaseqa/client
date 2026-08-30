@@ -39,7 +39,7 @@ export default function InfoPage() {
     <div className="mb-4">
       <section className="page-header-section">
         <span className="landing-eyebrow">About</span>
-        <h1 className="qa-page-title">Team & Credits</h1>
+        <h1 className="qa-page-title">Team &amp; credits</h1>
         <p className="qa-page-sub">
           Helping Boston renters understand their rights.
         </p>

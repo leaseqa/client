@@ -14,7 +14,7 @@ async function loginAsUser(page: Page, email: string, nextPath: string) {
   await page.goto(`/auth/login?next=${encodeURIComponent(nextPath)}`);
   await page.locator('input[name="email"]').fill(email);
   await page.locator('input[name="password"]').fill(TEST_PASSWORD);
-  await page.getByRole("button", { name: "Sign In" }).click();
+  await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).not.toHaveURL(/\/auth\/login/, { timeout: 10_000 });
 }
 
@@ -64,15 +64,18 @@ test.describe("ai review conversation", () => {
       SKIP_RAG_CONVERSATION_TEST,
       "Grounded-answer coverage requires Milvus-backed RAG services.",
     );
-    // Two conversation turns, each a real ~15s chat-model call, plus a
-    // possible one-shot retry per turn on the known abstention flake — well
-    // past Playwright's 30s default.
+    // Three real chat-model calls plus a possible one-shot retry per turn on
+    // the known abstention flake. Measured server-side on this clause:
+    // doubao-seed-2.0-lite ~7s/turn, whole test 38s. Note the frontend's axios
+    // timeout is 20s (app/lib/api/client.ts), so a model slower than that fails
+    // in the browser no matter what this budget says — glm-5-3-flash at
+    // 20-28s/turn could not pass even at 240s.
     test.setTimeout(120_000);
 
     await loginAsUser(page, TENANT_EMAIL, "/ai-review");
     await expect(page).toHaveURL(/\/ai-review$/);
 
-    await page.getByRole("tab", { name: "Paste Text" }).click();
+    await page.getByRole("tab", { name: "Paste text" }).click();
     await page.locator('textarea[name="sourceText"]').fill(SAMPLE_CLAUSE);
     const createSessionResponse = page.waitForResponse(
       (response) =>
@@ -80,7 +83,7 @@ test.describe("ai review conversation", () => {
         response.request().method() === "POST" &&
         response.ok(),
     );
-    await page.getByRole("button", { name: "Start Review" }).click();
+    await page.getByRole("button", { name: "Start review" }).click();
     await createSessionResponse;
 
     await expectGroundedAnswer(

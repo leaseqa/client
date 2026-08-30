@@ -12,7 +12,7 @@ async function loginAsUser(page: Page, email: string, nextPath: string) {
   await page.goto(`/auth/login?next=${encodeURIComponent(nextPath)}`);
   await page.locator('input[name="email"]').fill(email);
   await page.locator('input[name="password"]').fill(TEST_PASSWORD);
-  await page.getByRole("button", { name: "Sign In" }).click();
+  await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).not.toHaveURL(/\/auth\/login/, { timeout: 10_000 });
 }
 
@@ -87,8 +87,8 @@ test.describe("activity notifications", () => {
     await expect(page).toHaveURL(/\/ai-review$/);
 
     // The source picker opens on Upload, so the textarea only exists once
-    // Paste Text is selected.
-    await page.getByRole("tab", { name: "Paste Text" }).click();
+    // Paste text is selected.
+    await page.getByRole("tab", { name: "Paste text" }).click();
     await page.locator('textarea[name="sourceText"]').fill(SAMPLE_CLAUSE);
     const createSessionResponse = page.waitForResponse(
       (response) =>
@@ -96,7 +96,7 @@ test.describe("activity notifications", () => {
         response.request().method() === "POST" &&
         response.ok(),
     );
-    await page.getByRole("button", { name: "Start Review" }).click();
+    await page.getByRole("button", { name: "Start review" }).click();
     await createSessionResponse;
 
     await page.goto("/account");
@@ -194,7 +194,7 @@ test.describe("activity notifications", () => {
       "This post verifies discussion notifications.",
     );
     const discussionCard = tenantPage.locator(".post-detail-card", {
-      hasText: "Follow-up Discussion",
+      hasText: "Follow-up discussion",
     });
     await discussionCard.getByRole("button", { name: "Write follow-up" }).click();
     await discussionCard.locator(".ql-editor").last().fill(tenantRoot);
@@ -215,7 +215,7 @@ test.describe("activity notifications", () => {
       new URL(postUrl).pathname + new URL(postUrl).search,
     );
     const adminDiscussionCard = adminPage.locator(".post-detail-card", {
-      hasText: "Follow-up Discussion",
+      hasText: "Follow-up discussion",
     });
     const tenantThread = adminDiscussionCard.locator(".post-discussion-item", {
       hasText: tenantRoot,

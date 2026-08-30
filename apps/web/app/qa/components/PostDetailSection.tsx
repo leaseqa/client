@@ -8,6 +8,7 @@ import * as client from "../client";
 import { AnswersSection, DiscussionsSection, PostContent } from "../[id]/components/index";
 import { Folder } from "../types";
 import { Answer, Discussion, PostDetailData } from "../[id]/types";
+import RemoteDataState from "@/components/ui/RemoteDataState";
 
 type PostDetailSectionProps = {
   postId: string;
@@ -210,12 +211,7 @@ export default function PostDetailSection({
             Back to questions
           </button>
         </div>
-        <div className="d-flex justify-content-center align-items-center py-4">
-          <div className="text-center">
-            <div className="spinner-border text-primary mb-2" role="status"/>
-            <div className="text-secondary">Loading post…</div>
-          </div>
-        </div>
+        <RemoteDataState kind="loading" title="Loading post…"/>
       </section>
     );
   }
@@ -231,8 +227,11 @@ export default function PostDetailSection({
         </div>
         <div className="post-detail-empty-copy">
           <div className="post-section-kicker">Question detail</div>
-          <h2 className="post-detail-empty-title">{error || "Post not found."}</h2>
-          <p className="post-empty-note">Choose another thread from the QA list and try again.</p>
+          <RemoteDataState
+            kind="error"
+            title={error || "Post not found"}
+            description="Choose another thread from the list, or go back to questions."
+          />
         </div>
       </section>
     );

@@ -15,12 +15,6 @@ import {
 import AnswerSections from "./AnswerSections";
 import styles from "../ai-review.module.css";
 
-type RevealingMessage = {
-  key: string;
-  fullText: string;
-  visibleLength: number;
-};
-
 type ConversationProps = {
   showSession: boolean;
   resultsPanelState: ResultsPanelState;
@@ -31,7 +25,6 @@ type ConversationProps = {
   pendingDraftSource: boolean;
   pendingUserQuestion: string | null;
   pendingAssistantLabel: string | null;
-  revealingMessage: RevealingMessage | null;
   question: string;
   sendingMessage: boolean;
   onQuestionChange: (value: string) => void;
@@ -49,7 +42,6 @@ export default function Conversation({
   pendingDraftSource,
   pendingUserQuestion,
   pendingAssistantLabel,
-  revealingMessage,
   question,
   sendingMessage,
   onQuestionChange,
@@ -90,11 +82,6 @@ export default function Conversation({
                 <>
                   {activeMessages.map((message, index) => {
                     const messageKey = `${message.createdAt}-${index}`;
-                    const isRevealing = revealingMessage?.key === messageKey;
-                    const messageBody = isRevealing
-                      ? revealingMessage.fullText.slice(0, revealingMessage.visibleLength)
-                      : message.content;
-
                     return (
                       <article
                         key={messageKey}
@@ -104,8 +91,6 @@ export default function Conversation({
                         <AnswerSections
                           message={message}
                           messageKey={messageKey}
-                          isRevealing={Boolean(isRevealing)}
-                          messageBody={messageBody}
                         />
                       </article>
                     );
@@ -185,7 +170,7 @@ export default function Conversation({
                 <AceternityStatefulButton
                   type="submit"
                   status={sendingMessage ? "loading" : "idle"}
-                  className="btn-unified btn-unified-primary btn-unified-md"
+                  className="btn-warm-primary"
                   disabled={!question.trim() || activeSession.status !== "ready"}
                 >
                   {sendingMessage ? "Sending" : "Ask"}

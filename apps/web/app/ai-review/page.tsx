@@ -11,7 +11,6 @@ import { RootState } from "@/app/store";
 import { RagSession } from "./types";
 import {
   getDisplayedSource,
-  getNextRevealLength,
   getResultsPanelState,
   getSessionInputPlan,
   getVisibleMessages,
@@ -43,17 +42,11 @@ export default function AIReviewPage() {
     sourcePreview: string;
   } | null>(null);
   const [pendingAssistantLabel, setPendingAssistantLabel] = useState<string | null>(null);
-  const [revealingMessage, setRevealingMessage] = useState<{
-    key: string;
-    fullText: string;
-    visibleLength: number;
-  } | null>(null);
   const [toast, setToast] = useState<ToastData>({
     show: false,
     message: "",
     type: "error",
   });
-  const revealTimerRef = useRef<number | null>(null);
 
   const showToast = useCallback((message: string, type: "success" | "error") => {
     setToast({ show: true, message, type });
@@ -77,72 +70,11 @@ export default function AIReviewPage() {
     sessions.find((item) => item._id === resolvedId) ||
     null;
 
-  const stopReveal = useCallback(() => {
-    if ( revealTimerRef.current ) {
-      window.clearTimeout(revealTimerRef.current);
-      revealTimerRef.current = null;
-    }
-    setRevealingMessage(null);
-  }, []);
-
-  const startReveal = useCallback((messageKey: string, fullText: string) => {
-    stopReveal();
-    if ( !fullText ) {
-      return;
-    }
-    setRevealingMessage({
-      key: messageKey,
-      fullText,
-      visibleLength: 0,
-    });
-  }, [stopReveal]);
-
   useEffect(() => {
     if ( session.status === "unauthenticated" ) {
       router.replace("/auth/login?next=%2Fai-review");
     }
   }, [session.status, router]);
-
-  useEffect(() => {
-    if ( !revealingMessage ) {
-      return;
-    }
-
-    revealTimerRef.current = window.setTimeout(() => {
-      setRevealingMessage((current) => {
-        if ( !current ) {
-          return current;
-        }
-        const nextLength = getNextRevealLength(
-          current.visibleLength,
-          current.fullText,
-        );
-        if ( nextLength >= current.fullText.length ) {
-          return null;
-        }
-        return {
-          ...current,
-          visibleLength: nextLength,
-        };
-      });
-      revealTimerRef.current = null;
-    }, 18);
-
-    return () => {
-      if ( revealTimerRef.current ) {
-        window.clearTimeout(revealTimerRef.current);
-        revealTimerRef.current = null;
-      }
-    };
-  }, [revealingMessage, stopReveal]);
-
-  useEffect(() => {
-    return () => {
-      if ( revealTimerRef.current ) {
-        window.clearTimeout(revealTimerRef.current);
-      }
-    };
-  }, []);
 
   const displayedSource = useMemo(
     () =>
@@ -168,19 +100,6 @@ export default function AIReviewPage() {
     [activeSession, pendingDraftSource],
   );
 
-  const triggerLatestAssistantReveal = useCallback((nextSession: RagSession) => {
-    const visibleMessages = getVisibleMessages(nextSession);
-    const latestAssistantIndex = [...visibleMessages]
-      .reverse()
-      .findIndex((message) => message.role === "assistant");
-    if ( latestAssistantIndex === -1 ) {
-      return;
-    }
-    const actualIndex = visibleMessages.length - 1 - latestAssistantIndex;
-    const latestAssistant = visibleMessages[actualIndex];
-    startReveal(`${latestAssistant.createdAt}-${actualIndex}`, latestAssistant.content);
-  }, [startReveal]);
-
   const submitQuestion = useCallback(async (rawQuestion: string) => {
     if ( !activeSession ) {
       showToast("Create a chat source first.", "error");
@@ -196,14 +115,12 @@ export default function AIReviewPage() {
       return;
     }
 
-    stopReveal();
     setQuestion("");
-    setPendingAssistantLabel("Researching the best supported answer...");
+    setPendingAssistantLabel("Searching the handbook");
 
     try {
-      const result = await sendAsync(trimmedQuestion);
+      await sendAsync(trimmedQuestion);
       setPendingAssistantLabel(null);
-      triggerLatestAssistantReveal(result.session);
     } catch ( error: unknown ) {
       setPendingAssistantLabel(null);
       setQuestion(trimmedQuestion);
@@ -212,7 +129,7 @@ export default function AIReviewPage() {
         "error",
       );
     }
-  }, [activeSession, sendAsync, showToast, stopReveal, triggerLatestAssistantReveal]);
+  }, [activeSession, sendAsync, showToast]);
 
   const handleCreateSession = async (
     event: React.FormEvent<HTMLFormElement>,
@@ -240,14 +157,13 @@ export default function AIReviewPage() {
         sourceName: "pasted-text",
         sourcePreview: sourceText.trim(),
       });
-      setPendingAssistantLabel("Analyzing this clause against the handbook...");
+      setPendingAssistantLabel("Matching this clause against the handbook");
     } else {
       setPendingDraftSource(null);
       setPendingAssistantLabel(null);
     }
 
     try {
-      stopReveal();
       const created = await createSession(formData);
       setPendingDraftSource(null);
       setPendingAssistantLabel(null);
@@ -259,9 +175,7 @@ export default function AIReviewPage() {
         const hasAssistantAnswer = getVisibleMessages(created).some(
           (message) => message.role === "assistant",
         );
-        if ( hasAssistantAnswer ) {
-          triggerLatestAssistantReveal(created);
-        } else {
+        if ( !hasAssistantAnswer ) {
           showToast(
             "The first answer failed. Retry the clause analysis or ask your own question.",
             "error",
@@ -310,7 +224,7 @@ export default function AIReviewPage() {
       />
 
       <section className={styles.pageHeader} aria-labelledby="review-page-title">
-        <h1 id="review-page-title">Review My Lease</h1>
+        <h1 id="review-page-title">Review my lease</h1>
       </section>
 
       <div className={styles.workspace}>
@@ -351,7 +265,6 @@ export default function AIReviewPage() {
           pendingDraftSource={Boolean(pendingDraftSource)}
           pendingUserQuestion={null}
           pendingAssistantLabel={pendingAssistantLabel}
-          revealingMessage={revealingMessage}
           question={question}
           sendingMessage={sendingMessage}
           onQuestionChange={setQuestion}

@@ -1,6 +1,7 @@
 import React from "react";
 import UsersTable from "./UsersTable";
 import type { User } from "../../types";
+import RemoteDataState from "@/components/ui/RemoteDataState";
 
 type UsersAvailableProps = {
   isDataAvailable: true;
@@ -48,7 +49,7 @@ export default function ManageUsersSection(props: ManageUsersSectionProps) {
         <h2>{title}</h2>
       </div>
       {isLoading ? (
-        <p className="admin-v2-loading-copy">Loading users…</p>
+        <RemoteDataState kind="loading" title="Loading users…" compact/>
       ) : props.isDataAvailable ? (
         props.users.length ? (
           <UsersTable
@@ -61,7 +62,7 @@ export default function ManageUsersSection(props: ManageUsersSectionProps) {
             onDelete={props.onDelete}
           />
         ) : (
-          <div className="manage-empty-state">No users found.</div>
+          <RemoteDataState kind="empty" title="No users found" compact/>
         )
       ) : (
         // Back-compat path

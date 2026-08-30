@@ -6,7 +6,11 @@
 // empty state after an error tells the renter there is nothing there, which is
 // a different and wrong claim.
 
-export type RemoteDataStateKind = "loading" | "empty" | "error";
+export type RemoteDataStateKind =
+  | "loading"
+  | "empty"
+  | "error"
+  | "permission";
 
 export type RemoteDataStateProps = {
   kind: RemoteDataStateKind;
@@ -22,6 +26,10 @@ const ROLE_BY_KIND: Record<RemoteDataStateKind, string | undefined> = {
   loading: "status",
   empty: undefined,
   error: "alert",
+  // Being signed out or lacking a role is not a failure to announce urgently;
+  // it is a condition to describe. The stylesheet already had a `permission`
+  // treatment before the kind existed.
+  permission: undefined,
 };
 
 export default function RemoteDataState({

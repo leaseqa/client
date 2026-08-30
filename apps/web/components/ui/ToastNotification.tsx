@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-
-import { FaCheckCircle, FaExclamationCircle, FaTimes } from "react-icons/fa";
+import { CircleAlert, CircleCheck, X } from "lucide-react";
 
 export type ToastType = "success" | "error";
 
@@ -20,12 +19,12 @@ type ToastNotificationProps = {
 const config = {
   success: {
     bgClass: "bg-gradient-green",
-    icon: <FaCheckCircle size={20}/>,
+    icon: <CircleCheck size={20}/>,
     title: "Success"
   },
   error: {
     bgClass: "bg-gradient-red",
-    icon: <FaExclamationCircle size={20}/>,
+    icon: <CircleAlert size={20}/>,
     title: "Error"
   }
 };
@@ -51,7 +50,7 @@ export default function ToastNotification({ toast, onClose }: ToastNotificationP
           <div className="small opacity-90">{toast.message}</div>
         </div>
         <button onClick={onClose} className="btn btn-link p-0 text-white opacity-75">
-          <FaTimes size={16}/>
+          <X size={16}/>
         </button>
       </div>
     </div>

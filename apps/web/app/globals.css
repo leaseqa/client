@@ -31,7 +31,6 @@
      ============================================ */
 
   /* 60% - Dominant Color (Background) */
-  --color-bg-primary: #f5f0eb; /* Main page background */
   --color-bg-secondary: #efe9e3; /* Subtle sections */
   --color-bg-tertiary: #e5ddd5; /* Hover states */
 
@@ -60,16 +59,12 @@
 
   /* Legacy Colors (for backward compatibility) */
   --ink: var(--color-text-primary);
-  --ink-light: var(--color-text-secondary);
   --ink-muted: var(--color-text-muted);
   --panel-muted: var(--color-panel-muted);
-  --panel-dark: var(--color-bg-tertiary);
   --border: var(--color-border-primary);
-  --border-light: var(--color-border-subtle);
 
   /* Legacy Accents (mapped to new system) */
   --accent-red: var(--color-accent-error);
-  --accent-purple: var(--color-accent-primary); /* Legacy purple maps to olive */
   --accent-blue: var(--color-accent-info);
   --accent-green: var(--color-accent-success);
   --accent-success: var(--color-accent-success);
@@ -84,12 +79,10 @@
   --gradient-error: linear-gradient(135deg, #b5473a 0%, #8c362d 100%);
 
   /* Legacy Gradients (mapped to new system) */
-  --gradient-purple: var(--gradient-primary);
   --gradient-green: var(--gradient-success);
   --gradient-red: var(--gradient-error);
   --gradient-blue: var(--gradient-info);
   --gradient-dark: linear-gradient(135deg, #2c2825 0%, #3d3835 100%);
-  --gradient-sidenav: linear-gradient(180deg, #2c2825 0%, #3d3835 100%);
 
   /* Glass Effect */
   --glass-bg: rgba(255, 255, 255, 0.15);
@@ -108,7 +101,6 @@
   --shadow-xl: 0 15px 35px rgba(0, 0, 0, 0.15);
 
   /* Border Radius */
-  --radius-md: 0.75rem;
   --radius-lg: 1rem;
   --radius-2xl: 1.5rem;
   --radius-full: 9999px;
@@ -275,184 +267,6 @@ body {
 }
 
 /* ============================================
-   5. BUTTONS - Unified Button System
-   ============================================ */
-
-/* Base Button Styles */
-.btn-unified {
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.btn-unified:disabled {
-  /* Fading a filled button leaves white text on a washed accent — measured at
-     2.03:1 on the AI review submit. Disabled controls are exempt from WCAG
-     contrast, but that is unreadable rather than merely quiet, so the disabled
-     state is an explicit muted surface (5.3:1) instead of reduced opacity. */
-  background: var(--site-panel-strong);
-  border-color: var(--site-border-strong);
-  color: var(--site-muted);
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-/* Button Sizes */
-
-.btn-unified-md {
-  font-size: 0.875rem;
-}
-
-.btn-unified-lg {
-  font-size: 0.9375rem;
-}
-
-/* Button Variants */
-
-/* Primary - Main CTA (10% accent color) */
-.btn-unified-primary {
-  background: var(--color-accent-primary);
-  color: var(--color-text-inverse);
-  border-color: var(--color-accent-primary);
-}
-
-.btn-unified-primary:hover:not(:disabled) {
-  background: #3d4a33;
-  border-color: #3d4a33;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(92, 110, 78, 0.3);
-}
-
-.btn-unified-primary:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(92, 110, 78, 0.25);
-}
-
-/* Secondary - Secondary actions */
-.btn-unified-secondary {
-  background: var(--color-panel);
-  color: var(--color-text-primary);
-  border-color: var(--color-border-primary);
-}
-
-.btn-unified-secondary:hover:not(:disabled) {
-  background: var(--color-panel-hover);
-  border-color: var(--color-border-secondary);
-}
-
-/* Outline - Outlined style */
-.btn-unified-outline {
-  background: transparent;
-  color: var(--color-accent-primary);
-  border-color: var(--color-accent-primary);
-}
-
-.btn-unified-outline:hover:not(:disabled) {
-  background: rgba(92, 110, 78, 0.08);
-  border-color: #3d4a33;
-  color: #3d4a33;
-}
-
-/* Ghost - Minimal style */
-.btn-unified-ghost {
-  background: transparent;
-  color: var(--color-text-secondary);
-  border-color: transparent;
-}
-
-.btn-unified-ghost:hover:not(:disabled) {
-  background: var(--color-panel-hover);
-  color: var(--color-text-primary);
-}
-
-/* Danger - Destructive actions */
-.btn-unified-danger {
-  background: var(--color-accent-error);
-  color: var(--color-text-inverse);
-  border-color: var(--color-accent-error);
-}
-
-.btn-unified-danger:hover:not(:disabled) {
-  background: #8c362d;
-  border-color: #8c362d;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(181, 71, 58, 0.25);
-}
-
-/* Success - Success actions */
-.btn-unified-success {
-  background: var(--color-accent-success);
-  color: var(--color-text-inverse);
-  border-color: var(--color-accent-success);
-}
-
-.btn-unified-success:hover:not(:disabled) {
-  background: #3d4a33;
-  border-color: #3d4a33;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(92, 110, 78, 0.3);
-}
-
-/* Info - Info actions (blue) */
-.btn-unified-info {
-  background: var(--color-accent-info);
-  color: var(--color-text-inverse);
-  border-color: var(--color-accent-info);
-}
-
-.btn-unified-info:hover:not(:disabled) {
-  background: #3d4a33;
-  border-color: #3d4a33;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(92, 110, 78, 0.3);
-}
-
-/* Legacy Button Support (for backward compatibility) */
-.btn-pill {
-  border-radius: var(--radius-full);
-  padding: 0.5rem 1.5rem;
-}
-
-.btn-pill-lg {
-  border-radius: var(--radius-full);
-  padding: 0.75rem 2rem;
-}
-
-.btn-pill-padded {
-  border-radius: var(--radius-full);
-  padding: 0.75rem 1.5rem;
-}
-
-/* Gradient Buttons - Legacy (mapped to new system) */
-.btn-gradient-purple,
-.btn-gradient-green,
-.btn-gradient-red {
-  border: none;
-  color: white;
-}
-
-.btn-gradient-purple:hover,
-.btn-gradient-green:hover,
-.btn-gradient-red:hover {
-  opacity: 0.9;
-  color: white;
-}
-
-.btn-gradient-purple {
-  background: var(--gradient-primary);
-}
-
-.btn-gradient-green {
-  background: var(--gradient-success);
-}
-
-.btn-gradient-red {
-  background: var(--gradient-error);
-}
-
-/* ============================================
    6. FORMS & INPUTS
    ============================================ */
 .input-rounded {
@@ -480,21 +294,6 @@ body {
 
 .search-text {
   font-size: 0.875rem;
-}
-
-/* Drop Zone */
-.drop-zone {
-  background: var(--panel-muted);
-  border: 2px dashed var(--border-light);
-  border-radius: var(--site-radius);
-  padding: 2rem;
-  text-align: center;
-  cursor: pointer;
-  transition: border-color var(--transition-fast);
-}
-
-.drop-zone:hover {
-  border-color: var(--site-accent);
 }
 
 /* Rich Text Editor */
@@ -594,46 +393,7 @@ body {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid var(--glass-border);
 }
-
-/* Emoji Icons */
-.emoji-icon-lg {
-  font-size: 1.5rem;
-}
-
-/* Tech Stack Dots */
-.tech-dot {
-  width: 10px;
-  height: 10px;
-}
-
-.tech-dot-dark {
-  background: #000000;
-}
-
-.tech-dot-bootstrap {
-  background: #7952b3;
-}
-
-.tech-dot-mongo {
-  background: #47a248;
-}
-
-/* ============================================
-   8. BADGES & PILLS
-   ============================================ */
-.pill {
-  background: var(--panel-dark);
-  border-radius: var(--radius-full);
-  padding: 6px 14px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--ink-light);
-  display: inline-block;
-}
-
-/* Glass Pills (for dark backgrounds) */
-.pill-glass,
-.about-pill {
+.about-pill  {
   background: var(--glass-bg);
   color: white;
   display: inline-block;
@@ -685,49 +445,6 @@ body {
 .scenario-chip {
   padding-inline: 10px;
   padding-block: 2px;
-}
-
-/* ============================================
-   9. NAVIGATION
-   ============================================ */
-
-/* Side Nav */
-.sidenav-container {
-  width: var(--nav-width);
-  background: var(--gradient-sidenav);
-}
-
-.sidenav-divider {
-  width: 40px;
-  height: 2px;
-  background: var(--glass-border);
-  border-radius: 1px;
-}
-
-.sidenav-icon {
-  font-size: 1.5rem;
-}
-
-.sidenav-icon-active,
-.sidenav-label-active {
-  color: #fff;
-}
-
-.sidenav-icon-inactive,
-.sidenav-label-inactive {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.sidenav-label {
-  font-size: 0.6875rem;
-}
-
-.sidenav-label-active {
-  font-weight: 600;
-}
-
-.sidenav-label-inactive {
-  font-weight: 400;
 }
 
 /* Header Bar */
@@ -872,35 +589,6 @@ body {
 .scrollable-lg {
   max-height: 500px;
   overflow-y: auto;
-}
-
-/* Dividers */
-.divider-text {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  color: var(--ink-muted);
-  font-size: 0.875rem;
-}
-
-.divider-text::before,
-.divider-text::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--border-light);
-}
-
-/* ============================================
-   11. TABLES
-   ============================================ */
-.table-actions-col {
-  width: 160px;
-  text-align: end;
-}
-
-.table-description-col {
-  min-width: 160px;
 }
 
 /* ============================================
@@ -2327,12 +2015,6 @@ body {
   border-top: 1px solid var(--qa-border);
 }
 
-.manage-empty-state {
-  padding: 3rem;
-  text-align: center;
-  color: var(--text-muted);
-}
-
 .manage-empty {
   display: flex;
   flex-direction: column;
@@ -2963,63 +2645,81 @@ select:focus-visible,
 /* ============================================================
    7. BUTTONS
    ============================================================ */
-.btn-unified {
+/* One button family. There used to be four: `btn-unified-*` (declared twice,
+   the second block silently overriding the first), `btn-warm-*`, plus
+   `btn-pill*` and `btn-gradient-*` with no call sites at all. The survivors
+   keep `btn-warm`'s name and `--site-*` tokens, and `btn-unified`'s reasoned
+   disabled state and 44px minimum height. */
+.btn-warm-primary,
+.btn-warm-outline,
+.btn-warm-danger {
   display: inline-flex;
+  min-height: 2.75rem;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
-  min-height: 3rem;
-  border-radius: 0.7rem;
-  padding: 0.8rem 1.2rem;
-  font-size: 0.9375rem;
+  gap: 0.5rem;
+  padding: 0.65rem 1.4rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
   font-weight: 600;
   line-height: 1;
-  letter-spacing: 0.01em;
-  box-shadow: none;
-  vertical-align: middle;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
-.btn-unified-md {
-  min-height: 2.75rem;
-  padding: 0.7rem 1.05rem;
-}
-
-.btn-unified-lg {
-  min-height: 3.1rem;
-  padding: 0.85rem 1.3rem;
-}
-
-.btn-unified-primary,
-.btn-unified-success,
-.btn-unified-info {
-  background: var(--site-accent);
-  border-color: var(--site-accent);
-  color: #fff;
-}
-
-.btn-unified-primary:hover:not(:disabled),
-.btn-unified-success:hover:not(:disabled),
-.btn-unified-info:hover:not(:disabled) {
-  background: var(--site-accent-strong);
-  border-color: var(--site-accent-strong);
-  color: #fff;
-  transform: none;
-}
-
-.btn-unified-secondary,
-.btn-unified-outline,
-.btn-unified-ghost {
-  background: transparent;
+/* Fading a filled button leaves white text on a washed accent — measured at
+   2.03:1 on the AI review submit. Disabled controls are exempt from WCAG
+   contrast, but that is unreadable rather than merely quiet, so the disabled
+   state is an explicit muted surface (5.3:1) instead of reduced opacity. */
+.btn-warm-primary:disabled,
+.btn-warm-outline:disabled,
+.btn-warm-danger:disabled {
   border-color: var(--site-border-strong);
+  background: var(--site-panel-strong);
+  color: var(--site-muted);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn-warm-primary {
+  border-color: var(--site-accent);
+  background: var(--site-accent);
+  color: #fff;
+}
+
+.btn-warm-primary:hover:not(:disabled) {
+  border-color: var(--site-accent-strong);
+  background: var(--site-accent-strong);
+  color: #fff;
+}
+
+.btn-warm-outline {
+  border-color: var(--site-border-strong);
+  background: transparent;
   color: var(--site-ink);
 }
 
-.btn-unified-secondary:hover:not(:disabled),
-.btn-unified-outline:hover:not(:disabled),
-.btn-unified-ghost:hover:not(:disabled) {
-  background: rgba(31, 27, 24, 0.05);
-  border-color: var(--site-ink);
-  color: var(--site-ink);
+.btn-warm-outline:hover:not(:disabled) {
+  border-color: var(--site-accent);
+  background: var(--site-accent-soft);
+  color: var(--site-accent);
+}
+
+.btn-warm-danger {
+  border-color: rgba(180, 74, 45, 0.25);
+  background: transparent;
+  color: #b44a2d;
+}
+
+.btn-warm-danger:hover:not(:disabled) {
+  border-color: rgba(180, 74, 45, 0.4);
+  background: rgba(180, 74, 45, 0.06);
 }
 
 .text-muted-light,
@@ -3029,24 +2729,6 @@ select:focus-visible,
 
 .bg-muted {
   background: rgba(248, 243, 236, 0.8) !important;
-}
-
-/* ============================================
-   LANDING PAGE — v1 Editorial style
-   ============================================ */
-.landing-page {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-/* Hero grid — two columns */
-.landing-hero-grid {
-  padding: 4rem 0 3rem;
-  display: grid;
-  grid-template-columns: 1fr 0.85fr;
-  gap: 2.5rem;
-  align-items: center;
 }
 
 .landing-eyebrow {
@@ -3069,298 +2751,6 @@ select:focus-visible,
   border-radius: 1px;
 }
 
-.landing-hero-title {
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(2.2rem, 4vw, 3rem);
-  font-weight: 800;
-  line-height: 1.14;
-  letter-spacing: -0.025em;
-  margin: 0 0 1.15rem;
-}
-
-.landing-hero-title em {
-  font-style: normal;
-  color: var(--site-accent);
-}
-
-.landing-hero-sub {
-  font-size: 1rem;
-  color: var(--site-muted);
-  line-height: 1.65;
-  margin: 0 0 1.75rem;
-  max-width: 460px;
-}
-
-.landing-hero-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.landing-hero-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap;
-  background: var(--site-accent);
-  color: #fff;
-  font-weight: 600;
-  font-size: 0.875rem;
-  padding: 0.75rem 1.6rem;
-  border-radius: 0.5rem;
-  text-decoration: none;
-  transition: background 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 2px 8px rgba(92, 110, 78, 0.2);
-}
-
-.landing-hero-cta:hover {
-  background: var(--site-accent-strong);
-  color: #fff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(92, 110, 78, 0.28);
-}
-
-.landing-hero-cta svg {
-  transition: transform 0.3s;
-}
-
-.landing-hero-cta:hover svg {
-  transform: translateX(3px);
-}
-
-.landing-hero-cta-outline {
-  display: inline-flex;
-  align-items: center;
-  font-weight: 600;
-  font-size: 0.875rem;
-  padding: 0.75rem 1.6rem;
-  border-radius: 0.5rem;
-  border: 1.5px solid var(--site-border-strong);
-  color: var(--site-ink);
-  text-decoration: none;
-  transition: background 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.landing-hero-cta-outline:hover {
-  border-color: var(--site-accent);
-  color: var(--site-accent);
-  background: var(--site-accent-soft);
-  transform: translateY(-1px);
-}
-
-/* Hero — hot posts column */
-.landing-hero-visual {
-  position: relative;
-  background: linear-gradient(180deg, rgba(255, 252, 248, 0.96) 0%, rgba(247, 242, 236, 0.92) 100%);
-  border: 1px solid rgba(44, 40, 37, 0.1);
-  border-radius: 1.75rem;
-  padding: 1.55rem 1.45rem;
-  align-self: start;
-  box-shadow: 0 18px 42px rgba(44, 40, 37, 0.08);
-}
-
-.landing-preview-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.landing-preview-label {
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--site-muted);
-  margin-bottom: 0.45rem;
-}
-
-.landing-preview-item {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.85rem;
-  padding: 1rem 0;
-  text-decoration: none;
-  color: var(--site-ink);
-  border-top: 1px solid rgba(44, 40, 37, 0.08);
-  transition: color 0.18s ease, transform 0.18s ease;
-}
-
-.landing-preview-item:hover {
-  color: var(--site-ink);
-  transform: translateX(2px);
-}
-
-.landing-preview-dot {
-  width: 0.48rem;
-  height: 0.48rem;
-  border-radius: 999px;
-  flex-shrink: 0;
-}
-
-.landing-preview-dot-new {
-  background: #c89d77;
-}
-
-.landing-preview-dot-active {
-  background: #6a7b5a;
-}
-
-.landing-preview-dot-answered {
-  background: #90a086;
-}
-
-.landing-preview-title {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  line-height: 1.45;
-  min-width: 0;
-}
-
-.landing-preview-status {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 4.5rem;
-  padding: 0.35rem 0.7rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  flex-shrink: 0;
-}
-
-.landing-preview-status-new {
-  background: #f3e5dc;
-  color: #b76844;
-}
-
-.landing-preview-status-active {
-  background: #eef2ea;
-  color: #526247;
-}
-
-.landing-preview-status-answered {
-  background: #e4e8e0;
-  color: #677360;
-}
-
-/* Section label */
-.landing-section-label {
-  margin-bottom: 1.25rem;
-}
-
-.landing-section-label h2 {
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin: 0;
-}
-
-/* How it works */
-.landing-how-section {
-  padding: 2.5rem 0;
-}
-
-.landing-how-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  counter-reset: step;
-}
-
-.landing-how-step {
-  position: relative;
-  padding-left: 0;
-}
-
-.landing-how-num {
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--site-accent);
-  margin-bottom: 0.75rem;
-}
-
-.landing-how-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 0.625rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.85rem;
-  background: var(--site-accent-soft);
-  color: var(--site-accent);
-}
-
-.landing-how-title {
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.125rem;
-  font-weight: 700;
-  margin: 0 0 0.35rem;
-  letter-spacing: -0.01em;
-}
-
-.landing-how-desc {
-  font-size: 0.8125rem;
-  color: var(--site-muted);
-  line-height: 1.55;
-  margin: 0;
-}
-
-/* Stats */
-.landing-stats-section {
-  padding: 0.5rem 0 2.5rem;
-}
-
-.landing-stats {
-  background: #2c2825;
-  border-radius: var(--radius-lg);
-  padding: 1.75rem 2rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.landing-stats::before {
-  content: '';
-  position: absolute;
-  top: -60%;
-  right: -10%;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(92, 110, 78, 0.12) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.landing-stats-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.25rem;
-  position: relative;
-  z-index: 1;
-}
-
-.landing-stats-title {
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #f5f0eb;
-}
-
-.landing-stats-live {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: rgba(245, 240, 235, 0.45);
-}
-
 @keyframes livePulse {
   0%, 100% {
     transform: scale(1);
@@ -3370,52 +2760,6 @@ select:focus-visible,
     transform: scale(1.3);
     opacity: 0.7;
   }
-}
-
-.landing-live-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--site-accent);
-  animation: livePulse 2s ease-in-out infinite;
-}
-
-.landing-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-  position: relative;
-  z-index: 1;
-}
-
-.landing-stat {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 0.625rem;
-  padding: 1rem;
-  text-align: center;
-  transition: background 0.25s;
-}
-
-.landing-stat:hover {
-  background: rgba(255, 255, 255, 0.09);
-}
-
-.landing-stat-val {
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.9rem;
-  font-weight: 700;
-  color: #f5f0eb;
-  line-height: 1;
-  margin-bottom: 0.3rem;
-}
-
-.landing-stat-lbl {
-  font-size: 0.625rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(245, 240, 235, 0.4);
 }
 
 /* Legacy classes still used elsewhere */
@@ -3477,13 +2821,6 @@ select:focus-visible,
   text-wrap: balance;
 }
 
-.lead-copy {
-  max-width: 38rem;
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--site-muted);
-}
-
 .route-link {
   display: inline-flex;
   align-items: center;
@@ -3532,45 +2869,6 @@ select:focus-visible,
 
   .display-title {
     font-size: clamp(2.2rem, 12vw, 3.6rem);
-  }
-
-  .lead-copy {
-    font-size: 1rem;
-  }
-
-  /* Landing responsive */
-  .landing-hero-grid {
-    grid-template-columns: minmax(0, 1fr);
-    padding: 2.5rem 0 1.5rem;
-  }
-
-  .landing-hero-visual {
-    display: none;
-  }
-
-  .landing-hero-title {
-    font-size: 2rem;
-  }
-
-  .landing-how-grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1.5rem;
-  }
-
-  .landing-stats {
-    padding: 1.25rem;
-  }
-
-  .landing-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .landing-stat-val {
-    font-size: 1.5rem;
-  }
-
-  .landing-section-label {
-    flex-wrap: wrap;
   }
 }
 
@@ -3748,17 +3046,6 @@ select:focus-visible,
   letter-spacing: 0.08em;
   color: var(--site-muted);
   margin-bottom: 0.5rem;
-}
-
-.qa-empty-title {
-  font-family: var(--font-display), Georgia, serif;
-  font-weight: 700;
-}
-
-.qa-empty-desc {
-  color: var(--site-muted);
-  font-size: 0.875rem;
-  margin: 0;
 }
 
 .qa-compose-side-panel {
@@ -3959,7 +3246,8 @@ select:focus-visible,
   white-space: pre-wrap;
 }
 
-.review-chat-body.is-revealing::after,
+/* The caret now marks only a request that is actually in flight. It used to
+   also trail a fake typewriter replaying an answer that had already arrived. */
 .review-chat-body-pending::after {
   content: "";
   display: inline-block;
@@ -4238,7 +3526,11 @@ select:focus-visible,
   gap: 0.9rem;
 }
 
-.acet-file-upload-copy,
+/* Not `.acet-file-upload-copy`: these two are label-left / action-right rows,
+   where space-between is the point. The upload box's icon and its label are one
+   unit, and space-between pushed the icon to the far edge, away from the words
+   it belongs to. Grouping selectors by shared declarations rather than by shared
+   meaning is what put it here. */
 .review-history-item,
 .resources-topic-row {
   justify-content: space-between;
@@ -4361,10 +3653,6 @@ select:focus-visible,
   margin: 0;
   font-size: 1.125rem;
   letter-spacing: -0.015em;
-}
-
-.admin-v2-loading-copy {
-  color: var(--site-muted);
 }
 
 .admin-v2-inline-error {
@@ -5386,9 +4674,9 @@ select:focus-visible,
   margin-top: 0.15rem;
 }
 
-.resources-topic-row .btn-unified,
-.review-side-empty .btn-unified,
-.review-follow-panel .btn-unified {
+.resources-topic-row .btn-warm-outline,
+.review-side-empty .btn-warm-primary,
+.review-follow-panel .btn-warm-primary {
   align-self: flex-start;
 }
 
@@ -5460,73 +4748,6 @@ select:focus-visible,
 .account-field-icon {
   color: var(--site-muted);
   flex-shrink: 0;
-}
-
-.btn-warm-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: var(--site-accent);
-  color: #fff;
-  font-weight: 600;
-  font-size: 0.875rem;
-  padding: 0.65rem 1.4rem;
-  border-radius: 0.5rem;
-  border: none;
-  cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
-  text-decoration: none;
-}
-
-.btn-warm-primary:hover {
-  background: var(--site-accent-strong);
-  color: #fff;
-}
-
-.btn-warm-outline {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: transparent;
-  color: var(--site-ink);
-  font-weight: 600;
-  font-size: 0.875rem;
-  padding: 0.65rem 1.4rem;
-  border-radius: 0.5rem;
-  border: 1px solid var(--site-border-strong);
-  cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
-  text-decoration: none;
-}
-
-.btn-warm-outline:hover {
-  border-color: var(--site-accent);
-  color: var(--site-accent);
-  background: var(--site-accent-soft);
-}
-
-.btn-warm-danger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: transparent;
-  color: #b44a2d;
-  font-weight: 600;
-  font-size: 0.875rem;
-  padding: 0.65rem 1.4rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(180, 74, 45, 0.25);
-  cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
-  text-decoration: none;
-}
-
-.btn-warm-danger:hover {
-  background: rgba(180, 74, 45, 0.06);
-  border-color: rgba(180, 74, 45, 0.4);
 }
 
 /* ============================================
@@ -6041,13 +5262,6 @@ select:focus-visible,
   color: var(--site-highlight);
 }
 
-.post-empty-note {
-  margin: 0.35rem 0 0;
-  color: var(--site-muted);
-  font-size: 0.875rem;
-  line-height: 1.6;
-}
-
 .post-answers-list,
 .post-discussions-list {
   gap: 0.85rem;
@@ -6178,14 +5392,6 @@ select:focus-visible,
 
 .post-detail-empty-copy {
   padding-top: 0.65rem;
-}
-
-.post-detail-empty-title {
-  margin: 0 0 0.55rem;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--site-ink);
 }
 
 @media (max-width: 991px) {
@@ -6347,12 +5553,20 @@ select:focus-visible,
   min-width: 0;
 }
 
+/* The placeholder already reads "Search by lease issue or topic", so a visible
+   label repeated the same words twice in a row. Kept in the accessibility tree
+   because the input still needs a name. Self-contained rather than Bootstrap's
+   .visually-hidden, so it survives dropping Bootstrap. */
 .qa-toolbar-search-label {
-  display: block;
-  margin-bottom: 0.45rem;
-  color: var(--site-accent-strong);
-  font-size: 0.75rem;
-  font-weight: 800;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 .qa-toolbar-search {
@@ -6415,11 +5629,6 @@ select:focus-visible,
   background: var(--site-highlight);
 }
 
-.qa-empty-title {
-  margin-bottom: 0.45rem;
-  font-size: 1.25rem;
-}
-
 .qa-empty-action {
   display: inline-flex;
   min-height: 2.75rem;
@@ -6436,8 +5645,23 @@ select:focus-visible,
   text-decoration: none;
 }
 
-.qa-error-state {
-  border-left: 2px solid var(--site-highlight);
+/* An error state pairs the retry with a route that still works, so the two sit
+   on one baseline rather than stacking. */
+.qa-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.qa-empty-link {
+  margin-top: 1.125rem;
+  color: var(--site-accent-strong);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3rem;
 }
 
 .site-mobile-nav .nav-link,

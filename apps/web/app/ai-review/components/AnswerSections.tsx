@@ -4,22 +4,16 @@ import { getInlineCitationItems, shouldShowLegacyCitationList } from "../view-mo
 type AnswerSectionsProps = {
   message: ChatMessage;
   messageKey: string;
-  isRevealing: boolean;
-  messageBody: string;
 };
 
 export default function AnswerSections({
   message,
   messageKey,
-  isRevealing,
-  messageBody,
 }: AnswerSectionsProps) {
-  if ( isRevealing || !message.summary || !message.bullets?.length ) {
+  if ( !message.summary || !message.bullets?.length ) {
     return (
       <>
-        <div className={`review-chat-body ${isRevealing ? "is-revealing" : ""}`}>
-          {messageBody}
-        </div>
+        <div className="review-chat-body">{message.content}</div>
         {shouldShowLegacyCitationList(message) ? (
           <div className="review-chat-inline-citations review-chat-inline-citations-block">
             {getInlineCitationItems({

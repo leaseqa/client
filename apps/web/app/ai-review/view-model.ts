@@ -223,23 +223,6 @@ export function getEmptyStateMessage({
   return "Ask your first question about this source.";
 }
 
-export function getRevealChunkSize(totalLength: number) {
-  if ( totalLength <= 120 ) {
-    return 4;
-  }
-  if ( totalLength <= 360 ) {
-    return 8;
-  }
-  return 14;
-}
-
-export function getNextRevealLength(currentLength: number, fullText: string) {
-  return Math.min(
-    fullText.length,
-    currentLength + getRevealChunkSize(fullText.length),
-  );
-}
-
 export const ABSTENTION_SUMMARY =
   "I could not find enough support to answer that reliably from this source and the handbook.";
 

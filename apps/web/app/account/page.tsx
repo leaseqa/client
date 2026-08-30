@@ -5,11 +5,10 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setSession, signOut } from "@/app/store";
 import { Col, Form, Row, Stack } from "react-bootstrap";
-import { FaEnvelope, FaIdBadge, FaRobot, FaShieldAlt, FaSignInAlt, FaUserPlus, } from "react-icons/fa";
-import { Home, Scale, Shield } from "lucide-react";
 import { apiErrorMessage } from "@/app/lib/api/client";
 import * as client from "./client";
 import ActivityTimeline from "./components/ActivityTimeline";
+import { Bot, Home, IdCard, LogIn, Mail, Scale, Shield, ShieldCheck, UserPlus } from "lucide-react";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -109,7 +108,7 @@ export default function AccountPage() {
             </div>
             <div>
               <h1 className="qa-page-title" style={{ marginBottom: "0.25rem" }}>
-                {user?.name || "Guest User"}
+                {user?.name || "Guest user"}
               </h1>
               <p className="qa-page-sub" style={{ marginBottom: 0 }}>
                 {user?.email || "Not signed in"}
@@ -133,7 +132,7 @@ export default function AccountPage() {
           </div>
           {isAuthenticated && (
             <a href="/ai-review" className="btn-warm-primary">
-              <FaRobot/>
+              <Bot size={14}/>
               Use AI Review
             </a>
           )}
@@ -147,7 +146,7 @@ export default function AccountPage() {
               <div>
                 <div className="d-flex align-items-center gap-3 mb-4">
                   <div className="info-team-icon info-team-icon--olive">
-                    <FaIdBadge size={18}/>
+                    <IdCard size={18}/>
                   </div>
                   <div>
                     <div className="fw-bold">Profile overview</div>
@@ -159,7 +158,7 @@ export default function AccountPage() {
 
                 <Stack gap={3}>
                   <div className="account-field">
-                    <FaIdBadge className="account-field-icon"/>
+                    <IdCard size={16} className="account-field-icon"/>
                     <div className="w-100">
                       <div className="fw-semibold mb-1">Name</div>
                       {editMode ? (
@@ -180,7 +179,7 @@ export default function AccountPage() {
                   </div>
 
                   <div className="account-field">
-                    <FaEnvelope className="account-field-icon"/>
+                    <Mail size={16} className="account-field-icon"/>
                     <div className="w-100">
                       <div className="fw-semibold mb-1">Email</div>
                       {editMode ? (
@@ -204,7 +203,7 @@ export default function AccountPage() {
                   </div>
 
                   <div className="account-field">
-                    <FaShieldAlt className="account-field-icon"/>
+                    <ShieldCheck size={16} className="account-field-icon"/>
                     <div>
                       <div className="fw-semibold">Role</div>
                       <div className="text-secondary small text-capitalize">
@@ -225,8 +224,8 @@ export default function AccountPage() {
                         href="/auth/login"
                         className="btn-warm-primary w-100 justify-content-center"
                       >
-                        <FaSignInAlt/>
-                        Sign In for Full Access
+                        <LogIn size={14}/>
+                        Sign in for full access
                       </a>
                     </Stack>
                   ) : (
@@ -275,10 +274,10 @@ export default function AccountPage() {
               <div>
                 <div className="d-flex align-items-center gap-3 mb-4">
                   <div className="info-team-icon info-team-icon--terra">
-                    <FaShieldAlt size={18}/>
+                    <ShieldCheck size={18}/>
                   </div>
                   <div>
-                    <div className="fw-bold">Access Control</div>
+                    <div className="fw-bold">Access control</div>
                     <div className="text-secondary small">
                       Sign in to unlock features
                     </div>
@@ -295,15 +294,15 @@ export default function AccountPage() {
                     href="/auth/login"
                     className="btn-warm-primary w-100 justify-content-center"
                   >
-                    <FaSignInAlt/>
-                    Sign In
+                    <LogIn size={14}/>
+                    Sign in
                   </a>
                   <a
                     href="/auth/register"
                     className="btn-warm-outline w-100 justify-content-center"
                   >
-                    <FaUserPlus/>
-                    Create Account
+                    <UserPlus size={14}/>
+                    Create account
                   </a>
                 </Stack>
               </div>

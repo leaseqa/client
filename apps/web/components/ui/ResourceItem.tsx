@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { IconType } from "react-icons";
-import { FaExternalLinkAlt } from "react-icons/fa";
+import { ExternalLink, type LucideIcon } from "lucide-react";
 
 type ResourceItemProps = {
-  icon: IconType;
+  icon: LucideIcon;
   title: string;
   summary: string;
   link: string;
@@ -28,7 +27,7 @@ export default function ResourceItem({ icon: Icon, title, summary, link }: Resou
         <Link href={link} target="_blank"
       rel="noopener noreferrer" className="resource-link">
           <span>Open</span>
-          <FaExternalLinkAlt size={12}/>
+          <ExternalLink size={12}/>
         </Link>
       </div>
     </div>

@@ -1,24 +1,17 @@
 import Link from "next/link";
 import { Nav, Navbar, Offcanvas } from "react-bootstrap";
-import {
-  FaBookOpen,
-  FaComments,
-  FaHouse,
-  FaRobot,
-  FaRightToBracket,
-  FaUser,
-} from "react-icons/fa6";
 
 import { NAV_ITEMS } from "../config";
+import { BookOpen, Bot, House, LogIn, MessagesSquare, User } from "lucide-react";
 
-const MOBILE_ICONS: Record<string, typeof FaHouse> = {
-  "/": FaHouse,
-  "/ai-review": FaRobot,
-  "/qa": FaComments,
+const MOBILE_ICONS: Record<string, typeof House> = {
+  "/": House,
+  "/ai-review": Bot,
+  "/qa": MessagesSquare,
 };
 
 const SECONDARY_ITEMS = [
-  { label: "Resources", href: "/qa/resources", icon: FaBookOpen },
+  { label: "Resources", href: "/qa/resources", icon: BookOpen },
 ];
 
 type MobileNavProps = {
@@ -53,10 +46,10 @@ export default function MobileNav({
     `site-mobile-nav-link${isActive(href) ? " is-active" : ""}`;
 
   const accountItem = isAuthenticated
-    ? { label: "Account", href: "/account", icon: FaUser }
+    ? { label: "Account", href: "/account", icon: User }
     : isGuest
-      ? { label: "View Profile", href: "/account", icon: FaUser }
-      : { label: "Sign In", href: "/auth/login", icon: FaRightToBracket };
+      ? { label: "View profile", href: "/account", icon: User }
+      : { label: "Sign in", href: "/auth/login", icon: LogIn };
 
   return (
     <Navbar.Offcanvas

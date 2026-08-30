@@ -1,5 +1,5 @@
 import React from "react";
-import { FaCheck } from "react-icons/fa";
+import { Check } from "lucide-react";
 
 type FolderDraft = {
   name: string;
@@ -39,7 +39,7 @@ export default function CreateSectionForm({
   return (
     <div className="manage-card">
       <div className="manage-card-header">
-        <h2>{mode === "edit" ? "Edit section" : "Create New Section"}</h2>
+        <h2>{mode === "edit" ? "Edit section" : "Create new section"}</h2>
       </div>
       <div className="manage-card-body">
         <div className="manage-form-grid">
@@ -58,7 +58,7 @@ export default function CreateSectionForm({
             {errors.name && <div className="manage-field-error">{errors.name}</div>}
           </div>
           <div className="manage-form-group">
-            <label>Display Name</label>
+            <label>Display name</label>
             <input
               type="text"
               placeholder="Repairs & Habitability"
@@ -86,8 +86,8 @@ export default function CreateSectionForm({
             Cancel
           </button>
           <button className="manage-btn primary" onClick={onSave} disabled={loading || disabled}>
-            <FaCheck size={12}/>
-            <span>{mode === "edit" ? "Save Changes" : "Create Section"}</span>
+            <Check size={12}/>
+            <span>{mode === "edit" ? "Save changes" : "Create section"}</span>
           </button>
         </div>
         {(submitError || refetchError) && (

@@ -1,5 +1,5 @@
 import React from "react";
-import { FaPlus, FaSync } from "react-icons/fa";
+import { Plus, RefreshCw } from "lucide-react";
 
 type FormMode = "closed" | "create" | "edit";
 
@@ -45,13 +45,13 @@ export default function ManageHeader({
       </div>
       <div className="manage-header-actions">
         <button className="manage-btn secondary" onClick={onRefresh} disabled={refreshDisabled}>
-          <FaSync size={12} className={refreshing ? "spin" : ""}/>
+          <RefreshCw size={12} className={refreshing ? "spin" : ""}/>
           <span>Refresh</span>
         </button>
         {!isFormOpen && (
           <button className="manage-btn primary" onClick={onShowCreate} disabled={createDisabled}>
-            <FaPlus size={12}/>
-            <span>New Section</span>
+            <Plus size={12}/>
+            <span>New section</span>
           </button>
         )}
       </div>

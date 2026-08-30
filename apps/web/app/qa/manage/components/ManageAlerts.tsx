@@ -1,5 +1,5 @@
 import React from "react";
-import { FaTimes } from "react-icons/fa";
+import { X } from "lucide-react";
 
 type Latest = { kind: "error" | "success"; message: string } | null | undefined;
 
@@ -40,7 +40,7 @@ export default function ManageAlerts({
       <div className="manage-alert error">
         {resolvedLatest.message}
         <button onClick={onClearLatest ?? onClearError}>
-          <FaTimes size={12}/>
+          <X size={12}/>
         </button>
       </div>
     );
@@ -50,7 +50,7 @@ export default function ManageAlerts({
     <div className="manage-alert success">
       {resolvedLatest.message}
       <button onClick={onClearLatest ?? onClearSuccess}>
-        <FaTimes size={12}/>
+        <X size={12}/>
       </button>
     </div>
   );

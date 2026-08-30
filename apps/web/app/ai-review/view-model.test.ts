@@ -8,7 +8,6 @@ import {
   getDisplayedSource,
   getEmptyStateMessage,
   getInlineCitationItems,
-  getNextRevealLength,
   getPendingConversationItems,
   getResultsPanelState,
   getSessionInputPlan,
@@ -364,15 +363,6 @@ describe("getEmptyStateMessage", () => {
         },
       }),
     ).toBe("The first answer failed. Retry the clause analysis or ask your own question.");
-  });
-});
-
-describe("getNextRevealLength", () => {
-  test("moves a pending assistant reply forward in chunks", () => {
-    const reply = "This clause appears broadly consistent with the handbook.";
-
-    expect(getNextRevealLength(0, reply)).toBeGreaterThan(0);
-    expect(getNextRevealLength(reply.length - 2, reply)).toBe(reply.length);
   });
 });
 

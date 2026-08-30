@@ -1,6 +1,6 @@
-import { FaUser } from "react-icons/fa";
 
 import { RootState } from "@/app/store";
+import { User } from "lucide-react";
 
 type ProfileHeaderProps = {
   user: RootState["session"]["user"];
@@ -24,7 +24,7 @@ export default function ProfileHeader({
           className="profile-menu-avatar profile-menu-avatar-anon"
           aria-hidden="true"
         >
-          <FaUser size={14}/>
+          <User size={14}/>
         </span>
         <div className="profile-menu-copy">
           <div className="profile-menu-name">Not signed in</div>

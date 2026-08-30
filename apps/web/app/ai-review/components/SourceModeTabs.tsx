@@ -24,7 +24,7 @@ export default function SourceModeTabs({
         className={styles.sourceTab}
         onClick={() => onModeChange("upload")}
       >
-        Upload File
+        Upload file
       </button>
       <button
         id="source-tab-paste"
@@ -35,7 +35,7 @@ export default function SourceModeTabs({
         className={styles.sourceTab}
         onClick={() => onModeChange("paste")}
       >
-        Paste Text
+        Paste text
       </button>
     </div>
   );

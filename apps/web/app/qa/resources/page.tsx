@@ -3,34 +3,34 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Col, Row } from "react-bootstrap";
-import { FaArrowRight, FaBalanceScale, FaHandsHelping, FaHome, FaTools, } from "react-icons/fa";
 
 import { getTopicLabel } from "@/app/lib/reviewFollowUp";
+import { ArrowRight, HeartHandshake, House, Scale, Wrench } from "lucide-react";
 
 const resources = [
   {
     title: "Security deposits",
     link: "https://www.mass.gov/security-deposits",
     summary: "Deposit rules, receipts, escrow, and return deadlines.",
-    icon: FaBalanceScale,
+    icon: Scale,
   },
   {
     title: "Tenant rights",
     link: "https://www.mass.gov/info-details/tenant-rights",
     summary: "Core Massachusetts tenant protections and common issues.",
-    icon: FaHome,
+    icon: House,
   },
   {
     title: "Repairs and inspections",
     link: "https://www.masslegalhelp.org/housing-apartments-shelter/repairs-bad-conditions/getting-inspection",
     summary: "What to do when housing conditions are unsafe or not fixed.",
-    icon: FaTools,
+    icon: Wrench,
   },
   {
     title: "Legal help finder",
     link: "https://www.masslegalservices.org/findlegalaid",
     summary: "Find free or low-cost legal help by county and issue.",
-    icon: FaHandsHelping,
+    icon: HeartHandshake,
   },
 ];
 
@@ -75,7 +75,7 @@ export default function ResourcesPage() {
             </div>
             <Link
               href={`/qa?scenario=${topic}`}
-              className="btn-unified btn-unified-secondary btn-unified-md"
+              className="btn-warm-outline"
             >
               Open this section
             </Link>
@@ -111,7 +111,7 @@ export default function ResourcesPage() {
                     className="resources-inline-link resources-inline-link-quiet"
                   >
                     <span>Open</span>
-                    <FaArrowRight size={12}/>
+                    <ArrowRight size={12}/>
                   </Link>
                 </article>
               ))}

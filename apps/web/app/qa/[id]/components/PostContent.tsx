@@ -1,10 +1,9 @@
 import React from "react";
-import { FaEdit, FaEye, FaMapPin, FaTrash } from "react-icons/fa";
-import { Check } from "lucide-react";
 import { format } from "date-fns";
 import { PostContentProps } from "../../types";
 import EditPostForm from "./EditPostForm";
 import { sanitizeServerHtml } from "@/app/lib/safeHtml";
+import { Check, Eye, Pin, SquarePen, Trash2 } from "lucide-react";
 
 export default function PostContent({
                                       post,
@@ -50,7 +49,7 @@ export default function PostContent({
               <span>{post.folders?.join(", ")}</span>
               <span className="post-detail-meta-dot">·</span>
               <span className="post-detail-views">
-                                <FaEye size={11}/>
+                                <Eye size={11}/>
                 {post.viewCount || 0}
                             </span>
             </div>
@@ -59,13 +58,16 @@ export default function PostContent({
         <div className="post-detail-header-right">
           {post.isPinned && (
             <span className="post-pinned-badge">
-                            <FaMapPin size={12}/>
+                            <Pin size={12}/>
                             Pinned
                         </span>
           )}
-          <span className={`post-urgency-badge ${post.urgency || "low"}`}>
-                        {(post.urgency || "low").toUpperCase()}
-                    </span>
+          {/* Same rule as the feed: only `high` carries a signal worth a badge. */}
+          {post.urgency === "high" && (
+            <span className={`post-urgency-badge ${post.urgency}`}>
+                            {post.urgency.toUpperCase()}
+                        </span>
+          )}
           {isAdmin && !isEditing && (
             <button
               className={`post-action-btn pin ${post.isPinned ? "active" : ""}`}
@@ -74,7 +76,7 @@ export default function PostContent({
               onClick={onTogglePin}
               title={post.isPinned ? "Unpin post" : "Pin post"}
             >
-              <FaMapPin size={14}/>
+              <Pin size={14}/>
             </button>
           )}
           {canEdit && !isEditing && (
@@ -84,14 +86,14 @@ export default function PostContent({
                 aria-label="Edit this question"
                 onClick={onEdit}
               >
-                <FaEdit size={14}/>
+                <SquarePen size={14}/>
               </button>
               <button
                 className="post-action-btn danger"
                 aria-label="Delete this question"
                 onClick={onDelete}
               >
-                <FaTrash size={14}/>
+                <Trash2 size={14}/>
               </button>
             </div>
           )}

@@ -96,7 +96,7 @@ Also found: `components/**` was outside vitest's `include`, so the existing
 
 ## Remaining plan work beyond the menus
 
-The canonical implementation plan is `docs/superpowers/plans/2026-08-21-frontend-experience-refresh.md`.
+The canonical implementation plan is `docs/plans/2026-08-29-frontend-deai-pass.md`.
 
 ### Task 2: shared remote-data states
 
@@ -146,7 +146,7 @@ Use this sequence for every visible UI stage:
 
 1. **Inspect current behavior**: source, tests, cascade, desktop, and mobile.
 2. **Reduce the problem**: identify the one hierarchy or interaction issue being solved.
-3. **Explore in a design artifact**: use `superpowers:brainstorming` for the bounded interaction decision and `design-html` or an equivalent mockup workflow for visuals.
+3. **Explore in a design artifact**: settle the bounded interaction decision first, then build a standalone mockup for the visuals.
 4. **Show comparisons**: current and target, desktop and mobile.
 5. **Approval gate**: no rendered source change until the user explicitly approves the target.
 6. **TDD implementation**: focused failing tests, minimal code, then refactor.
@@ -154,7 +154,7 @@ Use this sequence for every visible UI stage:
 8. **Engineering verification**: typecheck, lint, unit tests, build, and relevant E2E.
 9. **Small commit**: one visual stage per commit with the plan checkboxes updated only when the actual scope is complete.
 
-For review of an implemented page, use `design-review`. For behavior verification, use `qa` or `qa-only`. For implementation from an already approved target, follow `superpowers:executing-plans`; do not reopen brainstorming unless the user asks to change the direction.
+For implementation from an already approved target, work straight from the plan; do not reopen the design exploration unless the user asks to change direction.
 
 ## Verification commands
 

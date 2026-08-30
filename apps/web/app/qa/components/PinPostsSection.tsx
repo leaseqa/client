@@ -1,8 +1,7 @@
 import { useRouter } from "next/navigation";
-import { FaMapPin } from "react-icons/fa";
-import { Check } from "lucide-react";
 import { Folder, Post } from "../types";
 import { getFolderDisplayName } from "../utils";
+import { Check, Pin } from "lucide-react";
 
 type PinPostsProps = {
   posts: Post[];
@@ -25,7 +24,7 @@ export default function PinPostsSection({ posts, folders }: PinPostsProps) {
   return (
     <div className="feed-section">
       <div className="feed-section-title">
-        <FaMapPin size={16}/>
+        <Pin size={16}/>
         <span>Pinned</span>
       </div>
       <div className="feed-section-posts">
@@ -50,7 +49,9 @@ export default function PinPostsSection({ posts, folders }: PinPostsProps) {
                                         {getFolderDisplayName(folders, f)}
                                     </span>
                 ))}
-                {post.urgency && (
+                {/* Only `high` says anything. A badge on every row is weight
+                    without signal, so the other levels stay unlabelled. */}
+                {post.urgency === "high" && (
                   <span className={`feed-section-urgency-badge ${post.urgency}`}>
                                         {post.urgency.toUpperCase()}
                                     </span>

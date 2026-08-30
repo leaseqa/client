@@ -1,8 +1,7 @@
 import { useRouter } from "next/navigation";
-import { FaBullhorn } from "react-icons/fa";
-import { Check } from "lucide-react";
 import { Folder, Post } from "../types";
 import { getFolderDisplayName } from "../utils";
+import { Check, Megaphone } from "lucide-react";
 
 type AnnouncementProps = {
   posts: Post[];
@@ -25,7 +24,7 @@ export default function AnnouncementSection({ posts, folders }: AnnouncementProp
   return (
     <div className="feed-section">
       <div className="feed-section-title">
-        <FaBullhorn size={16}/>
+        <Megaphone size={16}/>
         <span>Updates</span>
       </div>
       <div className="feed-section-posts">
@@ -50,7 +49,9 @@ export default function AnnouncementSection({ posts, folders }: AnnouncementProp
                                         {getFolderDisplayName(folders, f)}
                                     </span>
                 ))}
-                {post.urgency && (
+                {/* Only `high` says anything. A badge on every row is weight
+                    without signal, so the other levels stay unlabelled. */}
+                {post.urgency === "high" && (
                   <span className={`feed-section-urgency-badge ${post.urgency}`}>
                                         {post.urgency.toUpperCase()}
                                     </span>

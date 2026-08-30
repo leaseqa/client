@@ -146,7 +146,7 @@ describe("moderation render smoke", () => {
     );
 
     expect(html).toContain("qa-v2-panel");
-    expect(html).toContain("Follow-up Discussion");
+    expect(html).toContain("Follow-up discussion");
     expect(html).toContain("Write follow-up");
   });
 });

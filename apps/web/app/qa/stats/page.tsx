@@ -9,6 +9,7 @@ import * as client from "../client";
 import { isApiError } from "@/app/lib/api/client";
 
 import PageLoadingState from "@/components/ui/PageLoadingState";
+import RemoteDataState from "@/components/ui/RemoteDataState";
 import StatBox from "@/components/ui/StatBox";
 import ProgressItem from "@/components/ui/ProgressItem";
 
@@ -58,10 +59,24 @@ export default function StatsPage() {
   }
 
   if ( access !== "ok" ) {
-    const copy = {
-      "signed-out": "Sign in to view community stats.",
-      forbidden: "Stats are only visible to administrators.",
-      error: "Couldn't load stats. Please try again.",
+    // Being signed out or lacking the admin role is a permission state, not a
+    // failure — only the third case is an error, and they should not look alike.
+    const { kind, title, copy } = {
+      "signed-out": {
+        kind: "permission" as const,
+        title: "Sign in to see stats",
+        copy: "Community stats are visible to signed-in members.",
+      },
+      forbidden: {
+        kind: "permission" as const,
+        title: "Admins only",
+        copy: "Stats are limited to administrator accounts.",
+      },
+      error: {
+        kind: "error" as const,
+        title: "Couldn’t load stats",
+        copy: "The stats service didn’t respond. Retry in a moment.",
+      },
     }[access];
 
     return (
@@ -69,15 +84,14 @@ export default function StatsPage() {
         <section className="page-header-section">
           <h1 className="qa-page-title">Community stats</h1>
         </section>
-        <div className="qa-empty-flat qa-error-state" role="alert">
-          <h2 className="qa-empty-title">Stats Unavailable</h2>
-          <p className="qa-empty-desc">{copy}</p>
+        <div className="qa-empty-flat">
+          <RemoteDataState kind={kind} title={title} description={copy}/>
           {access === "signed-out" && (
             <Link
               className="qa-empty-action"
               href={`/auth/login?next=${encodeURIComponent("/qa/stats")}`}
             >
-              Sign In
+              Sign in
             </Link>
           )}
         </div>

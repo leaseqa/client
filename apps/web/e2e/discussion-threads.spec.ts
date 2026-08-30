@@ -10,7 +10,7 @@ async function loginAsUser(page: Page, email: string, nextPath: string) {
   await page.goto(`/auth/login?next=${encodeURIComponent(nextPath)}`);
   await page.locator('input[name="email"]').fill(email);
   await page.locator('input[name="password"]').fill(TEST_PASSWORD);
-  await page.getByRole("button", { name: "Sign In" }).click();
+  await page.getByRole("button", { name: "Sign in" }).click();
 }
 
 async function newLoggedInPage(
@@ -36,7 +36,7 @@ async function createPostFromComposer(page: Page, title: string, details: string
 
 async function postRootFollowUp(page: Page, text: string) {
   const discussionCard = page.locator(".post-detail-card", {
-    hasText: "Follow-up Discussion",
+    hasText: "Follow-up discussion",
   });
   await discussionCard.getByRole("button", { name: "Write follow-up" }).click();
   await discussionCard.locator(".ql-editor").last().fill(text);
@@ -102,7 +102,7 @@ test.describe("discussion threads", () => {
     );
 
     const discussionCard = tenantPage.locator(".post-detail-card", {
-      hasText: "Follow-up Discussion",
+      hasText: "Follow-up discussion",
     });
     const adminThread = discussionCard.locator(".post-discussion-item", {
       hasText: adminRoot,
@@ -140,7 +140,7 @@ test.describe("discussion threads", () => {
 
     await tenantPage.reload();
     const discussionCardAfterEdit = tenantPage.locator(".post-detail-card", {
-      hasText: "Follow-up Discussion",
+      hasText: "Follow-up discussion",
     });
     const adminThreadAfterEdit = discussionCardAfterEdit.locator(".post-discussion-item", {
       hasText: adminRoot,
@@ -205,7 +205,7 @@ test.describe("discussion threads", () => {
       postPath,
     );
     const tenantDiscussionCard = tenantPage.locator(".post-detail-card", {
-      hasText: "Follow-up Discussion",
+      hasText: "Follow-up discussion",
     });
     const tenantRootThread = tenantDiscussionCard.locator(".post-discussion-item", {
       hasText: rootThread,
@@ -221,7 +221,7 @@ test.describe("discussion threads", () => {
 
     await adminPage.reload();
     const discussionCardAfterTenantReply = adminPage.locator(".post-detail-card", {
-      hasText: "Follow-up Discussion",
+      hasText: "Follow-up discussion",
     });
     const rootThreadAfterTenantReply = discussionCardAfterTenantReply.locator(
       ".post-discussion-item",

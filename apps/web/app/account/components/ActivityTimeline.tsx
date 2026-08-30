@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Stack } from "react-bootstrap";
-import { FaComments, FaFileAlt, FaHistory, FaRobot, } from "react-icons/fa";
+import { Bot, FileText, History, MessagesSquare } from "lucide-react";
 
 export type ActivityTimelineItem = {
   _id: string;
@@ -22,12 +22,12 @@ type ActivityTimelineProps = {
 
 const getActivityIcon = (type: string) => {
   if ( type === "ai_review_created" ) {
-    return FaRobot;
+    return Bot;
   }
   if ( type === "answer_received" || type === "discussion_received" ) {
-    return FaComments;
+    return MessagesSquare;
   }
-  return FaFileAlt;
+  return FileText;
 };
 
 const formatTime = (value: string) => {
@@ -49,10 +49,10 @@ export default function ActivityTimeline({
     <div className="account-card h-100">
       <div className="d-flex align-items-center gap-3 mb-4">
         <div className="info-team-icon info-team-icon--terra">
-          <FaHistory size={18}/>
+          <History size={18}/>
         </div>
         <div>
-          <div className="fw-bold">Recent Activity</div>
+          <div className="fw-bold">Recent activity</div>
           <div className="text-secondary small">
             {isGuest ? "Sign in to track activity" : "Your latest actions"}
           </div>

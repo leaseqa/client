@@ -1,8 +1,7 @@
-import { FaChevronDown, FaChevronRight } from "react-icons/fa";
-import { Check } from "lucide-react";
 import { format } from "date-fns";
 import { useMemo } from "react";
 import { Post, RecencySidebarProps } from "../types";
+import { Check, ChevronDown, ChevronRight } from "lucide-react";
 
 export default function RecencySidebar({
                                          posts,
@@ -67,7 +66,7 @@ export default function RecencySidebar({
               className="post-sidebar-header"
               onClick={() => onToggleBucket(key)}
             >
-              {isOpen ? <FaChevronDown size={10}/> : <FaChevronRight size={10}/>}
+              {isOpen ? <ChevronDown size={10}/> : <ChevronRight size={10}/>}
               <span>{bucket.label}</span>
               <span className="post-sidebar-count">{bucket.items.length}</span>
             </button>

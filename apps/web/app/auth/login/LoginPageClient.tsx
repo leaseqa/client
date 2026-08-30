@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import { FiUser } from "react-icons/fi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -13,6 +11,8 @@ import { setGuestSession, setSession } from "@/app/store";
 import PageLoadingState from "@/components/ui/PageLoadingState";
 
 import * as client from "../client";
+import { User } from "lucide-react";
+import GoogleMark from "@/components/ui/GoogleMark";
 
 type LoginPageClientProps = {
   safeNextHref: string | null;
@@ -63,7 +63,7 @@ export default function LoginPageClient({
     <div className="auth-page">
       <div className="auth-container-narrow">
         <section className="page-header-section auth-header-section">
-          <h1 className="auth-title">Welcome Back</h1>
+          <h1 className="auth-title">Sign in</h1>
           <p className="qa-page-sub">Sign in to continue to LeaseQA.</p>
         </section>
 
@@ -98,7 +98,7 @@ export default function LoginPageClient({
               className="btn-warm-primary w-100 mb-3"
               disabled={loading}
             >
-              {loading ? "Signing In..." : "Sign In"}
+              {loading ? "Signing in…" : "Sign in"}
             </button>
 
             <div className="auth-divider">or</div>
@@ -107,7 +107,7 @@ export default function LoginPageClient({
               href={oauthUrl("google")}
               className="btn-warm-outline w-100 mb-3 d-block text-center text-decoration-none"
             >
-              <FcGoogle size={20} className="me-2" />
+              <GoogleMark size={20} className="me-2" />
               Continue with Google
             </a>
 
@@ -116,7 +116,7 @@ export default function LoginPageClient({
               className="btn-warm-outline w-100 mb-3"
               onClick={handleGuestLogin}
             >
-              <FiUser size={20} className="me-2" />
+              <User size={20} className="me-2" />
               Continue as Guest
             </button>
           </Form>
@@ -131,7 +131,7 @@ export default function LoginPageClient({
                 fontWeight: 600,
               }}
             >
-              Create Account
+              Create account
             </Link>
           </div>
         </div>

@@ -26,7 +26,7 @@ describe("ActivityTimeline", () => {
       />,
     );
 
-    expect(html).toContain("Recent Activity");
+    expect(html).toContain("Recent activity");
     expect(html).toContain("Created an AI review");
     expect(html).toContain("Security deposit clause");
     expect(html).toContain("account-activity-list");

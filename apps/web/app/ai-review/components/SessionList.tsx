@@ -84,7 +84,7 @@ export default function SessionList({
         <div className={styles.historyHeader}>
           <div id="review-history-title" className={styles.sectionLabel}>
             <Clock3 size={12}/>
-            <span>Review History</span>
+            <span>Review history</span>
           </div>
           <span aria-hidden="true">+</span>
         </div>
@@ -96,7 +96,7 @@ export default function SessionList({
 
       <details className={styles.mobileHistory}>
         <summary>
-          <span>Review History</span>
+          <span>Review history</span>
           <span>{sessions.length} saved</span>
         </summary>
         <div className={styles.mobileHistoryBody}>{renderSessions()}</div>

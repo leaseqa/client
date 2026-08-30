@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -10,6 +9,7 @@ import { Alert, Form, Modal } from "react-bootstrap";
 import { apiErrorMessage, oauthUrl } from "@/app/lib/api/client";
 import * as client from "../client";
 import PageLoadingState from "@/components/ui/PageLoadingState";
+import GoogleMark from "@/components/ui/GoogleMark";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -65,7 +65,7 @@ export default function RegisterPage() {
     <div className="auth-page">
       <div className="auth-container-narrow">
         <section className="page-header-section auth-header-section">
-          <h1 className="auth-title">Create Account</h1>
+          <h1 className="auth-title">Create account</h1>
           <p className="qa-page-sub">Join the LeaseQA community.</p>
         </section>
 
@@ -108,7 +108,7 @@ export default function RegisterPage() {
             </Form.Group>
 
             <Form.Group className="mb-4" controlId="register-confirm-password">
-              <Form.Label>Confirm Password</Form.Label>
+              <Form.Label>Confirm password</Form.Label>
               <Form.Control
                 type="password"
                 name="confirmPassword"
@@ -123,7 +123,7 @@ export default function RegisterPage() {
               className="btn-warm-primary w-100 mb-3"
               disabled={loading}
             >
-              {loading ? "Creating Account..." : "Sign Up"}
+              {loading ? "Creating account…" : "Sign up"}
             </button>
 
             <div className="auth-divider">or</div>
@@ -132,7 +132,7 @@ export default function RegisterPage() {
               href={oauthUrl("google")}
               className="btn-warm-outline w-100 d-block text-center text-decoration-none"
             >
-              <FcGoogle size={20} className="me-2"/>Sign up with Google
+              <GoogleMark size={20} className="me-2"/>Sign up with Google
             </a>
           </Form>
 
@@ -146,7 +146,7 @@ export default function RegisterPage() {
                 fontWeight: 600,
               }}
             >
-              Sign In
+              Sign in
             </Link>
           </div>
         </div>

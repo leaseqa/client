@@ -30,10 +30,10 @@ describe("Admin shell render smoke", () => {
     expect(html).toContain("#overview");
     expect(html).toContain("#users");
     expect(html).toContain("#sections");
-    expect(html).toContain("Pending Verification");
-    expect(html).toContain("Banned Users");
+    expect(html).toContain("Pending verification");
+    expect(html).toContain("Banned users");
     expect(html).toContain("/qa");
-    expect(html).not.toContain("Verified Lawyers");
+    expect(html).not.toContain("Verified lawyers");
 
     const htmlOmit = renderToStaticMarkup(
       <ManageSidebar
@@ -46,8 +46,8 @@ describe("Admin shell render smoke", () => {
         }}
       />,
     );
-    expect(htmlOmit).not.toContain("Pending Verification");
-    expect(htmlOmit).not.toContain("Banned Users");
+    expect(htmlOmit).not.toContain("Pending verification");
+    expect(htmlOmit).not.toContain("Banned users");
   });
 
   test("Header shows LeaseQA Admin and disables create when sections are unavailable", () => {
@@ -65,7 +65,7 @@ describe("Admin shell render smoke", () => {
 
     expect(html).toContain("LeaseQA Admin");
     // Create button should be disabled when sections are unavailable
-    expect(html).toMatch(/<button[^>]*disabled[^>]*>[\s\S]*New Section/);
+    expect(html).toMatch(/<button[^>]*disabled[^>]*>[\s\S]*New section/);
   });
 
   test("Alerts render only the latest surface (error or success)", () => {
@@ -82,14 +82,14 @@ describe("Admin shell render smoke", () => {
     expect(latestSuccessHtml).not.toContain("Boom");
   });
 
-  test("Stats renders only Users, Sections, Verified Lawyers cards and omits null metrics", () => {
+  test("Stats renders only Users, Sections, Verified lawyers cards and omits null metrics", () => {
     const html = renderToStaticMarkup(
       <ManageStats stats={{ totalUsers: 10, totalSections: null, verifiedLawyers: 4 }}/>,
     );
     expect(html).toContain("Users");
-    expect(html).toContain("Verified Lawyers");
-    expect(html).not.toContain("Pending Verification");
-    expect(html).not.toContain("Banned Users");
+    expect(html).toContain("Verified lawyers");
+    expect(html).not.toContain("Pending verification");
+    expect(html).not.toContain("Banned users");
     // Omit null metric card
     expect(html).not.toContain("Sections");
   });

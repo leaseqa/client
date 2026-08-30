@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
-import { FaEdit, FaPaperclip, FaTrash } from "react-icons/fa";
-import { Home, Scale } from "lucide-react";
 import { format } from "date-fns";
 import dynamic from "next/dynamic";
 import { Answer, AnswersSectionProps } from "../../types";
 import { sanitizeServerHtml } from "@/app/lib/safeHtml";
+import { Home, Paperclip, Scale, SquarePen, Trash2 } from "lucide-react";
+import RemoteDataState from "@/components/ui/RemoteDataState";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -72,7 +72,7 @@ export default function AnswersSection({
               onClick={() => fileInputRef.current?.click()}
               type="button"
             >
-              <FaPaperclip size={12}/>
+              <Paperclip size={12}/>
               {answerFiles.length > 0 ? ` ${answerFiles.length} files` : " Attach"}
             </button>
             <button className="post-btn primary" onClick={onSubmitAnswer} type="button">
@@ -87,7 +87,12 @@ export default function AnswersSection({
       )}
 
       {answers.length === 0 && !showAnswerBox && (
-        <p className="post-empty-note">No answers yet. Add one clear response or legal note.</p>
+        <RemoteDataState
+          kind="empty"
+          title="No answers yet"
+          description="Add one clear response or legal note."
+          compact
+        />
       )}
 
       {answers.length > 0 && (
@@ -119,10 +124,10 @@ export default function AnswersSection({
                 {canEditAnswer(ans) && (
                   <div className="post-answer-actions">
                     <button onClick={() => onEditAnswer(ans._id, ans.content)} type="button">
-                      <FaEdit size={12}/>
+                      <SquarePen size={12}/>
                     </button>
                     <button onClick={() => onDeleteAnswer(ans._id)} type="button">
-                      <FaTrash size={12}/>
+                      <Trash2 size={12}/>
                     </button>
                   </div>
                 )}

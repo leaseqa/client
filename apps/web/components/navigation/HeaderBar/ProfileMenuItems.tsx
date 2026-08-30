@@ -22,7 +22,7 @@ export default function ProfileMenuItems({
           className="profile-menu-item"
           onClick={() => navigate("/auth/login")}
         >
-          Sign In
+          Sign in
         </Dropdown.Item>
         <Dropdown.Item
           as="button"
@@ -30,7 +30,7 @@ export default function ProfileMenuItems({
           className="profile-menu-item"
           onClick={() => navigate("/auth/register")}
         >
-          Create Account
+          Create account
         </Dropdown.Item>
       </>
     );
@@ -45,7 +45,7 @@ export default function ProfileMenuItems({
           className="profile-menu-item"
           onClick={() => navigate("/account")}
         >
-          View Profile
+          View profile
         </Dropdown.Item>
         <Dropdown.Divider className="profile-menu-separator"/>
         <Dropdown.Item
@@ -54,7 +54,7 @@ export default function ProfileMenuItems({
           className="profile-menu-item"
           onClick={() => navigate("/auth/login")}
         >
-          Sign In for Full Access
+          Sign in for full access
         </Dropdown.Item>
         <Dropdown.Item
           as="button"
@@ -62,7 +62,7 @@ export default function ProfileMenuItems({
           className="profile-menu-item"
           onClick={() => navigate("/auth/register")}
         >
-          Create Account
+          Create account
         </Dropdown.Item>
       </>
     );

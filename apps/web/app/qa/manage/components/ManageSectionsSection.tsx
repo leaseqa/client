@@ -1,6 +1,7 @@
 import React from "react";
 import SectionsTable from "./SectionsTable";
 import type { Folder } from "../../types";
+import RemoteDataState from "@/components/ui/RemoteDataState";
 
 type SectionsAvailableProps = {
   isDataAvailable: true;
@@ -45,7 +46,7 @@ export default function ManageSectionsSection(props: ManageSectionsSectionProps)
         <h2>{title}</h2>
       </div>
       {isLoading ? (
-        <p className="admin-v2-loading-copy">Loading sections…</p>
+        <RemoteDataState kind="loading" title="Loading sections…" compact/>
       ) : props.isDataAvailable ? (
         props.sections.length ? (
           <SectionsTable
@@ -55,7 +56,12 @@ export default function ManageSectionsSection(props: ManageSectionsSectionProps)
             onDelete={props.onDelete}
           />
         ) : (
-          <div className="manage-empty-state">No sections found. Create one to get started.</div>
+          <RemoteDataState
+            kind="empty"
+            title="No sections yet"
+            description="Create one to start grouping questions."
+            compact
+          />
         )
       ) : (
         // Back-compat path

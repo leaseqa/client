@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import { FaUser } from "react-icons/fa";
+import { User } from "lucide-react";
 
 type AvatarToggleProps = {
   onClick?: (e: React.MouseEvent) => void;
@@ -15,7 +15,7 @@ const AvatarToggle = forwardRef<HTMLButtonElement, AvatarToggleProps>(
     const avatarContent = hasUser ? (
       <span className="fw-semibold avatar-text-sm">{initials}</span>
     ) : (
-      <FaUser className="text-secondary" size={18} aria-hidden/>
+      <User className="text-secondary" size={18} aria-hidden/>
     );
 
     return (

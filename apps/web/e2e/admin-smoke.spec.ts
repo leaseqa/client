@@ -8,7 +8,7 @@ async function loginAsAdmin(page: Page, nextPath: string) {
   await page.goto(`/auth/login?next=${encodeURIComponent(nextPath)}`);
   await page.locator('input[name="email"]').fill(ADMIN_EMAIL);
   await page.locator('input[name="password"]').fill(ADMIN_PASSWORD);
-  await page.getByRole("button", { name: "Sign In" }).click();
+  await page.getByRole("button", { name: "Sign in" }).click();
 }
 
 async function createPostFromComposer(page: Page, title: string, details: string) {
@@ -31,15 +31,15 @@ test.describe("admin smoke", () => {
     await expect(page.getByRole("link", { name: "Open Moderation" })).toBeVisible();
     await expect(page.locator("#users")).toContainText("admin@leaseqa.dev");
 
-    await page.getByRole("button", { name: "New Section" }).click();
-    await expect(page.getByRole("heading", { name: "Create New Section" })).toBeVisible();
+    await page.getByRole("button", { name: "New section" }).click();
+    await expect(page.getByRole("heading", { name: "Create new section" })).toBeVisible();
 
     await page.locator('input[name="name"]').fill(slug);
     await page.locator('input[placeholder="Repairs & Habitability"]').fill(originalName);
     await page
       .locator('textarea[placeholder="Optional helper text for this section"]')
       .fill("Playwright smoke section");
-    await page.getByRole("button", { name: "Create Section" }).click();
+    await page.getByRole("button", { name: "Create section" }).click();
 
     const createdRow = page.locator(".manage-table-row", { hasText: originalName });
     await expect(createdRow).toBeVisible();
@@ -50,7 +50,7 @@ test.describe("admin smoke", () => {
     await page
       .locator('textarea[placeholder="Optional helper text for this section"]')
       .fill("Updated by Playwright smoke");
-    await page.getByRole("button", { name: "Save Changes" }).click();
+    await page.getByRole("button", { name: "Save changes" }).click();
 
     const updatedRow = page.locator(".manage-table-row", { hasText: updatedName });
     await expect(updatedRow).toBeVisible();
@@ -99,7 +99,7 @@ test.describe("admin smoke", () => {
     await answersCard.getByRole("button", { name: "Cancel" }).click();
 
     const discussionCard = page.locator(".post-detail-card", {
-      hasText: "Follow-up Discussion",
+      hasText: "Follow-up discussion",
     });
     await discussionCard.getByRole("button", { name: "Write follow-up" }).click();
     await expect(
@@ -125,7 +125,7 @@ test.describe("admin smoke", () => {
     );
 
     const discussionCard = page.locator(".post-detail-card", {
-      hasText: "Follow-up Discussion",
+      hasText: "Follow-up discussion",
     });
 
     await discussionCard.getByRole("button", { name: "Write follow-up" }).click();
@@ -155,7 +155,7 @@ test.describe("admin smoke", () => {
     await expect(page.getByRole("heading", { name: postTitle })).toBeVisible();
 
     const discussionCardAfterReload = page.locator(".post-detail-card", {
-      hasText: "Follow-up Discussion",
+      hasText: "Follow-up discussion",
     });
     const firstThreadAfterReload = discussionCardAfterReload.locator(".post-discussion-item", {
       hasText: rootThreadA,

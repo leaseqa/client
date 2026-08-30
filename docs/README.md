@@ -23,10 +23,6 @@ These documents remain useful, but they are not the current source of truth:
 
 - [project-plan.md](project-plan.md)
   - Original v1 delivery timeline and milestone plan
-- `docs/superpowers/specs/*`
-  - Point-in-time design records for completed work
-- `docs/superpowers/plans/*`
-  - Point-in-time implementation plans for completed work
 
 ## Cross-Repo Docs
 

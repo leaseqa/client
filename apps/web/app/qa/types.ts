@@ -93,13 +93,6 @@ export type Stat = {
   value: number;
 };
 
-export type FeedHeaderProps = {
-  folders: Folder[];
-  posts: Post[];
-  activeFolder: string | null;
-  onSelectFolderAction: (folderName: string) => void;
-};
-
 export type PostDetailProps = {
   post: Post | null;
   folders: Folder[];

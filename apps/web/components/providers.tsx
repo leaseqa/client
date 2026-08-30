@@ -16,6 +16,14 @@ export function Providers({ children }: { children: ReactNode }) {
           queries: {
             refetchOnWindowFocus: false,
             retry: 1,
+            // The API is a separate origin that can be down while the browser
+            // is perfectly online, so failures must surface as errors. Under
+            // the default "online" mode the retryer instead PAUSES — the query
+            // sits at status "pending" / fetchStatus "paused" with no error,
+            // which reads to a route as "not loading, no error, no data" and
+            // renders an empty state. Telling a renter there are no questions
+            // when the server is unreachable is a different and wrong claim.
+            networkMode: "always",
           },
         },
       }),

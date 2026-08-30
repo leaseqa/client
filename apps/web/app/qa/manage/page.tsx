@@ -310,12 +310,12 @@ export default function ManageSectionsPage() {
     // validation
     if ( formMode === "create" ) {
       if ( !sectionDraft.name.trim() || !sectionDraft.displayName.trim() ) {
-        setSubmitError("Name and Display Name are required.");
+        setSubmitError("Name and Display name are required.");
         return;
       }
     } else if ( formMode === "edit" ) {
       if ( !sectionDraft.displayName.trim() ) {
-        setSubmitError("Display Name is required.");
+        setSubmitError("Display name is required.");
         return;
       }
     } else {

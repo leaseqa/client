@@ -1,22 +1,34 @@
 import { useRouter } from "next/navigation";
-import { FaFire } from "react-icons/fa";
-import { Check } from "lucide-react";
 import { Folder, Post } from "../types";
 import { getFolderDisplayName } from "../utils";
+import { Check, MessagesSquare } from "lucide-react";
 
-type FeedHeaderProps = {
+type QuestionFeedProps = {
   posts: Post[];
   folders: Folder[];
 };
 
-export default function FeedHeader({ folders, posts }: FeedHeaderProps) {
+/**
+ * The main column of the community page: everything matching the current
+ * filters that the Pinned and Updates sections above have not already shown.
+ *
+ * This used to be `FeedHeader`, which took the five most-viewed posts without
+ * excluding the pinned and announcement ones — so a pinned post was listed
+ * twice on the same screen, and past five posts the rest of the board was
+ * unreachable from the main column.
+ */
+export default function QuestionFeed({ folders, posts }: QuestionFeedProps) {
   const router = useRouter();
 
-  const hotPosts = [...posts]
-    .sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0))
-    .slice(0, 5);
+  const feedPosts = posts
+    .filter((post) => !post.isPinned && post.postType !== "announcement")
+    .sort((a, b) => {
+      const da = new Date(a.createdAt || a.updatedAt || 0).getTime();
+      const db = new Date(b.createdAt || b.updatedAt || 0).getTime();
+      return db - da;
+    });
 
-  if ( !hotPosts.length ) return null;
+  if ( !feedPosts.length ) return null;
 
   const handlePostClick = (postId: string) => {
     router.push(`/qa?post=${postId}`);
@@ -25,11 +37,11 @@ export default function FeedHeader({ folders, posts }: FeedHeaderProps) {
   return (
     <div className="feed-section">
       <div className="feed-section-title">
-        <FaFire size={16}/>
-        <span>Popular questions</span>
+        <MessagesSquare size={16}/>
+        <span>Questions</span>
       </div>
       <div className="feed-section-posts">
-        {hotPosts.map((post) => (
+        {feedPosts.map((post) => (
           <div
             key={post._id}
             className={`feed-section-post ${post.isResolved ? "resolved" : ""}`}
@@ -50,7 +62,9 @@ export default function FeedHeader({ folders, posts }: FeedHeaderProps) {
                                         {getFolderDisplayName(folders, f)}
                                     </span>
                 ))}
-                {post.urgency && (
+                {/* Only `high` says anything. A badge on every row is weight
+                    without signal, so the other levels stay unlabelled. */}
+                {post.urgency === "high" && (
                   <span className={`feed-section-urgency-badge ${post.urgency}`}>
                                         {post.urgency.toUpperCase()}
                                     </span>

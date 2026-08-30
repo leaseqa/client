@@ -1,9 +1,10 @@
 import React from "react";
-import { FaEdit, FaReply, FaTrash } from "react-icons/fa";
 import { format } from "date-fns";
 import dynamic from "next/dynamic";
 import { Discussion, DiscussionsSectionProps } from "../../types";
 import { sanitizeServerHtml } from "@/app/lib/safeHtml";
+import { Reply, SquarePen, Trash2 } from "lucide-react";
+import RemoteDataState from "@/components/ui/RemoteDataState";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -53,7 +54,7 @@ export default function DiscussionsSection({
                 onClick={() => onEdit(node._id, node.content)}
                 type="button"
               >
-                <FaEdit size={12}/>
+                <SquarePen size={12}/>
               </button>
               <button
                 aria-label="Delete discussion"
@@ -61,7 +62,7 @@ export default function DiscussionsSection({
                 onClick={() => onDelete(node._id)}
                 type="button"
               >
-                <FaTrash size={12}/>
+                <Trash2 size={12}/>
               </button>
             </div>
           )}
@@ -89,7 +90,7 @@ export default function DiscussionsSection({
 
         {!isGuest && !isEditing && (
           <button className="post-discussion-reply-btn" onClick={() => onReply(node._id)} type="button">
-            <FaReply size={10}/>
+            <Reply size={10}/>
             <span>Reply</span>
           </button>
         )}
@@ -127,7 +128,7 @@ export default function DiscussionsSection({
       <div className="post-section-header">
         <div>
           <div className="post-section-kicker">Thread</div>
-          <h2 className="post-section-title">Follow-up Discussion</h2>
+          <h2 className="post-section-title">Follow-up discussion</h2>
         </div>
       </div>
 
@@ -158,7 +159,12 @@ export default function DiscussionsSection({
       )}
 
       {discussions.length === 0 && !showFollowBox && (
-        <p className="post-empty-note">No follow-up yet. Use this thread to clarify timelines or next steps.</p>
+        <RemoteDataState
+          kind="empty"
+          title="No follow-up yet"
+          description="Use this thread to clarify timelines or next steps."
+          compact
+        />
       )}
 
       {discussions.length > 0 && (

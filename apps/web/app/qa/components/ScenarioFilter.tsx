@@ -1,29 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import * as client from "@/app/qa/client";
-import { Folder } from "../types";
+import { useFolders } from "../hooks/useFolders";
 
 export default function ScenarioFilter() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const activeScenario = searchParams.get("scenario") || "all";
-  const [folders, setFolders] = useState<Folder[]>([]);
 
-  const loadFolders = async () => {
-    try {
-      const response = await client.fetchFolders();
-      setFolders(response.data || []);
-    } catch ( error ) {
-      console.error("Failed to load folders:", error);
-    }
-  };
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    loadFolders();
-  }, []);
+  // Shares the page's folder query rather than issuing a second request.
+  // `uncategorized` is where a post lands when no topic was chosen — a storage
+  // fallback, so it is not offered as something to filter by.
+  const folders = useFolders().folders.filter(
+    (folder) => folder.name !== "uncategorized",
+  );
 
   const handleSelect = (value: string) => {
     if ( value === "all" ) {
@@ -41,7 +31,7 @@ export default function ScenarioFilter() {
         aria-pressed={activeScenario === "all"}
         onClick={() => handleSelect("all")}
       >
-        All Topics
+        All topics
       </button>
       {folders.map((folder) => (
         <button

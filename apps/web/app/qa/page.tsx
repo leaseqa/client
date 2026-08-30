@@ -8,7 +8,7 @@ import { Col, Row } from "react-bootstrap";
 
 import { RootState } from "@/app/store";
 
-import { Folder, Post } from "./types";
+import { Post } from "./types";
 import { ComposeState, INITIAL_COMPOSE_STATE } from "./constants";
 import * as client from "./client";
 import { getTopicLabel } from "@/app/lib/reviewFollowUp";
@@ -16,12 +16,15 @@ import { getTopicLabel } from "@/app/lib/reviewFollowUp";
 import ScenarioFilter from "./components/ScenarioFilter";
 import QAToolbar from "./components/QAToolbar";
 import RecencySidebar from "./components/RecencySidebar";
-import FeedHeader from "./components/FeedHeader";
+import QuestionFeed from "./components/QuestionFeed";
 import AnnouncementSection from "./components/AnnouncementSection";
 import ComposeForm from "./components/ComposeForm";
 import PinPostsSection from "./components/PinPostsSection";
 import PostDetailSection from "./components/PostDetailSection";
 import PageLoadingState from "@/components/ui/PageLoadingState";
+import RemoteDataState from "@/components/ui/RemoteDataState";
+import { useFolders } from "./hooks/useFolders";
+import { usePosts } from "./hooks/usePosts";
 
 function QAPageInner() {
   const router = useRouter();
@@ -38,11 +41,7 @@ function QAPageInner() {
   const draftFoldersParam = searchParams.get("draftFolders") || "";
   const draftUrgencyParam = searchParams.get("draftUrgency") || "";
 
-  const [folders, setFolders] = useState<Folder[]>([]);
-  const [posts, setPosts] = useState<Post[]>([]);
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState("");
   const [posting, setPosting] = useState(false);
   const [postError, setPostError] = useState("");
   const [composeState, setComposeState] = useState<ComposeState>(
@@ -61,11 +60,6 @@ function QAPageInner() {
       const query = searchParams.toString();
       const nextHref = query ? `/qa?${query}` : "/qa";
       router.replace(`/auth/login?next=${encodeURIComponent(nextHref)}`);
-    } else if (
-      session.status === "authenticated" ||
-      session.status === "guest"
-    ) {
-      loadData();
     }
   }, [session.status, router, searchParams]);
 
@@ -115,20 +109,27 @@ function QAPageInner() {
     scenario,
   ]);
 
+  // Both reads are shared: the topic filter reads the same folder query, so the
+  // page renders one request per resource instead of one per consumer.
+  const canRead =
+    session.status === "authenticated" || session.status === "guest";
+  const foldersQuery = useFolders(canRead);
+  const postsQuery = usePosts(canRead);
+
+  const folders = foldersQuery.folders;
+  const posts = postsQuery.posts;
+  // Three outcomes, derived from what the queries actually reported rather than
+  // from the absence of an error. A query that cannot reach the server may end
+  // up "paused": no data, no error, not loading. Reading that as "loaded and
+  // empty" told renters there were no questions while the API was unreachable.
+  const queryError = foldersQuery.error || postsQuery.error;
+  const unreachable = foldersQuery.isPaused || postsQuery.isPaused;
+  const loadError = queryError || unreachable;
+  const loaded = foldersQuery.isSuccess && postsQuery.isSuccess;
+  const loading = !loaded && !loadError;
+
   const loadData = async () => {
-    try {
-      setLoading(true);
-      setLoadError("");
-      const foldersResponse = await client.fetchFolders();
-      setFolders(foldersResponse.data || []);
-      const postsResponse = await client.fetchPosts({});
-      setPosts(postsResponse.data || []);
-    } catch ( error ) {
-      console.error("Failed to load data:", error);
-      setLoadError("We could not load the community questions.");
-    } finally {
-      setLoading(false);
-    }
+    await Promise.all([foldersQuery.refetch(), postsQuery.refetch()]);
   };
 
   const filteredPosts = useMemo(() => {
@@ -322,7 +323,7 @@ function QAPageInner() {
   return (
     <div className="qa-page">
       <section className="qa-header-section">
-        <h1 className="qa-page-title">Community Questions</h1>
+        <h1 className="qa-page-title">Community questions</h1>
 
         <div className="qa-controls-row">
           <ScenarioFilter/>
@@ -340,7 +341,12 @@ function QAPageInner() {
       <Row className="g-4 qa-browse-grid">
         <Col lg={3} className="d-none d-lg-block">
           <div className="qa-sidebar-flat">
-            <div className="qa-sidebar-label">Recent</div>
+            {/* RecencySidebar renders nothing when there is nothing to list, so
+                the label has to check the same condition — otherwise a failed
+                load leaves a heading standing over an empty column. */}
+            {filteredPosts.length > 0 && (
+              <div className="qa-sidebar-label">Recent</div>
+            )}
             <RecencySidebar
               posts={filteredPosts}
               currentPostId={postIdParam}
@@ -359,16 +365,18 @@ function QAPageInner() {
 
         <Col lg={9}>
           {loadError ? (
-            <div className="qa-empty-flat qa-error-state" role="alert">
-              <h2 className="qa-empty-title">Questions Could Not Load</h2>
-              <p className="qa-empty-desc">{loadError}</p>
-              <button
-                type="button"
-                className="qa-empty-action"
-                onClick={() => void loadData()}
-              >
-                Try Again
-              </button>
+            <div className="qa-empty-flat">
+              <RemoteDataState
+                kind="error"
+                title="Couldn’t reach the server"
+                description="The question list didn’t load. Check your connection, then retry."
+                action={{ label: "Retry", onClick: () => void loadData() }}
+              />
+              {/* A failed feed should not be a dead end: the guides are static
+                  and load even when the questions endpoint is down. */}
+              <Link className="qa-empty-link" href="/qa/resources">
+                Read the guides instead
+              </Link>
             </div>
           ) : showFeed && (
             <div className="qa-feed-stack">
@@ -379,20 +387,23 @@ function QAPageInner() {
                     posts={filteredPosts}
                     folders={folders}
                   />
-                  <FeedHeader folders={folders} posts={filteredPosts}/>
+                  <QuestionFeed folders={folders} posts={filteredPosts}/>
                 </>
               ) : (
                 <div className="qa-empty-flat">
                   <div className="qa-empty-mark" aria-hidden="true"/>
-                  <div className="qa-empty-title">No Open Questions Here</div>
-                  <p className="qa-empty-desc">
-                    {session.status === "guest"
-                      ? "Try another topic, or sign in to ask the community."
-                      : "Try another topic, or ask the community."}
-                  </p>
+                  <RemoteDataState
+                    kind="empty"
+                    title="No open questions here"
+                    description={
+                      session.status === "guest"
+                        ? "Try another topic, or sign in to ask the community."
+                        : "Try another topic, or ask the community."
+                    }
+                  />
                   {session.status === "guest" && (
                     <Link className="qa-empty-action" href={signInHref}>
-                      Sign In to Ask
+                      Sign in to ask
                     </Link>
                   )}
                 </div>

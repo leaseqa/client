@@ -31,7 +31,7 @@ export default function ManageStats({ stats }: ManageStatsProps) {
         )}
         {stats.verifiedLawyers !== null && (
           <div className="admin-v2-card">
-            <div className="admin-v2-card-title">Verified Lawyers</div>
+            <div className="admin-v2-card-title">Verified lawyers</div>
             <div className="admin-v2-card-value">{stats.verifiedLawyers}</div>
           </div>
         )}

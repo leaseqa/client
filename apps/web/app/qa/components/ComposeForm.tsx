@@ -2,11 +2,10 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import { FaPaperclip, FaTimes } from "react-icons/fa";
-import { Scale } from "lucide-react";
 
 import { ComposeState } from "../constants";
 import { Folder } from "../types";
+import { Paperclip, Scale, X } from "lucide-react";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -74,7 +73,7 @@ export default function ComposeForm({
           onClick={onCancelAction}
           disabled={posting}
         >
-          <FaTimes size={16}/>
+          <X size={16}/>
         </button>
       </div>
 
@@ -108,7 +107,7 @@ export default function ComposeForm({
                   <span key={folder} className="compose-form-tag">
                                         {getFolderLabel(folder)}
                     <button type="button" onClick={() => handleRemoveFolder(folder)}>
-                                            <FaTimes size={10}/>
+                                            <X size={10}/>
                                         </button>
                                     </span>
                 ))}
@@ -145,7 +144,7 @@ export default function ComposeForm({
 
           <div className="compose-form-group">
             <label className="compose-form-label" htmlFor="compose-attachments">
-              <FaPaperclip size={12}/>
+              <Paperclip size={12}/>
               <span>Attachments</span>
             </label>
             <input

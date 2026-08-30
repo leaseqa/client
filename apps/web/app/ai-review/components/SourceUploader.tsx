@@ -60,14 +60,14 @@ export default function SourceUploader({
       <button
         type="button"
         className={styles.mobileSourceSummary}
-        aria-label="Change Source"
+        aria-label="Change source"
         aria-expanded={expanded}
         onClick={() =>
           setUserToggledOpenKey(expanded ? null : uploadResetKey)
         }
       >
-        <span>Source Added</span>
-        <span>Change Source</span>
+        <span>Source added</span>
+        <span>Change source</span>
       </button>
 
       <div className={styles.sourceFormWrap}>
@@ -116,7 +116,7 @@ export default function SourceUploader({
           <AceternityStatefulButton
             type="submit"
             status={creatingSession ? "loading" : "idle"}
-            className={`btn-unified btn-unified-primary btn-unified-md ${styles.startReviewButton}`}
+            className={`btn-warm-primary ${styles.startReviewButton}`}
             disabled={
               creatingSession ||
               (mode === "upload" ? !selectedFile : !sourceText.trim())
@@ -124,9 +124,9 @@ export default function SourceUploader({
           >
             {creatingSession
               ? pendingDraftSource
-                ? "Analyzing Clause"
-                : "Loading Source"
-              : "Start Review"}
+                ? "Analyzing clause"
+                : "Loading source"
+              : "Start review"}
           </AceternityStatefulButton>
 
         </Form>
