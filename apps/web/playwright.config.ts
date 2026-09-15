@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import { defineConfig } from "@playwright/test";
 import { withPlaywrightDefaults } from "./e2e/playwright-env";
 import { resolveLeaseqaServerDir } from "./e2e/server-dir";
@@ -9,6 +11,10 @@ const serverDir = resolveLeaseqaServerDir(clientDir);
 
 export default defineConfig({
   testDir: "./e2e",
+  // Playwright resolves a relative output dir from the cwd, so a run started
+  // from the repo root scattered its artifacts there — over a tracked file.
+  // Pin it beside this config instead.
+  outputDir: path.join(__dirname, "test-results"),
   testMatch: "**/*.spec.ts",
   fullyParallel: false,
   retries: 0,

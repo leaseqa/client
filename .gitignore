@@ -15,6 +15,9 @@ packages/*/dist
 *.tsbuildinfo
 apps/web/playwright-report
 apps/web/test-results
+# Playwright resolves its output dir from the cwd, so a run started from the
+# repo root lands here instead of beside the config.
+test-results
 
 # env
 /.env
