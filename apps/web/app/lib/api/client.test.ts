@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   apiClient,
+  apiPost,
   apiUrl,
   createApiClient,
   oauthUrl,
@@ -108,6 +109,31 @@ describe("apiClient", () => {
   it("sends credentials and times out after 20 seconds", () => {
     expect(apiClient.defaults.withCredentials).toBe(true);
     expect(apiClient.defaults.timeout).toBe(20_000);
+  });
+
+  // Retrieval work outruns the 20s default: indexing a pasted clause measured
+  // 18-21s against production, so the default aborted the request mid-flight
+  // and the review page fell back to a bare "Error". The helpers have to carry
+  // a caller's timeout through to axios, not drop it on the floor.
+  it("forwards a per-request timeout through apiPost", async () => {
+    const original = apiClient.defaults.adapter;
+    let seen: number | undefined;
+    apiClient.defaults.adapter = async (requestConfig) => {
+      seen = requestConfig.timeout;
+      return {
+        data: { data: "ok" },
+        status: 200,
+        statusText: "OK",
+        headers: {},
+        config: requestConfig,
+      };
+    };
+    try {
+      await apiPost("/slow", { a: 1 }, { timeout: 90_000 });
+    } finally {
+      apiClient.defaults.adapter = original;
+    }
+    expect(seen).toBe(90_000);
   });
 
   it("normalizes server errors without exposing axios internals", async () => {

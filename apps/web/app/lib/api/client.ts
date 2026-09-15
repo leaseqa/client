@@ -137,6 +137,10 @@ export type RequestOptions = {
   signal?: AbortSignal;
   params?: AxiosRequestConfig["params"];
   headers?: AxiosRequestConfig["headers"];
+  // Retrieval endpoints outrun DEFAULT_TIMEOUT_MS. Without a per-request
+  // override the shared default aborts them mid-flight, which the caller sees
+  // as a canceled request rather than a slow one.
+  timeout?: number;
 };
 
 export async function apiGet<T = any>(path: string, options: RequestOptions = {}): Promise<T> {
@@ -144,6 +148,7 @@ export async function apiGet<T = any>(path: string, options: RequestOptions = {}
     params: options.params,
     signal: options.signal,
     headers: options.headers,
+    timeout: options.timeout,
   });
   return response.data;
 }
@@ -157,6 +162,7 @@ export async function apiPost<T = any>(
     params: options.params,
     signal: options.signal,
     headers: options.headers,
+    timeout: options.timeout,
   });
   return response.data;
 }
@@ -170,6 +176,7 @@ export async function apiPut<T = any>(
     params: options.params,
     signal: options.signal,
     headers: options.headers,
+    timeout: options.timeout,
   });
   return response.data;
 }
@@ -183,6 +190,7 @@ export async function apiPatch<T = any>(
     params: options.params,
     signal: options.signal,
     headers: options.headers,
+    timeout: options.timeout,
   });
   return response.data;
 }
@@ -192,6 +200,7 @@ export async function apiDelete<T = any>(path: string, options: RequestOptions =
     params: options.params,
     signal: options.signal,
     headers: options.headers,
+    timeout: options.timeout,
   });
   return response.data;
 }
