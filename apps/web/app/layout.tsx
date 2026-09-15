@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "@/app/globals.css";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
+import Link from "next/link";
 import { DM_Sans, Nunito_Sans } from "next/font/google";
 import { Providers } from "@/components/providers";
 import HeaderBar from "@/components/navigation/HeaderBar";
@@ -57,9 +58,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </div>
           </main>
 
-          <footer className="site-footer py-3 px-4 small">
-            LeaseQA gives legal information for renters. It is not a law
-            firm and it is not legal advice.
+          <footer className="site-footer py-3 px-4 small d-flex flex-wrap gap-3 align-items-center">
+            <span>
+              LeaseQA gives legal information for renters. It is not a law
+              firm and it is not legal advice.
+            </span>
+            <Link href="/info" className="site-footer-link ms-sm-auto">
+              About
+            </Link>
           </footer>
         </div>
       </div>

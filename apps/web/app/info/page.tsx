@@ -1,34 +1,29 @@
 "use client";
 
-import { FileText, FlaskConical, Github, Scale, Wrench } from "lucide-react";
+import { Compass, FileText, FlaskConical, Github, Wrench } from "lucide-react";
 
 const team = [
   {
-    name: "Xintao Hu",
+    names: ["Xintao Hu"],
     role: "Product",
-    focus: "App design & engineering",
     icon: FileText,
     accent: "olive" as const,
   },
   {
-    name: "Dan Jackson",
+    names: ["Chenyan Jia", "Dan Jackson"],
     role: "Advisor",
-    focus: "Legal-side product guidance",
-    icon: Scale,
+    icon: Compass,
     accent: "terra" as const,
   },
   {
-    name: "Eric Lai",
+    names: ["Eric Lai"],
     role: "Full-stack",
-    focus: "Next.js + Express + Mongo",
     icon: Wrench,
     accent: "muted" as const,
   },
   {
-    // Two names on one card so the section lands on a single row of four.
-    name: "Zhihao Qian & Tianze Li",
+    names: ["Zhihao Qian", "Tianze Li"],
     role: "Research",
-    focus: "UPL pilot study",
     icon: FlaskConical,
     accent: "olive" as const,
   },
@@ -53,16 +48,21 @@ export default function InfoPage() {
       </div>
       <div className="row g-4 mb-4">
         {team.map((member) => (
-          <div className="col-md-6 col-lg-3" key={member.name}>
+          <div className="col-md-6 col-lg-3" key={member.role}>
             <div className="info-team-card">
               <div
                 className={`info-team-icon info-team-icon--${member.accent}`}
               >
                 <member.icon size={20}/>
               </div>
-              <div className="fw-bold mb-1">{member.name}</div>
-              <span className="info-role-pill mb-2">{member.role}</span>
-              <div className="text-secondary small mt-2">{member.focus}</div>
+              <div className="mb-1">
+                {member.names.map((name) => (
+                  <div className="fw-bold" key={name}>
+                    {name}
+                  </div>
+                ))}
+              </div>
+              <span className="info-role-pill mt-auto">{member.role}</span>
             </div>
           </div>
         ))}

@@ -2854,6 +2854,18 @@ select:focus-visible,
   color: var(--site-muted);
 }
 
+.site-footer-link {
+  color: var(--site-muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-footer-link:hover,
+.site-footer-link:focus-visible {
+  color: var(--site-ink);
+  text-decoration: underline;
+}
+
 @media (max-width: 991px) {
   .page-shell {
     padding: 1rem 1rem 2rem;
@@ -4873,6 +4885,11 @@ select:focus-visible,
   border-radius: var(--site-radius);
   padding: 1.5rem;
   height: 100%;
+  /* Column flex so the role pill can sit on the baseline whatever the name
+     block's height is — cards carrying two names are a line taller. */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
