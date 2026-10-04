@@ -15,9 +15,6 @@ export default function InfoPage() {
       <section className="page-header-section">
         <span className="landing-eyebrow">About</span>
         <h1 className="qa-page-title">Team &amp; credits</h1>
-        <p className="qa-page-sub">
-          Helping Boston renters understand their rights.
-        </p>
       </section>
 
       <section className="info-team" aria-labelledby="info-team-title">

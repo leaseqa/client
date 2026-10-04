@@ -66,7 +66,6 @@ export default function RegisterPage() {
       <div className="auth-container-narrow">
         <section className="page-header-section auth-header-section">
           <h1 className="auth-title">Create account</h1>
-          <p className="qa-page-sub">Join the LeaseQA community.</p>
         </section>
 
         <div className="auth-card">

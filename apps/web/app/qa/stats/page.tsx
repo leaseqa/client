@@ -67,7 +67,7 @@ export default function StatsPage() {
       "signed-out": {
         kind: "permission" as const,
         title: "Sign in to see stats",
-        copy: "Community stats are visible to signed-in members.",
+        copy: undefined,
       },
       forbidden: {
         kind: "permission" as const,
@@ -107,9 +107,6 @@ export default function StatsPage() {
     <div className="qa-page qa-stats-page">
       <section className="page-header-section">
         <h1 className="qa-page-title">Community stats</h1>
-        <p className="qa-page-sub">
-          A quick view of post volume, reply activity, and topic breakdown.
-        </p>
       </section>
 
       <Row className="g-4 qa-stats-grid">
@@ -117,9 +114,6 @@ export default function StatsPage() {
           <section className="qa-stats-section">
             <div className="resources-section-head resources-section-head-compact">
               <h2 className="resources-section-title">Overview</h2>
-              <p className="resources-section-copy">
-                Live counts from the current Q&amp;A board.
-              </p>
             </div>
 
             <Row className="g-3 qa-stats-overview-grid">
@@ -136,9 +130,6 @@ export default function StatsPage() {
           <section className="qa-stats-section">
             <div className="resources-section-head resources-section-head-compact">
               <h2 className="resources-section-title">By topic</h2>
-              <p className="resources-section-copy">
-                Posts grouped by folder.
-              </p>
             </div>
 
             <Row className="g-3 qa-stats-breakdown-grid">

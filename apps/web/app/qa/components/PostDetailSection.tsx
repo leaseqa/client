@@ -227,7 +227,6 @@ export default function PostDetailSection({
           </button>
         </div>
         <div className="post-detail-empty-copy">
-          <div className="post-section-kicker">Question detail</div>
           <RemoteDataState
             kind="error"
             title={error || "Post not found"}
@@ -246,9 +245,7 @@ export default function PostDetailSection({
           Back to questions
         </button>
         <div className="post-detail-context-meta">
-                    <span className="post-detail-context-chip">
-                        {isAdmin ? "Moderation view" : "Question detail"}
-                    </span>
+          {isAdmin && <span className="post-detail-context-chip">Moderation view</span>}
           <span className="post-detail-context-chip">{countLabel(answers.length, "answer")}</span>
           <span className="post-detail-context-chip">{countLabel(discussions.length, "discussion")}</span>
         </div>

@@ -203,9 +203,10 @@ export function getResultsPanelState({
   }
 
   if ( activeSession ) {
+    // The heading names the source; the composer below already invites questions.
     return {
-      title: "Ask follow-up questions",
-      subtitle: `Source: ${formatSourceName(activeSession.sourceName)}`,
+      title: formatSourceName(activeSession.sourceName),
+      subtitle: "",
       conversationLabel: "Conversation",
     };
   }

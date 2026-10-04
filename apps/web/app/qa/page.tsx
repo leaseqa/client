@@ -11,7 +11,6 @@ import { RootState } from "@/app/store";
 import { Post } from "./types";
 import { ComposeState, INITIAL_COMPOSE_STATE } from "./constants";
 import * as client from "./client";
-import { getTopicLabel } from "@/app/lib/reviewFollowUp";
 
 import ScenarioFilter from "./components/ScenarioFilter";
 import QAToolbar from "./components/QAToolbar";
@@ -166,9 +165,6 @@ function QAPageInner() {
     }, {});
   }, [folders]);
 
-  const selectedComposeLabels = composeState.folders.map(
-    (folder) => folderDisplayMap[folder] || getTopicLabel(folder),
-  );
   const isAiReviewDraft = draftSourceParam === "ai-review";
   const showFeed = !composeParam && !postIdParam;
   const currentQaHref = searchParams.toString()
@@ -247,19 +243,10 @@ function QAPageInner() {
     return (
       <div className="qa-compose-page">
         <section className="qa-compose-header">
-          <span className="landing-eyebrow">
-            {isAiReviewDraft ? "From lease review" : "New question"}
-          </span>
+          {isAiReviewDraft && <span className="landing-eyebrow">From lease review</span>}
           <h1 className="qa-page-title">
-            {isAiReviewDraft
-              ? "Clean up the draft, then post it."
-              : "Ask one clear question."}
+            {isAiReviewDraft ? "Clean up the draft, then post it." : "Ask a question"}
           </h1>
-          <p className="qa-page-sub">
-            {isAiReviewDraft
-              ? "This draft includes your review summary and suggested sections."
-              : "Keep it short. Add the clause or timeline in the details box."}
-          </p>
         </section>
 
         <Row className="g-4">
@@ -284,29 +271,10 @@ function QAPageInner() {
           <Col lg={4}>
             <div className="qa-compose-side-stack">
               <div className="qa-compose-side-panel">
-                <div className="qa-sidebar-label">Draft includes</div>
-                {selectedComposeLabels.length > 0 && (
-                  <div className="qa-side-tag-row">
-                    {selectedComposeLabels.map((label) => (
-                      <span key={label} className="qa-side-tag">
-                        {label}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                <div className="qa-side-metric">
-                  <span className="qa-side-metric-label">Urgency</span>
-                  <span className="qa-side-metric-value">
-                    {composeState.urgency}
-                  </span>
-                </div>
-              </div>
-
-              <div className="qa-compose-side-panel">
                 <div className="qa-sidebar-label">Before posting</div>
                 <ul className="qa-side-list">
-                  <li>Keep the title to one plain-language question.</li>
-                  <li>Include the clause or timeline you want checked.</li>
+                  <li>Ask one question per post.</li>
+                  <li>Put the clause or dates in the details.</li>
                 </ul>
               </div>
             </div>

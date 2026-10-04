@@ -229,6 +229,31 @@ describe("getResultsPanelState", () => {
       conversationLabel: "First answer",
     });
   });
+
+  test("names an open review after its source, with no instruction above it", () => {
+    expect(
+      getResultsPanelState({
+        activeSession: {
+          _id: "session-3",
+          status: "ready",
+          error: null,
+          sourceKind: "text",
+          sourceName: "pasted-text",
+          sourceMimeType: null,
+          sourceTextPreview: "Tenant shall pay two months' rent as a deposit.",
+          sourceCharCount: 46,
+          createdAt: "2026-03-11T00:00:00.000Z",
+          updatedAt: "2026-03-11T00:00:00.000Z",
+          messages: [],
+        },
+        pendingDraftSource: null,
+      }),
+    ).toEqual({
+      title: "Pasted clause",
+      subtitle: "",
+      conversationLabel: "Conversation",
+    });
+  });
 });
 
 describe("formatCompactCitationLabel", () => {

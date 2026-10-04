@@ -83,7 +83,6 @@ describe("SessionList states", () => {
     renderList({ sessions: [] });
     expect(state()?.dataset.state).toBe("empty");
     expect(panel().getByText("No saved reviews yet")).toBeTruthy();
-    expect(panel().getByText("Your first source will appear here.")).toBeTruthy();
   });
 
   test("prefers loading over the empty state", () => {

@@ -121,11 +121,14 @@ export default function PostContent({
         />
       ) : (
         <div className="post-detail-body">
-          <div className="post-detail-kicker-row">
-                        <span className="post-detail-kicker">
-                            {postTypeLabel.charAt(0).toUpperCase() + postTypeLabel.slice(1)}
-                        </span>
-          </div>
+          {/* Every post on the board is a question unless it says otherwise. */}
+          {postTypeLabel !== "question" && (
+            <div className="post-detail-kicker-row">
+              <span className="post-detail-kicker">
+                {postTypeLabel.charAt(0).toUpperCase() + postTypeLabel.slice(1)}
+              </span>
+            </div>
+          )}
           <h2 className="post-detail-title">{post.summary}</h2>
           <div className="post-detail-content" dangerouslySetInnerHTML={{ __html: sanitizeServerHtml(post.details) }}/>
         </div>

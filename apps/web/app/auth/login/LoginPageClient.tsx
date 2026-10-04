@@ -64,7 +64,6 @@ export default function LoginPageClient({
       <div className="auth-container-narrow">
         <section className="page-header-section auth-header-section">
           <h1 className="auth-title">Sign in</h1>
-          <p className="qa-page-sub">Sign in to continue to LeaseQA.</p>
         </section>
 
         <div className="auth-card">

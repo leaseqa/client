@@ -32,7 +32,7 @@ function renderConversation(status: RagSession["status"]) {
   return renderToStaticMarkup(
     <Conversation
       showSession
-      resultsPanelState={{ title: "Ask follow-up questions", subtitle: "Source: Pasted clause", conversationLabel: "Conversation" }}
+      resultsPanelState={{ title: "Pasted clause", subtitle: "", conversationLabel: "Conversation" }}
       displayStatus={status}
       displaySourcePreview={session.sourceTextPreview}
       activeSession={{ ...session, status }}

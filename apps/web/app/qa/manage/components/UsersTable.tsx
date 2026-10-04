@@ -30,7 +30,6 @@ export default function UsersTable({
   return (
     <div className="manage-card">
       <div className="manage-card-header">
-        <h2>Users</h2>
         <span className="manage-count">{users.length} users</span>
       </div>
       <div className="manage-card-body no-padding scrollable">

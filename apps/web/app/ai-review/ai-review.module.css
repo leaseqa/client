@@ -260,44 +260,10 @@
   padding: 2.5rem 0;
 }
 
-.emptyAccent {
-  width: 2rem;
-  height: var(--rule-heavy);
-  margin-bottom: 1.25rem;
-  background: var(--site-highlight);
-}
-
-.emptyConversation h2 {
-  margin: 0 0 1.5rem;
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 1.05;
-}
-
-.emptyConversation ol {
-  display: grid;
+.emptyConversation p {
   margin: 0;
-  padding: 0;
-  border-top: 1px solid var(--site-ink);
-  list-style: none;
-}
-
-.emptyConversation li {
-  display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr);
-  align-items: baseline;
-  padding: 0.7rem 0;
-  border-bottom: 1px solid var(--site-border);
-  font-size: 0.9375rem;
-  color: var(--site-accent-strong);
-}
-
-.emptyConversation li span {
-  color: var(--site-text-tertiary);
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
+  color: var(--site-muted);
+  font-size: 1rem;
 }
 
 .activeConversation {

@@ -4,23 +4,9 @@ import Link from "next/link";
 import styles from "./home.module.css";
 
 const JOURNEY_STEPS = [
-  {
-    label: "01",
-    title: "Bring the exact wording",
-    description: "Upload a lease or paste the clause you are unsure about.",
-  },
-  {
-    label: "02",
-    title: "See the relevant guidance",
-    description:
-      "Read a plain-language explanation with cited tenant guidance.",
-  },
-  {
-    label: "03",
-    title: "Identify what to verify",
-    description:
-      "Review relevant questions, cited sources, and available options.",
-  },
+  { label: "01", title: "Paste or upload the clause" },
+  { label: "02", title: "Read the explanation and its sources" },
+  { label: "03", title: "Check the questions it raises" },
 ];
 
 export default function HomeJourney() {
@@ -37,9 +23,9 @@ export default function HomeJourney() {
         <div className={styles.heroBody}>
           <div className={styles.heroCopy}>
             <p className={styles.subtitle}>
-              LeaseQA explains lease language, surfaces relevant Massachusetts
-              tenant guidance, and helps you identify sources and questions for
-              further review.
+              Paste a clause or upload your lease. LeaseQA explains it in plain
+              English and cites the Massachusetts tenant guidance behind each
+              point.
             </p>
             <div className={styles.actions}>
               <Link href="/ai-review" className={styles.primaryAction}>
@@ -57,9 +43,6 @@ export default function HomeJourney() {
           >
             <header className={styles.previewHeader}>
               <span>Lease review · example</span>
-              <span className={styles.previewStatus}>
-                Compare with guidance
-              </span>
             </header>
             {/* The clause keeps its own section number in the margin, the way
                 the lease prints it; the highlighter marks the words to check. */}
@@ -98,14 +81,13 @@ export default function HomeJourney() {
 
       <section className={styles.journey} aria-labelledby="journey-title">
         <h2 id="journey-title" className={styles.journeyTitle}>
-          From clause to context
+          How a review works
         </h2>
         <ol className={styles.steps}>
           {JOURNEY_STEPS.map((step) => (
             <li key={step.label} className={styles.step}>
               <span className={styles.stepNumber}>{step.label}</span>
               <h3>{step.title}</h3>
-              <p>{step.description}</p>
             </li>
           ))}
         </ol>

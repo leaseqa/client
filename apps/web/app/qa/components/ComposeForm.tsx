@@ -56,28 +56,6 @@ export default function ComposeForm({
 
   return (
     <div className={`compose-form ${isAiReviewDraft ? "compose-form-draft" : ""}`}>
-      <div className="compose-form-header">
-        <div>
-          <h2 className="compose-form-title">
-            {isAiReviewDraft ? "Edit your draft" : "Write your question"}
-          </h2>
-          <p className="compose-form-subtitle">
-            {isAiReviewDraft
-              ? "Check the wording, then post it to the right section."
-              : "Write a short question and choose the right section."}
-          </p>
-        </div>
-        <button
-          type="button"
-          className="compose-form-close"
-          aria-label="Close the composer"
-          onClick={onCancelAction}
-          disabled={posting}
-        >
-          <X size={16}/>
-        </button>
-      </div>
-
       {isAiReviewDraft && (
         <div className="compose-form-banner">
           <Scale size={16}/>
@@ -89,7 +67,6 @@ export default function ComposeForm({
         <div className="compose-form-main">
           <div className="compose-form-group">
             <label className="compose-form-label" htmlFor="compose-sections">Sections</label>
-            <p className="compose-form-hint">Choose the closest topic.</p>
             <select
               id="compose-sections"
               className="compose-form-select"
@@ -139,7 +116,6 @@ export default function ComposeForm({
 
           <div className="compose-form-group">
             <label className="compose-form-label">Details</label>
-            <p className="compose-form-hint">Add the clause, timeline, or detail you want explained.</p>
             <div className="compose-form-editor">
               <ReactQuill
                 theme="snow"
@@ -210,7 +186,7 @@ export default function ComposeForm({
           <div className="compose-form-meta-card">
             <div className="compose-form-meta-title">Who replies here</div>
             <p className="compose-form-hint mb-0">
-              Community replies live here. Attorney answers are marked <Scale size={14} className="d-inline"/>.
+              Anyone can answer. Lawyers’ answers are marked <Scale size={14} className="d-inline"/>.
             </p>
           </div>
         </aside>

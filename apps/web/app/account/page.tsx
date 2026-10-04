@@ -134,9 +134,7 @@ export default function AccountPage() {
               <div>
                 <div className="account-card-head">
                   <h2 id="account-profile-title" className="account-card-title">Profile</h2>
-                  <p className="account-card-sub">
-                    {isGuest ? "Browsing as guest" : "Your LeaseQA identity"}
-                  </p>
+                  {isGuest && <p className="account-card-sub">Browsing as guest</p>}
                 </div>
 
                 <Stack gap={0} className="account-fields">

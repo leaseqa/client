@@ -186,7 +186,7 @@ export default function AIReviewPage() {
         showToast(
           created.status === "ready"
             ? "Source loaded. Pick a suggested question or ask your own."
-            : "Source uploaded. We are indexing it now.",
+            : "Uploaded. Indexing the file now.",
           "success",
         );
       }

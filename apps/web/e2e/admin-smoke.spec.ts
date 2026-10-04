@@ -81,7 +81,7 @@ test.describe("admin smoke", () => {
     const postTitle = `Playwright admin smoke ${Date.now()}`;
 
     await loginAsAdmin(page, "/qa?compose=1");
-    await expect(page.getByRole("heading", { name: "Ask one clear question." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Ask a question" })).toBeVisible();
 
     await createPostFromComposer(
       page,
@@ -132,7 +132,7 @@ test.describe("admin smoke", () => {
     const rootThreadB = `Can they deduct for ordinary wear and tear ${Date.now()}`;
 
     await loginAsAdmin(page, "/qa?compose=1");
-    await expect(page.getByRole("heading", { name: "Ask one clear question." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Ask a question" })).toBeVisible();
     await createPostFromComposer(
       page,
       postTitle,

@@ -40,7 +40,6 @@ export default function AnswersSection({
     <section className="post-detail-card post-detail-card-secondary qa-v2-panel">
       <div className="post-section-header">
         <div>
-          <div className="post-section-kicker">Response queue</div>
           <h2 className="post-section-title">Answers</h2>
         </div>
       </div>
@@ -90,7 +89,6 @@ export default function AnswersSection({
         <RemoteDataState
           kind="empty"
           title="No answers yet"
-          description="Add one clear response or legal note."
           compact
         />
       )}

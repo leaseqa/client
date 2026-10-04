@@ -67,7 +67,9 @@ export default function Conversation({
         <div className={styles.activeConversation}>
           <div className={styles.currentSource}>
             <h3>{resultsPanelState.title}</h3>
-            <p className={styles.sourceStatus}>{resultsPanelState.subtitle}</p>
+            {resultsPanelState.subtitle ? (
+              <p className={styles.sourceStatus}>{resultsPanelState.subtitle}</p>
+            ) : null}
             <p className="review-summary-text">{displaySourcePreview}</p>
             {activeSession?.error ? (
               <p className="text-danger mb-0 small">{activeSession.error}</p>
@@ -164,10 +166,12 @@ export default function Conversation({
 
               <div className={styles.composerFooter}>
                 <span>
-                  <Shield size={14}/>
-                  {activeSession.status === "ready"
-                    ? "Answers include cited tenant guidance."
-                    : "Wait for indexing to finish."}
+                  {activeSession.status !== "ready" && (
+                    <>
+                      <Shield size={14}/>
+                      Wait for indexing to finish.
+                    </>
+                  )}
                 </span>
                 <AceternityStatefulButton
                   type="submit"
@@ -181,19 +185,13 @@ export default function Conversation({
             </Form>
           ) : (
             <div className="review-history-inline">
-              Finishing the first answer. You can ask follow-up questions in a moment.
+              Finishing the first answer…
             </div>
           )}
         </div>
       ) : (
         <div className={styles.emptyConversation}>
-          <div className={styles.emptyAccent}/>
-          <h2>Clause context starts here.</h2>
-          <ol>
-            <li><span>01</span><strong>Exact lease language</strong></li>
-            <li><span>02</span><strong>Cited tenant guidance</strong></li>
-            <li><span>03</span><strong>Questions to verify</strong></li>
-          </ol>
+          <p>Upload a lease file or paste a clause to start.</p>
         </div>
       )}
     </section>

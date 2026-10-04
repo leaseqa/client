@@ -201,7 +201,6 @@ describe("NotificationsMenu states", () => {
     openMenu();
 
     expect(screen.getByText("No new notifications")).toBeTruthy();
-    expect(screen.getByText("New activity will appear here.")).toBeTruthy();
   });
 
   test("prefers the loading state over the empty state", () => {

@@ -35,16 +35,13 @@ export default function ActivityTimeline({
     <section className="account-card h-100" aria-labelledby="account-activity-title">
       <div className="account-card-head">
         <h2 id="account-activity-title" className="account-card-title">Recent activity</h2>
-        <p className="account-card-sub">
-          {isGuest ? "Sign in to track activity" : "Your latest actions"}
-        </p>
       </div>
 
       {isGuest ? (
         <div className="account-activity-empty">
           <p>Your saved history starts after sign-in.</p>
           <Link href="/auth/login" className="btn-warm-outline">
-            Sign in to track
+            Sign in
           </Link>
         </div>
       ) : loading ? (

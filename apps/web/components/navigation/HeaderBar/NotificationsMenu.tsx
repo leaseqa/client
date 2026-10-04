@@ -82,9 +82,6 @@ export default function NotificationsMenu({
             <div className="notifications-menu-state-title">
               No new notifications
             </div>
-            <div className="notifications-menu-state-hint">
-              New activity will appear here.
-            </div>
           </div>
         ) : (
           <div className="notifications-menu-list">

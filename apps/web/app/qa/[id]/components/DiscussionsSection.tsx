@@ -127,7 +127,6 @@ export default function DiscussionsSection({
     <section className="post-detail-card post-detail-card-secondary qa-v2-panel">
       <div className="post-section-header">
         <div>
-          <div className="post-section-kicker">Thread</div>
           <h2 className="post-section-title">Follow-up discussion</h2>
         </div>
       </div>
@@ -162,7 +161,6 @@ export default function DiscussionsSection({
         <RemoteDataState
           kind="empty"
           title="No follow-up yet"
-          description="Use this thread to clarify timelines or next steps."
           compact
         />
       )}

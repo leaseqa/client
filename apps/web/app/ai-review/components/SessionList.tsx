@@ -40,7 +40,7 @@ export default function SessionList({
         <RemoteDataState
           kind="error"
           title={error}
-          description="Nothing was lost. Opening the list again will retry."
+          description={onRetry ? undefined : "Open the list again to retry."}
           action={onRetry ? { label: "Try again", onClick: onRetry } : undefined}
           compact
           className={styles.historyState}
@@ -52,7 +52,6 @@ export default function SessionList({
         <RemoteDataState
           kind="empty"
           title="No saved reviews yet"
-          description="Your first source will appear here."
           compact
           className={styles.historyState}
         />
