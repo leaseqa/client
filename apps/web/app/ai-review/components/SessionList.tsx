@@ -1,6 +1,7 @@
 import { Clock3 } from "lucide-react";
 
 import { RagSession } from "../types";
+import { formatSourceName } from "../view-model";
 import RemoteDataState from "@/components/ui/RemoteDataState";
 import styles from "../ai-review.module.css";
 
@@ -69,7 +70,7 @@ export default function SessionList({
               className={styles.historyItem}
               aria-current={isActive ? "true" : undefined}
             >
-              <span>{item.sourceName}</span>
+              <span>{formatSourceName(item.sourceName)}</span>
               <span>{new Date(item.updatedAt).toLocaleDateString()}</span>
             </button>
           );
@@ -86,7 +87,6 @@ export default function SessionList({
             <Clock3 size={12}/>
             <span>Review history</span>
           </div>
-          <span aria-hidden="true">+</span>
         </div>
         {isGuest ? (
           <span className={styles.historyHint}>Temporary for this guest session</span>

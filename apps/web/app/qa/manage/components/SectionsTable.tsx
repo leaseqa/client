@@ -40,7 +40,7 @@ export default function SectionsTable({
             compact
           />
         ) : (
-          <div className="manage-table">
+          <div className="manage-table manage-table-sections">
             <div className="manage-table-header">
               <div className="manage-table-cell name">Display name</div>
               <div className="manage-table-cell slug">Slug</div>

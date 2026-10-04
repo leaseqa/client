@@ -101,7 +101,6 @@ export type PostDetailProps = {
 export type RecencySidebarProps = {
   posts: Post[];
   currentPostId: string | null;
-  onSelectPost: (id: string) => void;
   folderDisplayMap?: Record<string, string>;
   bucketOpen: Record<string, boolean>;
   onToggleBucket: (key: string) => void;

@@ -149,3 +149,17 @@ describe("SessionList items", () => {
     expect(panel().getByText(/Temporary for this guest session/i)).toBeTruthy();
   });
 });
+
+describe("SessionList naming", () => {
+  test("names a pasted clause for the renter, not by its storage id", () => {
+    renderList({ sessions: [session({ sourceName: "pasted-text" })] });
+    expect(panel().getByText("Pasted clause")).toBeTruthy();
+    expect(panel().queryByText("pasted-text")).toBeNull();
+  });
+
+  test("does not draw a '+' that looks like an action but does nothing", () => {
+    renderList({ sessions: [session()] });
+    const header = document.querySelector("#review-history-title")?.parentElement;
+    expect(header?.textContent).not.toContain("+");
+  });
+});

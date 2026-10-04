@@ -176,10 +176,6 @@ function QAPageInner() {
     : "/qa";
   const signInHref = `/auth/login?next=${encodeURIComponent(currentQaHref)}`;
 
-  const handleSelectPost = (id: string) => {
-    router.push(`/qa?post=${id}`);
-  };
-
   const handleClosePost = () => {
     router.push("/qa");
   };
@@ -350,7 +346,6 @@ function QAPageInner() {
             <RecencySidebar
               posts={filteredPosts}
               currentPostId={postIdParam}
-              onSelectPost={handleSelectPost}
               folderDisplayMap={folderDisplayMap}
               bucketOpen={bucketOpen}
               onToggleBucket={(key) =>
@@ -402,7 +397,7 @@ function QAPageInner() {
                     }
                   />
                   {session.status === "guest" && (
-                    <Link className="qa-empty-action" href={signInHref}>
+                    <Link className="btn-warm-outline qa-empty-action" href={signInHref}>
                       Sign in to ask
                     </Link>
                   )}

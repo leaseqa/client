@@ -2,6 +2,7 @@ import React from "react";
 import { User } from "../../types";
 import { Ban, Check, Trash2, UserCheck } from "lucide-react";
 import RemoteDataState from "@/components/ui/RemoteDataState";
+import { initialsFor } from "@/app/lib/initials";
 
 type UsersTableProps = {
   users: User[];
@@ -36,7 +37,7 @@ export default function UsersTable({
         {!users.length ? (
           <RemoteDataState kind="empty" title="No users found" compact/>
         ) : (
-          <div className="manage-table">
+          <div className="manage-table manage-table-users">
             <div className="manage-table-header">
               <div className="manage-table-cell user-name">User</div>
               <div className="manage-table-cell user-email">Email</div>
@@ -53,7 +54,7 @@ export default function UsersTable({
                   <div className="manage-table-cell user-name">
                     <div className="user-info">
                                             <span className="icon-circle icon-circle-sm icon-bg-purple">
-                                                {user.username?.charAt(0).toUpperCase() || "?"}
+                                                {initialsFor(user.username)}
                                             </span>
                       <span className="manage-folder-name">{user.username}</span>
                     </div>
@@ -64,6 +65,7 @@ export default function UsersTable({
                   <div className="manage-table-cell user-role">
                     <select
                       className="user-role-select"
+                      aria-label={`Role for ${user.username}`}
                       value={user.role}
                       onChange={(e) => onChangeRole(user._id, e.target.value)}
                       disabled={isSelf || isPending}

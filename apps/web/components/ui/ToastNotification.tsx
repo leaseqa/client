@@ -18,13 +18,11 @@ type ToastNotificationProps = {
 
 const config = {
   success: {
-    bgClass: "bg-gradient-green",
-    icon: <CircleCheck size={20}/>,
+    icon: <CircleCheck size={20} aria-hidden="true"/>,
     title: "Success"
   },
   error: {
-    bgClass: "bg-gradient-red",
-    icon: <CircleAlert size={20}/>,
+    icon: <CircleAlert size={20} aria-hidden="true"/>,
     title: "Error"
   }
 };
@@ -39,18 +37,28 @@ export default function ToastNotification({ toast, onClose }: ToastNotificationP
 
   if ( !toast.show ) return null;
 
-  const { bgClass, icon, title } = config[toast.type];
+  const { icon, title } = config[toast.type];
 
+  // Announced: an error interrupts, a confirmation waits its turn. The toast
+  // used to be silent to screen readers, and its close button had no name.
   return (
     <div className="toast-wrapper">
-      <div className={`d-flex align-items-start gap-3 text-white p-3 shadow-lg rounded-3 ${bgClass}`}>
-        <div className="flex-shrink-0 mt-1">{icon}</div>
-        <div className="flex-grow-1">
-          <div className="fw-bold mb-1">{title}</div>
-          <div className="small opacity-90">{toast.message}</div>
+      <div
+        className={`toast-panel toast-panel-${toast.type}`}
+        role={toast.type === "error" ? "alert" : "status"}
+      >
+        <div className="toast-panel-icon">{icon}</div>
+        <div className="toast-panel-copy">
+          <div className="toast-panel-title">{title}</div>
+          <div className="toast-panel-message">{toast.message}</div>
         </div>
-        <button onClick={onClose} className="btn btn-link p-0 text-white opacity-75">
-          <X size={16}/>
+        <button
+          type="button"
+          onClick={onClose}
+          className="toast-panel-close"
+          aria-label="Dismiss notification"
+        >
+          <X size={16} aria-hidden="true"/>
         </button>
       </div>
     </div>

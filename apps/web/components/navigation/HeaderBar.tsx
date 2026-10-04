@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, signOut } from "@/app/store";
@@ -15,6 +15,7 @@ import NotificationsMenu from "./HeaderBar/NotificationsMenu";
 import { apiErrorMessage } from "@/app/lib/api/client";
 import * as client from "@/app/account/client";
 import { NAV_ITEMS } from "./config";
+import { initialsFor } from "@/app/lib/initials";
 
 export default function HeaderBar() {
   const pathname = usePathname();
@@ -35,7 +36,7 @@ export default function HeaderBar() {
   const [notifications, setNotifications] = useState<client.ActivityItem[]>([]);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
   const [notificationsError, setNotificationsError] = useState("");
-  const initials = user?.name?.slice(0, 2).toUpperCase() || "?";
+  const initials = initialsFor(user?.name);
 
   const navigate = useCallback((href: string) => {
     setShowMenu(false);
@@ -72,6 +73,13 @@ export default function HeaderBar() {
     }
   }, [isAuthenticated]);
 
+  // Load once the session is known, not only when the menu opens: the bell's
+  // unread mark is the only thing that tells a renter there is something new,
+  // and it could never show before the menu had been opened.
+  useEffect(() => {
+    void loadNotifications();
+  }, [loadNotifications]);
+
   const handleSelectNotification = useCallback(
     async (item: NotificationMenuItem) => {
       try {
@@ -99,10 +107,13 @@ export default function HeaderBar() {
       <Navbar expand={false} expanded={navOpen} onToggle={setNavOpen}>
         <Container fluid className="px-3">
           <div className="d-flex align-items-center gap-2">
+            {/* `label`, not `aria-label`: Navbar.Toggle writes its own
+                aria-label after spreading props, so a passed one was always
+                replaced by "Toggle navigation". */}
             <Navbar.Toggle
               aria-controls="mobile-navbar-nav"
               aria-expanded={navOpen}
-              aria-label={navOpen ? "Close navigation" : "Open navigation"}
+              label={navOpen ? "Close navigation" : "Open navigation"}
               className="d-lg-none border-0 p-0 me-2"
             />
             <NavbarBrand
@@ -152,8 +163,6 @@ export default function HeaderBar() {
               }}
               onSelect={handleSelectNotification}
             />
-
-            <span className="site-auth-divider" aria-hidden="true"/>
 
             <Dropdown align="end" show={showMenu} onToggle={setShowMenu}>
               <Dropdown.Toggle

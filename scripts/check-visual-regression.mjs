@@ -18,6 +18,10 @@
 //   node scripts/check-visual-regression.mjs --compare before.json after.json
 //
 // The dev server must already be running. Point at it with LEASEQA_PREVIEW_URL.
+// Use the host the dev server was started with (localhost by default). Next
+// blocks its dev-only assets for any other hostname (`allowedDevOrigins`), so a
+// page opened through 127.0.0.1 never hydrates and every client route is
+// fingerprinted as its loading shell.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -28,7 +32,7 @@ const { chromium } = await import(
   path.join(clientDir, "node_modules/playwright/index.mjs")
 );
 
-const PREVIEW = process.env.LEASEQA_PREVIEW_URL || "http://127.0.0.1:3000";
+const PREVIEW = process.env.LEASEQA_PREVIEW_URL || "http://localhost:3000";
 
 const ROUTES = [
   "/",

@@ -123,16 +123,16 @@ export default function RegisterPage() {
               className="btn-warm-primary w-100 mb-3"
               disabled={loading}
             >
-              {loading ? "Creating account…" : "Sign up"}
+              {loading ? "Creating account…" : "Create account"}
             </button>
 
             <div className="auth-divider">or</div>
 
             <a
               href={oauthUrl("google")}
-              className="btn-warm-outline w-100 d-block text-center text-decoration-none"
+              className="btn-warm-outline w-100 mb-3"
             >
-              <GoogleMark size={20} className="me-2"/>Sign up with Google
+              <GoogleMark size={20}/>Sign up with Google
             </a>
           </Form>
 
@@ -154,7 +154,7 @@ export default function RegisterPage() {
 
       <Modal show={showSuccess} onHide={() => setShowSuccess(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Account Created!</Modal.Title>
+          <Modal.Title>Account created</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p className="mb-0">Your account was created successfully.</p>
@@ -170,7 +170,7 @@ export default function RegisterPage() {
             className="btn-warm-primary"
             onClick={() => router.push("/account")}
           >
-            Go to Account
+            Go to account
           </button>
         </Modal.Footer>
       </Modal>

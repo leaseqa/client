@@ -8,6 +8,10 @@ import { Provider as ReduxProvider } from "react-redux";
 import store from "@/app/store";
 import SessionLoader from "@/app/auth/SessionLoader";
 
+// What the server rendered with: the store before any session has loaded.
+// Captured at module load, before SessionLoader can dispatch.
+const INITIAL_STATE = store.getState();
+
 export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
     () =>
@@ -30,7 +34,12 @@ export function Providers({ children }: { children: ReactNode }) {
   );
 
   return (
-    <ReduxProvider store={store}>
+    // `serverState` makes components hydrate against the state the server saw.
+    // Without it, a session that resolved before a lazily hydrated segment
+    // (e.g. /qa/manage under its loading boundary) was read during hydration,
+    // the admin page rendered where the server had rendered nothing, and React
+    // discarded the tree with a hydration error.
+    <ReduxProvider store={store} serverState={INITIAL_STATE}>
       <QueryClientProvider client={queryClient}>
         <SessionLoader>
           {children}

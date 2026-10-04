@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 
 import { ComposeState } from "../constants";
 import { Folder } from "../types";
+import { countLabel } from "../utils";
 import { Paperclip, Scale, X } from "lucide-react";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
@@ -87,9 +88,10 @@ export default function ComposeForm({
       <div className="compose-form-layout">
         <div className="compose-form-main">
           <div className="compose-form-group">
-            <label className="compose-form-label">Sections</label>
+            <label className="compose-form-label" htmlFor="compose-sections">Sections</label>
             <p className="compose-form-hint">Choose the closest topic.</p>
             <select
+              id="compose-sections"
               className="compose-form-select"
               value=""
               onChange={(event) => handleAddFolder(event.target.value)}
@@ -106,7 +108,11 @@ export default function ComposeForm({
                 {composeState.folders.map((folder) => (
                   <span key={folder} className="compose-form-tag">
                                         {getFolderLabel(folder)}
-                    <button type="button" onClick={() => handleRemoveFolder(folder)}>
+                    <button
+                      type="button"
+                      aria-label={`Remove ${getFolderLabel(folder)}`}
+                      onClick={() => handleRemoveFolder(folder)}
+                    >
                                             <X size={10}/>
                                         </button>
                                     </span>
@@ -116,11 +122,12 @@ export default function ComposeForm({
           </div>
 
           <div className="compose-form-group">
-            <label className="compose-form-label">
+            <label className="compose-form-label" htmlFor="compose-title">
               Title
               <span className="compose-form-count">{composeState.summary.length}/100</span>
             </label>
             <input
+              id="compose-title"
               type="text"
               className="compose-form-input"
               placeholder='Short question, for example: "Is this deposit clause normal?"'
@@ -156,7 +163,7 @@ export default function ComposeForm({
             />
             {composeState.files.length > 0 && (
               <div className="compose-form-file-count">
-                {composeState.files.length} file(s) selected
+                {countLabel(composeState.files.length, "file")} selected
               </div>
             )}
           </div>
@@ -224,7 +231,7 @@ export default function ComposeForm({
           onClick={onSubmitAction}
           disabled={posting}
         >
-          {posting ? "Posting..." : "Post"}
+          {posting ? "Posting…" : "Post"}
         </button>
       </div>
     </div>

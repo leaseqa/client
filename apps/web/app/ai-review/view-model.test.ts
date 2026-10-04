@@ -5,6 +5,8 @@ import {
   FILE_AUTO_ANALYZE_QUESTION,
   FILE_SUGGESTED_PROMPTS,
   formatCompactCitationLabel,
+  formatRoleLabel,
+  formatSourceName,
   getDisplayedSource,
   getEmptyStateMessage,
   getInlineCitationItems,
@@ -223,7 +225,7 @@ describe("getResultsPanelState", () => {
       }),
     ).toEqual({
       title: "Analyzing new clause",
-      subtitle: "Source: pasted-text",
+      subtitle: "Source: Pasted clause",
       conversationLabel: "First answer",
     });
   });
@@ -244,7 +246,7 @@ describe("formatCompactCitationLabel", () => {
     ).toBe("Chap. 3 Security Deposit");
   });
 
-  test("gives pasted text a short uploaded-clause label", () => {
+  test("labels a pasted clause the way the history does", () => {
     expect(
       formatCompactCitationLabel({
         sourceName: "pasted-text",
@@ -255,7 +257,7 @@ describe("formatCompactCitationLabel", () => {
         sourceUrl: null,
         snippet: "Uploaded clause text",
       }),
-    ).toBe("Uploaded Clause");
+    ).toBe("Pasted clause");
   });
 
   test("gives handout citations a short handout label", () => {
@@ -438,5 +440,22 @@ describe("conversation fixtures", () => {
         message: "Denied",
       }),
     ).toBe(false);
+  });
+});
+
+describe("formatSourceName", () => {
+  test("names a pasted clause for the renter", () => {
+    expect(formatSourceName("pasted-text")).toBe("Pasted clause");
+  });
+
+  test("keeps an uploaded file's own name", () => {
+    expect(formatSourceName("lease-2026.pdf")).toBe("lease-2026.pdf");
+  });
+});
+
+describe("formatRoleLabel", () => {
+  test("labels the renter's turn and the answer", () => {
+    expect(formatRoleLabel("user")).toBe("You");
+    expect(formatRoleLabel("assistant")).toBe("Answer");
   });
 });

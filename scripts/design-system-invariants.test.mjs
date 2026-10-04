@@ -53,7 +53,7 @@ test("globals.css keeps exactly one canonical token block", async () => {
   );
 });
 
-test("the canonical block still defines the warm surface tokens", async () => {
+test("the canonical block still defines the surface tokens", async () => {
   const css = stripComments(await readGlobals());
   const start = css.indexOf(":root");
   const block = css.slice(start, css.indexOf("}", start));
@@ -145,11 +145,7 @@ test("the heading layer holds only its five steps", async () => {
   // 16px and up. The exclusions are not headings: they use font-size to size a
   // glyph or a display figure, so a type scale does not apply to them.
   const HEADING = new Set(["1rem", "1.125rem", "1.25rem", "1.5rem", "2rem"]);
-  const NOT_TYPE = [
-    "account-avatar", "avatar-circle", "team-avatar", "site-wordmark",
-    "primaryAction", "admin-v2-card-value", "stat-box-value",
-    "review-summary-count",
-  ];
+  const NOT_TYPE = ["site-wordmark"];
   const offenders = [];
   for (const file of await collectCss()) {
     const css = stripComments(await readFile(file, "utf8"));
@@ -178,6 +174,38 @@ test("the heading layer holds only its five steps", async () => {
     [],
     `off-scale heading sizes: ${offenders.join(", ")}. Use one of ${[...HEADING].join(", ")}.`,
   );
+});
+
+test("colours come from the token block, nowhere else", async () => {
+  // The Swiss pass mapped every literal colour onto a --site-* token. A hex or
+  // rgb() written into a rule is how a second palette starts growing back.
+  const offenders = [];
+  for (const file of await collectCss()) {
+    let css = stripComments(await readFile(file, "utf8"));
+    const root = css.indexOf(":root");
+    if (root !== -1) css = css.slice(0, root) + css.slice(css.indexOf("}", root));
+    const literals = css.match(/#[0-9a-fA-F]{3,8}\b|rgba?\([^)]*\)|hsla?\([^)]*\)|(?<![\w-])(?:white|black)(?![\w-])/g) || [];
+    if (literals.length) {
+      offenders.push(`${path.relative(CLIENT_DIR, file)}: ${[...new Set(literals)].join(", ")}`);
+    }
+  }
+  assert.deepEqual(offenders, [], `literal colours outside :root — ${offenders.join("; ")}. Use a --site-* token.`);
+});
+
+test("corners stay square", async () => {
+  // One radius knob. 50% is allowed for the one shape that must be round: a
+  // spinner's ring.
+  const offenders = [];
+  for (const file of await collectCss()) {
+    const css = stripComments(await readFile(file, "utf8"));
+    for (const match of css.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;}]+)/g)) {
+      const value = match[1].replace("!important", "").trim();
+      if (value !== "var(--site-radius)" && value !== "50%") {
+        offenders.push(`${path.relative(CLIENT_DIR, file)}: ${value}`);
+      }
+    }
+  }
+  assert.deepEqual(offenders, [], `radius off the token: ${offenders.join(", ")}. Use var(--site-radius).`);
 });
 
 /** Same walk as collectCss, for the TS/TSX sources. */
@@ -251,7 +279,7 @@ test("one button family survives the consolidation", async () => {
   assert.deepEqual(
     offenders,
     [],
-    `retired button classes are back: ${offenders.join(", ")}. Use btn-warm-primary, btn-warm-outline, or btn-warm-danger.`,
+    `retired button classes are back: ${offenders.join(", ")}. Use btn-warm-primary, btn-warm-outline, or btn-warm-highlight.`,
   );
 });
 
@@ -280,8 +308,9 @@ test("globals.css does not accumulate unreferenced classes", async () => {
   });
 
   // Ratchet: this was 59 before the de-AI pass stripped the dead landing page,
-  // sidenav, and tech-dot rules. Lower it when you delete more; never raise it.
-  const BUDGET = 5;
+  // sidenav, and tech-dot rules, and 5 until the Swiss layout pass deleted the
+  // rest. Never raise it.
+  const BUDGET = 0;
   assert.ok(
     orphans.length <= BUDGET,
     `${orphans.length} unreferenced classes in globals.css (budget ${BUDGET}): ${orphans.join(", ")}`,

@@ -7,19 +7,17 @@ import "@/app/globals.css";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 import Link from "next/link";
-import { DM_Sans, Nunito_Sans } from "next/font/google";
+import { Archivo } from "next/font/google";
 import { Providers } from "@/components/providers";
 import HeaderBar from "@/components/navigation/HeaderBar";
 
-const dmSans = DM_Sans({
+// One grotesque, used across its width axis the way Univers was used across
+// its numbered matrix: semi-expanded for display, normal for text, condensed
+// for index labels. See COLOR_GUIDE.md, "Typography".
+const archivo = Archivo({
   subsets: ["latin"],
+  axes: ["wdth"],
   variable: "--font-body",
-});
-
-const nunitoSans = Nunito_Sans({
-  subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
-  variable: "--font-display",
 });
 
 export const metadata: Metadata = {
@@ -38,7 +36,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
     <body
       suppressHydrationWarning
-      className={`${dmSans.variable} ${nunitoSans.variable}`}
+      className={archivo.variable}
     >
     <Providers>
       <div className="app-shell d-flex min-vh-100 flex-column">
@@ -58,7 +56,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </div>
           </main>
 
-          <footer className="site-footer py-3 px-4 small d-flex flex-wrap gap-3 align-items-center">
+          <footer className="site-footer small d-flex flex-wrap gap-3 align-items-center">
             <span>
               LeaseQA gives legal information for renters. It is not a law
               firm and it is not legal advice.

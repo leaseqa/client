@@ -1,37 +1,17 @@
 "use client";
 
-import { Compass, FileText, FlaskConical, Github, Wrench } from "lucide-react";
+import { Github } from "lucide-react";
 
 const team = [
-  {
-    names: ["Xintao Hu"],
-    role: "Product",
-    icon: FileText,
-    accent: "olive" as const,
-  },
-  {
-    names: ["Chenyan Jia", "Dan Jackson"],
-    role: "Advisor",
-    icon: Compass,
-    accent: "terra" as const,
-  },
-  {
-    names: ["Eric Lai"],
-    role: "Full-stack",
-    icon: Wrench,
-    accent: "muted" as const,
-  },
-  {
-    names: ["Zhihao Qian", "Tianze Li"],
-    role: "Research",
-    icon: FlaskConical,
-    accent: "olive" as const,
-  },
+  { names: ["Xintao Hu"], role: "Product" },
+  { names: ["Chenyan Jia", "Dan Jackson"], role: "Advisor" },
+  { names: ["Eric Lai"], role: "Full-stack" },
+  { names: ["Zhihao Qian", "Tianze Li"], role: "Research" },
 ];
 
 export default function InfoPage() {
   return (
-    <div className="mb-4">
+    <div className="info-page">
       <section className="page-header-section">
         <span className="landing-eyebrow">About</span>
         <h1 className="qa-page-title">Team &amp; credits</h1>
@@ -40,48 +20,31 @@ export default function InfoPage() {
         </p>
       </section>
 
-      <div
-        className="small text-secondary mb-3 fw-semibold"
-        style={{ letterSpacing: "0.08em" }}
-      >
-        TEAM
-      </div>
-      <div className="row g-4 mb-4">
-        {team.map((member) => (
-          <div className="col-md-6 col-lg-3" key={member.role}>
-            <div className="info-team-card">
-              <div
-                className={`info-team-icon info-team-icon--${member.accent}`}
-              >
-                <member.icon size={20}/>
-              </div>
-              <div className="mb-1">
-                {member.names.map((name) => (
-                  <div className="fw-bold" key={name}>
-                    {name}
-                  </div>
-                ))}
-              </div>
-              <span className="info-role-pill mt-auto">{member.role}</span>
-            </div>
-          </div>
-        ))}
-      </div>
+      <section className="info-team" aria-labelledby="info-team-title">
+        <h2 id="info-team-title" className="info-section-label">Team</h2>
+        <ul className="info-team-grid">
+          {team.map((member) => (
+            <li className="info-team-card" key={member.role}>
+              <span className="info-role-pill">{member.role}</span>
+              {member.names.map((name) => (
+                <span className="info-team-name" key={name}>
+                  {name}
+                </span>
+              ))}
+            </li>
+          ))}
+        </ul>
+      </section>
 
-      <div
-        className="d-flex justify-content-center mt-5 mb-5"
-        style={{ paddingTop: "2rem" }}
+      <a
+        href="https://github.com/leaseqa"
+        target="_blank"
+        rel="noreferrer"
+        className="info-source-link"
       >
-        <a
-          href="https://github.com/leaseqa"
-          target="_blank"
-          rel="noreferrer"
-          className="text-decoration-none"
-          aria-label="Visit LeaseQA on GitHub"
-        >
-          <Github size={48} className="text-secondary"/>
-        </a>
-      </div>
+        <Github size={18} aria-hidden="true"/>
+        <span>Source code on GitHub</span>
+      </a>
     </div>
   );
 }

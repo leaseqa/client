@@ -1,4 +1,4 @@
-import { Badge, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { MessageSquareQuote, Shield } from "lucide-react";
 
 import AceternityStatefulButton from "@/components/ui/AceternityStatefulButton";
@@ -6,8 +6,8 @@ import { ChatMessage, RagSession } from "../types";
 import {
   AUTO_ANALYZE_QUESTION,
   FILE_SUGGESTED_PROMPTS,
+  formatRoleLabel,
   formatStatusLabel,
-  formatStatusVariant,
   getEmptyStateMessage,
   ResultsPanelState,
   TEXT_RETRY_PROMPT_LABEL,
@@ -53,9 +53,11 @@ export default function Conversation({
       <div className={styles.conversationHeader}>
         <h2 id="review-conversation-title">Review</h2>
         {showSession ? (
-          <Badge bg={formatStatusVariant(displayStatus)}>
+          // Not a Bootstrap Badge: its green belonged to no palette here, and the
+          // header's own span rule recoloured the badge text into the green.
+          <span className={styles.status} data-status={displayStatus}>
             {formatStatusLabel(displayStatus)}
-          </Badge>
+          </span>
         ) : (
           <span>No source added</span>
         )}
@@ -87,7 +89,7 @@ export default function Conversation({
                         key={messageKey}
                         className={`review-chat-message review-chat-message-${message.role}`}
                       >
-                        <div className="review-chat-role">{message.role}</div>
+                        <div className="review-chat-role">{formatRoleLabel(message.role)}</div>
                         <AnswerSections
                           message={message}
                           messageKey={messageKey}
@@ -97,13 +99,13 @@ export default function Conversation({
                   })}
                   {pendingUserQuestion ? (
                     <article className="review-chat-message review-chat-message-user">
-                      <div className="review-chat-role">user</div>
+                      <div className="review-chat-role">{formatRoleLabel("user")}</div>
                       <div className="review-chat-body">{pendingUserQuestion}</div>
                     </article>
                   ) : null}
                   {pendingAssistantLabel ? (
                     <article className="review-chat-message review-chat-message-assistant">
-                      <div className="review-chat-role">assistant</div>
+                      <div className="review-chat-role">{formatRoleLabel("assistant")}</div>
                       <div className="review-chat-body review-chat-body-pending">
                         {pendingAssistantLabel}
                       </div>

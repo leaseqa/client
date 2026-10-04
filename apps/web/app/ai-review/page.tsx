@@ -14,6 +14,7 @@ import {
   getResultsPanelState,
   getSessionInputPlan,
   getVisibleMessages,
+  PASTED_TEXT_SOURCE,
 } from "./view-model";
 import { useRagConversation } from "./hooks/useRagConversation";
 import { useRagSession } from "./hooks/useRagSession";
@@ -154,7 +155,7 @@ export default function AIReviewPage() {
     if ( inputPlan.initialQuestion ) {
       formData.set("initialQuestion", inputPlan.initialQuestion);
       setPendingDraftSource({
-        sourceName: "pasted-text",
+        sourceName: PASTED_TEXT_SOURCE,
         sourcePreview: sourceText.trim(),
       });
       setPendingAssistantLabel("Matching this clause against the handbook");

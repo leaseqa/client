@@ -9,6 +9,7 @@ import { AnswersSection, DiscussionsSection, PostContent } from "../[id]/compone
 import { Folder } from "../types";
 import { Answer, Discussion, PostDetailData } from "../[id]/types";
 import RemoteDataState from "@/components/ui/RemoteDataState";
+import { countLabel } from "../utils";
 
 type PostDetailSectionProps = {
   postId: string;
@@ -248,8 +249,8 @@ export default function PostDetailSection({
                     <span className="post-detail-context-chip">
                         {isAdmin ? "Moderation view" : "Question detail"}
                     </span>
-          <span className="post-detail-context-chip">{answers.length} answers</span>
-          <span className="post-detail-context-chip">{discussions.length} discussions</span>
+          <span className="post-detail-context-chip">{countLabel(answers.length, "answer")}</span>
+          <span className="post-detail-context-chip">{countLabel(discussions.length, "discussion")}</span>
         </div>
       </div>
 

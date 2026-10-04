@@ -41,12 +41,14 @@ export default function StatsPage() {
       }
       setAccess("ok");
     } catch ( error ) {
-      console.error("Failed to load stats:", error);
+      // 401 and 403 are expected answers for guests and members, not
+      // failures; only the unexpected case belongs in the console.
       if ( isApiError(error) && error.status === 401 ) {
         setAccess("signed-out");
       } else if ( isApiError(error) && error.status === 403 ) {
         setAccess("forbidden");
       } else {
+        console.error("Failed to load stats:", error);
         setAccess("error");
       }
     } finally {
@@ -88,7 +90,7 @@ export default function StatsPage() {
           <RemoteDataState kind={kind} title={title} description={copy}/>
           {access === "signed-out" && (
             <Link
-              className="qa-empty-action"
+              className="btn-warm-outline qa-empty-action"
               href={`/auth/login?next=${encodeURIComponent("/qa/stats")}`}
             >
               Sign in

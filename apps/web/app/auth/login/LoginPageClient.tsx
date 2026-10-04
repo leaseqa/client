@@ -105,9 +105,9 @@ export default function LoginPageClient({
 
             <a
               href={oauthUrl("google")}
-              className="btn-warm-outline w-100 mb-3 d-block text-center text-decoration-none"
+              className="btn-warm-outline w-100 mb-3"
             >
-              <GoogleMark size={20} className="me-2" />
+              <GoogleMark size={20} />
               Continue with Google
             </a>
 
@@ -116,8 +116,8 @@ export default function LoginPageClient({
               className="btn-warm-outline w-100 mb-3"
               onClick={handleGuestLogin}
             >
-              <User size={20} className="me-2" />
-              Continue as Guest
+              <User size={20} />
+              Continue as guest
             </button>
           </Form>
 

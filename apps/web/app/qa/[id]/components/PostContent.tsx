@@ -3,6 +3,8 @@ import { format } from "date-fns";
 import { PostContentProps } from "../../types";
 import EditPostForm from "./EditPostForm";
 import { sanitizeServerHtml } from "@/app/lib/safeHtml";
+import { getFolderDisplayName } from "../../utils";
+import { initialsFor } from "@/app/lib/initials";
 import { Check, Eye, Pin, SquarePen, Trash2 } from "lucide-react";
 
 export default function PostContent({
@@ -29,7 +31,7 @@ export default function PostContent({
                                     }: PostContentProps) {
   const isAnonymous = (post as any).isAnonymous;
   const authorName = isAnonymous ? "Anonymous" : (post.author?.username || post.author?.email || "Unknown");
-  const authorInitial = isAnonymous ? "?" : authorName.charAt(0).toUpperCase();
+  const authorInitials = isAnonymous ? "?" : initialsFor(authorName);
   const postTypeLabel = post.postType ? post.postType.replace("_", " ") : "question";
 
   return (
@@ -37,7 +39,7 @@ export default function PostContent({
       <div className="post-detail-header">
         <div className="post-detail-author-section">
           <div className={`icon-circle icon-circle-md ${isAnonymous ? "icon-bg-muted" : "icon-bg-purple"}`}>
-            {authorInitial}
+            {authorInitials}
           </div>
           <div className="post-detail-author-info">
             <div className="post-detail-author-row">
@@ -46,12 +48,17 @@ export default function PostContent({
             <div className="post-detail-meta-row">
               <span>{post.createdAt ? format(new Date(post.createdAt), "MMM d, yyyy 'at' h:mm a") : ""}</span>
               <span className="post-detail-meta-dot">·</span>
-              <span>{post.folders?.join(", ")}</span>
+              <span>
+                {(post.folders || [])
+                  .map((folder) => getFolderDisplayName(folders, folder))
+                  .join(", ")}
+              </span>
               <span className="post-detail-meta-dot">·</span>
               <span className="post-detail-views">
-                                <Eye size={11}/>
+                <Eye size={11} aria-hidden="true"/>
                 {post.viewCount || 0}
-                            </span>
+                <span className="visually-hidden"> views</span>
+              </span>
             </div>
           </div>
         </div>
@@ -64,9 +71,7 @@ export default function PostContent({
           )}
           {/* Same rule as the feed: only `high` carries a signal worth a badge. */}
           {post.urgency === "high" && (
-            <span className={`post-urgency-badge ${post.urgency}`}>
-                            {post.urgency.toUpperCase()}
-                        </span>
+            <span className={`post-urgency-badge ${post.urgency}`}>Urgent</span>
           )}
           {isAdmin && !isEditing && (
             <button
@@ -154,6 +159,7 @@ export default function PostContent({
               <label className={resolvedStatus === "open" ? "active" : ""}>
                 <input
                   type="radio"
+                  name="post-status"
                   checked={resolvedStatus === "open"}
                   onChange={() => onStatusChange("open")}
                 />
@@ -162,6 +168,7 @@ export default function PostContent({
               <label className={resolvedStatus === "resolved" ? "active" : ""}>
                 <input
                   type="radio"
+                  name="post-status"
                   checked={resolvedStatus === "resolved"}
                   onChange={() => onStatusChange("resolved")}
                 />

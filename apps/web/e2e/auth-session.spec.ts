@@ -25,10 +25,10 @@ test.describe("auth session", () => {
     await page.locator('input[name="email"]').fill(email);
     await page.locator('input[name="password"]').fill(password);
     await page.locator('input[name="confirmPassword"]').fill(password);
-    await page.getByRole("button", { name: "Sign up" }).click();
+    await page.getByRole("button", { name: "Create account" }).click();
 
-    await expect(page.getByText("Account Created!")).toBeVisible();
-    await page.getByRole("button", { name: "Go to Account" }).click();
+    await expect(page.getByText("Account created")).toBeVisible();
+    await page.getByRole("button", { name: "Go to account" }).click();
     await expect(page).toHaveURL(/\/account$/);
     await expect(page.locator(".account-header-row").getByText(email)).toBeVisible();
 
