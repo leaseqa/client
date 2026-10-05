@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setSession, signOut } from "@/app/store";
@@ -8,7 +9,7 @@ import { Col, Form, Row, Stack } from "react-bootstrap";
 import { apiErrorMessage } from "@/app/lib/api/client";
 import * as client from "./client";
 import ActivityTimeline from "./components/ActivityTimeline";
-import { Bot, Home, IdCard, LogIn, Mail, Scale, Shield, ShieldCheck, UserPlus } from "lucide-react";
+import { initialsFor } from "@/app/lib/initials";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -99,215 +100,165 @@ export default function AccountPage() {
   };
 
   return (
-    <div className="mb-4">
-      <section className="page-header-section" style={{ borderBottom: "none" }}>
+    <div className="account-page">
+      <section className="page-header-section">
         <div className="account-header-row">
-          <div className="d-flex align-items-center gap-3">
-            <div className="account-avatar">
-              {user?.name?.slice(0, 2).toUpperCase() || "?"}
+          <div className="account-identity">
+            <div className="account-avatar" aria-hidden="true">
+              {initialsFor(user?.name)}
             </div>
             <div>
-              <h1 className="qa-page-title" style={{ marginBottom: "0.25rem" }}>
-                {user?.name || "Guest user"}
-              </h1>
-              <p className="qa-page-sub" style={{ marginBottom: 0 }}>
-                {user?.email || "Not signed in"}
-              </p>
+              <h1 className="qa-page-title">{user?.name || "Guest user"}</h1>
+              <p className="qa-page-sub">{user?.email || "Not signed in"}</p>
               {user && (
-                <div className="d-flex align-items-center gap-2 mt-2">
-                  <span className="info-role-pill text-capitalize">
-                    {user.role === "lawyer" ? (
-                      <Scale size={12} className="me-1"/>
-                    ) : user.role === "admin" ? (
-                      <Shield size={12} className="me-1"/>
-                    ) : (
-                      <Home size={12} className="me-1"/>
-                    )}
-                    {user.role}
-                  </span>
+                <div className="account-badges">
+                  <span className="info-role-pill text-capitalize">{user.role}</span>
                   {isGuest && <span className="info-role-pill">Read-only</span>}
                 </div>
               )}
             </div>
           </div>
           {isAuthenticated && (
-            <a href="/ai-review" className="btn-warm-primary">
-              <Bot size={14}/>
-              Use AI Review
-            </a>
+            // While the profile form is open, Save is the one primary action.
+            <Link href="/ai-review" className={editMode ? "btn-warm-outline" : "btn-warm-primary"}>
+              Review my lease
+            </Link>
           )}
         </div>
       </section>
 
-      <Row className="g-4">
+      <Row className="g-5">
         <Col lg={6}>
-          <div className="account-card">
+          <section className="account-card" aria-labelledby="account-profile-title">
             {isAuthenticated || isGuest ? (
               <div>
-                <div className="d-flex align-items-center gap-3 mb-4">
-                  <div className="info-team-icon info-team-icon--olive">
-                    <IdCard size={18}/>
-                  </div>
-                  <div>
-                    <div className="fw-bold">Profile overview</div>
-                    <div className="text-secondary small">
-                      {isGuest ? "Browsing as guest" : "Your LeaseQA identity"}
-                    </div>
-                  </div>
+                <div className="account-card-head">
+                  <h2 id="account-profile-title" className="account-card-title">Profile</h2>
+                  {isGuest && <p className="account-card-sub">Browsing as guest</p>}
                 </div>
 
-                <Stack gap={3}>
+                <Stack gap={0} className="account-fields">
                   <div className="account-field">
-                    <IdCard size={16} className="account-field-icon"/>
-                    <div className="w-100">
-                      <div className="fw-semibold mb-1">Name</div>
-                      {editMode ? (
-                        <Form.Control
-                          value={profileForm.name}
-                          onChange={(e) =>
-                            setProfileForm((prev) => ({
-                              ...prev,
-                              name: e.target.value,
-                            }))
-                          }
-                          disabled={saving}
-                        />
-                      ) : (
-                        <div className="text-secondary small">{user?.name}</div>
-                      )}
-                    </div>
+                    <div className="account-field-label">Name</div>
+                    {editMode ? (
+                      <Form.Control
+                        aria-label="Name"
+                        value={profileForm.name}
+                        onChange={(e) =>
+                          setProfileForm((prev) => ({
+                            ...prev,
+                            name: e.target.value,
+                          }))
+                        }
+                        disabled={saving}
+                      />
+                    ) : (
+                      <div className="account-field-value">{user?.name}</div>
+                    )}
                   </div>
 
                   <div className="account-field">
-                    <Mail size={16} className="account-field-icon"/>
-                    <div className="w-100">
-                      <div className="fw-semibold mb-1">Email</div>
-                      {editMode ? (
-                        <Form.Control
-                          type="email"
-                          value={profileForm.email}
-                          onChange={(e) =>
-                            setProfileForm((prev) => ({
-                              ...prev,
-                              email: e.target.value,
-                            }))
-                          }
-                          disabled={saving}
-                        />
-                      ) : (
-                        <div className="text-secondary small">
-                          {user?.email}
-                        </div>
-                      )}
-                    </div>
+                    <div className="account-field-label">Email</div>
+                    {editMode ? (
+                      <Form.Control
+                        aria-label="Email"
+                        type="email"
+                        value={profileForm.email}
+                        onChange={(e) =>
+                          setProfileForm((prev) => ({
+                            ...prev,
+                            email: e.target.value,
+                          }))
+                        }
+                        disabled={saving}
+                      />
+                    ) : (
+                      <div className="account-field-value">{user?.email}</div>
+                    )}
                   </div>
 
                   <div className="account-field">
-                    <ShieldCheck size={16} className="account-field-icon"/>
-                    <div>
-                      <div className="fw-semibold">Role</div>
-                      <div className="text-secondary small text-capitalize">
-                        {user?.role || "tenant"}
-                      </div>
+                    <div className="account-field-label">Role</div>
+                    <div className="account-field-value text-capitalize">
+                      {user?.role || "tenant"}
                     </div>
                   </div>
-
-                  {error && <div className="text-danger small">{error}</div>}
-
-                  {isGuest ? (
-                    <Stack gap={2}>
-                      <p className="text-secondary small mb-0">
-                        Sign in to edit your profile, post questions, and access
-                        AI review.
-                      </p>
-                      <a
-                        href="/auth/login"
-                        className="btn-warm-primary w-100 justify-content-center"
-                      >
-                        <LogIn size={14}/>
-                        Sign in for full access
-                      </a>
-                    </Stack>
-                  ) : (
-                    <div className="d-flex gap-2">
-                      {!editMode ? (
-                        <>
-                          <button
-                            className="btn-warm-outline flex-fill"
-                            onClick={() => {
-                              setError("");
-                              setEditMode(true);
-                            }}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="btn-warm-danger flex-fill"
-                            onClick={handleLogout}
-                          >
-                            Sign out
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <button
-                            className="btn-warm-primary flex-fill"
-                            disabled={saving}
-                            onClick={handleSaveProfile}
-                          >
-                            {saving ? "Saving..." : "Save"}
-                          </button>
-                          <button
-                            className="btn-warm-outline flex-fill"
-                            disabled={saving}
-                            onClick={handleCancelEdit}
-                          >
-                            Cancel
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  )}
                 </Stack>
+
+                {error && <p className="account-error">{error}</p>}
+
+                {isGuest ? (
+                  <div className="account-actions account-actions-stacked">
+                    <p className="account-card-sub">
+                      Sign in to edit your profile, post questions, and access
+                      lease review.
+                    </p>
+                    <Link href="/auth/login" className="btn-warm-primary">
+                      Sign in for full access
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="account-actions">
+                    {!editMode ? (
+                      <>
+                        <button
+                          className="btn-warm-outline"
+                          onClick={() => {
+                            setError("");
+                            setEditMode(true);
+                          }}
+                        >
+                          Edit profile
+                        </button>
+                        <button
+                          className="btn-warm-highlight"
+                          onClick={handleLogout}
+                        >
+                          Sign out
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          className="btn-warm-primary"
+                          disabled={saving}
+                          onClick={handleSaveProfile}
+                        >
+                          {saving ? "Saving…" : "Save changes"}
+                        </button>
+                        <button
+                          className="btn-warm-outline"
+                          disabled={saving}
+                          onClick={handleCancelEdit}
+                        >
+                          Cancel
+                        </button>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
             ) : (
               <div>
-                <div className="d-flex align-items-center gap-3 mb-4">
-                  <div className="info-team-icon info-team-icon--terra">
-                    <ShieldCheck size={18}/>
-                  </div>
-                  <div>
-                    <div className="fw-bold">Access control</div>
-                    <div className="text-secondary small">
-                      Sign in to unlock features
-                    </div>
-                  </div>
+                <div className="account-card-head">
+                  <h2 id="account-profile-title" className="account-card-title">Sign in</h2>
+                  <p className="account-card-sub">
+                    Lease review, posting questions, and attorney replies
+                    require sign-in.
+                  </p>
                 </div>
 
-                <p className="text-secondary mb-4">
-                  AI review, posting questions, and attorney replies require
-                  authentication.
-                </p>
-
-                <Stack gap={3}>
-                  <a
-                    href="/auth/login"
-                    className="btn-warm-primary w-100 justify-content-center"
-                  >
-                    <LogIn size={14}/>
+                <div className="account-actions account-actions-stacked">
+                  <Link href="/auth/login" className="btn-warm-primary">
                     Sign in
-                  </a>
-                  <a
-                    href="/auth/register"
-                    className="btn-warm-outline w-100 justify-content-center"
-                  >
-                    <UserPlus size={14}/>
+                  </Link>
+                  <Link href="/auth/register" className="btn-warm-outline">
                     Create account
-                  </a>
-                </Stack>
+                  </Link>
+                </div>
               </div>
             )}
-          </div>
+          </section>
         </Col>
 
         {(isAuthenticated || isGuest) && (

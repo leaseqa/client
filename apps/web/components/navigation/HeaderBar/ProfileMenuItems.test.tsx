@@ -68,19 +68,19 @@ describe("ProfileMenuItems — guest", () => {
 describe("ProfileMenuItems — authenticated", () => {
   test("offers account navigation and sign out", () => {
     renderItems({ isAuthenticated: true });
-    expect(labels()).toEqual(["Go to Account", "Sign Out"]);
+    expect(labels()).toEqual(["Account", "Sign out"]);
   });
 
   test("styles sign out with the warm accent rather than bootstrap danger", () => {
     renderItems({ isAuthenticated: true });
-    const signOut = screen.getByText("Sign Out");
+    const signOut = screen.getByText("Sign out");
     expect(signOut.className).toContain("profile-menu-item-warm");
     expect(signOut.className).not.toContain("text-danger");
   });
 
   test("signs out through the caller", () => {
     const { onSignOut } = renderItems({ isAuthenticated: true });
-    fireEvent.click(screen.getByText("Sign Out"));
+    fireEvent.click(screen.getByText("Sign out"));
     expect(onSignOut).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,12 +1,12 @@
+import Link from "next/link";
 import { format } from "date-fns";
 import { useMemo } from "react";
 import { Post, RecencySidebarProps } from "../types";
-import { Check, ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 export default function RecencySidebar({
                                          posts,
                                          currentPostId,
-                                         onSelectPost,
                                          folderDisplayMap = {},
                                          bucketOpen,
                                          onToggleBucket,
@@ -41,14 +41,7 @@ export default function RecencySidebar({
   const hasAny = Object.values(grouped).some((b) => b.items.length);
   if ( !hasAny ) return null;
 
-  const makeSnippet = (text: string) => {
-    if ( !text ) return "";
-    const clean = text.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
-    return clean;
-  };
-
   const getAuthor = (p: Post) => p.isAnonymous ? "Anonymous" : (p.author?.username || p.author?.email || "Unknown");
-  const getAuthorInitial = (p: Post) => p.isAnonymous ? "?" : getAuthor(p).charAt(0).toUpperCase();
   const getFolder = (p: Post) => {
     const key = p.folders?.[0];
     return key ? folderDisplayMap[key] || key : "";
@@ -60,60 +53,47 @@ export default function RecencySidebar({
         if ( !bucket.items.length ) return null;
         const isOpen = bucketOpen[key] ?? true;
         return (
-          <div className="post-sidebar-group" key={key}>
+          <section className="post-sidebar-group" key={key}>
             <button
               type="button"
               className="post-sidebar-header"
+              aria-expanded={isOpen}
               onClick={() => onToggleBucket(key)}
             >
-              {isOpen ? <ChevronDown size={10}/> : <ChevronRight size={10}/>}
+              {isOpen ? <ChevronDown size={12}/> : <ChevronRight size={12}/>}
               <span>{bucket.label}</span>
               <span className="post-sidebar-count">{bucket.items.length}</span>
             </button>
             {isOpen && (
-              <div className="post-sidebar-items">
+              <ul className="post-sidebar-items">
                 {bucket.items.map((p) => {
                   const isActive = p._id === currentPostId;
+                  const folder = getFolder(p);
                   return (
-                    <div
-                      key={p._id}
-                      className={`post-sidebar-item ${isActive ? "active" : ""} ${p.isResolved ? "resolved" : ""}`}
-                      onClick={() => onSelectPost(p._id)}
-                    >
-                      <div className="post-sidebar-item-title">
-                        {p.isResolved && (
-                          <span className="resolved-badge d-inline-flex align-items-center">
-                                                        <Check size={12}/>
-                                                    </span>
-                        )}
-                        {p.summary}
-                      </div>
-                      <div className="post-sidebar-item-badges">
-                                                <span className="post-sidebar-badge">
-                                                    {p.createdAt ? format(new Date(p.createdAt), "MMM d") : ""}
-                                                </span>
-                        {getFolder(p) && (
-                          <span className="post-sidebar-badge">{getFolder(p)}</span>
-                        )}
-                      </div>
-                      <div className="post-sidebar-item-snippet">
-                        {makeSnippet(p.details || "")}
-                      </div>
-                      <div className="post-sidebar-item-author">
-                                                <span
-                                                  className={`icon-circle icon-circle-xs ${p.isAnonymous ? "icon-bg-muted" : "icon-bg-purple"}`}>
-                                                    {getAuthorInitial(p)}
-                                                </span>
-                        <span className="post-sidebar-item-author-name">
-                                                    {getAuthor(p)}
-                                                </span>
-                      </div>
-                    </div>
+                    <li key={p._id}>
+                      {/* A link, not a clickable div, so the list is reachable
+                          by keyboard and each thread can open in a new tab. */}
+                      <Link
+                        href={`/qa?post=${p._id}`}
+                        className={`post-sidebar-item${isActive ? " active" : ""}${p.isResolved ? " resolved" : ""}`}
+                        aria-current={isActive ? "page" : undefined}
+                      >
+                        <span className="post-sidebar-item-date">
+                          {p.createdAt ? format(new Date(p.createdAt), "MMM d") : ""}
+                        </span>
+                        <span className="post-sidebar-item-title">{p.summary}</span>
+                        <span className="post-sidebar-item-meta">
+                          {[p.isResolved ? "Resolved" : "", folder, getAuthor(p)]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </span>
+                      </Link>
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
             )}
-          </div>
+          </section>
         );
       })}
     </div>

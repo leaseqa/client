@@ -9,6 +9,7 @@ import { AnswersSection, DiscussionsSection, PostContent } from "../[id]/compone
 import { Folder } from "../types";
 import { Answer, Discussion, PostDetailData } from "../[id]/types";
 import RemoteDataState from "@/components/ui/RemoteDataState";
+import { countLabel } from "../utils";
 
 type PostDetailSectionProps = {
   postId: string;
@@ -226,7 +227,6 @@ export default function PostDetailSection({
           </button>
         </div>
         <div className="post-detail-empty-copy">
-          <div className="post-section-kicker">Question detail</div>
           <RemoteDataState
             kind="error"
             title={error || "Post not found"}
@@ -245,11 +245,9 @@ export default function PostDetailSection({
           Back to questions
         </button>
         <div className="post-detail-context-meta">
-                    <span className="post-detail-context-chip">
-                        {isAdmin ? "Moderation view" : "Question detail"}
-                    </span>
-          <span className="post-detail-context-chip">{answers.length} answers</span>
-          <span className="post-detail-context-chip">{discussions.length} discussions</span>
+          {isAdmin && <span className="post-detail-context-chip">Moderation view</span>}
+          <span className="post-detail-context-chip">{countLabel(answers.length, "answer")}</span>
+          <span className="post-detail-context-chip">{countLabel(discussions.length, "discussion")}</span>
         </div>
       </div>
 

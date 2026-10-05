@@ -84,7 +84,7 @@ test.describe("discussion threads", () => {
     );
 
     await expect(
-      adminPage.getByRole("heading", { name: "Ask one clear question." }),
+      adminPage.getByRole("heading", { name: "Ask a question" }),
     ).toBeVisible();
     await createPostFromComposer(
       adminPage,
@@ -185,7 +185,7 @@ test.describe("discussion threads", () => {
     );
 
     await expect(
-      adminPage.getByRole("heading", { name: "Ask one clear question." }),
+      adminPage.getByRole("heading", { name: "Ask a question" }),
     ).toBeVisible();
     await createPostFromComposer(
       adminPage,

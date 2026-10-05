@@ -40,7 +40,6 @@ export default function AnswersSection({
     <section className="post-detail-card post-detail-card-secondary qa-v2-panel">
       <div className="post-section-header">
         <div>
-          <div className="post-section-kicker">Response queue</div>
           <h2 className="post-section-title">Answers</h2>
         </div>
       </div>
@@ -90,7 +89,6 @@ export default function AnswersSection({
         <RemoteDataState
           kind="empty"
           title="No answers yet"
-          description="Add one clear response or legal note."
           compact
         />
       )}
@@ -123,10 +121,20 @@ export default function AnswersSection({
                                 </span>
                 {canEditAnswer(ans) && (
                   <div className="post-answer-actions">
-                    <button onClick={() => onEditAnswer(ans._id, ans.content)} type="button">
+                    <button
+                      aria-label="Edit answer"
+                      title="Edit answer"
+                      onClick={() => onEditAnswer(ans._id, ans.content)}
+                      type="button"
+                    >
                       <SquarePen size={12}/>
                     </button>
-                    <button onClick={() => onDeleteAnswer(ans._id)} type="button">
+                    <button
+                      aria-label="Delete answer"
+                      title="Delete answer"
+                      onClick={() => onDeleteAnswer(ans._id)}
+                      type="button"
+                    >
                       <Trash2 size={12}/>
                     </button>
                   </div>

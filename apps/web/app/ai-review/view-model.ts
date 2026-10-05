@@ -14,6 +14,8 @@ export const FILE_SUGGESTED_PROMPTS = [
 ];
 
 export const TEXT_RETRY_PROMPT_LABEL = "Analyze this clause";
+/** The server's name for a clause pasted rather than uploaded. */
+export const PASTED_TEXT_SOURCE = "pasted-text";
 
 export type PendingDraftSource = {
   sourceName: string;
@@ -128,8 +130,8 @@ const toTitleWords = (text: string) =>
     });
 
 export function formatCompactCitationLabel(citation: Citation) {
-  if ( citation.sourceName === "pasted-text" || citation.sourceGroup === "text" ) {
-    return "Uploaded Clause";
+  if ( citation.sourceName === PASTED_TEXT_SOURCE || citation.sourceGroup === "text" ) {
+    return formatSourceName(PASTED_TEXT_SOURCE);
   }
 
   const baseName = citation.sourceName.replace(/\.[a-z0-9]+$/i, "");
@@ -173,6 +175,18 @@ export function getInlineCitationItems({
     });
 }
 
+/**
+ * A pasted clause is stored under the internal name `pasted-text`; renters
+ * should see what it is, not what the server calls it.
+ */
+export function formatSourceName(sourceName: string) {
+  return sourceName === PASTED_TEXT_SOURCE ? "Pasted clause" : sourceName;
+}
+
+export function formatRoleLabel(role: ChatMessage["role"]) {
+  return role === "user" ? "You" : "Answer";
+}
+
 export function getResultsPanelState({
                                        activeSession,
                                        pendingDraftSource,
@@ -183,15 +197,16 @@ export function getResultsPanelState({
   if ( pendingDraftSource ) {
     return {
       title: "Analyzing new clause",
-      subtitle: `Source: ${pendingDraftSource.sourceName}`,
+      subtitle: `Source: ${formatSourceName(pendingDraftSource.sourceName)}`,
       conversationLabel: "First answer",
     };
   }
 
   if ( activeSession ) {
+    // The heading names the source; the composer below already invites questions.
     return {
-      title: "Ask follow-up questions",
-      subtitle: `Source: ${activeSession.sourceName}`,
+      title: formatSourceName(activeSession.sourceName),
+      subtitle: "",
       conversationLabel: "Conversation",
     };
   }
@@ -286,14 +301,4 @@ export function formatStatusLabel(status: RagSession["status"]) {
     return "Failed";
   }
   return "Indexing";
-}
-
-export function formatStatusVariant(status: RagSession["status"]) {
-  if ( status === "ready" ) {
-    return "success";
-  }
-  if ( status === "failed" ) {
-    return "danger";
-  }
-  return "warning";
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 
@@ -11,7 +12,6 @@ const TABS = [
 ];
 
 export default function NavTabs() {
-  const router = useRouter();
   const pathname = usePathname();
   const session = useSelector((state: RootState) => state.session);
   const isAdmin = session.user?.role === "admin";
@@ -29,23 +29,21 @@ export default function NavTabs() {
 
   const activeTab = getActiveTab();
 
+  // Links rather than buttons that push the router: these are places, so they
+  // should open in a new tab and announce themselves as navigation.
   return (
-    <nav
-      className={`qa-nav-tabs ${isAdmin ? "has-admin-tab" : ""}`}
-      aria-label="Community sections"
-    >
+    <nav className="qa-nav-tabs" aria-label="Community sections">
       {allTabs.map((tab) => {
         const isActive = activeTab === tab.key;
         return (
-          <button
+          <Link
             key={tab.key}
-            type="button"
+            href={tab.path}
             className={`qa-nav-tab ${isActive ? "active" : ""}`}
             aria-current={isActive ? "page" : undefined}
-            onClick={() => router.push(tab.path)}
           >
-            <span>{tab.label}</span>
-          </button>
+            {tab.label}
+          </Link>
         );
       })}
     </nav>

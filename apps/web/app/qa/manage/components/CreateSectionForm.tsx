@@ -44,8 +44,9 @@ export default function CreateSectionForm({
       <div className="manage-card-body">
         <div className="manage-form-grid">
           <div className="manage-form-group">
-            <label>Name (slug)</label>
+            <label htmlFor="section-name">Name (slug)</label>
             <input
+              id="section-name"
               type="text"
               placeholder="e.g. repairs"
               value={draft.name}
@@ -58,8 +59,9 @@ export default function CreateSectionForm({
             {errors.name && <div className="manage-field-error">{errors.name}</div>}
           </div>
           <div className="manage-form-group">
-            <label>Display name</label>
+            <label htmlFor="section-display-name">Display name</label>
             <input
+              id="section-display-name"
               type="text"
               placeholder="Repairs & Habitability"
               value={draft.displayName}
@@ -70,8 +72,9 @@ export default function CreateSectionForm({
             {errors.displayName && <div className="manage-field-error">{errors.displayName}</div>}
           </div>
           <div className="manage-form-group full-width">
-            <label>Description</label>
+            <label htmlFor="section-description">Description</label>
             <textarea
+              id="section-description"
               rows={2}
               placeholder="Optional helper text for this section"
               value={draft.description}

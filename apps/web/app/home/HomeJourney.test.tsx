@@ -41,7 +41,7 @@ describe("HomeJourney", () => {
     const html = renderToStaticMarkup(<HomeJourney />);
 
     expect(html).toContain('id="journey-title"');
-    expect(html).toContain("From clause to context");
+    expect(html).toContain("How a review works");
     expect(html).not.toContain("Your path");
   });
 

@@ -57,7 +57,7 @@ export default function ResourcesPage() {
   return (
     <div className="resources-page">
       <section className="page-header-section">
-        <h1 className="qa-page-title">Read one guide or use one template.</h1>
+        <h1 className="qa-page-title">Guides and templates</h1>
         <p className="qa-page-sub">
           Start with a Massachusetts guide. Use a template after you know which
           rule applies.
@@ -88,10 +88,6 @@ export default function ResourcesPage() {
           <section className="resources-main-card resources-content-column">
             <div className="resources-section-head">
               <h2 className="resources-section-title">Guides</h2>
-              <p className="resources-section-copy">
-                Start with one official guide. Then decide if you need Q&A or a
-                template.
-              </p>
             </div>
 
             <div className="resources-list-simple">
@@ -123,9 +119,6 @@ export default function ResourcesPage() {
           <aside className="resources-side-card resources-content-column resources-content-column-secondary">
             <div className="resources-section-head resources-section-head-compact">
               <h2 className="resources-section-title">Templates</h2>
-              <p className="resources-section-copy">
-                Use these after you read the guide.
-              </p>
             </div>
 
             <div className="resources-template-list">

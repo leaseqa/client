@@ -19,6 +19,21 @@ async function createPostFromComposer(page: Page, title: string, details: string
 }
 
 test.describe("admin smoke", () => {
+  // A full page load is the case that failed: the session resolved before the
+  // page segment hydrated, the admin page rendered where the server had
+  // rendered nothing, and React threw the tree away.
+  test("the manage page hydrates without discarding the server render", async ({ page }) => {
+    const pageErrors: string[] = [];
+    page.on("pageerror", (error) => pageErrors.push(error.message));
+
+    await loginAsAdmin(page, "/qa/manage");
+    await expect(page.getByRole("heading", { name: "LeaseQA Admin" })).toBeVisible();
+
+    await page.goto("/qa/manage");
+    await expect(page.getByRole("heading", { name: "LeaseQA Admin" })).toBeVisible();
+    expect(pageErrors.filter((message) => /hydrat/i.test(message))).toEqual([]);
+  });
+
   test("admin can create, edit, and delete a section from the manage workspace", async ({
                                                                                           page,
                                                                                         }) => {
@@ -28,7 +43,7 @@ test.describe("admin smoke", () => {
 
     await loginAsAdmin(page, "/qa/manage");
     await expect(page.getByRole("heading", { name: "LeaseQA Admin" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Open Moderation" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Open moderation" })).toBeVisible();
     await expect(page.locator("#users")).toContainText("admin@leaseqa.dev");
 
     await page.getByRole("button", { name: "New section" }).click();
@@ -66,7 +81,7 @@ test.describe("admin smoke", () => {
     const postTitle = `Playwright admin smoke ${Date.now()}`;
 
     await loginAsAdmin(page, "/qa?compose=1");
-    await expect(page.getByRole("heading", { name: "Ask one clear question." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Ask a question" })).toBeVisible();
 
     await createPostFromComposer(
       page,
@@ -117,7 +132,7 @@ test.describe("admin smoke", () => {
     const rootThreadB = `Can they deduct for ordinary wear and tear ${Date.now()}`;
 
     await loginAsAdmin(page, "/qa?compose=1");
-    await expect(page.getByRole("heading", { name: "Ask one clear question." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Ask a question" })).toBeVisible();
     await createPostFromComposer(
       page,
       postTitle,

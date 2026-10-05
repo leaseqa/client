@@ -5,7 +5,7 @@ test.describe("ai review upload", () => {
                                                                               page,
                                                                             }) => {
     await page.goto("/auth/login");
-    await page.getByRole("button", { name: "Continue as Guest" }).click();
+    await page.getByRole("button", { name: "Continue as guest" }).click();
     await page.goto("/ai-review");
     await expect(page).toHaveURL(/\/ai-review$/);
 

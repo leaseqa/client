@@ -76,7 +76,7 @@ export default function ProfileMenuItems({
         className="profile-menu-item"
         onClick={() => navigate("/account")}
       >
-        Go to Account
+        Account
       </Dropdown.Item>
       <Dropdown.Divider className="profile-menu-separator"/>
       <Dropdown.Item
@@ -85,7 +85,7 @@ export default function ProfileMenuItems({
         className="profile-menu-item profile-menu-item-warm"
         onClick={onSignOut}
       >
-        Sign Out
+        Sign out
       </Dropdown.Item>
     </>
   );

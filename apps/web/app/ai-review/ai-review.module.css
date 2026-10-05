@@ -3,35 +3,37 @@
   flex: 1;
   flex-direction: column;
   min-height: 0;
-  padding-top: 0.3rem;
 }
 
 .pageHeader {
-  padding: 0.45rem 0 1.35rem;
+  margin-bottom: 2rem;
+  padding: 0 0 1.5rem;
+  border-bottom: var(--rule-heavy) solid var(--site-ink);
 }
 
 .pageHeader h1 {
-  margin: 0.35rem 0 0;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(2rem, 4vw, 2.7rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  margin: 0;
+  font-size: var(--type-title);
+  font-weight: 700;
+  letter-spacing: var(--tracking-display);
   line-height: 1;
 }
 
 .sectionLabel {
   color: var(--site-accent-strong);
   font-size: 0.6875rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-stretch: var(--stretch-label);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
 }
 
+/* --- workspace: the source on the left, the reading on the right --- */
 .workspace {
   display: grid;
-  grid-template-columns: 20.4rem minmax(0, 1fr);
+  grid-template-columns: 20rem minmax(0, 1fr);
   min-height: 31.5rem;
-  border: 1px solid var(--site-border-strong);
+  border: 1px solid var(--site-ink);
   background: var(--site-panel);
 }
 
@@ -39,12 +41,12 @@
   display: flex;
   min-width: 0;
   flex-direction: column;
-  border-right: 1px solid var(--site-border-strong);
-  background: var(--site-panel-strong);
+  border-right: 1px solid var(--site-ink);
+  background: var(--site-panel-soft);
 }
 
 .sourceSection {
-  padding: 1.35rem;
+  padding: 1.25rem;
 }
 
 .mobileSourceSummary {
@@ -57,69 +59,76 @@
 
 .sourceTabs {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-top: 0.7rem;
-  border-bottom: 1px solid var(--site-border-strong);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 0.75rem;
+  border-bottom: 1px solid var(--site-border);
 }
 
 .sourceTab {
-  min-height: 2.85rem;
+  position: relative;
+  min-height: 2.75rem;
   border: 0;
-  border-bottom: 2px solid transparent;
   background: transparent;
   color: var(--site-muted);
   font-size: 0.8125rem;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .sourceTab[aria-selected="true"] {
-  border-bottom-color: var(--site-accent);
   color: var(--site-accent-strong);
+}
+
+.sourceTab[aria-selected="true"]::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: var(--rule-heavy);
+  background: var(--site-accent);
+  content: "";
 }
 
 .sourceForm {
   gap: 0.85rem;
-  padding-top: 0.9rem;
+  padding-top: 1rem;
 }
 
 .sourceForm :global(.acet-file-upload-surface) {
   min-height: 8rem;
-  border-radius: 0;
   padding: 1rem;
   background: var(--site-panel);
 }
 
 .sourceForm :global(.review-textarea) {
   min-height: 8rem;
-  border-radius: 0 !important;
   resize: vertical;
 }
 
 .startReviewButton {
   width: 100%;
-  border-radius: 0.45rem !important;
 }
 
 .startReviewButton:disabled {
-  /* Was #b2b9aa with white text — a washed accent at 2.03:1, unreadable rather
-     than quiet. A muted surface with muted ink reads as disabled at 5.3:1. */
-  border-color: var(--site-border-strong) !important;
+  /* Not a faded fill: white on a washed button measured 2.03:1. A muted
+     surface with muted ink still reads as a label. */
+  border-color: var(--site-border) !important;
   background: var(--site-panel-strong) !important;
   color: var(--site-muted) !important;
   cursor: not-allowed;
 }
 
+/* --- history --- */
 .desktopHistory {
   flex: 1;
-  padding: 1.25rem 1.35rem;
-  border-top: 1px solid var(--site-border-strong);
+  padding: 1.25rem;
+  border-top: 1px solid var(--site-ink);
 }
 
 .historyHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.75rem;
 }
 
 .historyHeader .sectionLabel {
@@ -130,7 +139,7 @@
 
 .historyHint {
   display: block;
-  margin: -0.45rem 0 1rem;
+  margin: -0.35rem 0 0.85rem;
   color: var(--site-text-tertiary);
   font-size: 0.6875rem;
 }
@@ -146,15 +155,16 @@
 
 .historyList {
   display: grid;
-  gap: 0.45rem;
+  border-top: 1px solid var(--site-border);
 }
 
 .historyItem {
   display: grid;
   gap: 0.2rem;
   width: 100%;
-  padding: 0.65rem 0.7rem;
-  border: 1px solid transparent;
+  padding: 0.65rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--site-border);
   background: transparent;
   color: var(--site-ink);
   text-align: left;
@@ -162,8 +172,8 @@
 
 .historyItem span:first-child {
   overflow: hidden;
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.8125rem;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -171,18 +181,24 @@
 .historyItem span:last-child {
   color: var(--site-text-tertiary);
   font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
 }
 
-.historyItem:hover,
+.historyItem:hover span:first-child {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 .historyItem[aria-current="true"] {
-  border-color: var(--site-border-strong);
-  background: var(--site-panel);
+  padding-left: 0.75rem;
+  box-shadow: inset var(--rule-heavy) 0 0 var(--site-accent);
 }
 
 .mobileHistory {
   display: none;
 }
 
+/* --- the reading --- */
 .conversation {
   display: flex;
   min-width: 0;
@@ -192,29 +208,50 @@
 
 .conversationHeader {
   display: flex;
-  min-height: 4.15rem;
+  min-height: 4rem;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1.45rem;
-  border-bottom: 1px solid var(--site-border-strong);
+  padding: 0 1.5rem;
+  border-bottom: 1px solid var(--site-ink);
 }
 
 .conversationHeader h2 {
   margin: 0;
-  font-family: var(--font-display), Georgia, serif;
   font-size: 1.25rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
-.conversationHeader > span {
+.conversationHeader > span,
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   color: var(--site-text-tertiary);
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.6875rem;
+  font-stretch: var(--stretch-label);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.status::before {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: currentColor;
+  content: "";
+}
+
+.status[data-status="ready"] {
+  color: var(--site-accent-strong);
+}
+
+.status[data-status="failed"] {
+  color: var(--site-highlight-strong);
 }
 
 .emptyConversation {
   display: flex;
-  width: min(35rem, calc(100% - 3rem));
+  width: min(36rem, calc(100% - 3rem));
   min-height: 25.5rem;
   flex: 1;
   flex-direction: column;
@@ -223,49 +260,10 @@
   padding: 2.5rem 0;
 }
 
-.emptyAccent {
-  width: 2.4rem;
-  height: 2px;
-  margin-bottom: 1rem;
-  background: var(--site-highlight);
-}
-
-.emptyConversation h2 {
-  margin: 0;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.65rem, 3vw, 2rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-}
-
 .emptyConversation p {
-  max-width: 45ch;
-  margin: 0.65rem 0 1.15rem;
-  color: var(--site-muted);
-  font-size: 0.875rem;
-  line-height: 1.55;
-}
-
-.emptyConversation ol {
-  display: grid;
-  gap: 0.45rem;
   margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.emptyConversation li {
-  display: grid;
-  grid-template-columns: 1.9rem 1fr;
-  align-items: baseline;
-  color: var(--site-accent-strong);
-  font-size: 0.75rem;
-}
-
-.emptyConversation li span {
-  color: var(--site-text-tertiary);
-  font-size: 0.6875rem;
-  font-weight: 800;
+  color: var(--site-muted);
+  font-size: 1rem;
 }
 
 .activeConversation {
@@ -275,43 +273,52 @@
   flex-direction: column;
 }
 
+/* The clause under review carries a terracotta margin rule: it is the thing
+   being checked, which is what terracotta marks across the product. */
 .currentSource {
-  padding: 1.2rem 1.45rem;
+  padding: 1.25rem 1.5rem 1.5rem;
   border-bottom: 1px solid var(--site-border);
-  background: var(--site-panel-strong);
 }
 
 .currentSource h3 {
-  margin: 0.35rem 0 0.2rem;
-  font-size: 1rem;
-  font-weight: 800;
+  margin: 0;
+  color: var(--site-text-tertiary);
+  font-size: 0.6875rem;
+  font-stretch: var(--stretch-label);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
 }
 
 .sourceStatus {
-  margin: 0 0 0.7rem;
+  margin: 0.2rem 0 0.9rem;
   color: var(--site-muted);
   font-size: 0.75rem;
+}
+
+.currentSource :global(.review-summary-text) {
+  padding-left: 1rem;
+  border-left: var(--rule-heavy) solid var(--site-highlight);
 }
 
 .chatArea {
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 0.8rem;
-  padding: 1.35rem 1.45rem;
+  gap: 0.5rem;
+  padding: 1.25rem 1.5rem;
 }
 
 .composer {
   display: grid;
   gap: 0.65rem;
-  padding: 0.75rem 1rem;
-  border-top: 1px solid var(--site-border-strong);
-  background: var(--site-panel-strong);
+  padding: 0.85rem 1rem;
+  border-top: 1px solid var(--site-ink);
+  background: var(--site-panel-soft);
 }
 
 .composer :global(.review-textarea) {
   min-height: 3.2rem;
-  border-radius: 0.45rem !important;
   resize: vertical;
 }
 
@@ -331,16 +338,9 @@
 }
 
 @media (max-width: 767px) {
-  .reviewPage {
-    padding-top: 0;
-  }
-
   .pageHeader {
-    padding: 0 0 1.1rem;
-  }
-
-  .pageHeader h1 {
-    font-size: 2rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.1rem;
   }
 
   .workspace {
@@ -357,8 +357,8 @@
 
   .sourceSection {
     padding: 1.1rem;
-    border: 1px solid var(--site-border-strong);
-    background: var(--site-panel-strong);
+    border: 1px solid var(--site-ink);
+    background: var(--site-panel-soft);
   }
 
   .sourceSection[data-has-session="true"] {
@@ -374,11 +374,11 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 0.85rem;
-    border: 1px solid var(--site-border-strong);
+    border: 1px solid var(--site-ink);
     background: var(--site-panel);
     color: var(--site-accent-strong);
     font-size: 0.75rem;
-    font-weight: 800;
+    font-weight: 600;
   }
 
   .sourceSection[data-has-session="true"] .mobileSourceSummary {
@@ -392,8 +392,8 @@
   .sourceSection[data-has-session="true"][data-expanded="true"] .sourceFormWrap {
     margin-top: 0.75rem;
     padding: 1.1rem;
-    border: 1px solid var(--site-border-strong);
-    background: var(--site-panel-strong);
+    border: 1px solid var(--site-ink);
+    background: var(--site-panel-soft);
   }
 
   .sourceTab {
@@ -407,7 +407,7 @@
   .mobileHistory {
     display: block;
     margin: 0.75rem 0;
-    border: 1px solid var(--site-border-strong);
+    border: 1px solid var(--site-ink);
     background: var(--site-panel);
   }
 
@@ -420,7 +420,7 @@
     color: var(--site-accent-strong);
     cursor: pointer;
     font-size: 0.75rem;
-    font-weight: 800;
+    font-weight: 600;
     list-style: none;
   }
 
@@ -441,7 +441,7 @@
   }
 
   .conversation {
-    border: 1px solid var(--site-border-strong);
+    border: 1px solid var(--site-ink);
   }
 
   .conversationHeader {
@@ -449,15 +449,11 @@
     padding: 0 1rem;
   }
 
-  .conversationHeader h2 {
-    font-size: 1.25rem;
-  }
-
   .emptyConversation {
     width: 100%;
     min-height: 19.5rem;
     justify-content: flex-start;
-    padding: 2.15rem 1.4rem;
+    padding: 2rem 1.25rem;
   }
 
   .emptyConversation h2 {
@@ -476,7 +472,6 @@
   .composerFooter > span {
     max-width: 16rem;
   }
-
 }
 
 @media (prefers-reduced-motion: reduce) {

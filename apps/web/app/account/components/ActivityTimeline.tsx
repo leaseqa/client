@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Stack } from "react-bootstrap";
-import { Bot, FileText, History, MessagesSquare } from "lucide-react";
+import { format } from "date-fns";
 
 export type ActivityTimelineItem = {
   _id: string;
@@ -20,22 +19,9 @@ type ActivityTimelineProps = {
   onRetry: () => void;
 };
 
-const getActivityIcon = (type: string) => {
-  if ( type === "ai_review_created" ) {
-    return Bot;
-  }
-  if ( type === "answer_received" || type === "discussion_received" ) {
-    return MessagesSquare;
-  }
-  return FileText;
-};
-
 const formatTime = (value: string) => {
-  try {
-    return new Date(value).toLocaleString();
-  } catch {
-    return value;
-  }
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : format(date, "MMM d, yyyy 'at' h:mm a");
 };
 
 export default function ActivityTimeline({
@@ -46,82 +32,60 @@ export default function ActivityTimeline({
                                            onRetry,
                                          }: ActivityTimelineProps) {
   return (
-    <div className="account-card h-100">
-      <div className="d-flex align-items-center gap-3 mb-4">
-        <div className="info-team-icon info-team-icon--terra">
-          <History size={18}/>
-        </div>
-        <div>
-          <div className="fw-bold">Recent activity</div>
-          <div className="text-secondary small">
-            {isGuest ? "Sign in to track activity" : "Your latest actions"}
-          </div>
-        </div>
+    <section className="account-card h-100" aria-labelledby="account-activity-title">
+      <div className="account-card-head">
+        <h2 id="account-activity-title" className="account-card-title">Recent activity</h2>
       </div>
 
       {isGuest ? (
-        <div className="text-center py-4">
-          <p className="text-secondary mb-3">
-            Your saved history starts after sign-in.
-          </p>
-          <a href="/auth/login" className="btn-warm-outline">
-            Sign in to track
-          </a>
+        <div className="account-activity-empty">
+          <p>Your saved history starts after sign-in.</p>
+          <Link href="/auth/login" className="btn-warm-outline">
+            Sign in
+          </Link>
         </div>
       ) : loading ? (
-        <div className="review-history-inline">Loading activity...</div>
+        <div className="review-history-inline">Loading activity…</div>
       ) : error ? (
         <div className="account-activity-empty">
-          <p className="text-secondary mb-3">{error}</p>
+          <p>{error}</p>
           <button type="button" className="btn-warm-outline" onClick={onRetry}>
             Retry activity
           </button>
         </div>
       ) : items.length > 0 ? (
-        <Stack gap={3} className="account-activity-list">
+        <ul className="account-activity-list">
           {items.map((item) => {
-            const Icon = getActivityIcon(item.type);
             const body = (
-              <div className="account-field">
-                <div
-                  className="info-team-icon info-team-icon--muted"
-                  style={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: 8,
-                    marginBottom: 0,
-                  }}
-                >
-                  <Icon size={14}/>
-                </div>
-                <div className="flex-grow-1">
-                  <div className="small fw-semibold">{item.title}</div>
-                  {item.summary ? (
-                    <div className="text-secondary small">{item.summary}</div>
-                  ) : null}
-                  <div className="text-secondary small">
-                    {formatTime(item.createdAt)}
-                  </div>
-                </div>
-              </div>
+              <>
+                <span className="account-activity-title">{item.title}</span>
+                {item.summary ? (
+                  <span className="account-activity-summary">{item.summary}</span>
+                ) : null}
+                <time className="account-activity-time" dateTime={item.createdAt}>
+                  {formatTime(item.createdAt)}
+                </time>
+              </>
             );
 
-            return item.href ? (
-              <Link key={item._id} href={item.href} className="text-decoration-none">
-                {body}
-              </Link>
-            ) : (
-              <div key={item._id}>{body}</div>
+            return (
+              <li key={item._id}>
+                {item.href ? (
+                  <Link href={item.href} className="account-activity-item">
+                    {body}
+                  </Link>
+                ) : (
+                  <div className="account-activity-item">{body}</div>
+                )}
+              </li>
             );
           })}
-        </Stack>
+        </ul>
       ) : (
         <div className="account-activity-empty">
-          <p className="text-secondary mb-0">
-            No saved activity yet. Start an AI review or post a question.
-          </p>
+          <p>No saved activity yet. Start a lease review or post a question.</p>
         </div>
       )}
-    </div>
+    </section>
   );
 }

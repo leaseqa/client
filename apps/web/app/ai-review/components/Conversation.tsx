@@ -1,4 +1,4 @@
-import { Badge, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { MessageSquareQuote, Shield } from "lucide-react";
 
 import AceternityStatefulButton from "@/components/ui/AceternityStatefulButton";
@@ -6,8 +6,8 @@ import { ChatMessage, RagSession } from "../types";
 import {
   AUTO_ANALYZE_QUESTION,
   FILE_SUGGESTED_PROMPTS,
+  formatRoleLabel,
   formatStatusLabel,
-  formatStatusVariant,
   getEmptyStateMessage,
   ResultsPanelState,
   TEXT_RETRY_PROMPT_LABEL,
@@ -53,9 +53,11 @@ export default function Conversation({
       <div className={styles.conversationHeader}>
         <h2 id="review-conversation-title">Review</h2>
         {showSession ? (
-          <Badge bg={formatStatusVariant(displayStatus)}>
+          // Not a Bootstrap Badge: its green belonged to no palette here, and the
+          // header's own span rule recoloured the badge text into the green.
+          <span className={styles.status} data-status={displayStatus}>
             {formatStatusLabel(displayStatus)}
-          </Badge>
+          </span>
         ) : (
           <span>No source added</span>
         )}
@@ -65,7 +67,9 @@ export default function Conversation({
         <div className={styles.activeConversation}>
           <div className={styles.currentSource}>
             <h3>{resultsPanelState.title}</h3>
-            <p className={styles.sourceStatus}>{resultsPanelState.subtitle}</p>
+            {resultsPanelState.subtitle ? (
+              <p className={styles.sourceStatus}>{resultsPanelState.subtitle}</p>
+            ) : null}
             <p className="review-summary-text">{displaySourcePreview}</p>
             {activeSession?.error ? (
               <p className="text-danger mb-0 small">{activeSession.error}</p>
@@ -87,7 +91,7 @@ export default function Conversation({
                         key={messageKey}
                         className={`review-chat-message review-chat-message-${message.role}`}
                       >
-                        <div className="review-chat-role">{message.role}</div>
+                        <div className="review-chat-role">{formatRoleLabel(message.role)}</div>
                         <AnswerSections
                           message={message}
                           messageKey={messageKey}
@@ -97,13 +101,13 @@ export default function Conversation({
                   })}
                   {pendingUserQuestion ? (
                     <article className="review-chat-message review-chat-message-user">
-                      <div className="review-chat-role">user</div>
+                      <div className="review-chat-role">{formatRoleLabel("user")}</div>
                       <div className="review-chat-body">{pendingUserQuestion}</div>
                     </article>
                   ) : null}
                   {pendingAssistantLabel ? (
                     <article className="review-chat-message review-chat-message-assistant">
-                      <div className="review-chat-role">assistant</div>
+                      <div className="review-chat-role">{formatRoleLabel("assistant")}</div>
                       <div className="review-chat-body review-chat-body-pending">
                         {pendingAssistantLabel}
                       </div>
@@ -162,10 +166,12 @@ export default function Conversation({
 
               <div className={styles.composerFooter}>
                 <span>
-                  <Shield size={14}/>
-                  {activeSession.status === "ready"
-                    ? "Answers include cited tenant guidance."
-                    : "Wait for indexing to finish."}
+                  {activeSession.status !== "ready" && (
+                    <>
+                      <Shield size={14}/>
+                      Wait for indexing to finish.
+                    </>
+                  )}
                 </span>
                 <AceternityStatefulButton
                   type="submit"
@@ -179,19 +185,13 @@ export default function Conversation({
             </Form>
           ) : (
             <div className="review-history-inline">
-              Finishing the first answer. You can ask follow-up questions in a moment.
+              Finishing the first answer…
             </div>
           )}
         </div>
       ) : (
         <div className={styles.emptyConversation}>
-          <div className={styles.emptyAccent}/>
-          <h2>Clause context starts here.</h2>
-          <ol>
-            <li><span>01</span><strong>Exact lease language</strong></li>
-            <li><span>02</span><strong>Cited tenant guidance</strong></li>
-            <li><span>03</span><strong>Questions to verify</strong></li>
-          </ol>
+          <p>Upload a lease file or paste a clause to start.</p>
         </div>
       )}
     </section>

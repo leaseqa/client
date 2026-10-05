@@ -39,8 +39,7 @@ export default function ManageHeader({
       <div className="manage-header-content">
         <h1 className="manage-title">LeaseQA Admin</h1>
         <p className="manage-subtitle">
-          Control the scenario buckets used across Q&amp;A. Deleting a section moves its posts to
-          &quot;Uncategorized&quot;.
+          Deleting a section moves its questions to Uncategorized.
         </p>
       </div>
       <div className="manage-header-actions">

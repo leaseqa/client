@@ -26,7 +26,7 @@ export default function ManageSidebar({
                                       }: ManageSidebarProps) {
   return (
     <aside className="admin-v2-sidebar">
-      <nav className="admin-v2-nav">
+      <nav className="admin-v2-nav" aria-label="Admin sections">
         <a href={overviewHref}>Overview</a>
         <a href={usersHref}>Users</a>
         <a href={sectionsHref}>Sections</a>
@@ -49,7 +49,7 @@ export default function ManageSidebar({
 
       <div className="admin-v2-secondary">
         <a className="admin-v2-link-btn" href={moderationHref}>
-          Open Moderation
+          Open moderation
         </a>
       </div>
     </aside>
