@@ -44,7 +44,7 @@
     "@playwright/test": "1.62.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.2",
-    "@types/node": "^20.16.5",
+    "@types/node": "^24.19.1",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "autoprefixer": "^10.4.20",
@@ -53,6 +53,7 @@
     "jsdom": "^30.0.1",
     "postcss": "^8.5.23",
     "typescript": "^5.5.4",
-    "vitest": "^3.2.7"
+    "vite": "^7.3.6",
+    "vitest": "^5.0.3"
   }
 }
