@@ -15,7 +15,10 @@ concurrency:
 
 jobs:
   quality:
-    runs-on: ubuntu-latest
+    # Pinned rather than ubuntu-latest, which moves to Ubuntu 26.04 on
+    # 2026-10-19. Bump deliberately, after checking that
+    # `playwright install --with-deps` and the service containers still come up.
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     env:
       NEXT_PUBLIC_HTTP_SERVER: http://127.0.0.1:4100
