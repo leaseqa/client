@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { apiUrl } from "./client";
 import { parseEventBlocks, postEventStream, ServerEvent } from "./eventStream";
 import { ApiError } from "./types";
 
@@ -81,7 +82,8 @@ describe("postEventStream", () => {
       { event: "delta", data: { part: "summary", text: "The dep" } },
       { event: "delta", data: { part: "summary", text: "osit" } },
     ]);
-    expect(calls[0].url).toBe("/api/rag/sessions/s1/messages");
+    // Same resolver as the axios client, so it follows NEXT_PUBLIC_HTTP_SERVER.
+    expect(calls[0].url).toBe(apiUrl("/rag/sessions/s1/messages"));
     expect(calls[0].init.method).toBe("POST");
     expect(calls[0].init.credentials).toBe("include");
     expect(calls[0].init.headers).toEqual({
