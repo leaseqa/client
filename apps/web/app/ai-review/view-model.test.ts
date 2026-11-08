@@ -1,16 +1,21 @@
 import { describe, expect, test } from "vitest";
 
 import {
+  applyAnswerEvent,
   AUTO_ANALYZE_QUESTION,
+  createAnswerDraft,
   FILE_AUTO_ANALYZE_QUESTION,
   FILE_SUGGESTED_PROMPTS,
+  formatAnswerStage,
   formatCompactCitationLabel,
   formatRoleLabel,
   formatSourceName,
+  formatStartButtonLabel,
   getDisplayedSource,
   getEmptyStateMessage,
+  FIRST_ANSWER_FAILED,
   getInlineCitationItems,
-  getPendingConversationItems,
+  getPendingAnswerView,
   getResultsPanelState,
   getSessionInputPlan,
   getVisibleMessages,
@@ -178,6 +183,7 @@ describe("getDisplayedSource", () => {
         pendingDraftSource: {
           sourceName: "pasted-text",
           sourcePreview: "Pending draft clause",
+          sourceKind: "text",
         },
         activeSession: {
           _id: "session-2",
@@ -198,6 +204,21 @@ describe("getDisplayedSource", () => {
       sourcePreview: "Pending draft clause",
       status: "indexing",
     });
+  });
+
+  test("reports the pending source as ready once the first answer is past indexing", () => {
+    const pendingDraftSource = {
+      sourceName: "pasted-text",
+      sourcePreview: "Pending draft clause",
+      sourceKind: "text" as const,
+    };
+    const statusAt = (pendingStage: "indexing" | "retrieving" | "generating" | null) =>
+      getDisplayedSource({ activeSession: null, pendingDraftSource, pendingStage })?.status;
+
+    expect(statusAt(null)).toBe("indexing");
+    expect(statusAt("indexing")).toBe("indexing");
+    expect(statusAt("retrieving")).toBe("ready");
+    expect(statusAt("generating")).toBe("ready");
   });
 });
 
@@ -221,11 +242,29 @@ describe("getResultsPanelState", () => {
         pendingDraftSource: {
           sourceName: "pasted-text",
           sourcePreview: "Pending draft clause",
+          sourceKind: "text",
         },
       }),
     ).toEqual({
       title: "Analyzing new clause",
       subtitle: "Source: Pasted clause",
+      conversationLabel: "First answer",
+    });
+  });
+
+  test("names an uploaded file as a file while it is analyzed", () => {
+    expect(
+      getResultsPanelState({
+        activeSession: null,
+        pendingDraftSource: {
+          sourceName: "lease-2026.pdf",
+          sourcePreview: "",
+          sourceKind: "upload",
+        },
+      }),
+    ).toEqual({
+      title: "Analyzing new file",
+      subtitle: "Source: lease-2026.pdf",
       conversationLabel: "First answer",
     });
   });
@@ -436,18 +475,6 @@ describe("conversation fixtures", () => {
     ).toBe(false);
   });
 
-  test("surfaces pending user and assistant items", () => {
-    expect(
-      getPendingConversationItems({
-        pendingUserQuestion: "Is the late fee legal?",
-        pendingAssistantLabel: "Researching the best supported answer...",
-      }),
-    ).toEqual([
-      { role: "user", content: "Is the late fee legal?" },
-      { role: "assistant", content: "Researching the best supported answer..." },
-    ]);
-  });
-
   test("treats 503 and *_RETRYABLE codes as retryable", () => {
     expect(
       isRetryableApiError({
@@ -482,5 +509,118 @@ describe("formatRoleLabel", () => {
   test("labels the renter's turn and the answer", () => {
     expect(formatRoleLabel("user")).toBe("You");
     expect(formatRoleLabel("assistant")).toBe("Answer");
+  });
+});
+
+describe("answer drafts", () => {
+  const status = (stage: string) => ({ event: "status", data: { stage } });
+  const summary = (text: string) => ({ event: "delta", data: { part: "summary", text } });
+  const bullet = (index: number, text: string) => ({
+    event: "delta",
+    data: { part: "bullet", index, text },
+  });
+
+  test("a draft follows the stages and appends each delta where it belongs", () => {
+    const events = [
+      status("retrieving"),
+      status("generating"),
+      summary("The deposit"),
+      summary(" is too high."),
+      bullet(0, "Two months"),
+      bullet(0, " is over the cap."),
+      bullet(1, "The fee"),
+    ];
+    const draft = events.reduce(applyAnswerEvent, createAnswerDraft("indexing"));
+
+    expect(draft).toEqual({
+      stage: "generating",
+      summary: "The deposit is too high.",
+      bullets: ["Two months is over the cap.", "The fee"],
+    });
+  });
+
+  test("a bullet that arrives ahead of the one before it leaves a gap, not a crash", () => {
+    const draft = applyAnswerEvent(createAnswerDraft("generating"), bullet(1, "Second"));
+    expect(draft.bullets).toEqual(["", "Second"]);
+  });
+
+  test("unknown or malformed events leave the draft as it was", () => {
+    const start = createAnswerDraft("retrieving");
+    for ( const event of [
+      { event: "status", data: { stage: "dreaming" } },
+      { event: "delta", data: { part: "summary" } },
+      { event: "delta", data: { part: "bullet", index: -1, text: "x" } },
+      { event: "delta", data: { part: "bullet", index: 1.5, text: "x" } },
+      { event: "delta", data: { part: "bullet", index: 500, text: "x" } },
+      { event: "delta", data: null },
+      { event: "message", data: { text: "x" } },
+    ] ) {
+      expect(applyAnswerEvent(start, event)).toBe(start);
+    }
+  });
+
+  test("stage labels say what the system is doing, naming a file as a file", () => {
+    expect(formatAnswerStage("indexing", "text")).toBe("Reading the clause");
+    expect(formatAnswerStage("indexing", "upload")).toBe("Reading the file");
+    expect(formatAnswerStage("retrieving", "text")).toBe("Searching the handbook");
+    expect(formatAnswerStage("generating", "upload")).toBe("Writing the answer");
+  });
+
+  test("before any text the caret follows the stage label", () => {
+    expect(getPendingAnswerView(createAnswerDraft("retrieving"), "text")).toEqual({
+      stageLabel: "Searching the handbook",
+      summary: "",
+      bullets: [],
+      caret: "label",
+    });
+  });
+
+  test("once text arrives the caret follows whatever is still being written", () => {
+    const withSummary = { stage: "generating" as const, summary: "The deposit is", bullets: [] };
+    expect(getPendingAnswerView(withSummary, "text").caret).toBe("summary");
+
+    const withBullets = {
+      stage: "generating" as const,
+      summary: "The deposit is too high.",
+      bullets: ["Two months is over the cap.", "", "The fee"],
+    };
+    expect(getPendingAnswerView(withBullets, "text")).toEqual({
+      stageLabel: "Writing the answer",
+      summary: "The deposit is too high.",
+      bullets: ["Two months is over the cap.", "The fee"],
+      caret: 1,
+    });
+  });
+});
+
+describe("formatStartButtonLabel", () => {
+  test("names what is being analyzed while a review starts", () => {
+    expect(formatStartButtonLabel({ creating: false, pendingSourceKind: null })).toBe("Start review");
+    expect(formatStartButtonLabel({ creating: true, pendingSourceKind: "text" })).toBe("Analyzing clause");
+    expect(formatStartButtonLabel({ creating: true, pendingSourceKind: "upload" })).toBe("Analyzing file");
+  });
+});
+
+describe("FIRST_ANSWER_FAILED", () => {
+  test("the toast leaves the guidance to the empty review under it", () => {
+    expect(FIRST_ANSWER_FAILED).toBe("The first answer failed.");
+    for ( const sourceKind of ["text", "upload"] as const ) {
+      const emptyState = getEmptyStateMessage({
+        activeSession: {
+          _id: "s1",
+          status: "ready",
+          error: null,
+          sourceKind,
+          sourceName: sourceKind === "text" ? "pasted-text" : "lease.pdf",
+          sourceMimeType: null,
+          sourceTextPreview: "",
+          sourceCharCount: 0,
+          messages: [],
+          createdAt: "2026-11-08T00:00:00.000Z",
+          updatedAt: "2026-11-08T00:00:00.000Z",
+        },
+      });
+      expect(emptyState).toMatch(/question/);
+    }
   });
 });

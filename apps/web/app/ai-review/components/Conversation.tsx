@@ -6,13 +6,15 @@ import { ChatMessage, RagSession } from "../types";
 import {
   AUTO_ANALYZE_QUESTION,
   FILE_SUGGESTED_PROMPTS,
-  formatRoleLabel,
   formatStatusLabel,
   getEmptyStateMessage,
+  PendingAnswerView,
   ResultsPanelState,
   TEXT_RETRY_PROMPT_LABEL,
 } from "../view-model";
 import AnswerSections from "./AnswerSections";
+import ChatTurn from "./ChatTurn";
+import StreamingAnswer from "./StreamingAnswer";
 import styles from "../ai-review.module.css";
 
 type ConversationProps = {
@@ -23,8 +25,7 @@ type ConversationProps = {
   activeSession: RagSession | null;
   activeMessages: ChatMessage[];
   pendingDraftSource: boolean;
-  pendingUserQuestion: string | null;
-  pendingAssistantLabel: string | null;
+  pendingAnswer: PendingAnswerView | null;
   question: string;
   sendingMessage: boolean;
   onQuestionChange: (value: string) => void;
@@ -40,8 +41,7 @@ export default function Conversation({
   activeSession,
   activeMessages,
   pendingDraftSource,
-  pendingUserQuestion,
-  pendingAssistantLabel,
+  pendingAnswer,
   question,
   sendingMessage,
   onQuestionChange,
@@ -82,37 +82,20 @@ export default function Conversation({
               <span>{resultsPanelState.conversationLabel}</span>
             </div>
             <div className="review-chat-log">
-              {activeMessages.length > 0 || pendingDraftSource || pendingUserQuestion || pendingAssistantLabel ? (
+              {activeMessages.length > 0 || pendingAnswer ? (
                 <>
                   {activeMessages.map((message, index) => {
                     const messageKey = `${message.createdAt}-${index}`;
                     return (
-                      <article
-                        key={messageKey}
-                        className={`review-chat-message review-chat-message-${message.role}`}
-                      >
-                        <div className="review-chat-role">{formatRoleLabel(message.role)}</div>
+                      <ChatTurn key={messageKey} role={message.role}>
                         <AnswerSections
                           message={message}
                           messageKey={messageKey}
                         />
-                      </article>
+                      </ChatTurn>
                     );
                   })}
-                  {pendingUserQuestion ? (
-                    <article className="review-chat-message review-chat-message-user">
-                      <div className="review-chat-role">{formatRoleLabel("user")}</div>
-                      <div className="review-chat-body">{pendingUserQuestion}</div>
-                    </article>
-                  ) : null}
-                  {pendingAssistantLabel ? (
-                    <article className="review-chat-message review-chat-message-assistant">
-                      <div className="review-chat-role">{formatRoleLabel("assistant")}</div>
-                      <div className="review-chat-body review-chat-body-pending">
-                        {pendingAssistantLabel}
-                      </div>
-                    </article>
-                  ) : null}
+                  {pendingAnswer ? <StreamingAnswer answer={pendingAnswer}/> : null}
                 </>
               ) : (
                 <>

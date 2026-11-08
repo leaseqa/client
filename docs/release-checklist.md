@@ -22,12 +22,15 @@ npm install --prefix ../server
 CI_SKIP_RAG=true npm run e2e
 ```
 
-`CI_SKIP_RAG=true` skips the one test that needs Milvus-backed RAG
+`CI_SKIP_RAG=true` skips the two tests that need Milvus-backed RAG
 (`activity notifications › tenant sees ai review and post activity in account
-history`). Drop the flag only when Milvus is reachable — otherwise it fails on
-`POST /api/rag/sessions` rather than on anything the release changed.
+history` and `ai review conversation › tenant reviewing a lease clause gets a
+cited answer and keeps citations on follow-up`). Drop the flag only when Milvus
+is reachable — otherwise they fail on `POST /api/rag/sessions` rather than on
+anything the release changed. The streamed answer UI is covered either way:
+`ai-review-streaming.spec.ts` answers the RAG API itself.
 
-Expected: **21 passed, 1 skipped**. Record it here if that count changes.
+Expected: **55 passed, 2 skipped**. Record it here if that count changes.
 
 If Playwright reports missing browsers, install them once:
 

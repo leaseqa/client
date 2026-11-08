@@ -153,7 +153,7 @@ describe("useRagConversation optimistic messages", () => {
     });
 
     act(() => {
-      result.current.send("Is the late fee legal?");
+      void result.current.sendAsync("Is the late fee legal?");
     });
 
     await waitFor(() => {
@@ -171,5 +171,48 @@ describe("useRagConversation optimistic messages", () => {
       expect(userMessages).toHaveLength(1);
       expect(session?.messages.some((message) => message.role === "assistant")).toBe(true);
     });
+  });
+
+  it("hands progress to the caller and stores the answer under the session the server names", async () => {
+    const { queryClient, wrapper } = createWrapper();
+    queryClient.setQueryData(ragKeys.session("session-1"), makeSession());
+    const answered = makeSession({
+      messages: [
+        { role: "user", content: "Is the late fee legal?", citations: [], createdAt: "2026-08-19T00:00:01.000Z" },
+        { role: "assistant", content: "It is capped.", citations: [], createdAt: "2026-08-19T00:00:02.000Z" },
+      ],
+    });
+    sendMessage.mockImplementation(async (_sessionId, _message, onEvent) => {
+      onEvent({ event: "status", data: { stage: "generating" } });
+      onEvent({ event: "delta", data: { part: "summary", text: "It is" } });
+      return { session: answered, answer: "It is capped.", citations: [] };
+    });
+    const onEvent = vi.fn();
+
+    const { result } = renderHook(() => useRagConversation("session-1"), { wrapper });
+    await act(async () => {
+      await result.current.sendAsync("Is the late fee legal?", onEvent);
+    });
+
+    expect(sendMessage).toHaveBeenCalledWith("session-1", "Is the late fee legal?", onEvent);
+    expect(onEvent.mock.calls.map(([event]) => event.event)).toEqual(["status", "delta"]);
+    expect(queryClient.getQueryData(ragKeys.session("session-1"))).toEqual(answered);
+    expect(queryClient.getQueryData<RagSession[]>(ragKeys.sessions)?.[0]).toEqual(answered);
+  });
+
+  it("puts the history back as it was when the answer fails", async () => {
+    const { queryClient, wrapper } = createWrapper();
+    const before = makeSession();
+    queryClient.setQueryData(ragKeys.session("session-1"), before);
+    sendMessage.mockRejectedValue(new Error("Failed to answer question."));
+
+    const { result } = renderHook(() => useRagConversation("session-1"), { wrapper });
+    await act(async () => {
+      await expect(result.current.sendAsync("Is the late fee legal?")).rejects.toThrow(
+        "Failed to answer question.",
+      );
+    });
+
+    expect(queryClient.getQueryData(ragKeys.session("session-1"))).toEqual(before);
   });
 });

@@ -1,4 +1,4 @@
-import { expect, type Page, test } from "@playwright/test";
+import { expect, type Page, type Response, test } from "@playwright/test";
 
 const TENANT_EMAIL = "tenant@leaseqa.dev";
 const TEST_PASSWORD =
@@ -18,6 +18,13 @@ async function loginAsUser(page: Page, email: string, nextPath: string) {
   await expect(page).not.toHaveURL(/\/auth\/login/, { timeout: 10_000 });
 }
 
+// Both RAG calls stream: the response "arrives" as soon as the stream opens, so
+// wait for its body to finish and for no answer to be marked as still busy.
+async function waitForStreamedAnswer(page: Page, response: Promise<Response>) {
+  await (await response).finished();
+  await expect(page.locator('.review-chat-message[aria-busy="true"]')).toHaveCount(0);
+}
+
 async function askFollowUp(page: Page, question: string) {
   await page.locator("#review-question").fill(question);
   const response = page.waitForResponse(
@@ -27,7 +34,7 @@ async function askFollowUp(page: Page, question: string) {
       candidate.ok(),
   );
   await page.getByRole("button", { name: "Ask" }).click();
-  await response;
+  await waitForStreamedAnswer(page, response);
 }
 
 // The chat model occasionally returns structured output that fails parsing or
@@ -66,10 +73,8 @@ test.describe("ai review conversation", () => {
     );
     // Three real chat-model calls plus a possible one-shot retry per turn on
     // the known abstention flake. Measured server-side on this clause:
-    // doubao-seed-2.0-lite ~7s/turn, whole test 38s. Note the frontend's axios
-    // timeout is 20s (app/lib/api/client.ts), so a model slower than that fails
-    // in the browser no matter what this budget says — glm-5-3-flash at
-    // 20-28s/turn could not pass even at 240s.
+    // doubao-seed-2.0-lite ~7s/turn, whole test 38s. Each streamed call gives
+    // up after 90s in the browser (RAG_TIMEOUT_MS in app/ai-review/client.ts).
     test.setTimeout(120_000);
 
     await loginAsUser(page, TENANT_EMAIL, "/ai-review");
@@ -84,7 +89,7 @@ test.describe("ai review conversation", () => {
         response.ok(),
     );
     await page.getByRole("button", { name: "Start review" }).click();
-    await createSessionResponse;
+    await waitForStreamedAnswer(page, createSessionResponse);
 
     await expectGroundedAnswer(
       page,

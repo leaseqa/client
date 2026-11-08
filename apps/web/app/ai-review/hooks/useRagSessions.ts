@@ -1,5 +1,7 @@
+import { useCallback } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import type { ServerEventListener } from "@/app/lib/api/eventStream";
 import * as client from "../client";
 import { RagSession } from "../types";
 import { ragKeys } from "./ragKeys";
@@ -14,7 +16,13 @@ export function useRagSessions(enabled = true) {
   });
 
   const createMutation = useMutation({
-    mutationFn: (formData: FormData) => client.createSession(formData),
+    mutationFn: ({
+      formData,
+      onEvent,
+    }: {
+      formData: FormData;
+      onEvent?: ServerEventListener;
+    }) => client.createSession(formData, onEvent),
     onSuccess: (created) => {
       queryClient.setQueryData(ragKeys.session(created._id), created);
       queryClient.setQueryData<RagSession[]>(ragKeys.sessions, (current) => {
@@ -23,6 +31,13 @@ export function useRagSessions(enabled = true) {
       });
     },
   });
+
+  const { mutateAsync: createAsync } = createMutation;
+  const createSession = useCallback(
+    (formData: FormData, onEvent?: ServerEventListener) =>
+      createAsync({ formData, onEvent }),
+    [createAsync],
+  );
 
   const deleteMutation = useMutation({
     mutationFn: (sessionId: string) => client.deleteSession(sessionId),
@@ -39,7 +54,7 @@ export function useRagSessions(enabled = true) {
     isLoading: listQuery.isLoading,
     error: listQuery.error,
     refetch: listQuery.refetch,
-    createSession: createMutation.mutateAsync,
+    createSession,
     isCreating: createMutation.isPending,
     deleteSession: deleteMutation.mutateAsync,
     isDeleting: deleteMutation.isPending,

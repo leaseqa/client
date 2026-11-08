@@ -84,25 +84,49 @@ export function apiErrorMessage(error: unknown, fallback: string): string {
   return message || fallback;
 }
 
+// The errors every transport reports the same way, so a toast reads the same
+// whether the request went through axios or a streamed fetch (eventStream.ts).
+export const timeoutError = () => new ApiError("Request timed out", 0, "TIMEOUT");
+export const networkError = () => new ApiError("Network Error", 0, "NETWORK");
+// Only the streamed fetch can see this: a 2xx whose body is not what the
+// server sends. Axios would hand such a body through as text instead.
+export const invalidResponseError = () =>
+  new ApiError("The server sent a response that could not be read.", 0, "INVALID_RESPONSE");
+const abortedError = () => new ApiError("Request aborted", 0, "ABORTED");
+
+/** The ApiError for a failed response: its error body if it has one, else the fallback. */
+export function errorFromResponse(
+  status: number,
+  data: unknown,
+  fallbackMessage: string,
+): ApiError {
+  const body = readErrorBody(data);
+  return new ApiError(
+    body.message || fallbackMessage,
+    status,
+    body.code || (status ? `HTTP_${status}` : "NETWORK"),
+  );
+}
+
 export function toApiError(error: unknown): ApiError {
   if ( isApiError(error) ) {
     return error;
   }
 
   if ( axios.isCancel(error) || (axios.isAxiosError(error) && error.code === "ERR_CANCELED") ) {
-    return new ApiError("Request aborted", 0, "ABORTED");
+    return abortedError();
   }
 
   if ( axios.isAxiosError(error) ) {
     if ( error.code === "ECONNABORTED" ) {
-      return new ApiError("Request timed out", 0, "TIMEOUT");
+      return timeoutError();
     }
 
-    const status = error.response?.status ?? 0;
-    const body = readErrorBody(error.response?.data);
-    const message = body.message || error.message || "Request failed";
-    const code = body.code || (status ? `HTTP_${status}` : "NETWORK");
-    return new ApiError(message, status, code);
+    return errorFromResponse(
+      error.response?.status ?? 0,
+      error.response?.data,
+      error.message || "Request failed",
+    );
   }
 
   if ( error instanceof Error ) {

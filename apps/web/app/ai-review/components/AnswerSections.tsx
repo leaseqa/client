@@ -1,5 +1,6 @@
 import { ChatMessage } from "../types";
 import { getInlineCitationItems, shouldShowLegacyCitationList } from "../view-model";
+import StructuredAnswer from "./StructuredAnswer";
 
 type AnswerSectionsProps = {
   message: ChatMessage;
@@ -46,45 +47,38 @@ export default function AnswerSections({
   }
 
   return (
-    <div className="review-chat-structured">
-      <p className="review-chat-summary">{message.summary}</p>
-      <ul className="review-chat-bullet-list">
-        {message.bullets.map((bullet, bulletIndex) => (
-          <li
-            key={`${messageKey}-bullet-${bulletIndex}`}
-            className="review-chat-bullet-item"
-          >
-            <span>{bullet.text}</span>
-            {bullet.citationIndices.length > 0 ? (
-              <span className="review-chat-inline-citations">
-                {getInlineCitationItems({
-                  citations: message.citations,
-                  citationIndices: bullet.citationIndices,
-                }).map((citation, citationIndex) =>
-                  citation.sourceUrl ? (
-                    <a
-                      key={`${messageKey}-${bulletIndex}-${citationIndex}`}
-                      href={citation.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="review-chat-inline-citation"
-                    >
-                      {citation.label}
-                    </a>
-                  ) : (
-                    <span
-                      key={`${messageKey}-${bulletIndex}-${citationIndex}`}
-                      className="review-chat-inline-citation is-static"
-                    >
-                      {citation.label}
-                    </span>
-                  ),
-                )}
-              </span>
-            ) : null}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <StructuredAnswer
+      summary={message.summary}
+      bullets={message.bullets.map((bullet, bulletIndex) => ({
+        text: bullet.text,
+        end: bullet.citationIndices.length > 0 ? (
+          <span className="review-chat-inline-citations">
+            {getInlineCitationItems({
+              citations: message.citations,
+              citationIndices: bullet.citationIndices,
+            }).map((citation, citationIndex) =>
+              citation.sourceUrl ? (
+                <a
+                  key={`${messageKey}-${bulletIndex}-${citationIndex}`}
+                  href={citation.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="review-chat-inline-citation"
+                >
+                  {citation.label}
+                </a>
+              ) : (
+                <span
+                  key={`${messageKey}-${bulletIndex}-${citationIndex}`}
+                  className="review-chat-inline-citation is-static"
+                >
+                  {citation.label}
+                </span>
+              ),
+            )}
+          </span>
+        ) : null,
+      }))}
+    />
   );
 }

@@ -2603,12 +2603,13 @@ select:focus-visible,
   font-weight: 600;
 }
 
-/* The caret marks only a request that is actually in flight. */
+/* The caret marks only an answer that is actually arriving: after its stage
+   while nothing is written yet, then after the newest text. */
 .review-chat-body-pending {
   color: var(--site-accent-strong);
 }
 
-.review-chat-body-pending::after {
+.review-chat-caret {
   display: inline-block;
   width: 0.55rem;
   height: 1rem;
@@ -2616,7 +2617,6 @@ select:focus-visible,
   vertical-align: text-bottom;
   background: var(--site-accent);
   animation: review-chat-caret 0.9s steps(1) infinite;
-  content: "";
 }
 
 .review-chat-structured {

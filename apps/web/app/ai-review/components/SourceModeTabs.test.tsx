@@ -18,7 +18,7 @@ function renderUploader(sourceText = "", hasActiveSession = false) {
       selectedFile={null}
       uploadResetKey={0}
       creatingSession={false}
-      pendingDraftSource={false}
+      pendingSourceKind={null}
       hasActiveSession={hasActiveSession}
       isGuest
       onSourceTextChange={onSourceTextChange}

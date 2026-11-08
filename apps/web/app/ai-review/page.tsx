@@ -8,13 +8,18 @@ import ToastNotification, { ToastData } from "@/components/ui/ToastNotification"
 import PageLoadingState from "@/components/ui/PageLoadingState";
 import { apiErrorMessage } from "@/app/lib/api/client";
 import { RootState } from "@/app/store";
-import { RagSession } from "./types";
+import { AnswerDraft, RagSession } from "./types";
 import {
+  applyAnswerEvent,
+  createAnswerDraft,
+  FIRST_ANSWER_FAILED,
   getDisplayedSource,
+  getPendingAnswerView,
   getResultsPanelState,
   getSessionInputPlan,
   getVisibleMessages,
   PASTED_TEXT_SOURCE,
+  PendingDraftSource,
 } from "./view-model";
 import { useRagConversation } from "./hooks/useRagConversation";
 import { useRagSession } from "./hooks/useRagSession";
@@ -23,6 +28,18 @@ import SessionList from "./components/SessionList";
 import SourceUploader from "./components/SourceUploader";
 import Conversation from "./components/Conversation";
 import styles from "./ai-review.module.css";
+
+/** A new review's first answer in progress, and the source it reads. */
+type PendingFirstAnswer = {
+  source: PendingDraftSource;
+  draft: AnswerDraft;
+};
+
+/** A follow-up answer in progress, and the review it belongs to. */
+type PendingFollowUp = {
+  sessionId: string;
+  draft: AnswerDraft;
+};
 
 export default function AIReviewPage() {
   const router = useRouter();
@@ -38,11 +55,11 @@ export default function AIReviewPage() {
   const [question, setQuestion] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadResetKey, setUploadResetKey] = useState(0);
-  const [pendingDraftSource, setPendingDraftSource] = useState<{
-    sourceName: string;
-    sourcePreview: string;
-  } | null>(null);
-  const [pendingAssistantLabel, setPendingAssistantLabel] = useState<string | null>(null);
+  // Streamed drafts. Each is cleared in the same update that brings in the
+  // finished answer, so the draft never flashes away before it is replaced.
+  const [pendingFirstAnswer, setPendingFirstAnswer] = useState<PendingFirstAnswer | null>(null);
+  const [followUp, setFollowUp] = useState<PendingFollowUp | null>(null);
+  const pendingDraftSource = pendingFirstAnswer?.source ?? null;
   const [toast, setToast] = useState<ToastData>({
     show: false,
     message: "",
@@ -82,8 +99,9 @@ export default function AIReviewPage() {
       getDisplayedSource({
         activeSession,
         pendingDraftSource,
+        pendingStage: pendingFirstAnswer?.draft.stage ?? null,
       }),
-    [activeSession, pendingDraftSource],
+    [activeSession, pendingDraftSource, pendingFirstAnswer?.draft.stage],
   );
   const showSession = Boolean(displayedSource);
   const displaySourcePreview = displayedSource?.sourcePreview || "";
@@ -100,6 +118,15 @@ export default function AIReviewPage() {
     () => (pendingDraftSource ? [] : getVisibleMessages(activeSession)),
     [activeSession, pendingDraftSource],
   );
+  const pendingAnswer = useMemo(() => {
+    if ( pendingFirstAnswer ) {
+      return getPendingAnswerView(pendingFirstAnswer.draft, pendingFirstAnswer.source.sourceKind);
+    }
+    if ( followUp && activeSession && followUp.sessionId === activeSession._id ) {
+      return getPendingAnswerView(followUp.draft, activeSession.sourceKind);
+    }
+    return null;
+  }, [activeSession, followUp, pendingFirstAnswer]);
 
   const submitQuestion = useCallback(async (rawQuestion: string) => {
     if ( !activeSession ) {
@@ -116,19 +143,28 @@ export default function AIReviewPage() {
       return;
     }
 
+    const sessionId = activeSession._id;
+    const isThisAnswer = (current: PendingFollowUp | null): current is PendingFollowUp =>
+      current?.sessionId === sessionId;
     setQuestion("");
-    setPendingAssistantLabel("Searching the handbook");
+    setFollowUp({ sessionId, draft: createAnswerDraft("retrieving") });
 
     try {
-      await sendAsync(trimmedQuestion);
-      setPendingAssistantLabel(null);
+      await sendAsync(trimmedQuestion, (serverEvent) => {
+        setFollowUp((current) =>
+          isThisAnswer(current)
+            ? { sessionId, draft: applyAnswerEvent(current.draft, serverEvent) }
+            : current,
+        );
+      });
     } catch ( error: unknown ) {
-      setPendingAssistantLabel(null);
       setQuestion(trimmedQuestion);
       showToast(
         apiErrorMessage(error, "Failed to send message."),
         "error",
       );
+    } finally {
+      setFollowUp((current) => (isThisAnswer(current) ? null : current));
     }
   }, [activeSession, sendAsync, showToast]);
 
@@ -140,7 +176,8 @@ export default function AIReviewPage() {
       hasFile: Boolean(selectedFile),
       sourceText,
     });
-    if ( inputPlan.error ) {
+    // Without an error the plan always carries the first question to ask.
+    if ( inputPlan.error !== null ) {
       showToast(inputPlan.error, "error");
       return;
     }
@@ -152,47 +189,34 @@ export default function AIReviewPage() {
     if ( sourceText.trim() ) {
       formData.set("sourceText", sourceText.trim());
     }
-    if ( inputPlan.initialQuestion ) {
-      formData.set("initialQuestion", inputPlan.initialQuestion);
-      setPendingDraftSource({
-        sourceName: PASTED_TEXT_SOURCE,
-        sourcePreview: sourceText.trim(),
-      });
-      setPendingAssistantLabel("Matching this clause against the handbook");
-    } else {
-      setPendingDraftSource(null);
-      setPendingAssistantLabel(null);
-    }
+    formData.set("initialQuestion", inputPlan.initialQuestion);
+    setPendingFirstAnswer({
+      source: selectedFile
+        ? { sourceName: selectedFile.name, sourcePreview: "", sourceKind: "upload" }
+        : { sourceName: PASTED_TEXT_SOURCE, sourcePreview: sourceText.trim(), sourceKind: "text" },
+      draft: createAnswerDraft("indexing"),
+    });
 
     try {
-      const created = await createSession(formData);
-      setPendingDraftSource(null);
-      setPendingAssistantLabel(null);
+      const created = await createSession(formData, (serverEvent) => {
+        setPendingFirstAnswer((current) =>
+          current ? { ...current, draft: applyAnswerEvent(current.draft, serverEvent) } : current,
+        );
+      });
+      setPendingFirstAnswer(null);
       setActiveId(created._id);
       setSourceText("");
       setSelectedFile(null);
       setUploadResetKey((current) => current + 1);
-      if ( inputPlan.initialQuestion ) {
-        const hasAssistantAnswer = getVisibleMessages(created).some(
-          (message) => message.role === "assistant",
-        );
-        if ( !hasAssistantAnswer ) {
-          showToast(
-            "The first answer failed. Retry the clause analysis or ask your own question.",
-            "error",
-          );
-        }
-      } else {
-        showToast(
-          created.status === "ready"
-            ? "Source loaded. Pick a suggested question or ask your own."
-            : "Uploaded. Indexing the file now.",
-          "success",
-        );
+      const hasAssistantAnswer = getVisibleMessages(created).some(
+        (message) => message.role === "assistant",
+      );
+      if ( !hasAssistantAnswer ) {
+        // The empty review below says how to try again; the toast only says what happened.
+        showToast(FIRST_ANSWER_FAILED, "error");
       }
     } catch ( error: unknown ) {
-      setPendingDraftSource(null);
-      setPendingAssistantLabel(null);
+      setPendingFirstAnswer(null);
       showToast(
         apiErrorMessage(error, "Failed to load source."),
         "error",
@@ -235,7 +259,7 @@ export default function AIReviewPage() {
             selectedFile={selectedFile}
             uploadResetKey={uploadResetKey}
             creatingSession={creatingSession}
-            pendingDraftSource={Boolean(pendingDraftSource)}
+            pendingSourceKind={pendingDraftSource?.sourceKind ?? null}
             hasActiveSession={showSession}
             isGuest={isGuest}
             onSourceTextChange={setSourceText}
@@ -264,8 +288,7 @@ export default function AIReviewPage() {
           activeSession={activeSession}
           activeMessages={activeMessages}
           pendingDraftSource={Boolean(pendingDraftSource)}
-          pendingUserQuestion={null}
-          pendingAssistantLabel={pendingAssistantLabel}
+          pendingAnswer={pendingAnswer}
           question={question}
           sendingMessage={sendingMessage}
           onQuestionChange={setQuestion}
