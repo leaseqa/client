@@ -67,8 +67,11 @@ access.
 - uploaded source material
 - ingested legal corpus
 
-4. Backend returns a structured answer with short summary, bullets, and citations
-5. Follow-up questions continue through `/api/rag/sessions/:sessionId/messages`
+4. Backend streams its progress and the answer as the model writes it (server-sent events), then the finished
+   structured answer with short summary, bullets, and citations
+5. Follow-up questions continue through `/api/rag/sessions/:sessionId/messages`, streamed the same way
+
+The event format is in [api-design.md](api-design.md#streaming-the-two-model-calls).
 
 For signed-in users, successful AI review creation also writes account activity.
 

@@ -1,4 +1,5 @@
-import { ChatMessage, Citation, RagSession } from "./types";
+import type { ServerEvent } from "@/app/lib/api/eventStream";
+import { AnswerDraft, AnswerStage, ChatMessage, Citation, RagSession } from "./types";
 
 export const CHAT_UPLOAD_MAX_MB = 20;
 export const CHAT_UPLOAD_ACCEPT = "application/pdf,.docx";
@@ -20,6 +21,7 @@ export const PASTED_TEXT_SOURCE = "pasted-text";
 export type PendingDraftSource = {
   sourceName: string;
   sourcePreview: string;
+  sourceKind: RagSession["sourceKind"];
 };
 
 export type ResultsPanelState = {
@@ -94,15 +96,21 @@ export function shouldShowLegacyCitationList(message: ChatMessage) {
 export function getDisplayedSource({
                                      activeSession,
                                      pendingDraftSource,
+                                     pendingStage = null,
                                    }: {
   activeSession: RagSession | null;
   pendingDraftSource: PendingDraftSource | null;
+  /** How far the first answer has got: past indexing, the source is ready. */
+  pendingStage?: AnswerStage | null;
 }) {
   if ( pendingDraftSource ) {
     return {
       sourceName: pendingDraftSource.sourceName,
       sourcePreview: pendingDraftSource.sourcePreview,
-      status: "indexing" as const,
+      status:
+        pendingStage && pendingStage !== "indexing"
+          ? ("ready" as const)
+          : ("indexing" as const),
     };
   }
 
@@ -175,6 +183,11 @@ export function getInlineCitationItems({
     });
 }
 
+/** What a renter calls the source: the file they uploaded or the clause they pasted. */
+export function sourceNoun(sourceKind: RagSession["sourceKind"]) {
+  return sourceKind === "upload" ? "file" : "clause";
+}
+
 /**
  * A pasted clause is stored under the internal name `pasted-text`; renters
  * should see what it is, not what the server calls it.
@@ -196,7 +209,7 @@ export function getResultsPanelState({
 }): ResultsPanelState {
   if ( pendingDraftSource ) {
     return {
-      title: "Analyzing new clause",
+      title: `Analyzing new ${sourceNoun(pendingDraftSource.sourceKind)}`,
       subtitle: `Source: ${formatSourceName(pendingDraftSource.sourceName)}`,
       conversationLabel: "First answer",
     };
@@ -238,6 +251,12 @@ export function getEmptyStateMessage({
   return "Ask your first question about this source.";
 }
 
+/**
+ * The toast when a new review comes back without its first answer. It only
+ * says what happened: the empty review under it already says how to go on.
+ */
+export const FIRST_ANSWER_FAILED = "The first answer failed.";
+
 export const ABSTENTION_SUMMARY =
   "I could not find enough support to answer that reliably from this source and the handbook.";
 
@@ -261,21 +280,94 @@ export function hasMissingCitations(message: ChatMessage) {
   return message.citations.length === 0;
 }
 
-export function getPendingConversationItems({
-  pendingUserQuestion,
-  pendingAssistantLabel,
+const ANSWER_STAGES: readonly AnswerStage[] = ["indexing", "retrieving", "generating"];
+// The prompt asks for at most four bullets; anything far past that is noise.
+const MAX_DRAFT_BULLETS = 8;
+
+export function createAnswerDraft(stage: AnswerStage): AnswerDraft {
+  return { stage, summary: "", bullets: [] };
+}
+
+/**
+ * Fold one server event into the draft. Events the draft has no use for, or
+ * that are malformed, return the same draft object untouched.
+ */
+export function applyAnswerEvent(draft: AnswerDraft, { event, data }: ServerEvent): AnswerDraft {
+  if ( !data || typeof data !== "object" ) {
+    return draft;
+  }
+  const payload = data as Record<string, unknown>;
+
+  if ( event === "status" ) {
+    const stage = ANSWER_STAGES.find((candidate) => candidate === payload.stage);
+    return stage ? { ...draft, stage } : draft;
+  }
+  if ( event !== "delta" || typeof payload.text !== "string" ) {
+    return draft;
+  }
+  if ( payload.part === "summary" ) {
+    return { ...draft, summary: draft.summary + payload.text };
+  }
+  const index = payload.index;
+  if (
+    payload.part === "bullet" &&
+    typeof index === "number" &&
+    Number.isInteger(index) &&
+    index >= 0 &&
+    index < MAX_DRAFT_BULLETS
+  ) {
+    const bullets = Array.from(
+      { length: Math.max(draft.bullets.length, index + 1) },
+      (_, position) => draft.bullets[position] || "",
+    );
+    bullets[index] += payload.text;
+    return { ...draft, bullets };
+  }
+  return draft;
+}
+
+/** Say what the system is doing, not what a person would be thinking. */
+export function formatAnswerStage(stage: AnswerStage, sourceKind: RagSession["sourceKind"]) {
+  if ( stage === "indexing" ) {
+    return `Reading the ${sourceNoun(sourceKind)}`;
+  }
+  if ( stage === "retrieving" ) {
+    return "Searching the handbook";
+  }
+  return "Writing the answer";
+}
+
+export type PendingAnswerView = {
+  stageLabel: string;
+  summary: string;
+  bullets: string[];
+  /** Where the caret sits: after the stage label, the summary, or a bullet. */
+  caret: "label" | "summary" | number;
+};
+
+export function getPendingAnswerView(
+  draft: AnswerDraft,
+  sourceKind: RagSession["sourceKind"],
+): PendingAnswerView {
+  const bullets = draft.bullets.filter(Boolean);
+  return {
+    stageLabel: formatAnswerStage(draft.stage, sourceKind),
+    summary: draft.summary,
+    bullets,
+    caret: bullets.length > 0 ? bullets.length - 1 : draft.summary ? "summary" : "label",
+  };
+}
+
+export function formatStartButtonLabel({
+  creating,
+  pendingSourceKind,
 }: {
-  pendingUserQuestion: string | null;
-  pendingAssistantLabel: string | null;
+  creating: boolean;
+  pendingSourceKind: RagSession["sourceKind"] | null;
 }) {
-  const items: Array<{ role: "user" | "assistant"; content: string }> = [];
-  if ( pendingUserQuestion ) {
-    items.push({ role: "user", content: pendingUserQuestion });
-  }
-  if ( pendingAssistantLabel ) {
-    items.push({ role: "assistant", content: pendingAssistantLabel });
-  }
-  return items;
+  return creating && pendingSourceKind
+    ? `Analyzing ${sourceNoun(pendingSourceKind)}`
+    : "Start review";
 }
 
 export function isRetryableApiError(error: unknown) {

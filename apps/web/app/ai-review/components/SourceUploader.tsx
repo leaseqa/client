@@ -3,7 +3,8 @@ import { Form } from "react-bootstrap";
 
 import AceternityFileUpload from "@/components/ui/AceternityFileUpload";
 import AceternityStatefulButton from "@/components/ui/AceternityStatefulButton";
-import { CHAT_UPLOAD_ACCEPT, CHAT_UPLOAD_MAX_MB } from "../view-model";
+import { RagSession } from "../types";
+import { CHAT_UPLOAD_ACCEPT, CHAT_UPLOAD_MAX_MB, formatStartButtonLabel } from "../view-model";
 import styles from "../ai-review.module.css";
 import SourceModeTabs, { SourceMode } from "./SourceModeTabs";
 
@@ -12,7 +13,8 @@ type SourceUploaderProps = {
   selectedFile: File | null;
   uploadResetKey: number;
   creatingSession: boolean;
-  pendingDraftSource: boolean;
+  /** What is being analyzed while a review starts, if anything. */
+  pendingSourceKind: RagSession["sourceKind"] | null;
   hasActiveSession: boolean;
   isGuest: boolean;
   onSourceTextChange: (value: string) => void;
@@ -25,7 +27,7 @@ export default function SourceUploader({
   selectedFile,
   uploadResetKey,
   creatingSession,
-  pendingDraftSource,
+  pendingSourceKind,
   hasActiveSession,
   isGuest,
   onSourceTextChange,
@@ -122,11 +124,7 @@ export default function SourceUploader({
               (mode === "upload" ? !selectedFile : !sourceText.trim())
             }
           >
-            {creatingSession
-              ? pendingDraftSource
-                ? "Analyzing clause"
-                : "Loading source"
-              : "Start review"}
+            {formatStartButtonLabel({ creating: creatingSession, pendingSourceKind })}
           </AceternityStatefulButton>
 
         </Form>

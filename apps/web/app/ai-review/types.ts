@@ -36,6 +36,20 @@ export type RagSession = {
   updatedAt: string;
 };
 
+/** Where an answer has got to, as the server's `status` events report it. */
+export type AnswerStage = "indexing" | "retrieving" | "generating";
+
+/**
+ * The part of an answer that has streamed in so far. It is a draft: the
+ * finished answer replaces it and may drop bullets the evidence does not
+ * support.
+ */
+export type AnswerDraft = {
+  stage: AnswerStage;
+  summary: string;
+  bullets: string[];
+};
+
 export type CreateSessionResponse = RagSession;
 
 export type SendMessageResponse = {

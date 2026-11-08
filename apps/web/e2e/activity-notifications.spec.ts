@@ -97,7 +97,9 @@ test.describe("activity notifications", () => {
         response.ok(),
     );
     await page.getByRole("button", { name: "Start review" }).click();
-    await createSessionResponse;
+    // Creation streams, so the response starts long before the review exists;
+    // leaving the page before its body finishes would race the activity write.
+    await (await createSessionResponse).finished();
 
     await page.goto("/account");
     await expect(page.locator(".account-activity-list")).toContainText("Created an AI review", {
