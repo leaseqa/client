@@ -20,11 +20,11 @@
     "node": "24.x"
   },
   "devDependencies": {
-    "prettier": "^3.3.3",
-    "typescript": "^5.5.4"
+    "prettier": "^3.9.9",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.3.0"
   },
   "overrides": {
     "@types/react": "^19.2.0",
