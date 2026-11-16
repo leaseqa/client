@@ -16,7 +16,7 @@ export async function logout() {
   return apiPost("/auth/logout");
 }
 
-export async function updateCurrentUser(payload: { username?: string; email?: string }) {
+export async function updateCurrentUser(payload: { username: string }) {
   return apiPatch("/users/me", payload);
 }
 

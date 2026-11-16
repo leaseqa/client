@@ -26,16 +26,12 @@ export default function AccountPage() {
   const [activityItems, setActivityItems] = useState<client.ActivityItem[]>([]);
   const [activityLoading, setActivityLoading] = useState(false);
   const [activityError, setActivityError] = useState("");
-  const [profileForm, setProfileForm] = useState({
-    name: user?.name || "",
-    email: user?.email || "",
-  });
+  // Only the name is editable: PATCH /users/me takes username and avatarUrl
+  // and rejects anything else, so sending the email made every save fail.
+  const [profileForm, setProfileForm] = useState({ name: user?.name || "" });
 
   useEffect(() => {
-    setProfileForm({
-      name: user?.name || "",
-      email: user?.email || "",
-    });
+    setProfileForm({ name: user?.name || "" });
   }, [user]);
 
   const loadActivity = useCallback(async () => {
@@ -76,10 +72,7 @@ export default function AccountPage() {
     setError("");
     setSaving(true);
     try {
-      const response = await client.updateCurrentUser({
-        username: profileForm.name,
-        email: profileForm.email,
-      });
+      const response = await client.updateCurrentUser({ username: profileForm.name });
       const updatedUser = (response as any)?.data || response;
       dispatch(setSession(updatedUser));
       setEditMode(false);
@@ -92,10 +85,7 @@ export default function AccountPage() {
 
   const handleCancelEdit = () => {
     setError("");
-    setProfileForm({
-      name: user?.name || "",
-      email: user?.email || "",
-    });
+    setProfileForm({ name: user?.name || "" });
     setEditMode(false);
   };
 
@@ -159,22 +149,7 @@ export default function AccountPage() {
 
                   <div className="account-field">
                     <div className="account-field-label">Email</div>
-                    {editMode ? (
-                      <Form.Control
-                        aria-label="Email"
-                        type="email"
-                        value={profileForm.email}
-                        onChange={(e) =>
-                          setProfileForm((prev) => ({
-                            ...prev,
-                            email: e.target.value,
-                          }))
-                        }
-                        disabled={saving}
-                      />
-                    ) : (
-                      <div className="account-field-value">{user?.email}</div>
-                    )}
+                    <div className="account-field-value">{user?.email}</div>
                   </div>
 
                   <div className="account-field">
