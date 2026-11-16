@@ -20,6 +20,12 @@ export async function updateCurrentUser(payload: { username: string }) {
   return apiPatch("/users/me", payload);
 }
 
+/** Resolves to the signed-in user; the server also rotates the session id. */
+export async function changePassword(payload: { currentPassword: string; newPassword: string }) {
+  const response = await apiPost<{ data?: unknown }>("/auth/password", payload);
+  return unwrapData(response);
+}
+
 export async function fetchActivity(limit = 20): Promise<ActivityItem[]> {
   const response = await apiGet<{ data?: ActivityItem[] }>("/activity", {
     params: { limit },

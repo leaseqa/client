@@ -9,6 +9,8 @@ export type SessionUser = {
   role: SessionRole;
   avatar: string;
   lawyerVerified: boolean;
+  /** False for accounts made through Google, which have no password to change. */
+  hasPassword: boolean;
 };
 
 export type SessionState = {
@@ -58,6 +60,7 @@ export function parseSessionUser(payload: unknown): SessionUser | null {
     role: asSessionRole(payload.role),
     avatar: asNonEmptyString(payload.avatar) || DEFAULT_AVATAR,
     lawyerVerified: payload.lawyerVerified === true,
+    hasPassword: payload.hasPassword === true,
   };
 }
 
@@ -93,6 +96,7 @@ const sessionSlice = createSlice({
         role: action.payload.role || "tenant",
         avatar: DEFAULT_AVATAR,
         lawyerVerified: false,
+        hasPassword: false,
       };
     },
     setGuestSession(state) {
@@ -104,6 +108,7 @@ const sessionSlice = createSlice({
         role: "tenant",
         avatar: DEFAULT_AVATAR,
         lawyerVerified: false,
+        hasPassword: false,
       };
     },
   },
