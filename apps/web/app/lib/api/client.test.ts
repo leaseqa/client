@@ -152,6 +152,40 @@ describe("apiClient", () => {
     });
   });
 
+  it("shows the server's rate-limit message", async () => {
+    await expect(
+      requestWithRejectedAdapter({
+        message: "Request failed with status code 429",
+        response: {
+          status: 429,
+          data: {
+            error: {
+              code: "RATE_LIMITED",
+              message: "Too many attempts. Wait 15 minutes and try again.",
+            },
+          },
+        },
+      }),
+    ).rejects.toMatchObject({
+      status: 429,
+      code: "RATE_LIMITED",
+      message: "Too many attempts. Wait 15 minutes and try again.",
+    });
+  });
+
+  it("does not show axios's status-code message for a 429 without a body", async () => {
+    await expect(
+      requestWithRejectedAdapter({
+        message: "Request failed with status code 429",
+        response: { status: 429, data: "Too many requests, please try again later." },
+      }),
+    ).rejects.toMatchObject({
+      status: 429,
+      code: "HTTP_429",
+      message: "Too many requests. Wait a few minutes and try again.",
+    });
+  });
+
   it("rejects canceled requests as ApiError without axios fields", async () => {
     const controller = new AbortController();
     controller.abort();

@@ -3766,6 +3766,12 @@ a.review-chat-inline-citation:hover {
   font-size: 0.875rem;
 }
 
+.account-success {
+  margin: 1rem 0 0;
+  color: var(--site-accent-strong);
+  font-size: 0.875rem;
+}
+
 .account-actions {
   display: flex;
   flex-wrap: wrap;
@@ -3863,7 +3869,8 @@ a.account-activity-item:hover .account-activity-title {
   background: var(--site-panel);
 }
 
-.auth-card .form-label {
+.auth-card .form-label,
+.account-card .form-label {
   font-size: 0.6875rem;
   font-stretch: var(--stretch-label);
   font-weight: 600;

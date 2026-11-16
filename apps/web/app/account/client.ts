@@ -16,8 +16,14 @@ export async function logout() {
   return apiPost("/auth/logout");
 }
 
-export async function updateCurrentUser(payload: { username?: string; email?: string }) {
+export async function updateCurrentUser(payload: { username: string }) {
   return apiPatch("/users/me", payload);
+}
+
+/** Resolves to the signed-in user; the server also rotates the session id. */
+export async function changePassword(payload: { currentPassword: string; newPassword: string }) {
+  const response = await apiPost<{ data?: unknown }>("/auth/password", payload);
+  return unwrapData(response);
 }
 
 export async function fetchActivity(limit = 20): Promise<ActivityItem[]> {

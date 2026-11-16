@@ -18,6 +18,7 @@ const AUTH_USER: SessionUser = {
   role: "tenant",
   avatar: "/images/NEU.png",
   lawyerVerified: false,
+  hasPassword: true,
 };
 
 const GUEST_USER: SessionUser = {
@@ -27,6 +28,7 @@ const GUEST_USER: SessionUser = {
   role: "tenant",
   avatar: "/images/NEU.png",
   lawyerVerified: false,
+  hasPassword: false,
 };
 
 function identity(): HTMLElement {
