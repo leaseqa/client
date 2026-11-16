@@ -94,6 +94,10 @@ export const invalidResponseError = () =>
   new ApiError("The server sent a response that could not be read.", 0, "INVALID_RESPONSE");
 const abortedError = () => new ApiError("Request aborted", 0, "ABORTED");
 
+// The server's limiters send their own message. A 429 without one (from a proxy
+// in front of it) would otherwise read as "Request failed with status code 429".
+const RATE_LIMITED_MESSAGE = "Too many requests. Wait a few minutes and try again.";
+
 /** The ApiError for a failed response: its error body if it has one, else the fallback. */
 export function errorFromResponse(
   status: number,
@@ -102,7 +106,7 @@ export function errorFromResponse(
 ): ApiError {
   const body = readErrorBody(data);
   return new ApiError(
-    body.message || fallbackMessage,
+    body.message || (status === 429 ? RATE_LIMITED_MESSAGE : fallbackMessage),
     status,
     body.code || (status ? `HTTP_${status}` : "NETWORK"),
   );
